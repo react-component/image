@@ -1,0 +1,18 @@
+@imagePrefixCls: rc-image;
+
+.effect() {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  transform-origin: 0 0;
+}
+
+.@{imagePrefixCls} {
+  box-sizing: border-box;
+  position: relative;
+  vertical-align: middle;
+  &-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+ }
