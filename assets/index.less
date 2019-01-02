@@ -9,10 +9,20 @@
 .@{imagePrefixCls} {
   box-sizing: border-box;
   position: relative;
-  vertical-align: middle;
   &-responsive {
     display: block;
     max-width: 100%;
     height: auto;
+  }
+  &-placeholder {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  &-wrapper {
+    position: relative;
+    display: inline-block;
   }
  }

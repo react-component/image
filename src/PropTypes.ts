@@ -19,12 +19,12 @@ export interface IImageProps {
   alt: string;
   children: JSX.Element[] | JSX.Element | any;
   style: CSSProperties;
+  wrapperStyle: CSSProperties;
   prefixCls: string;
   responsive: boolean,
   disabled: boolean,
   className: string;
-  placeholder: string;
-  loading: boolean;
+  placeholder: JSX.Element | string;
   onLoad: () => void;
   onError: () => void;
 }

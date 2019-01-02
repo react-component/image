@@ -7,7 +7,7 @@ import { isRetina, saveRef } from './util';
 import { IImageProps } from './PropTypes';
 
 export interface IImageState {
-  loaded: boolean;
+  loading: boolean;
   error: boolean;
 }
 
@@ -21,7 +21,7 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
   public onImageLoad = () => {
     const { onLoad } = this.props;
     this.setState({
-      loaded: true,
+      loading: false,
     }, () => {
       onLoad();
     })
@@ -39,21 +39,21 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
   public saveImageRef: (ref: HTMLImageElement) => void;
   public imageRef: HTMLInputElement | null = null;
   public saveDivRef: (ref: HTMLDivElement) => void;
-  public divRef: HTMLInputElement | null = null;
+  public divRef: HTMLDivElement | null = null;
   constructor(props: Partial<IImageProps>) {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
     this.saveDivRef = saveRef(this, 'divRef');
     this.state = {
       error: false,
-      loaded: false,
+      loading: true,
     }
   }
   public componentWillReceiveProps(nextProps: IImageProps) {
     if (nextProps.src !== this.props.src) {
       this.setState({
         error: false,
-        loaded: false,
+        loading: true,
       });
     }
   };
@@ -65,26 +65,43 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
   //  }
   //  console.log(this.imageRef.hasAttribute('srcset'));
   //  this.imageRef
+
+  }
+  public renderPlaceholder() {
+    const { prefixCls, placeholder } = this.props;
+    if (!placeholder) return null;
+    return (
+      <div className={`${prefixCls}-placeholder`}>
+        {placeholder}
+      </div>
+    );
   }
   public render() {
-    const { className, prefixCls, src, srcSet, alt, responsive, children } = this.props;
+    const { className, prefixCls, src, srcSet, alt, responsive, style, wrapperStyle } = this.props;
     const rootCls = {
       [className as string]: !!className,
       [prefixCls as string]: 1,
       [`${prefixCls}-responsive`]: !!responsive,
     };
-    const { loaded } = this.state;
+    const { loading } = this.state;
     // console.log('---isRetina-', isRetina(), 'loaded', loaded);
     return (
-      <img
-        ref={this.saveImageRef}
-        className={classnames(rootCls)}
-        src={src}
-        srcSet={srcSet}
-        onLoad={this.onImageLoad}
-        onError={this.onImageError}
-        alt={alt}
-      />
+      <div
+        className={`${prefixCls}-wrapper`}
+        style={wrapperStyle}
+      >
+        <img
+          ref={this.saveImageRef}
+          className={classnames(rootCls)}
+          src={src}
+          style={style}
+          srcSet={srcSet}
+          onLoad={this.onImageLoad}
+          onError={this.onImageError}
+          alt={alt}
+        />
+        {loading && this.renderPlaceholder()}
+      </div>
     );
   }
 }
