@@ -15,6 +15,7 @@ import {
 export interface IImageProps {
   id: string;
   src: string;
+  errorSrc?: string;
   srcSet: string,
   alt: string;
   children: JSX.Element[] | JSX.Element | any;
