@@ -3,17 +3,19 @@ import classnames from 'classnames';
 import { polyfill } from 'react-lifecycles-compat';
 
 import { saveRef } from './util';
-import { IImageProps } from './PropTypes';
+import { ImageProps } from './PropTypes';
 
-export interface IImageState {
-  error: boolean;
+export interface ImageState {
+  error?: boolean;
+  preview?: boolean;
 }
 
-class Image extends React.Component<Partial<IImageProps>, IImageState> {
+class Image extends React.Component<Partial<ImageProps>, ImageState> {
   public static displayName = 'Image';
   public static defaultProps = {
     prefixCls: 'rc-image',
     errorSrc: 'error',
+    preview: false,
     onLoad: () => {},
     onError: () => {},
   }
@@ -35,7 +37,7 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
   public imageRef: HTMLInputElement | null = null;
   public saveDivRef: (ref: HTMLDivElement) => void;
   public divRef: HTMLDivElement | null = null;
-  constructor(props: Partial<IImageProps>) {
+  constructor(props: Partial<ImageProps>) {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
     this.saveDivRef = saveRef(this, 'divRef');
@@ -43,24 +45,15 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
       error: false,
     }
   }
-  public componentWillReceiveProps(nextProps: IImageProps) {
-    if (nextProps.src !== this.props.src) {
+  componentWillReceiveProps(nextProps: ImageProps) {
+    if (nextProps.preview && nextProps.preview !== this.props.preview) {
       this.setState({
-        error: false,
-      });
+        preview: true,
+      })
     }
   };
-  public renderPlaceholder() {
-    const { prefixCls, placeholder } = this.props;
-    if (!placeholder) return null;
-    return (
-      <div className={`${prefixCls}-placeholder`}>
-        {placeholder}
-      </div>
-    );
-  }
   public render() {
-    const { className, errorSrc, prefixCls, src, srcSet, alt, responsive, style } = this.props;
+    const { className, errorSrc, prefixCls, src, srcSet, alt, responsive, style, ...restProps } = this.props;
     const { error } = this.state;
     const rootCls = {
       [className as string]: !!className,
@@ -68,17 +61,22 @@ class Image extends React.Component<Partial<IImageProps>, IImageState> {
       [`${prefixCls}-responsive`]: !!responsive,
     };
     const imgSrc = error ? errorSrc : src;
+    console.log('---imgSrc---', imgSrc);
     return (
-      <img
-        ref={this.saveImageRef}
-        className={classnames(rootCls)}
-        src={imgSrc}
-        style={style}
-        srcSet={srcSet}
-        onLoad={this.onImageLoad}
-        onError={this.onImageError}
-        alt={alt}
-      />
+      <React.Fragment>
+        <img
+          {...restProps}
+          ref={this.saveImageRef}
+          className={classnames(rootCls)}
+          src={imgSrc}
+          style={style}
+          srcSet={srcSet}
+          onLoad={this.onImageLoad}
+          onError={this.onImageError}
+          alt={alt}
+        />
+
+      </React.Fragment>
     );
   }
 }

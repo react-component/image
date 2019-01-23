@@ -26,6 +26,14 @@ React Image
 
 
 ## Feature
+- [x] Error image display
+- [x] Responsive
+- [ ] PreviewImage
+- [ ] Placeholder
+- [ ] rotate
+- [ ] cropping
+- [ ] filter
+
 
 
 ### Keyboard
@@ -37,6 +45,23 @@ React Image
 ## Usage
 
 ### basic use
+
+### preview Image
+
+```jsx
+const handlePreview = () => {
+  this.setState({
+    preview: true,
+  });
+}
+
+<div className="mask">
+  <Image preview={this.state.preview}  />
+  <Icon type="view" onClick={this.handlePreview} />
+  <Icon type="delete" />
+</div>
+
+```
 
 ## API
 
