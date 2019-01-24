@@ -1,4 +1,4 @@
-# rc-image
+# [WIP] rc-image
 ---
 
 React Image
@@ -9,8 +9,6 @@ React Image
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-image
 [travis-image]: https://img.shields.io/travis/react-component/image.svg?style=flat-square
 [travis-url]: https://travis-ci.org/react-componentimage/
 [coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
@@ -46,22 +44,6 @@ React Image
 
 ### basic use
 
-### preview Image
-
-```jsx
-const handlePreview = () => {
-  this.setState({
-    preview: true,
-  });
-}
-
-<div className="mask">
-  <Image preview={this.state.preview}  />
-  <Icon type="view" onClick={this.handlePreview} />
-  <Icon type="delete" />
-</div>
-
-```
 
 ## API
 
