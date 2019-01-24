@@ -21,8 +21,34 @@
     top: 0;
     left: 0;
   }
-  &-wrapper {
-    position: relative;
-    display: inline-block;
+  &-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+  }
+  &-preview-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: zoom-out;
+    background-color: #ffffff;
+    transition: opacity 0.2s;
+    will-change: opacity;
+  }
+  &-preview-image {
+    user-select: none;
+    transition: -webkit-transform 350ms cubic-bezier(0.6, 0, 0.1, 1);
+    transition: transform 350ms cubic-bezier(0.6, 0, 0.1, 1);
+    transition: transform 350ms cubic-bezier(0.6, 0, 0.1, 1), -webkit-transform 350ms cubic-bezier(0.6, 0, 0.1, 1);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 10;
+    will-change: transform, top;
   }
  }

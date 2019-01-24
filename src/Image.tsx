@@ -2,6 +2,9 @@ import * as React from 'react';
 import classnames from 'classnames';
 import { polyfill } from 'react-lifecycles-compat';
 
+import Portal from './PreviewContainer';
+import Preview from './Preview';
+
 import { saveRef } from './util';
 import { ImageProps } from './PropTypes';
 
@@ -34,27 +37,43 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
     }
   }
   public saveImageRef: (ref: HTMLImageElement) => void;
-  public imageRef: HTMLInputElement | null = null;
-  public saveDivRef: (ref: HTMLDivElement) => void;
-  public divRef: HTMLDivElement | null = null;
-  constructor(props: Partial<ImageProps>) {
+  public imageRef: HTMLImageElement | null;
+  constructor(props: ImageProps) {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
-    this.saveDivRef = saveRef(this, 'divRef');
     this.state = {
       error: false,
+
     }
   }
-  componentWillReceiveProps(nextProps: ImageProps) {
-    if (nextProps.preview && nextProps.preview !== this.props.preview) {
-      this.setState({
-        preview: true,
-      })
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if ('preview' in prevState) return null;
+    return {
+      preview: nextProps.preview,
     }
   };
-  public render() {
-    const { className, errorSrc, prefixCls, src, srcSet, alt, responsive, style, ...restProps } = this.props;
-    const { error } = this.state;
+  public handlePreview = (preview: boolean) => {
+    this.setState({
+      preview,
+    })
+  }
+  public onImageClick = () => {
+    this.handlePreview(true);
+  }
+  render() {
+    const {
+      className,
+      errorSrc,
+      prefixCls,
+      src,
+      srcSet,
+      alt,
+      responsive,
+      style,
+      previewStyle,
+      ...restProps
+     } = this.props;
+    const { error, preview } = this.state;
     const rootCls = {
       [className as string]: !!className,
       [prefixCls as string]: 1,
@@ -62,6 +81,10 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
     };
     const imgSrc = error ? errorSrc : src;
     console.log('---imgSrc---', imgSrc);
+    console.log('----state----', this.state);
+    console.log('---this.props--', this.props);
+    console.log('----ref--', this.imageRef);
+    debugger
     return (
       <React.Fragment>
         <img
@@ -73,9 +96,18 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
           srcSet={srcSet}
           onLoad={this.onImageLoad}
           onError={this.onImageError}
+          onClick={this.onImageClick}
           alt={alt}
         />
-
+        {!error && preview &&
+          <Portal style={previewStyle}>
+            <Preview
+              prefixCls={prefixCls}
+              handlePreview={this.handlePreview}
+              cover={this.imageRef}
+            />
+          </Portal>
+        }
       </React.Fragment>
     );
   }

@@ -14,6 +14,32 @@ export function isRetina(): boolean {
 
 export function saveRef(instance: any, name: string): (node: any) => void {
   return (node: JSX.Element) => {
-    instance[name] = node;
+    if (node) {
+      instance[name] = node;
+    }
   };
 }
+
+
+// screen util funciton
+export const getScrollHeight = () => Math.max(
+  document.body.scrollHeight, document.documentElement.scrollHeight,
+  document.body.offsetHeight, document.documentElement.offsetHeight,
+  document.body.clientHeight, document.documentElement.clientHeight
+);
+
+export const getClientHeight = () => {
+  let clientHeight = 0;
+  if (document.body.clientHeight && document.documentElement.clientHeight) {
+    clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+  } else {
+    clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+  }
+  return clientHeight;
+};
+
+
+export const getWindowWidth = () => window.innerWidth;
+export const getScrollWidth = () => document.body.scrollWidth;
+export const getClientWidth = () => document.documentElement.clientWidth;
+export const getWindowHeight = () => window.innerHeight;
