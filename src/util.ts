@@ -53,3 +53,15 @@ export const getWindowWidth = () => window.innerWidth;
 export const getScrollWidth = () => document.body.scrollWidth;
 export const getClientWidth = () => document.documentElement.clientWidth;
 export const getWindowHeight = () => window.innerHeight;
+export const getScrollTop = () => {
+  let scrollTop = 0;
+  if (document.documentElement && document.documentElement.scrollTop) {
+    scrollTop = document.documentElement.scrollTop;
+  } else if (document.body) {
+    scrollTop = document.body.scrollTop;
+  }
+  return scrollTop;
+};
+
+// calc picture maxScale
+// export const getPictureScale = () => {};

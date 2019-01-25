@@ -1,9 +1,10 @@
+import classNames from 'classnames';
 import * as React from 'react';
 
 import {
   getClientHeight,
   getClientWidth,
-  getScrollHeight,
+  // getScrollHeight,
   getScrollWidth,
   getWindowHeight,
   saveRef,
@@ -17,11 +18,10 @@ interface ICoverStyle {
   opacity: number;
   scale: number;
   rotate: number;
-  borderRadius: number;
 }
 
 interface IImgState {
-  currentStyle: Partial<ICoverStyle>;
+  currentStyle: Partial<ICoverStyle> | null;
 }
 
 export default class Img extends React.Component<ImgProps, IImgState> {
@@ -29,30 +29,41 @@ export default class Img extends React.Component<ImgProps, IImgState> {
   public previewImgRef: HTMLImageElement | null = null;
   constructor(props: ImgProps) {
     super(props);
-    this.savePreviewImgRef = saveRef(this, 'previewImgRef');
-    const currentStyle = this.getCoverStyle();
     this.state = {
-      currentStyle,
+      currentStyle: this.getCoverStyle(),
     };
+    this.savePreviewImgRef = saveRef(this, 'previewImgRef');
   }
+  // init position
   public getCoverStyle = () => {
     const { cover, rotate } = this.props;
     const { naturalWidth } = cover;
-    const { top, left, width, height } = cover.getBoundingClientRect();
-    const { opacity, borderRadius } = window.getComputedStyle(cover);
+    const {
+      top,
+      left,
+      right,
+      bottom,
+      width: coverWidth,
+      height: coverHeight,
+    } = cover.getBoundingClientRect();
+    // support IE
+    const width = coverWidth || right - left;
+    const height = coverHeight || bottom - left;
+    const { opacity } = window.getComputedStyle(cover);
+    const scale = width / naturalWidth;
+
     const coverStyle: Partial<ICoverStyle> = {
-      x: -getScrollHeight() / 2 + left + width / 2,
+      x: -getScrollWidth() / 2 + left + width / 2,
       y: -getWindowHeight() / 2 + top + height / 2,
       // tslint:disable-next-line
       opacity: opacity ? ~~opacity : 1,
-      scale: width / naturalWidth,
+      scale,
       rotate: rotate - (rotate % 360),
-      borderRadius: borderRadius ? +borderRadius : 0,
     };
     return coverStyle;
   };
   public getBrowsingStyle = () => {
-    const { radius = 0, edge = 0, rotate = 0 } = this.props;
+    const { edge, rotate } = this.props;
     if (this.previewImgRef) {
       const { naturalWidth, naturalHeight } = this.previewImgRef;
       const scaleX = getClientWidth() / (naturalWidth + 2 * edge);
@@ -64,7 +75,6 @@ export default class Img extends React.Component<ImgProps, IImgState> {
         opacity: 1,
         scale,
         rotate,
-        borderRadius: radius,
       };
     }
     return {};
@@ -90,15 +100,14 @@ export default class Img extends React.Component<ImgProps, IImgState> {
         opacity: 1,
         scale: 1,
         rotate,
-        borderRadius: 0,
       };
     }
     return {};
   };
 
   public updateCurrentStyle = () => {
-    const { zoom } = this.props;
-    const currentStyle = zoom ? this.getZoomingStyle() : this.getBrowsingStyle();
+    const { isZoom } = this.props;
+    const currentStyle = isZoom ? this.getZoomingStyle() : this.getBrowsingStyle();
     if (currentStyle) {
       this.setState({
         currentStyle,
@@ -106,23 +115,28 @@ export default class Img extends React.Component<ImgProps, IImgState> {
     }
   };
   public render() {
-    const { prefixCls, zoom, cover } = this.props;
+    const { prefixCls, isZoom, cover } = this.props;
     const { currentStyle } = this.state;
-    const { src, alt } = cover;
-    console.log('---currentStyle-----', currentStyle);
+    console.log('----currentStyle-', currentStyle);
+    const transform = currentStyle
+      ? `translate(-50%, -50%) translate(${currentStyle.x}px, ${currentStyle.y}px) scale(${
+          currentStyle.scale
+        }, ${currentStyle.scale}) rotate(${currentStyle.rotate}deg)`
+      : '';
+    console.log('--transform----', transform);
+    const previewImageCls = classNames(cover.className, `${prefixCls}-preview-image`);
     return (
       <img
-        className={`${prefixCls}-preview-image`}
+        className={previewImageCls}
         style={{
-          transform: `translate3d(-50%, -50%, 0) translate3d(${currentStyle.x}px, ${
-            currentStyle.y
-          }px, 0px) scale3d(${currentStyle.scale}, ${currentStyle.scale}, 1) rotate3d(0, 0, 1, ${
-            currentStyle.rotate
-          }deg)`,
-          cursor: zoom ? 'zoom-out' : 'initial',
+          transform,
+          msTransform: transform,
+          WebkitTransform: transform,
+          OTransform: transform,
+          cursor: isZoom ? 'zoom-out' : 'initial',
         }}
-        src={src}
-        alt={alt}
+        src={cover.src}
+        alt={cover.alt}
         onLoad={this.updateCurrentStyle}
         ref={this.savePreviewImgRef}
       />

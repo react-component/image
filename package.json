@@ -64,7 +64,6 @@
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
-    "rc-dialog": "7.3.0",
     "classnames": "2.x",
     "rc-util": "^4.6.0",
     "react-lifecycles-compat": "^3.0.2"

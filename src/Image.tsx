@@ -19,17 +19,10 @@ class Image extends React.Component<ImageProps, ImageState> {
     prefixCls: 'rc-image',
     errorSrc: 'error',
     preview: false,
+    zoom: {},
     onLoad: () => null,
     onError: () => null,
   };
-  public static getDerivedStateFromProps(nextProps: ImageProps, prevState: ImageState) {
-    if ('preview' in prevState) {
-      return null;
-    }
-    return {
-      preview: nextProps.preview,
-    };
-  }
   public saveImageRef: (ref: HTMLImageElement) => void;
   public imageRef: HTMLImageElement | null = null;
   constructor(props: ImageProps) {
@@ -78,6 +71,7 @@ class Image extends React.Component<ImageProps, ImageState> {
       alt,
       responsive,
       style,
+      zoom,
       previewStyle,
       ...restProps
     } = this.props;
@@ -88,10 +82,7 @@ class Image extends React.Component<ImageProps, ImageState> {
       [`${prefixCls}-responsive`]: !!responsive,
     };
     const imgSrc = error ? errorSrc : src;
-    console.log('---imgSrc---', imgSrc);
-    console.log('----state----', this.state);
-    console.log('---this.props--', this.props);
-    console.log('----ref--', this.imageRef);
+    const isPreview = !error && preview;
     return (
       <React.Fragment>
         <img
@@ -101,17 +92,18 @@ class Image extends React.Component<ImageProps, ImageState> {
           src={imgSrc}
           style={style}
           srcSet={srcSet}
+          alt={alt}
           onLoad={this.onImageLoad}
           onError={this.onImageError}
           onClick={this.onImageClick}
-          alt={alt}
         />
-        {!error && preview && this.imageRef && (
+        {this.imageRef && isPreview && (
           <Portal style={previewStyle}>
             <Preview
               prefixCls={prefixCls}
               handlePreview={this.handlePreview}
               cover={this.imageRef}
+              zoom={zoom}
             />
           </Portal>
         )}

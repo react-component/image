@@ -12,6 +12,14 @@ import * as React from 'react';
 
 // }
 
+export interface IZoom {
+  // Pixel number to offset zoomed image from the window
+  bounds: number;
+  // default for src, also provide a image for zoom
+  zoomImage: React.ImgHTMLAttributes<HTMLImageElement>;
+  onZoom: () => void;
+}
+
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   errorSrc?: string;
@@ -21,8 +29,7 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   prefixCls?: string;
   responsive?: boolean;
   className?: string;
-  // 预览
-  preview?: boolean;
+  zoom?: Partial<IZoom> | boolean;
   // 预览容器样式
   previewStyle?: React.CSSProperties;
   onLoad?: () => void;
@@ -38,6 +45,7 @@ export interface IPreviewProps {
   cover: HTMLImageElement;
   prefixCls?: string;
   handlePreview?: (preview: boolean) => void;
+  zoom?: Partial<IZoom> | boolean;
 }
 
 export interface IPreviewImageProps {
@@ -48,7 +56,8 @@ export interface ImgProps {
   cover: HTMLImageElement;
   prefixCls?: string;
   rotate: number;
-  zoom: boolean;
+  zoom?: Partial<IZoom> | boolean;
+  isZoom?: boolean;
   edge: number;
   radius: number;
 }
