@@ -1,43 +1,35 @@
-import * as React from 'react';
 import classnames from 'classnames';
+import * as React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
 
-import Portal from './PreviewContainer';
 import Preview from './Preview';
+import Portal from './PreviewContainer';
 
-import { saveRef } from './util';
 import { ImageProps } from './PropTypes';
+import { saveRef } from './util';
 
 export interface ImageState {
   error?: boolean;
   preview?: boolean;
 }
 
-class Image extends React.Component<Partial<ImageProps>, ImageState> {
+class Image extends React.Component<ImageProps, ImageState> {
+;
   public static displayName = 'Image';
   public static defaultProps = {
     prefixCls: 'rc-image',
     errorSrc: 'error',
     preview: false,
-    onLoad: () => {},
-    onError: () => {},
+    onLoad: () => null,
+    onError: () => null,
   }
-  public onImageLoad = () => {
-    const { onLoad } = this.props;
-    onLoad();
-  }
-  public onImageError = (err: React.SyntheticEvent) => {
-    const { src, onError } = this.props;
-    if (src) {
-      this.setState({
-        error: true,
-      }, () => {
-        onError();
-      })
+  public static getDerivedStateFromProps(nextProps: ImageProps, prevState: ImageState) {
+    if ('preview' in prevState) { return null; }
+    return {
+      preview: nextProps.preview,
     }
-  }
-  public saveImageRef: (ref: HTMLImageElement) => void;
-  public imageRef: HTMLImageElement | null;
+  }  public saveImageRef: (ref: HTMLImageElement) => void;
+  public imageRef: HTMLImageElement | null = null;
   constructor(props: ImageProps) {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
@@ -46,12 +38,24 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
 
     }
   }
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if ('preview' in prevState) return null;
-    return {
-      preview: nextProps.preview,
+  public onImageLoad = () => {
+    const { onLoad } = this.props;
+    if (onLoad) {
+      onLoad();
     }
-  };
+  }
+  public onImageError = (err: React.SyntheticEvent) => {
+    const { src, onError } = this.props;
+    if (src) {
+      this.setState({
+        error: true,
+      }, () => {
+        if (onError) {
+          onError();
+        }
+      })
+    }
+  }
   public handlePreview = (preview: boolean) => {
     this.setState({
       preview,
@@ -60,7 +64,7 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
   public onImageClick = () => {
     this.handlePreview(true);
   }
-  render() {
+  public render() {
     const {
       className,
       errorSrc,
@@ -84,7 +88,6 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
     console.log('----state----', this.state);
     console.log('---this.props--', this.props);
     console.log('----ref--', this.imageRef);
-    debugger
     return (
       <React.Fragment>
         <img
@@ -99,7 +102,7 @@ class Image extends React.Component<Partial<ImageProps>, ImageState> {
           onClick={this.onImageClick}
           alt={alt}
         />
-        {!error && preview &&
+        {!error && preview && this.imageRef &&
           <Portal style={previewStyle}>
             <Preview
               prefixCls={prefixCls}

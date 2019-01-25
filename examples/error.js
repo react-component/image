@@ -1,8 +1,8 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Image from 'rc-image';
-import 'rc-image/assets/index.less';
+import Image from 'rc-img';
+import 'rc-img/assets/index.less';
 import ReactDOM from 'react-dom';
 
 class Test extends React.Component {

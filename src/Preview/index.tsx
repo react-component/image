@@ -1,30 +1,29 @@
 import * as React from 'react';
 
+import { IPreviewProps } from '../PropTypes';
 import Img from './Img';
-import { PreviewProps } from '../PropTypes';
 
-export interface PreviewState {
-  zoom?: boolean;
-  rotate?: number;
+export interface IPreviewState {
+  zoom: boolean;
+  rotate: number;
 }
 
-export default class Preview extends React.Component<PreviewProps, PreviewState> {
-  constructor(props) {
+export default class Preview extends React.Component<IPreviewProps, Partial<IPreviewState>> {
+  constructor(props: IPreviewProps) {
     super(props);
     this.state = {
       rotate: 0,
       zoom: false,
     }
   }
-  componentDidMount() {
+  public componentDidMount() {
     setTimeout(this.mountSelf, 0)
   }
-  componentWillUnmount() {
+  public componentWillUnmount() {
     window.addEventListener('scroll', this.handleScroll)
   }
   public mountSelf = () => {
     const { cover } = this.props
-    debugger;
     // hidden
     cover.style.visibility = 'hidden'
     // bind scrollEvent
@@ -34,14 +33,16 @@ export default class Preview extends React.Component<PreviewProps, PreviewState>
     this.unMountSelf();
   }
   public unMountSelf = () => {
-    const { cover } = this.props
+    const { cover, handlePreview } = this.props
     cover.style.visibility = 'visible'
-    this.props.handlePreview(false);
+    if (handlePreview) {
+      handlePreview(false);
+    }
   }
 
-  render() {
+  public render() {
     const { cover, prefixCls } = this.props;
-    const { zoom, rotate } = this.state;
+    const { zoom = false, rotate = 0 } = this.state;
     console.log('--this.state---', this.state);
     return (
       <div className={`${prefixCls}-preview`}>
@@ -52,6 +53,7 @@ export default class Preview extends React.Component<PreviewProps, PreviewState>
           rotate={rotate}
           zoom={zoom}
           edge={20}
+          radius={0}
         />
       </div>
     )

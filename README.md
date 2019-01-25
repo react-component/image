@@ -1,4 +1,4 @@
-# [WIP] rc-img
+# [WIP] rc-image
 ---
 
 React Image

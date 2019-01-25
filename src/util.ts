@@ -30,6 +30,7 @@ export const getScrollHeight = () => Math.max(
 
 export const getClientHeight = () => {
   let clientHeight = 0;
+  // tslint:disable-next-line
   if (document.body.clientHeight && document.documentElement.clientHeight) {
     clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
   } else {

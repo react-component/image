@@ -9,9 +9,9 @@ import * as React from 'react';
 // src?: string;
 // srcSet?: string;
 
-export interface IZoom {
+// export interface IZoom {
 
-}
+// }
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -30,17 +30,26 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   onError?: () => void;
 }
 
-export interface PreviewContainerProps {
+export interface IPreviewContainerProps {
   style?: React.CSSProperties;
   getPreviewContainer?: (triggerNode?: HTMLElement) => HTMLElement;
 }
 
-export interface PreviewProps {
-  cover: HTMLImageElement | null;
+export interface IPreviewProps {
+  cover: HTMLImageElement;
   prefixCls?: string;
   handlePreview?: (preview: boolean) => void;
 }
 
-export interface PreviewImageProps  {
+export interface IPreviewImageProps  {
+  [key: string]: any;
+}
 
+export interface ImgProps {
+  cover: HTMLImageElement;
+  prefixCls?: string;
+  rotate: number;
+  zoom: boolean;
+  edge: number;
+  radius: number;
 }

@@ -6,7 +6,7 @@ declare module 'rc-animate';
 
 declare module 'rc-menu';
 
-declare module 'rc-util/lib/Children/toArray';
+declare module 'rc-util/lib/Portal';
 
 declare module 'rc-util/lib/KeyCode';
 

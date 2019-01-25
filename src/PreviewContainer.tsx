@@ -1,23 +1,25 @@
-import * as React from 'react';
-import { findDOMNode, createPortal } from 'react-dom';
-import ContainerRender from 'rc-util/lib/ContainerRender';
+// import ContainerRender from 'rc-util/lib/ContainerRender';
 import Portal from 'rc-util/lib/Portal';
+import * as React from 'react';
+import { createPortal, findDOMNode } from 'react-dom';
 
-import { PreviewContainerProps } from './PropTypes';
+import { IPreviewContainerProps } from './PropTypes';
 
 const IS_REACT_16 = !!createPortal;
 
-export default class PreviewContainer extends React.Component<PreviewContainerProps, {}> {
+export default class PreviewContainer extends React.Component<IPreviewContainerProps, {}> {
   public static defaultProps = {
     style: {},
   }
   public getContainer = () => {
     const { style, getPreviewContainer } = this.props;
     const previewContainer: HTMLElement = document.createElement('div');
-    previewContainer.style.position = style.position || 'relative';
-    previewContainer.style.zIndex = (style.zIndex as string) || '999';
-    previewContainer.style.top = (style.top as string) || '0px';
-    previewContainer.style.left = (style.left as string) || '0px'
+    if (style) {
+      previewContainer.style.position = style.position || 'relative';
+      previewContainer.style.zIndex = (style.zIndex as string) || '999';
+      previewContainer.style.top = (style.top as string) || '0px';
+      previewContainer.style.left = (style.left as string) || '0px'
+    }
 
 
     const mountNode: HTMLElement = getPreviewContainer ?
@@ -26,7 +28,7 @@ export default class PreviewContainer extends React.Component<PreviewContainerPr
     mountNode.appendChild(previewContainer);
     return previewContainer;
   }
-  render() {
+  public render() {
     const { children  } = this.props;
     if (IS_REACT_16) {
       return (
@@ -38,6 +40,9 @@ export default class PreviewContainer extends React.Component<PreviewContainerPr
         </Portal>
       )
     }
+    return (
+      <div>{children}</div>
+    )
 
     // return (
 
