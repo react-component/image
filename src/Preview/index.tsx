@@ -14,31 +14,31 @@ export default class Preview extends React.Component<IPreviewProps, Partial<IPre
     this.state = {
       rotate: 0,
       zoom: false,
-    }
+    };
   }
   public componentDidMount() {
-    setTimeout(this.mountSelf, 0)
+    setTimeout(this.mountSelf, 0);
   }
   public componentWillUnmount() {
-    window.addEventListener('scroll', this.handleScroll)
+    window.addEventListener('scroll', this.handleScroll);
   }
   public mountSelf = () => {
-    const { cover } = this.props
+    const { cover } = this.props;
     // hidden
-    cover.style.visibility = 'hidden'
+    cover.style.visibility = 'hidden';
     // bind scrollEvent
-    window.addEventListener('scroll', this.handleScroll)
-  }
+    window.addEventListener('scroll', this.handleScroll);
+  };
   public handleScroll = () => {
     this.unMountSelf();
-  }
+  };
   public unMountSelf = () => {
-    const { cover, handlePreview } = this.props
-    cover.style.visibility = 'visible'
+    const { cover, handlePreview } = this.props;
+    cover.style.visibility = 'visible';
     if (handlePreview) {
       handlePreview(false);
     }
-  }
+  };
 
   public render() {
     const { cover, prefixCls } = this.props;
@@ -47,15 +47,8 @@ export default class Preview extends React.Component<IPreviewProps, Partial<IPre
     return (
       <div className={`${prefixCls}-preview`}>
         <div className={`${prefixCls}-preview-bg`} />
-        <Img
-          cover={cover}
-          prefixCls={prefixCls}
-          rotate={rotate}
-          zoom={zoom}
-          edge={20}
-          radius={0}
-        />
+        <Img cover={cover} prefixCls={prefixCls} rotate={rotate} zoom={zoom} edge={20} radius={0} />
       </div>
-    )
+    );
   }
 }

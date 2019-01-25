@@ -5,21 +5,20 @@ import Image from 'rc-img';
 import 'rc-img/assets/index.less';
 import ReactDOM from 'react-dom';
 
-
 class Test extends React.Component {
   state = {
     imageState: 'loading',
-  }
+  };
   onLoad = () => {
     this.setState({
       imageState: 'loaded',
-    })
-  }
+    });
+  };
   onError = () => {
     this.setState({
       imageState: 'error',
-    })
-  }
+    });
+  };
   loading = (
     <Image
       wrapperStyle={{ width: '100%', backgroundColor: '#fff' }}

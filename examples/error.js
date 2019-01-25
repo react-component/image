@@ -8,12 +8,12 @@ import ReactDOM from 'react-dom';
 class Test extends React.Component {
   state = {
     imageState: 'loading',
-  }
+  };
   onError = () => {
     this.setState({
       imageState: 'error',
-    })
-  }
+    });
+  };
   render() {
     return (
       <div style={{ margin: 20 }}>

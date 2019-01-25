@@ -14,7 +14,6 @@ export interface ImageState {
 }
 
 class Image extends React.Component<ImageProps, ImageState> {
-;
   public static displayName = 'Image';
   public static defaultProps = {
     prefixCls: 'rc-image',
@@ -22,48 +21,53 @@ class Image extends React.Component<ImageProps, ImageState> {
     preview: false,
     onLoad: () => null,
     onError: () => null,
-  }
+  };
   public static getDerivedStateFromProps(nextProps: ImageProps, prevState: ImageState) {
-    if ('preview' in prevState) { return null; }
+    if ('preview' in prevState) {
+      return null;
+    }
     return {
       preview: nextProps.preview,
-    }
-  }  public saveImageRef: (ref: HTMLImageElement) => void;
+    };
+  }
+  public saveImageRef: (ref: HTMLImageElement) => void;
   public imageRef: HTMLImageElement | null = null;
   constructor(props: ImageProps) {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
     this.state = {
       error: false,
-
-    }
+    };
   }
   public onImageLoad = () => {
     const { onLoad } = this.props;
     if (onLoad) {
       onLoad();
     }
-  }
+  };
   public onImageError = (err: React.SyntheticEvent) => {
     const { src, onError } = this.props;
     if (src) {
-      this.setState({
-        error: true,
-      }, () => {
-        if (onError) {
-          onError();
-        }
-      })
+      this.setState(
+        {
+          error: true,
+        },
+        () => {
+          if (onError) {
+            onError();
+          }
+        },
+      );
     }
-  }
+  };
   public handlePreview = (preview: boolean) => {
     this.setState({
       preview,
-    })
-  }
+    });
+  };
   public onImageClick = () => {
     this.handlePreview(true);
-  }
+  };
   public render() {
     const {
       className,
@@ -76,7 +80,7 @@ class Image extends React.Component<ImageProps, ImageState> {
       style,
       previewStyle,
       ...restProps
-     } = this.props;
+    } = this.props;
     const { error, preview } = this.state;
     const rootCls = {
       [className as string]: !!className,
@@ -102,7 +106,7 @@ class Image extends React.Component<ImageProps, ImageState> {
           onClick={this.onImageClick}
           alt={alt}
         />
-        {!error && preview && this.imageRef &&
+        {!error && preview && this.imageRef && (
           <Portal style={previewStyle}>
             <Preview
               prefixCls={prefixCls}
@@ -110,7 +114,7 @@ class Image extends React.Component<ImageProps, ImageState> {
               cover={this.imageRef}
             />
           </Portal>
-        }
+        )}
       </React.Fragment>
     );
   }

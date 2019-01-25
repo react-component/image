@@ -6,7 +6,6 @@ import 'rc-img/assets/index.less';
 import ReactDOM from 'react-dom';
 
 class Test extends React.Component {
-
   render() {
     return (
       <div style={{ margin: 20 }}>

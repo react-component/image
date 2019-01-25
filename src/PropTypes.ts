@@ -1,4 +1,3 @@
-
 // import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
@@ -16,11 +15,11 @@ import * as React from 'react';
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   errorSrc?: string;
-  srcSet?: string,
+  srcSet?: string;
   alt?: string;
   style?: React.CSSProperties;
   prefixCls?: string;
-  responsive?: boolean,
+  responsive?: boolean;
   className?: string;
   // 预览
   preview?: boolean;
@@ -41,7 +40,7 @@ export interface IPreviewProps {
   handlePreview?: (preview: boolean) => void;
 }
 
-export interface IPreviewImageProps  {
+export interface IPreviewImageProps {
   [key: string]: any;
 }
 
