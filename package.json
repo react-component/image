@@ -73,6 +73,7 @@
   ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
+      "git add",
       "npm run pre-commit",
       "git add"
     ]
