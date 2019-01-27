@@ -44,8 +44,9 @@ export interface IPreviewContainerProps {
 export interface IPreviewProps {
   cover: HTMLImageElement;
   prefixCls?: string;
-  handlePreview?: (preview: boolean) => void;
+  handlePreview: (preview: boolean) => void;
   zoom?: Partial<IZoom> | boolean;
+  isPreview?: boolean;
 }
 
 export interface IPreviewImageProps {
@@ -60,4 +61,6 @@ export interface ImgProps {
   isZoom?: boolean;
   edge: number;
   radius: number;
+  show?: boolean;
+  handlePreview: (preview: boolean) => void;
 }

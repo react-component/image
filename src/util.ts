@@ -62,6 +62,3 @@ export const getScrollTop = () => {
   }
   return scrollTop;
 };
-
-// calc picture maxScale
-// export const getPictureScale = () => {};

@@ -34,6 +34,32 @@ export default class Img extends React.Component<ImgProps, IImgState> {
     };
     this.savePreviewImgRef = saveRef(this, 'previewImgRef');
   }
+  public componentDidUpdate(prevProps: ImgProps) {
+    const { show: prevPreview } = prevProps;
+    const { show: nextPreview } = this.props;
+    if (prevPreview !== nextPreview) {
+      this.updateCurrentStyle();
+    }
+  }
+  public componentDidMount() {
+    window.addEventListener('transitionend', this.handleTransitionEnd);
+    window.addEventListener('resize', this.handleResize);
+  }
+  public componentWillUnmount() {
+    window.removeEventListener('transitionend', this.handleTransitionEnd);
+    window.removeEventListener('resize', this.handleResize);
+  }
+  public handleResize = () => {
+    this.updateCurrentStyle();
+  };
+  public handleTransitionEnd = (e: TransitionEvent) => {
+    if (e.target === this.previewImgRef) {
+      const { show } = this.props;
+      if (!show) {
+        this.removePreivew();
+      }
+    }
+  };
   // init position
   public getCoverStyle = () => {
     const { cover, rotate } = this.props;
@@ -48,7 +74,7 @@ export default class Img extends React.Component<ImgProps, IImgState> {
     } = cover.getBoundingClientRect();
     // support IE
     const width = coverWidth || right - left;
-    const height = coverHeight || bottom - left;
+    const height = coverHeight || bottom - top;
     const { opacity } = window.getComputedStyle(cover);
     const scale = width / naturalWidth;
 
@@ -66,8 +92,10 @@ export default class Img extends React.Component<ImgProps, IImgState> {
     const { edge, rotate } = this.props;
     if (this.previewImgRef) {
       const { naturalWidth, naturalHeight } = this.previewImgRef;
-      const scaleX = getClientWidth() / (naturalWidth + 2 * edge);
-      const scaleY = getClientHeight() / (naturalHeight + 2 * edge);
+      const viewportWidth = getClientWidth() - edge * 2;
+      const viewportHeight = getClientHeight() - edge * 2;
+      const scaleX = viewportWidth / naturalWidth;
+      const scaleY = viewportHeight / naturalHeight;
       const scale = Math.min(scaleX, scaleY);
       return {
         x: 0,
@@ -78,6 +106,13 @@ export default class Img extends React.Component<ImgProps, IImgState> {
       };
     }
     return {};
+  };
+  public removePreivew = () => {
+    const { cover, handlePreview } = this.props;
+    if (cover) {
+      cover.style.visibility = 'visible';
+      handlePreview(false);
+    }
   };
   public getZoomingStyle = () => {
     const { edge = 0, rotate } = this.props;
@@ -104,14 +139,20 @@ export default class Img extends React.Component<ImgProps, IImgState> {
     }
     return {};
   };
-
   public updateCurrentStyle = () => {
-    const { isZoom } = this.props;
-    const currentStyle = isZoom ? this.getZoomingStyle() : this.getBrowsingStyle();
-    if (currentStyle) {
+    const { isZoom, show } = this.props;
+    if (!show) {
+      const coverStyle = this.getCoverStyle();
       this.setState({
-        currentStyle,
+        currentStyle: coverStyle,
       });
+    } else {
+      const currentStyle = isZoom ? this.getZoomingStyle() : this.getBrowsingStyle();
+      if (currentStyle) {
+        this.setState({
+          currentStyle,
+        });
+      }
     }
   };
   public render() {

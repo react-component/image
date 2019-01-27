@@ -76,11 +76,11 @@ class Image extends React.Component<ImageProps, ImageState> {
       ...restProps
     } = this.props;
     const { error, preview } = this.state;
-    const rootCls = {
+    const rootCls = classnames({
       [className as string]: !!className,
-      [prefixCls as string]: 1,
+      [prefixCls as string]: true,
       [`${prefixCls}-responsive`]: !!responsive,
-    };
+    });
     const imgSrc = error ? errorSrc : src;
     const isPreview = !error && preview;
     return (
@@ -88,7 +88,7 @@ class Image extends React.Component<ImageProps, ImageState> {
         <img
           {...restProps}
           ref={this.saveImageRef}
-          className={classnames(rootCls)}
+          className={rootCls}
           src={imgSrc}
           style={style}
           srcSet={srcSet}
@@ -102,6 +102,7 @@ class Image extends React.Component<ImageProps, ImageState> {
             <Preview
               prefixCls={prefixCls}
               handlePreview={this.handlePreview}
+              isPreview={isPreview}
               cover={this.imageRef}
               zoom={zoom}
             />

@@ -6,6 +6,7 @@ import Img from './Img';
 export interface IPreviewState {
   isZoom: boolean;
   rotate: number;
+  show: boolean;
 }
 
 export default class Preview extends React.Component<IPreviewProps, Partial<IPreviewState>> {
@@ -14,46 +15,62 @@ export default class Preview extends React.Component<IPreviewProps, Partial<IPre
     this.state = {
       rotate: 0,
       isZoom: false,
+      show: false,
     };
   }
   public componentDidMount() {
-    setTimeout(this.mountSelf, 0);
+    setTimeout(this.mountPreview, 0);
   }
   public componentWillUnmount() {
-    window.addEventListener('scroll', this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll);
   }
-  public mountSelf = () => {
+  public mountPreview = () => {
     const { cover } = this.props;
-    // hidden
-    cover.style.visibility = 'hidden';
-    // bind scrollEvent
-    window.addEventListener('scroll', this.handleScroll);
+    this.setState(
+      {
+        show: true,
+      },
+      () => {
+        // hidden
+        cover.style.visibility = 'hidden';
+        // bind scrollEvent
+        window.addEventListener('scroll', this.handleScroll);
+      },
+    );
   };
   public handleScroll = () => {
-    this.unMountSelf();
-  };
-  public unMountSelf = () => {
-    const { cover, handlePreview } = this.props;
-    cover.style.visibility = 'visible';
-    if (handlePreview) {
-      handlePreview(false);
+    if (this.state.show) {
+      this.unMountPreview();
     }
+  };
+  public unMountPreview = () => {
+    this.setState({
+      show: false,
+    });
   };
 
   public render() {
-    const { cover, prefixCls, zoom } = this.props;
-    const { isZoom, rotate = 0 } = this.state;
+    const { cover, prefixCls, zoom, handlePreview } = this.props;
+    const { isZoom, rotate = 0, show } = this.state;
     return (
       <div className={`${prefixCls}-preview`}>
-        <div className={`${prefixCls}-preview-bg`} />
+        <div
+          onClick={this.unMountPreview}
+          className={`${prefixCls}-preview-bg`}
+          style={{
+            opacity: show ? 1 : 0,
+          }}
+        />
         <Img
           cover={cover}
+          show={show}
           prefixCls={prefixCls}
           rotate={rotate}
           zoom={zoom}
           isZoom={isZoom}
           edge={20}
           radius={0}
+          handlePreview={handlePreview}
         />
       </div>
     );
