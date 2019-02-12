@@ -1,9 +1,8 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Image from 'rc-img';
-import 'rc-img/assets/index.less';
-import ReactDOM from 'react-dom';
+import Image from '../src';
+import '../assets/index.less';
 
 const Test = () => (
   <div style={{ margin: 20 }}>
@@ -38,4 +37,4 @@ const Test = () => (
   </div>
 );
 
-ReactDOM.render(<Test />, document.getElementById('__react-content'));
+export default Test;

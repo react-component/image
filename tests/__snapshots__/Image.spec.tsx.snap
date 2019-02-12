@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image render renders correctly 1`] = `
+<img
+  class="rc-image"
+  src="http://aaa.png"
+/>
+`;

@@ -1,11 +1,10 @@
 /* eslint no-console: 0 */
 
 import React from 'react';
-import Image from 'rc-img';
-import 'rc-img/assets/index.less';
-import ReactDOM from 'react-dom';
+import Image from '../src';
+import '../assets/index.less';
 
-class Test extends React.Component {
+export default class Test extends React.Component {
   render() {
     return (
       <div style={{ margin: 20 }}>
@@ -21,5 +20,3 @@ class Test extends React.Component {
     );
   }
 }
-
-ReactDOM.render(<Test />, document.getElementById('__react-content'));
