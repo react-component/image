@@ -16,7 +16,7 @@ import Single from '../examples/single';
 import Zoom from '../examples/zoom';
 import READMECode from '../README.md';
 
-storiesOf('rc-img', module)
+storiesOf('rc-image', module)
   .addDecorator(checkA11y)
   .addDecorator(withInfo)
   .addDecorator((storyFn, context) => withConsole()(storyFn)(context))

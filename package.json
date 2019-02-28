@@ -1,6 +1,6 @@
 {
-  "name": "rc-img",
-  "version": "0.0.0",
+  "name": "rc-image",
+  "version": "1.0.0",
   "description": "React Image",
   "keywords": [
     "react",
