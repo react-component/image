@@ -10,7 +10,7 @@ React Image
 [![npm download][download-image]][download-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-imag
+[npm-url]: http://npmjs.org/package/rc-image
 [travis-image]: https://img.shields.io/travis/react-component/img.svg?style=flat-square
 [travis-url]: https://travis-ci.org/react-component/image
 [coveralls-image]: https://img.shields.io/coveralls/react-component/img.svg?style=flat-square
@@ -24,10 +24,9 @@ React Image
 
 ## Screenshots
 
-
 ## Feature
-- [-] Error image display
-- [-] Placeholder
+- [x] Error image display
+- [x] Placeholder
 - [ ] ZoomIn
 
 ### Keyboard
@@ -40,7 +39,6 @@ React Image
 ## Usage
 
 ### basic use
-
 
 ## API
 
