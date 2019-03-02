@@ -7,13 +7,9 @@ import { withConsole } from '@storybook/addon-console';
 import { withViewport } from '@storybook/addon-viewport';
 import { withInfo } from '@storybook/addon-info';
 import ErrorSource from 'rc-source-loader!../examples/error';
-import RetinaSource from 'rc-source-loader!../examples/retina';
 import SingleSource from 'rc-source-loader!../examples/single';
-import ZoomSource from 'rc-source-loader!../examples/zoom';
 import Error from '../examples/error';
-import Retina from '../examples/retina';
 import Single from '../examples/single';
-import Zoom from '../examples/zoom';
 import READMECode from '../README.md';
 
 storiesOf('rc-image', module)
@@ -44,18 +40,8 @@ storiesOf('rc-image', module)
       code: ErrorSource,
     },
   })
-  .add('retina', () => <Retina />, {
-    source: {
-      code: RetinaSource,
-    },
-  })
   .add('single', () => <Single />, {
     source: {
       code: SingleSource,
     },
   })
-  .add('zoom', () => <Zoom />, {
-    source: {
-      code: ZoomSource,
-    },
-  });

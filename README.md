@@ -26,21 +26,16 @@ React Image
 
 
 ## Feature
-- [x] Error image display
-- [x] Responsive
-- [ ] PreviewImage
-- [ ] Placeholder
-- [ ] rotate
-- [ ] cropping
-- [ ] filter
-
-
+- [-] Error image display
+- [-] Placeholder
+- [ ] ZoomIn
 
 ### Keyboard
 
 
 ## install
 
+[![rc-image](https://nodei.co/npm/rc-image.png)](https://npmjs.org/package/rc-image)
 
 ## Usage
 
@@ -50,6 +45,12 @@ React Image
 ## API
 
 ### Image props
+
+| name     | description    | type     | default      |
+|----------|----------------|----------|--------------|
+|src | src | String | '' |
+|errorSrc | src when image error | String | '' |
+|placeholder | placeholder | String | '' |
 
 ### Methods
 

@@ -2,24 +2,26 @@ import classnames from 'classnames';
 import * as React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
 
-import Preview from './Preview';
-import Portal from './PreviewContainer';
-
-import { ImageProps } from './PropTypes';
 import { saveRef } from './util';
 
-export interface ImageState {
+interface ImageState {
+  loaded?: boolean;
   error?: boolean;
-  preview?: boolean;
 }
 
-class Image extends React.Component<ImageProps, ImageState> {
-  public static displayName = 'Image';
+export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  prefixCls?: string;
+  errorSrc?: string;
+  placeholde?: React.ReactElement<any>;
+  onLoad?: () => void;
+  onError?: () => void;
+}
+
+class RcImage extends React.Component<ImageProps, ImageState> {
+  public static displayName = 'RcImage';
   public static defaultProps = {
     prefixCls: 'rc-image',
     errorSrc: 'error',
-    preview: false,
-    zoom: {},
     onLoad: () => null,
     onError: () => null,
   };
@@ -29,60 +31,50 @@ class Image extends React.Component<ImageProps, ImageState> {
     super(props);
     this.saveImageRef = saveRef(this, 'imageRef');
     this.state = {
+      loaded: false,
       error: false,
     };
   }
-  public onImageLoad = () => {
+  public handleImageLoad = () => {
     const { onLoad } = this.props;
     if (onLoad) {
-      onLoad();
+      this.setState({
+        loaded: true,
+      }, () => {
+        onLoad();
+      })
     }
   };
-  public onImageError = (err: React.SyntheticEvent) => {
+  public handleImageError = () => {
     const { src, onError } = this.props;
     if (src) {
-      this.setState(
-        {
-          error: true,
-        },
-        () => {
-          if (onError) {
-            onError();
-          }
-        },
-      );
+      this.setState({
+        error: true,
+      }, () => {
+        if (onError) {
+          onError();
+        }
+      });
     }
-  };
-  public handlePreview = (preview: boolean) => {
-    this.setState({
-      preview,
-    });
-  };
-  public onImageClick = () => {
-    this.handlePreview(true);
   };
   public render() {
     const {
       className,
       errorSrc,
       prefixCls,
+      placeholder,
       src,
       srcSet,
       alt,
-      responsive,
       style,
-      zoom,
-      previewStyle,
       ...restProps
     } = this.props;
-    const { error, preview } = this.state;
+    const { error, loaded } = this.state;
     const rootCls = classnames({
       [className as string]: !!className,
       [prefixCls as string]: true,
-      [`${prefixCls}-responsive`]: !!responsive,
     });
     const imgSrc = error ? errorSrc : src;
-    const isPreview = !error && preview;
     return (
       <React.Fragment>
         <img
@@ -93,26 +85,18 @@ class Image extends React.Component<ImageProps, ImageState> {
           style={style}
           srcSet={srcSet}
           alt={alt}
-          onLoad={this.onImageLoad}
-          onError={this.onImageError}
-          onClick={this.onImageClick}
+          onLoad={this.handleImageLoad}
+          onError={this.handleImageError}
         />
-        {this.imageRef && isPreview && (
-          <Portal style={previewStyle}>
-            <Preview
-              prefixCls={prefixCls}
-              handlePreview={this.handlePreview}
-              isPreview={isPreview}
-              cover={this.imageRef}
-              zoom={zoom}
-            />
-          </Portal>
-        )}
+        {!loaded && React.isValidElement(placeholder) &&
+          React.cloneElement(placeholder)
+        }
+
       </React.Fragment>
     );
   }
 }
 
-polyfill(Image);
+polyfill(RcImage);
 
-export default Image;
+export default RcImage;
