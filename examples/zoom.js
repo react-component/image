@@ -13,7 +13,11 @@ const Test = () => (
         style={{
           width: '100%',
         }}
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        zoom={{
+          bounds: 10,
+        }}
+        src="https://farm6.staticflickr.com/5591/15008867125_b61960af01_h.jpg"
+        placeholder={<img src="https://farm6.staticflickr.com/5591/15008867125_68a8ed88cc_m.jpg" />}
       />
     </div>
     <div style={{ float: 'right' }}>

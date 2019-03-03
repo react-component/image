@@ -10,6 +10,7 @@ import ErrorSource from 'rc-source-loader!../examples/error';
 import SingleSource from 'rc-source-loader!../examples/single';
 import Error from '../examples/error';
 import Single from '../examples/single';
+import Zoom from '../examples/zoom';
 import READMECode from '../README.md';
 
 storiesOf('rc-image', module)
@@ -45,3 +46,8 @@ storiesOf('rc-image', module)
       code: SingleSource,
     },
   })
+  .add('zoomIn', () => <Zoom />, {
+    source: {
+      code: SingleSource,
+    },
+  });

@@ -7,8 +7,24 @@
 }
 
 .@{imagePrefixCls} {
-  position: relative;
-  &-error {
-    display: none;
+  opacity: 1;
+  transition: all .3s ease-in-out;
+  &-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  &-zoom {
+    cursor: zoom-in;
+    opacity: 0;
+  }
+  &-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .rc-dialog-content {
+      border-radius: 0;
+      background-color: transparent;
+    }
+
   }
  }
