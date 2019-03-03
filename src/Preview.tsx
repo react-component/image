@@ -5,7 +5,7 @@ import * as React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
 
 interface IPreviewState {
-  size: {
+  size?: {
     width: number;
     height: number;
   };
@@ -17,11 +17,11 @@ export interface IPreviewProps {
   alt?: string;
   visible?: boolean;
   onClose?: (e: React.SyntheticEvent) => void;
-  mousePosition: {
+  mousePosition?: {
     x: number;
     y: number;
   };
-  size: {
+  size?: {
     width: number;
     height: number;
   };
@@ -30,16 +30,26 @@ export interface IPreviewProps {
 class Preview extends React.Component<IPreviewProps, IPreviewState> {
   constructor(props: IPreviewProps) {
     super(props);
-    const { size } = this.props;
-    console.log('---1111111-----', size);
     this.state = {
-      size,
+      size: undefined,
     };
   }
-  public componentWillReceiveProps(prevProps, nextState) {
-    this.setState({
-      size: prevProps.size,
-    });
+  // public static getDerivedStateFromProps = (nextProps: IPreviewProps, prevState: IPreviewState) => {
+  //   if (!nextProps.size) {
+  //     const { size } = nextProps;
+  //     return {
+  //       size,
+  //     }
+  //   }
+  //   return null;
+  // }
+  public componentWillReceiveProps(nextProps: IPreviewProps) {
+    console.log('--componentWillReceiveProps-');
+    if (nextProps.size) {
+      this.setState({
+        size: nextProps.size,
+      })
+    }
   }
   public render() {
     const {
@@ -54,7 +64,7 @@ class Preview extends React.Component<IPreviewProps, IPreviewState> {
       },
     } = this.props;
     const { x, y } = mousePosition;
-    const { width, height } = this.state.size;
+    const { width = 0, height = 0 } = this.state.size || {};
     console.log('----mousePosition-', mousePosition);
     return (
       <Dialog

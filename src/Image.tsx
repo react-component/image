@@ -12,7 +12,7 @@ interface ImageState {
     x: number;
     y: number;
   };
-  size: {
+  size?: {
     width: number;
     height: number;
   };
@@ -56,10 +56,7 @@ class RcImage extends React.Component<ImageProps, ImageState> {
       loaded: false,
       error: false,
       isZoom: false,
-      size: {
-        width: 0,
-        height: 0,
-      },
+      size: undefined,
       mousePosition: {
         x: 0,
         y: 0,

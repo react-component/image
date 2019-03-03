@@ -62,3 +62,7 @@ export const getScrollTop = () => {
   }
   return scrollTop;
 };
+
+export const calcZoomScale = () => {
+
+}
