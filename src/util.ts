@@ -49,10 +49,9 @@ export const getClientHeight = () => {
   return clientHeight;
 };
 
-export const getWindowWidth = () => window.innerWidth;
 export const getScrollWidth = () => document.body.scrollWidth;
 export const getClientWidth = () => document.documentElement.clientWidth;
-export const getWindowHeight = () => window.innerHeight;
+export const getWindowSize = () => [window.innerWidth, window.innerHeight];
 export const getScrollTop = () => {
   let scrollTop = 0;
   if (document.documentElement && document.documentElement.scrollTop) {
@@ -63,6 +62,20 @@ export const getScrollTop = () => {
   return scrollTop;
 };
 
-export const calcZoomScale = () => {
+/**
+ *
+ * @param imageSize [width, height]
+ *
+ * @returns ratioFit number
+ */
+export const calcZoomScale = (imageSize: [number, number]): number => {
+  const clientWidth = getClientWidth();
+  const clientHeight = getClientHeight();
+  const [width, height] = imageSize;
+  const ratioW = clientWidth / width;
+  const ratioH = clientHeight / height;
 
-}
+  const ratioFit = Math.min(ratioW, ratioH);
+
+  return ratioFit;
+};

@@ -16,7 +16,7 @@ export interface IPreviewProps {
   src?: string;
   alt?: string;
   visible?: boolean;
-  onClose?: (e: React.SyntheticEvent) => void;
+  onClose: (e?: React.SyntheticEvent) => void;
   mousePosition?: {
     x: number;
     y: number;
@@ -34,6 +34,9 @@ class Preview extends React.Component<IPreviewProps, IPreviewState> {
       size: undefined,
     };
   }
+  public handleScroll = () => {
+    this.props.onClose();
+  };
   // public static getDerivedStateFromProps = (nextProps: IPreviewProps, prevState: IPreviewState) => {
   //   if (!nextProps.size) {
   //     const { size } = nextProps;
@@ -44,11 +47,10 @@ class Preview extends React.Component<IPreviewProps, IPreviewState> {
   //   return null;
   // }
   public componentWillReceiveProps(nextProps: IPreviewProps) {
-    console.log('--componentWillReceiveProps-');
     if (nextProps.size) {
       this.setState({
         size: nextProps.size,
-      })
+      });
     }
   }
   public render() {
@@ -85,10 +87,12 @@ class Preview extends React.Component<IPreviewProps, IPreviewState> {
         closable={false}
         maskAnimation="fade"
         onClose={onClose}
+        onCloseScroll={true}
         forceRender={true}
       >
         <img
           src={src}
+          className={`${prefixCls}-zoomOut`}
           alt={alt}
           style={{
             width: '100%',

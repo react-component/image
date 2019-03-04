@@ -1,6 +1,7 @@
 import cls from 'classnames';
 import * as React from 'react';
 import { polyfill } from 'react-lifecycles-compat';
+import { calcZoomScale } from './util';
 
 import Preview from './Preview';
 
@@ -35,7 +36,9 @@ export interface ImageProps {
   errorSrc?: string;
   placeholder?: React.ReactElement<any>;
   style?: React.CSSProperties;
-  zoom?: {};
+  zoom?: {
+    retainImage?: boolean;
+  };
   onLoad?: () => void;
   onClick?: (e: React.MouseEvent<HTMLImageElement>) => void;
   onError?: () => void;
@@ -102,9 +105,11 @@ class RcImage extends React.Component<ImageProps, ImageState> {
       onClick(e);
     }
     if (zoom) {
-      const { width, height, left, top } = (this
-        .imageRef as HTMLImageElement).getBoundingClientRect();
-      console.log('---width-', width, 'height', height);
+      const { left, top } = (this.imageRef as HTMLImageElement).getBoundingClientRect();
+      const { naturalWidth, naturalHeight } = this.imageRef as HTMLImageElement;
+      const zoomRatio = calcZoomScale([naturalWidth, naturalHeight]);
+      const width = Math.round(naturalWidth * zoomRatio);
+      const height = Math.round(naturalHeight * zoomRatio);
       this.setState({
         isZoom: true,
         size: {
@@ -118,7 +123,7 @@ class RcImage extends React.Component<ImageProps, ImageState> {
       });
     }
   };
-  public onCloseImageZoom = (e: React.SyntheticEvent) => {
+  public onCloseImageZoom = (e?: React.SyntheticEvent) => {
     this.setState({
       isZoom: false,
     });
@@ -146,7 +151,8 @@ class RcImage extends React.Component<ImageProps, ImageState> {
       [className as string]: !!className,
       [prefixCls as string]: true,
       [`${prefixCls}-error`]: error,
-      [`${prefixCls}-zoom`]: isZoom,
+      [`${prefixCls}-zoomIn`]: zoom,
+      [`${prefixCls}-isZoom`]: zoom && !zoom.retainImage && isZoom,
     });
     const imgSrc = error && errorSrc ? errorSrc : src;
     const renderPlaceHolder = () => {
