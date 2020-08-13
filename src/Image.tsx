@@ -11,6 +11,7 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
   prefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
+  preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
 }
 
@@ -30,6 +31,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   fallback,
   width,
   height,
+  preview = true,
   ...otherProps
 }) => {
   const [state, setState] = useSetState<ImageState>({
@@ -94,7 +96,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   return (
     <div
       className={`${prefixCls}-wrapper`}
-      onClick={onPreview}
+      onClick={preview ? onPreview : null}
       style={{
         width,
         height,
@@ -111,14 +113,16 @@ const ImageInternal: React.FC<ImageProps> = ({
         height={height}
       />
       {state.isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
-      <Preview
-        visible={state.isShowPreview}
-        prefixCls={`${prefixCls}-preview`}
-        onClose={onPreviewClose}
-        mousePosition={state.mousePosition}
-        src={mergedSrc}
-        alt={alt}
-      />
+      {preview && (
+        <Preview
+          visible={state.isShowPreview}
+          prefixCls={`${prefixCls}-preview`}
+          onClose={onPreviewClose}
+          mousePosition={state.mousePosition}
+          src={mergedSrc}
+          alt={alt}
+        />
+      )}
     </div>
   );
 };
