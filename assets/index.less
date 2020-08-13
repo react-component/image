@@ -1,53 +1,140 @@
-@imagePrefixCls: rc-image;
+@prefixCls: rc-image;
+@zindex-preview-mask: 1000;
+@preview-mask-bg: fade(#000, 100%);
+@text-color: #bbb;
+@text-color-disabled: darken(@text-color, 30%);
 
-.effect() {
-  animation-duration: 0.3s;
-  animation-fill-mode: both;
-  transform-origin: 0 0;
+.reset() {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.@{imagePrefixCls} {
-  box-sizing: border-box;
-  position: relative;
-  cursor: pointer;
-  &-responsive {
-    display: block;
-    max-width: 100%;
-    height: auto;
+.box() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.@{prefixCls} {
+  .reset;
+  &-wrapper {
+    display: inline-block;
+    position: relative;
   }
+
   &-placeholder {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
+    .box;
   }
+
   &-preview {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999;
+    text-align: center;
+    height: 100%;
+    pointer-events: none;
+
+    &-body {
+      .box;
+      overflow: hidden;
+    }
+
+    &.zoom-enter,
+    &.zoom-appear {
+      transform: none;
+      opacity: 0;
+      animation-duration: 0.3s;
+    }
+
+    &-mask {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: @zindex-preview-mask;
+      height: 100%;
+      background-color: @preview-mask-bg;
+      filter: ~'alpha(opacity=50)';
+
+      &-hidden {
+        display: none;
+      }
+    }
+
+    &-img {
+      cursor: grab;
+      transform: scale3d(1, 1, 1);
+      transition: transform 0.3s cubic-bezier(0, 0, 0.25, 1) 0s;
+      user-select: none;
+      vertical-align: middle;
+      max-width: 100%;
+      max-height: 100%;
+      pointer-events: auto;
+      &-wrapper {
+        .box;
+        transition: transform 0.3s cubic-bezier(0, 0, 0.25, 1) 0s;
+        &::before {
+          content: '';
+          display: inline-block;
+          height: 50%;
+          width: 1px;
+          margin-right: -1px;
+        }
+      }
+    }
+
+    &-grabing {
+      .@{prefixCls}-preview-img {
+        cursor: grabbing;
+        &-wrapper {
+          transition-duration: 0s;
+        }
+      }
+    }
+
+    &-wrap {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: @zindex-preview-mask;
+      overflow: auto;
+      outline: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    &-tools {
+      .reset;
+      pointer-events: auto;
+      list-style: none;
+      position: absolute;
+      display: flex;
+      top: 0;
+      right: 0;
+      width: 100%;
+      align-items: center;
+      flex-direction: row-reverse;
+      z-index: 1;
+      color: @text-color;
+      background: fade(@preview-mask-bg, 45%);
+
+      &-tool {
+        padding: 10px;
+        cursor: pointer;
+        margin-left: 10px;
+        &-disabled {
+          pointer-events: none;
+          color: @text-color-disabled;
+        }
+        &:last-of-type {
+          margin-left: 0;
+        }
+      }
+      &-icon {
+        font-size: 18px;
+      }
+    }
   }
-  &-preview-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    cursor: zoom-out;
-    background-color: #ffffff;
-    transition: opacity 0.2s;
-    will-change: opacity;
-  }
-  &-preview-image {
-    user-select: none;
-    transition: transform 350ms cubic-bezier(0.6, 0, 0.1, 1);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 10;
-    will-change: transform, top;
-  }
- }
+}
