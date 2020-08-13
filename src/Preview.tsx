@@ -9,9 +9,10 @@ import CloseOutlined from '@ant-design/icons/CloseOutlined';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
-import useSetState from './hooks/useSetState';
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+
+const { useState } = React;
 
 interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => any;
@@ -24,11 +25,6 @@ interface PreviewState {
   rotate: number;
 }
 
-const initialState = {
-  scale: 1,
-  rotate: 0,
-};
-
 const initialFrameState = {
   x: 0,
   y: 0,
@@ -36,7 +32,8 @@ const initialFrameState = {
 
 const Preview: React.FC<PreviewProps> = props => {
   const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
-  const [state, setSatte] = useSetState<PreviewState>(initialState);
+  const [scale, setScale] = useState(1);
+  const [rotate, setRotate] = useState(0);
   const [frameState, setFrameState] = useFrameSetState<{
     x: number;
     y: number;
@@ -56,32 +53,29 @@ const Preview: React.FC<PreviewProps> = props => {
   const [isGrabing, setIsGrabing] = React.useState(false);
 
   const onAfterClose = () => {
-    setSatte(initialState);
+    setScale(1);
+    setRotate(0);
     setFrameState(initialFrameState);
   };
 
   const onZoomIn = () => {
-    setSatte(({ scale }) => ({
-      scale: scale + 1,
-    }));
+    setScale(value => value + 1);
+
     setFrameState(initialFrameState);
   };
   const onZoomOut = () => {
-    if (state.scale > 1) {
-      setSatte({ scale: state.scale - 1 });
+    if (scale > 1) {
+      setScale(value => value - 1);
     }
     setFrameState(initialFrameState);
   };
 
   const onRotateRight = () => {
-    setSatte(({ rotate }) => ({
-      rotate: rotate + 90,
-    }));
+    setRotate(value => value + 90);
   };
+
   const onRotateLeft = () => {
-    setSatte(({ rotate }) => ({
-      rotate: rotate - 90,
-    }));
+    setRotate(value => value - 90);
   };
 
   const wrapClassName = classnames({
@@ -104,7 +98,7 @@ const Preview: React.FC<PreviewProps> = props => {
       Icon: ZoomOutOutlined,
       onClick: onZoomOut,
       type: 'zoomOut',
-      disabled: state.scale === 1,
+      disabled: scale === 1,
     },
     {
       Icon: RotateRightOutlined,
@@ -120,10 +114,10 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isGrabing) {
-      const width = imgRef.current.offsetWidth * state.scale;
-      const height = imgRef.current.offsetHeight * state.scale;
+      const width = imgRef.current.offsetWidth * scale;
+      const height = imgRef.current.offsetHeight * scale;
       const { left, top } = getOffset(imgRef.current);
-      const isRotate = state.rotate % 180 !== 0;
+      const isRotate = rotate % 180 !== 0;
 
       setIsGrabing(false);
 
@@ -224,7 +218,7 @@ const Preview: React.FC<PreviewProps> = props => {
           src={src}
           alt={alt}
           style={{
-            transform: `scale3d(${state.scale}, ${state.scale}, 1) rotate(${state.rotate}deg)`,
+            transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
           }}
         />
       </div>

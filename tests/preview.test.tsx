@@ -31,7 +31,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper.find('.rc-image-wrapper').simulate('click');
+      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -44,7 +44,7 @@ describe('Preview', () => {
 
     // With btn close
     act(() => {
-      wrapper.find('.rc-image-wrapper').simulate('click');
+      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -65,7 +65,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper.find('.rc-image-wrapper').simulate('click');
+      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -81,7 +81,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper.find('.rc-image-wrapper').simulate('click');
+      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -119,7 +119,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper.find('.rc-image-wrapper').simulate('click');
+      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -188,7 +188,7 @@ describe('Preview', () => {
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
-    wrapper.find('.rc-image-wrapper').simulate('click');
+    wrapper.find('.rc-image').simulate('click');
 
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,

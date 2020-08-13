@@ -17,11 +17,11 @@ describe('Fallback', () => {
     const wrapper = mount(<Image src="abc" fallback={fallback} />);
 
     act(() => {
-      wrapper.find('.rc-image').simulate('error');
+      wrapper.find('.rc-image-img').simulate('error');
       jest.runAllTimers();
       wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image').prop('src')).toBe(fallback);
+    expect(wrapper.find('.rc-image-img').prop('src')).toBe(fallback);
   });
 });

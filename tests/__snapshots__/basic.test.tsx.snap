@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Basic snapshot 1`] = `
-<ImageInternal
+<Image
   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
   width={200}
 >
   <div
-    className="rc-image-wrapper"
+    className="rc-image"
     onClick={[Function]}
     style={
       Object {
@@ -16,7 +16,7 @@ exports[`Basic snapshot 1`] = `
     }
   >
     <img
-      className="rc-image"
+      className="rc-image-img"
       onError={[Function]}
       onLoad={[Function]}
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -47,5 +47,5 @@ exports[`Basic snapshot 1`] = `
       </Component>
     </Preview>
   </div>
-</ImageInternal>
+</Image>
 `;

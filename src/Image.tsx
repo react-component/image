@@ -2,7 +2,8 @@ import * as React from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import Preview from './Preview';
-import useSetState from './hooks/useSetState';
+
+const { useState } = React;
 
 export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder'> {
   // Original
@@ -34,68 +35,56 @@ const ImageInternal: React.FC<ImageProps> = ({
   preview = true,
   ...otherProps
 }) => {
-  const [state, setState] = useSetState<ImageState>({
-    isShowPreview: false,
-    isError: false,
-    isShowPlaceholder: placeholder !== undefined,
-    mousePosition: null,
-  });
+  const [isShowPreview, setShowPreview] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isShowPlaceholder, setIsShowPlaceholder] = useState(placeholder !== undefined);
+  const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
   const onLoad = () => {
-    if (!state.isError) {
-      setState({
-        isShowPlaceholder: false,
-      });
+    if (!isError) {
+      setIsShowPlaceholder(false);
     }
   };
 
   const onError = () => {
-    setState({
-      isError: true,
-      isShowPlaceholder: false,
-    });
+    setIsError(true);
+    setIsShowPlaceholder(false);
   };
 
   const onPreview: React.MouseEventHandler<HTMLImageElement> = e => {
     const { left, top } = getOffset(e.target);
 
-    setState({
-      isShowPreview: true,
-      mousePosition: {
-        x: left,
-        y: top,
-      },
+    setShowPreview(true);
+    setMousePosition({
+      x: left,
+      y: top,
     });
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.stopPropagation();
-
-    setState({
-      isShowPreview: false,
-      mousePosition: null,
-    });
+    setShowPreview(false);
+    setMousePosition(null);
 
     if (onInitialPreviewClose) onInitialPreviewClose(e);
   };
 
   React.useEffect(() => {
     if (placeholder) {
-      setState({
-        isShowPlaceholder: true,
-      });
+      setIsShowPlaceholder(true);
     }
   }, [src]);
 
-  const className = cn(prefixCls, {
-    [`${prefixCls}-error`]: state.isError,
+  const imgPrefixCls = `${prefixCls}-img`;
+  const className = cn(imgPrefixCls, {
+    [`${imgPrefixCls}-error`]: isError,
   });
 
-  const mergedSrc = state.isError && fallback ? fallback : src;
+  const mergedSrc = isError && fallback ? fallback : src;
 
   return (
     <div
-      className={`${prefixCls}-wrapper`}
+      className={prefixCls}
       onClick={preview ? onPreview : null}
       style={{
         width,
@@ -112,13 +101,13 @@ const ImageInternal: React.FC<ImageProps> = ({
         width={width}
         height={height}
       />
-      {state.isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
+      {isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
       {preview && (
         <Preview
-          visible={state.isShowPreview}
+          visible={isShowPreview}
           prefixCls={`${prefixCls}-preview`}
           onClose={onPreviewClose}
-          mousePosition={state.mousePosition}
+          mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
         />
@@ -126,5 +115,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     </div>
   );
 };
+
+ImageInternal.displayName = 'Image';
 
 export default ImageInternal;

@@ -23,7 +23,7 @@ describe('Placeholder', () => {
     expect(wrapper.find('.rc-image-placeholder').text()).toBe(placeholder);
 
     act(() => {
-      wrapper.find('.rc-image').simulate('load');
+      wrapper.find('.rc-image-img').simulate('load');
       jest.runAllTimers();
       wrapper.update();
     });
