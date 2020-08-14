@@ -51,7 +51,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(0)
         .simulate('click');
     });
@@ -90,7 +90,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(3)
         .simulate('click');
       jest.runAllTimers();
@@ -102,7 +102,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(4)
         .simulate('click');
       jest.runAllTimers();
@@ -128,7 +128,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(2)
         .simulate('click');
       jest.runAllTimers();
@@ -140,7 +140,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(1)
         .simulate('click');
       jest.runAllTimers();
@@ -152,7 +152,7 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image-preview-tools-tool')
+        .find('.rc-image-preview-operations-operation')
         .at(2)
         .simulate('click');
       jest.runAllTimers();

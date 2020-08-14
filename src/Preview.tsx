@@ -20,11 +20,6 @@ interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   alt?: string;
 }
 
-interface PreviewState {
-  scale: number;
-  rotate: number;
-}
-
 const initialFrameState = {
   x: 0,
   y: 0,
@@ -81,8 +76,8 @@ const Preview: React.FC<PreviewProps> = props => {
   const wrapClassName = classnames({
     [`${prefixCls}-grabing`]: isGrabing,
   });
-  const toolClassName = `${prefixCls}-tools-tool`;
-  const iconClassName = `${prefixCls}-tools-icon`;
+  const toolClassName = `${prefixCls}-operations-operation`;
+  const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
     {
       Icon: CloseOutlined,
@@ -192,11 +187,11 @@ const Preview: React.FC<PreviewProps> = props => {
       visible={visible}
       wrapClassName={wrapClassName}
     >
-      <ul className={`${prefixCls}-tools`}>
+      <ul className={`${prefixCls}-operations`}>
         {tools.map(({ Icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {
-              [`${prefixCls}-tools-tool-disabled`]: !!disabled,
+              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
             })}
             onClick={onClick}
             key={type}

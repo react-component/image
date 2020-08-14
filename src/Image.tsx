@@ -16,13 +16,6 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
 }
 
-interface ImageState {
-  isShowPreview: boolean;
-  isShowPlaceholder: boolean;
-  isError: boolean;
-  mousePosition: null | { x: number; y: number };
-}
-
 const ImageInternal: React.FC<ImageProps> = ({
   src,
   alt,
