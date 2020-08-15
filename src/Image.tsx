@@ -25,6 +25,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   fallback,
   width,
   height,
+  style,
   preview = true,
   ...otherProps
 }) => {
@@ -74,26 +75,28 @@ const ImageInternal: React.FC<ImageProps> = ({
   });
 
   const mergedSrc = isError && fallback ? fallback : src;
+  const commonProps = {
+    ...otherProps,
+    alt,
+    className,
+  };
 
   return (
     <div
       className={prefixCls}
       onClick={preview ? onPreview : null}
       style={{
+        ...style,
         width,
         height,
       }}
     >
-      <img
-        {...otherProps}
-        src={mergedSrc}
-        onLoad={onLoad}
-        onError={onError}
-        alt={alt}
-        className={className}
-        width={width}
-        height={height}
-      />
+      {isError && fallback ? (
+        <img {...commonProps} src={fallback} />
+      ) : (
+        <img {...commonProps} onLoad={onLoad} onError={onError} src={src} />
+      )}
+
       {isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
       {preview && (
         <Preview
