@@ -18,4 +18,18 @@ describe('Basic', () => {
 
     expect(wrapper).toMatchSnapshot();
   });
+
+  it('With click', () => {
+    const onClickMock = jest.fn();
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        onClick={onClickMock}
+      />,
+    );
+
+    wrapper.simulate('click');
+
+    expect(onClickMock).toHaveBeenCalledTimes(1);
+  });
 });

@@ -5,7 +5,8 @@ import Preview from './Preview';
 
 const { useState } = React;
 
-export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder'> {
+export interface ImageProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
   // Original
   src?: string;
 
@@ -14,6 +15,7 @@ export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElemen
   fallback?: string;
   preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const ImageInternal: React.FC<ImageProps> = ({
@@ -27,6 +29,8 @@ const ImageInternal: React.FC<ImageProps> = ({
   height,
   style,
   preview = true,
+  className: originalClassName,
+  onClick,
 
   // Img
   crossOrigin,
@@ -54,7 +58,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     setIsShowPlaceholder(false);
   };
 
-  const onPreview: React.MouseEventHandler<HTMLImageElement> = e => {
+  const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
 
     setShowPreview(true);
@@ -62,6 +66,8 @@ const ImageInternal: React.FC<ImageProps> = ({
       x: left,
       y: top,
     });
+
+    if (onClick) onClick(e);
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
@@ -78,7 +84,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     }
   }, [src]);
 
-  const className = cn(prefixCls, {
+  const className = cn(prefixCls, originalClassName, {
     [`${prefixCls}-error`]: isError,
   });
 
