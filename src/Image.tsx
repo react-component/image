@@ -27,6 +27,15 @@ const ImageInternal: React.FC<ImageProps> = ({
   height,
   style,
   preview = true,
+
+  // Img
+  crossOrigin,
+  decoding,
+  loading,
+  referrerPolicy,
+  sizes,
+  srcSet,
+  useMap,
   ...otherProps
 }) => {
   const [isShowPreview, setShowPreview] = useState(false);
@@ -69,21 +78,27 @@ const ImageInternal: React.FC<ImageProps> = ({
     }
   }, [src]);
 
-  const imgPrefixCls = `${prefixCls}-img`;
-  const className = cn(imgPrefixCls, {
-    [`${imgPrefixCls}-error`]: isError,
+  const className = cn(prefixCls, {
+    [`${prefixCls}-error`]: isError,
   });
 
   const mergedSrc = isError && fallback ? fallback : src;
-  const commonProps = {
-    ...otherProps,
+  const imgCommonProps = {
+    crossOrigin,
+    decoding,
+    loading,
+    referrerPolicy,
+    sizes,
+    srcSet,
+    useMap,
     alt,
-    className,
+    className: `${prefixCls}-img`,
   };
 
   return (
     <div
-      className={prefixCls}
+      {...otherProps}
+      className={className}
       onClick={preview ? onPreview : null}
       style={{
         ...style,
@@ -92,9 +107,9 @@ const ImageInternal: React.FC<ImageProps> = ({
       }}
     >
       {isError && fallback ? (
-        <img {...commonProps} src={fallback} />
+        <img {...imgCommonProps} src={fallback} />
       ) : (
-        <img {...commonProps} onLoad={onLoad} onError={onError} src={src} />
+        <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
       )}
 
       {isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
