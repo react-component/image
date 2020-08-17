@@ -20,7 +20,7 @@ interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   alt?: string;
 }
 
-const initialFrameState = {
+const initialPosition = {
   x: 0,
   y: 0,
 };
@@ -29,10 +29,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
-  const [frameState, setFrameState] = useFrameSetState<{
+  const [position, setPosition] = useFrameSetState<{
     x: number;
     y: number;
-  }>(initialFrameState);
+  }>(initialPosition);
   const imgRef = React.useRef<HTMLImageElement>();
   const refState = React.useRef<{
     originX: number;
@@ -50,19 +50,19 @@ const Preview: React.FC<PreviewProps> = props => {
   const onAfterClose = () => {
     setScale(1);
     setRotate(0);
-    setFrameState(initialFrameState);
+    setPosition(initialPosition);
   };
 
   const onZoomIn = () => {
     setScale(value => value + 1);
 
-    setFrameState(initialFrameState);
+    setPosition(initialPosition);
   };
   const onZoomOut = () => {
     if (scale > 1) {
       setScale(value => value - 1);
     }
-    setFrameState(initialFrameState);
+    setPosition(initialPosition);
   };
 
   const onRotateRight = () => {
@@ -124,7 +124,7 @@ const Preview: React.FC<PreviewProps> = props => {
       );
 
       if (fixState) {
-        setFrameState({ ...fixState });
+        setPosition({ ...fixState });
       }
     }
   };
@@ -133,16 +133,16 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    refState.current.deltaX = event.pageX - frameState.x;
-    refState.current.deltaY = event.pageY - frameState.y;
-    refState.current.originX = frameState.x;
-    refState.current.originY = frameState.y;
+    refState.current.deltaX = event.pageX - position.x;
+    refState.current.deltaY = event.pageY - position.y;
+    refState.current.originX = position.x;
+    refState.current.originY = position.y;
     setIsGrabing(true);
   };
 
   const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isGrabing) {
-      setFrameState({
+      setPosition({
         x: event.pageX - refState.current.deltaX,
         y: event.pageY - refState.current.deltaY,
       });
@@ -203,7 +203,7 @@ const Preview: React.FC<PreviewProps> = props => {
       <div
         className={`${prefixCls}-img-wrapper`}
         style={{
-          transform: `translate3d(${frameState.x}px, ${frameState.y}px, 0)`,
+          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
         }}
       >
         <img

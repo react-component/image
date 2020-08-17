@@ -1,4 +1,5 @@
 import * as React from 'react';
+import raf from 'rc-util/lib/raf';
 
 type SetActionType<T> = Partial<T> | ((state: T) => Partial<T>);
 
@@ -13,7 +14,7 @@ export default function useFrameSetState<T extends object>(
   const setFrameState = (newState: SetActionType<T>) => {
     if (frame.current === null) {
       queue.current = [];
-      frame.current = requestAnimationFrame(() => {
+      frame.current = raf(() => {
         setState(preState => {
           let memoState: any = preState;
           queue.current.forEach(queueState => {
@@ -29,7 +30,7 @@ export default function useFrameSetState<T extends object>(
     queue.current.push(newState);
   };
 
-  React.useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  React.useEffect(() => () => raf.cancel(frame.current), []);
 
   return [state, setFrameState];
 }
