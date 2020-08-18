@@ -195,7 +195,7 @@ describe('Preview', () => {
       pageY: 0,
     });
 
-    expect(wrapper.find('.rc-image-preview-grabing').get(0)).toBeTruthy();
+    expect(wrapper.find('.rc-image-preview-moving').get(0)).toBeTruthy();
 
     const mousemoveEvent = new Event('mousemove');
 
