@@ -45,7 +45,7 @@ const Preview: React.FC<PreviewProps> = props => {
     deltaX: 0,
     deltaY: 0,
   });
-  const [isGrabing, setIsGrabing] = React.useState(false);
+  const [isMoving, setMoving] = React.useState(false);
 
   const onAfterClose = () => {
     setScale(1);
@@ -74,7 +74,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const wrapClassName = classnames({
-    [`${prefixCls}-grabing`]: isGrabing,
+    [`${prefixCls}-moving`]: isMoving,
   });
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
@@ -108,13 +108,13 @@ const Preview: React.FC<PreviewProps> = props => {
   ];
 
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
-    if (visible && isGrabing) {
+    if (visible && isMoving) {
       const width = imgRef.current.offsetWidth * scale;
       const height = imgRef.current.offsetHeight * scale;
       const { left, top } = getOffset(imgRef.current);
       const isRotate = rotate % 180 !== 0;
 
-      setIsGrabing(false);
+      setMoving(false);
 
       const fixState = getFixScaleEleTransPosition(
         isRotate ? height : width,
@@ -137,11 +137,11 @@ const Preview: React.FC<PreviewProps> = props => {
     refState.current.deltaY = event.pageY - position.y;
     refState.current.originX = position.x;
     refState.current.originY = position.y;
-    setIsGrabing(true);
+    setMoving(true);
   };
 
   const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
-    if (visible && isGrabing) {
+    if (visible && isMoving) {
       setPosition({
         x: event.pageX - refState.current.deltaX,
         y: event.pageY - refState.current.deltaY,
@@ -172,7 +172,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isGrabing]);
+  }, [visible, isMoving]);
 
   return (
     <Dialog
