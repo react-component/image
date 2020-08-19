@@ -9,7 +9,6 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run: npm install
-      - run: npm run init-tslint
       - save_cache:
           paths:
             - node_modules
@@ -25,15 +24,29 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run: npm install
-      - run: npm run init-tslint
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm test -- --coverage
+      - run: npm test -- --coverage && bash <(curl -s https://codecov.io/bash)
+  compile:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm run compile
 workflows:
   version: 2
   build_and_test:
     jobs:
       - lint
       - test
+      - compile

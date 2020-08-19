@@ -1,7 +1,7 @@
 {
-  "name": "rc-img",
-  "version": "0.0.0",
-  "description": "React Image",
+  "name": "rc-image",
+  "version": "1.0.0",
+  "description": "React easy to use image component",
   "keywords": [
     "react",
     "react-component",
@@ -10,6 +10,7 @@
   ],
   "main": "./lib/index",
   "module": "./es/index",
+  "types": "./lib/index.d.ts",
   "files": [
     "assets/*.css",
     "es",
@@ -24,59 +25,46 @@
     "url": "http://github.com/react-component/image/issues"
   },
   "license": "MIT",
-  "config": {
-    "port": 8003
-  },
   "scripts": {
-    "build": "rc-tools run storybook-build",
-    "compile": "rc-tools run compile --babel-runtime",
-    "gh-pages": "npm run build && rc-tools run storybook-gh-pages",
-    "start": "rc-tools run storybook",
-    "pub": "rc-tools run pub --babel-runtime",
-    "lint": "rc-tools run lint",
-    "lint:fix": "rc-tools run lint --fix",
-    "prettier": "rc-tools run prettier",
-    "test": "rc-tools run test",
-    "prepublish": "rc-tools run guard",
-    "init-tslint": "rc-tools run gen-lint-config",
-    "init-storybook": "rc-tools run genStorybook",
-    "coverage": "rc-tools run test --coverage",
-    "pre-commit": "rc-tools run pre-commit",
-    "storybook": "rc-tools run storybook",
-    "lint-staged": "lint-staged"
+    "start": "cross-env NODE_ENV=development father doc dev --storybook",
+    "build": "father doc build --storybook",
+    "compile": "father build && lessc assets/index.less assets/index.css",
+    "gh-pages": "npm run build && father doc deploy",
+    "prepublishOnly": "npm run compile && np --yolo --no-publish",
+    "postpublish": "npm run gh-pages",
+    "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
+    "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "test": "father test",
+    "coverage": "father test --coverage"
   },
-  "devDependencies": {
-    "@types/classnames": "^2.2.6",
-    "@types/enzyme": "^3.1.15",
-    "@types/react": "^16.7.17",
-    "@types/react-dom": "^16.0.11",
-    "enzyme": "^3.8.0",
-    "enzyme-adapter-react-16": "^1.7.1",
-    "enzyme-to-json": "^3.1.4",
-    "jsonp": "^0.2.0",
-    "lint-staged": "^8.1.0",
-    "pre-commit": "1.x",
-    "querystring": "^0.2.0",
-    "rc-test": "^6.0.1",
-    "rc-tools": "^9.0.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "typescript": "^3.2.2"
+  "peerDependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "dependencies": {
-    "babel-runtime": "^6.23.0",
-    "classnames": "2.x",
-    "rc-util": "^4.6.0",
-    "react-lifecycles-compat": "^3.0.2"
+    "@ant-design/icons": "^4.2.2",
+    "@babel/runtime": "^7.11.2",
+    "classnames": "^2.2.6",
+    "rc-dialog": "^8.1.0",
+    "rc-util": "^5.0.6"
   },
-  "pre-commit": [
-    "lint-staged"
-  ],
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "npm run pre-commit",
-      "git add"
-    ]
+  "devDependencies": {
+    "@types/classnames": "^2.2.10",
+    "@types/enzyme": "^3.10.5",
+    "@types/jest": "^26.0.9",
+    "@types/react": "^16.9.44",
+    "@types/react-dom": "^16.9.8",
+    "@umijs/fabric": "^2.2.2",
+    "cross-env": "^7.0.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-to-json": "^3.5.0",
+    "eslint": "^7.6.0",
+    "father": "^2.29.6",
+    "less": "^3.12.2",
+    "np": "^6.3.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "typescript": "^3.9.7"
   }
 }

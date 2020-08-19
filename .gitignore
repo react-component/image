@@ -1,3 +1,5 @@
+.storybook
+.doc
 *.iml
 *.log
 .idea/
@@ -25,16 +27,9 @@ assets/**/*.css
 build
 lib
 coverage
-.vscode
 yarn.lock
-es/
 package-lock.json
-src/*.js
-src/*.map
-.prettierrc
-jest.config.js
-tsconfig.json
-tslint.json
-tsconfig.test.json
-.eslintrc.js
-.prettierignore
+es/
+.storybook
+.doc
+.history
