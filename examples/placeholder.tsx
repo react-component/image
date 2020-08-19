@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { Button, Space } from 'antd';
-import 'antd/dist/antd.min.css';
 import Image from '../src';
 import '../assets/index.less';
 
 export default function Base() {
   const [random, setRandom] = React.useState(Date.now());
   return (
-    <Space>
-      <Button
+    <div>
+      <button
+        type="button"
         onClick={() => {
           setRandom(Date.now());
         }}
       >
         Reset
-      </Button>
+      </button>
+      <br />
+
       <Image
         // eslint-disable-next-line global-require
         src={`${require('./demo1.png')}?random=${random}`}
@@ -28,6 +29,6 @@ export default function Base() {
           />
         }
       />
-    </Space>
+    </div>
   );
 }

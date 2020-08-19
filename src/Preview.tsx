@@ -34,7 +34,7 @@ const Preview: React.FC<PreviewProps> = props => {
     y: number;
   }>(initialPosition);
   const imgRef = React.useRef<HTMLImageElement>();
-  const refState = React.useRef<{
+  const originPositionRef = React.useRef<{
     originX: number;
     originY: number;
     deltaX: number;
@@ -133,18 +133,18 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    refState.current.deltaX = event.pageX - position.x;
-    refState.current.deltaY = event.pageY - position.y;
-    refState.current.originX = position.x;
-    refState.current.originY = position.y;
+    originPositionRef.current.deltaX = event.pageX - position.x;
+    originPositionRef.current.deltaY = event.pageY - position.y;
+    originPositionRef.current.originX = position.x;
+    originPositionRef.current.originY = position.y;
     setMoving(true);
   };
 
   const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isMoving) {
       setPosition({
-        x: event.pageX - refState.current.deltaX,
-        y: event.pageY - refState.current.deltaY,
+        x: event.pageX - originPositionRef.current.deltaX,
+        y: event.pageY - originPositionRef.current.deltaY,
       });
     }
   };

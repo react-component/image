@@ -55,7 +55,6 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@umijs/fabric": "^2.2.2",
-    "antd": "^4.5.2",
     "cross-env": "^7.0.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",

@@ -23,5 +23,13 @@ describe('Fallback', () => {
     });
 
     expect(wrapper.find('.rc-image-img').prop('src')).toBe(fallback);
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(wrapper.find('.rc-image-preview').get(0)).toBeFalsy();
   });
 });

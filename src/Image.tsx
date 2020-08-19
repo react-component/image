@@ -1,9 +1,8 @@
 import * as React from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import Preview from './Preview';
-
-const { useState } = React;
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -17,6 +16,8 @@ export interface ImageProps
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
+
+type ImageStatus = 'normal' | 'error' | 'loading';
 
 const ImageInternal: React.FC<ImageProps> = ({
   src,
@@ -43,19 +44,16 @@ const ImageInternal: React.FC<ImageProps> = ({
   ...otherProps
 }) => {
   const [isShowPreview, setShowPreview] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [isShowPlaceholder, setIsShowPlaceholder] = useState(placeholder !== undefined);
+  const [status, setStatus] = useState<ImageStatus>(placeholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
+  const isError = status === 'error';
 
   const onLoad = () => {
-    if (!isError) {
-      setIsShowPlaceholder(false);
-    }
+    setStatus('normal');
   };
 
   const onError = () => {
-    setIsError(true);
-    setIsShowPlaceholder(false);
+    setStatus('error');
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
@@ -80,7 +78,7 @@ const ImageInternal: React.FC<ImageProps> = ({
 
   React.useEffect(() => {
     if (placeholder) {
-      setIsShowPlaceholder(true);
+      setStatus('loading');
     }
   }, [src]);
 
@@ -105,7 +103,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     <div
       {...otherProps}
       className={className}
-      onClick={preview ? onPreview : null}
+      onClick={preview && !isError ? onPreview : onClick}
       style={{
         ...style,
         width,
@@ -118,8 +116,8 @@ const ImageInternal: React.FC<ImageProps> = ({
         <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
       )}
 
-      {isShowPlaceholder && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
-      {preview && (
+      {status === 'loading' && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
+      {preview && !isError && (
         <Preview
           visible={isShowPreview}
           prefixCls={`${prefixCls}-preview`}

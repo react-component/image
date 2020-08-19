@@ -30,7 +30,7 @@ export default function useFrameSetState<T extends object>(
     queue.current.push(newState);
   };
 
-  React.useEffect(() => () => raf.cancel(frame.current), []);
+  React.useEffect(() => () => frame.current && raf.cancel(frame.current), []);
 
   return [state, setFrameState];
 }
