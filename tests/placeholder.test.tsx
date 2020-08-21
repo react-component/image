@@ -12,6 +12,14 @@ describe('Placeholder', () => {
     jest.useRealTimers();
   });
 
+  it('Default placeholder', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(<Image src={src} placeholder />);
+
+    expect(wrapper.find('.rc-image-placeholder').get(0)).toBeFalsy();
+    expect(wrapper.find('.rc-image-img-placeholder').prop('src')).toBe(src);
+  });
+
   it('Set correct', () => {
     const placeholder = 'placeholder';
     const wrapper = mount(

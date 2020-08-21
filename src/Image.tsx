@@ -10,6 +10,7 @@ export interface ImageProps
   src?: string;
 
   prefixCls?: string;
+  previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
   preview?: boolean;
@@ -24,6 +25,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   alt,
   onPreviewClose: onInitialPreviewClose,
   prefixCls = 'rc-image',
+  previewPrefixCls = `${prefixCls}-preview`,
   placeholder,
   fallback,
   width,
@@ -43,8 +45,9 @@ const ImageInternal: React.FC<ImageProps> = ({
   useMap,
   ...otherProps
 }) => {
+  const isCustomPlaceholder = placeholder && placeholder !== true;
   const [isShowPreview, setShowPreview] = useState(false);
-  const [status, setStatus] = useState<ImageStatus>(placeholder ? 'loading' : 'normal');
+  const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
 
@@ -77,7 +80,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   };
 
   React.useEffect(() => {
-    if (placeholder) {
+    if (isCustomPlaceholder) {
       setStatus('loading');
     }
   }, [src]);
@@ -96,7 +99,9 @@ const ImageInternal: React.FC<ImageProps> = ({
     srcSet,
     useMap,
     alt,
-    className: `${prefixCls}-img`,
+    className: cn(`${prefixCls}-img`, {
+      [`${prefixCls}-img-placeholder`]: placeholder === true,
+    }),
   };
 
   return (
@@ -125,7 +130,7 @@ const ImageInternal: React.FC<ImageProps> = ({
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
-          prefixCls={`${prefixCls}-preview`}
+          prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}
           src={mergedSrc}
