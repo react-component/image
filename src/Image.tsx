@@ -116,9 +116,14 @@ const ImageInternal: React.FC<ImageProps> = ({
         <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
       )}
 
-      {status === 'loading' && <div className={`${prefixCls}-placeholder`}>{placeholder}</div>}
+      {status === 'loading' && (
+        <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+          {placeholder}
+        </div>
+      )}
       {preview && !isError && (
         <Preview
+          aria-hidden={!isShowPreview}
           visible={isShowPreview}
           prefixCls={`${prefixCls}-preview`}
           onClose={onPreviewClose}

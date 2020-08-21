@@ -22,6 +22,7 @@ exports[`Basic snapshot 1`] = `
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     />
     <Preview
+      aria-hidden={true}
       mousePosition={null}
       onClose={[Function]}
       prefixCls="rc-image-preview"
@@ -30,6 +31,7 @@ exports[`Basic snapshot 1`] = `
     >
       <Component
         afterClose={[Function]}
+        aria-hidden={true}
         closable={false}
         keyboard={true}
         maskTransitionName="fade"
