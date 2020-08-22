@@ -12,13 +12,23 @@ export default function Base() {
           setRandom(Date.now());
         }}
       >
-        Reset
+        Reload
       </button>
-      <br />
+      <h1>Default placeholder</h1>
+      <div>
+        <Image
+          // eslint-disable-next-line global-require
+          src={`${require('./demo1.png')}?random=${random}`}
+          width={400}
+          placeholder
+        />
+      </div>
 
+      <br />
+      <h1>Custom placeholder</h1>
       <Image
         // eslint-disable-next-line global-require
-        src={`${require('./demo1.png')}?random=${random}`}
+        src={`${require('./demo1.png')}?random=${random + 1}`}
         width={400}
         placeholder={
           <Image

@@ -50,13 +50,14 @@ ReactDOM.render(
 
 ## API
 
-| Name           | Type        | Default  | Description             |
-| -------------- | ----------- | -------- | ----------------------- |
-| preview        | boolean     | true     | Whether to show preview |
-| prefixCls      | string      | rc-image | Classname prefix        |
-| placeholder    | ReactNode   | -        | Loading placeholder     |
-| fallback       | string      | -        | Load failed src         |
-| onPreviewClose | function(e) | -        | Preview close callback  |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| preview | boolean | true | Whether to show preview |
+| prefixCls | string | rc-image | Classname prefix |
+| placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
+| fallback | string | - | Load failed src |
+| onPreviewClose | function(e) | - | Preview close callback |
+| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 
 ## Example
 
