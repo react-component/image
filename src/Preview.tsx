@@ -73,6 +73,10 @@ const Preview: React.FC<PreviewProps> = props => {
     setRotate(value => value - 90);
   };
 
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
@@ -187,7 +191,7 @@ const Preview: React.FC<PreviewProps> = props => {
       visible={visible}
       wrapClassName={wrapClassName}
     >
-      <ul className={`${prefixCls}-operations`}>
+      <ul className={`${prefixCls}-operations`} onClick={stopPropagation}>
         {tools.map(({ Icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {
@@ -209,6 +213,7 @@ const Preview: React.FC<PreviewProps> = props => {
         <img
           onMouseDown={onMouseDown}
           ref={imgRef}
+          onClick={stopPropagation}
           className={`${prefixCls}-img`}
           src={src}
           alt={alt}
