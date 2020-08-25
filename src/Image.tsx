@@ -2,7 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
-import Preview from './Preview';
+import Preview, { PreviewProps } from './Preview';
+
+export type Preview =
+  | boolean
+  | {
+      urls?: PreviewProps['urls'];
+      current?: PreviewProps['current'];
+    };
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -13,7 +20,7 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: boolean;
+  preview?: Preview;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -135,6 +142,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
+          {...preview}
         />
       )}
     </div>

@@ -343,4 +343,44 @@ describe('Preview', () => {
     imgEleMock.mockRestore();
     jest.restoreAllMocks();
   });
+
+  it('preview urls', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          urls: [
+            'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+            'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ',
+          ],
+        }}
+      />,
+    );
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image-preview-wrap').simulate('click');
+
+    act(() => {
+      wrapper
+        .find('.rc-image-preview-switch-right')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper
+        .find('.rc-image-preview-switch-left')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+  });
 });
