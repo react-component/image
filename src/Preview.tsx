@@ -38,8 +38,6 @@ const Preview: React.FC<PreviewProps> = props => {
     y: number;
   }>(initialPosition);
   const imgRef = React.useRef<HTMLImageElement>();
-  const urlsRef = React.useRef<string[]>(urls || []);
-  const indexRef = React.useRef<number>(urlsRef.current.indexOf(current || src));
   const originPositionRef = React.useRef<{
     originX: number;
     originY: number;
@@ -53,9 +51,13 @@ const Preview: React.FC<PreviewProps> = props => {
   });
   const [isMoving, setMoving] = React.useState(false);
 
-  const [currentSrc, setCurrentSrc] = React.useState(
-    indexRef.current > -1 ? urls[indexRef.current] : src,
-  );
+  let mergedUrls = [src];
+
+  if (Array.isArray(urls)) {
+    mergedUrls = [...new Set(urls.indexOf(src) > -1 ? urls : [src].concat(urls))];
+  }
+
+  const [index, setIndex] = React.useState(mergedUrls.indexOf(current || src));
 
   const onAfterClose = () => {
     setScale(1);
@@ -87,9 +89,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    if (indexRef.current > 0) {
-      indexRef.current -= 1;
-      setCurrentSrc(urls[indexRef.current]);
+    if (index > 0) {
+      setIndex(index - 1);
     }
   };
 
@@ -97,9 +98,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    if (indexRef.current < urlsRef.current.length - 1) {
-      indexRef.current += 1;
-      setCurrentSrc(urls[indexRef.current]);
+    if (index < mergedUrls.length - 1) {
+      setIndex(index + 1);
     }
   };
 
@@ -193,6 +193,10 @@ const Preview: React.FC<PreviewProps> = props => {
       onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
     }
 
+    if (visible) {
+      setIndex(mergedUrls.indexOf(current || src));
+    }
+
     return () => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
@@ -202,8 +206,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
       if (!visible) {
-        indexRef.current = urlsRef.current.indexOf(current || src);
-        setCurrentSrc(indexRef.current > -1 ? urls[indexRef.current] : src);
+        setIndex(mergedUrls.indexOf(current || src));
       }
     };
   }, [visible, isMoving]);
@@ -244,26 +247,26 @@ const Preview: React.FC<PreviewProps> = props => {
           onMouseDown={onMouseDown}
           ref={imgRef}
           className={`${prefixCls}-img`}
-          src={currentSrc}
+          src={mergedUrls[index]}
           alt={alt}
           style={{
             transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
           }}
         />
       </div>
-      {urlsRef.current.length ? (
+      {mergedUrls.length > 1 ? (
         <div
           className={classnames(`${prefixCls}-switch-left`, {
-            [`${prefixCls}-switch-left-disabled`]: indexRef.current <= 0,
+            [`${prefixCls}-switch-left-disabled`]: index <= 0,
           })}
         >
           <LeftOutlined onClick={onSwitchLeft} />
         </div>
       ) : null}
-      {urlsRef.current.length ? (
+      {mergedUrls.length > 1 ? (
         <div
           className={classnames(`${prefixCls}-switch-right`, {
-            [`${prefixCls}-switch-right-disabled`]: indexRef.current >= urlsRef.current.length - 1,
+            [`${prefixCls}-switch-right-disabled`]: index >= mergedUrls.length - 1,
           })}
         >
           <RightOutlined onClick={onSwitchRight} />

@@ -383,4 +383,55 @@ describe('Preview', () => {
       wrapper.update();
     });
   });
+
+  it('preview groupKey', () => {
+    const wrapper = mount(
+      <>
+        <Image
+          className="preview-group-1"
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          groupKey="preview"
+        />
+        <Image
+          className="preview-group-2"
+          src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
+          groupKey="preview"
+        />
+      </>,
+    );
+
+    act(() => {
+      wrapper.find('.rc-image.preview-group-1').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image.preview-group-1 .rc-image-preview-wrap').simulate('click');
+
+    act(() => {
+      wrapper.find('.rc-image.preview-group-2').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image.preview-group-2 .rc-image-preview-wrap').simulate('click');
+
+    act(() => {
+      wrapper
+        .find('.rc-image.preview-group-1 .rc-image-preview-switch-right')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper
+        .find('.rc-image.preview-group-2 .rc-image-preview-switch-left')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+  });
 });

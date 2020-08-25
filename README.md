@@ -59,6 +59,7 @@ ReactDOM.render(
 | fallback | string | - | Load failed src |
 | onPreviewClose | function(e) | - | Preview close callback |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+| groupKey | string | - | if preview is `true` will merge src set preview.urls |
 
 ## Preview
 

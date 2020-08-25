@@ -27,6 +27,7 @@ exports[`Basic snapshot 1`] = `
       onClose={[Function]}
       prefixCls="rc-image-preview"
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      urls={Array []}
       visible={false}
     >
       <Component

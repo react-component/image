@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import Preview, { PreviewProps } from './Preview';
@@ -23,9 +23,12 @@ export interface ImageProps
   preview?: Preview;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  groupKey?: string;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
+
+const groupCache = new Map<string, Set<string>>();
 
 const ImageInternal: React.FC<ImageProps> = ({
   src,
@@ -41,6 +44,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   preview = true,
   className: originalClassName,
   onClick,
+  groupKey,
 
   // Img
   crossOrigin,
@@ -57,6 +61,10 @@ const ImageInternal: React.FC<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
+  const groupKeyRef = useRef<string>(groupKey);
+  const srcRef = useRef<string>(src);
+  const urls = typeof preview === 'object' && Array.isArray(preview.urls) ? preview.urls : [];
+  const [groupUrls, setGroupUrls] = useState<string[]>([...(groupCache.get(groupKey) || [])]);
 
   const onLoad = () => {
     setStatus('normal');
@@ -69,6 +77,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
 
+    setGroupUrls([...(groupCache.get(groupKey) || [])]); // 因为groupCache数据受其他Image影响，触发需要使用最新的数据
     setShowPreview(true);
     setMousePosition({
       x: left,
@@ -90,7 +99,38 @@ const ImageInternal: React.FC<ImageProps> = ({
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
-  }, [src]);
+    if (groupKey !== groupKeyRef.current || src !== srcRef.current) {
+      const set = groupCache.get(groupKeyRef.current);
+      if (set) {
+        set.delete(srcRef.current);
+      }
+      groupKeyRef.current = groupKey;
+      srcRef.current = src;
+    }
+    if (groupKey && src) {
+      let set = groupCache.get(groupKey);
+      if (set) {
+        if (!set.has(src)) {
+          set.add(src);
+        }
+      } else {
+        set = new Set();
+        set.add(src);
+        groupCache.set(groupKey, set);
+      }
+    }
+
+    return () => {
+      groupCache.forEach((set, key) => {
+        if (set || set.size === 0) {
+          groupCache.delete(key);
+        } else if (key === groupKey) {
+          set.delete(src);
+          groupCache.set(key, set);
+        }
+      });
+    };
+  }, [src, groupKey]);
 
   const className = cn(prefixCls, originalClassName, {
     [`${prefixCls}-error`]: isError,
@@ -110,6 +150,8 @@ const ImageInternal: React.FC<ImageProps> = ({
       [`${prefixCls}-img-placeholder`]: placeholder === true,
     }),
   };
+
+  const mergedUrls = [...new Set([...urls, ...groupUrls])];
 
   return (
     <div
@@ -143,6 +185,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           src={mergedSrc}
           alt={alt}
           {...preview}
+          urls={mergedUrls}
         />
       )}
     </div>
