@@ -26,6 +26,7 @@ React Image
 - [x] Rotate
 - [x] Zoom
 - [x] Fallback
+- [x] Multiple Preview
 
 ### Keyboard
 
@@ -52,12 +53,19 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean | true | Whether to show preview |
+| preview | boolean \| Preview | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | onPreviewClose | function(e) | - | Preview close callback |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+
+## Preview
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| urls | string[] | - | preview urls of multiple src |
+| current | string | - | current src |
 
 ## Example
 
