@@ -2,14 +2,7 @@ import * as React from 'react';
 import { useState, useRef } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
-import Preview, { PreviewProps } from './Preview';
-
-export type Preview =
-  | boolean
-  | {
-      urls?: PreviewProps['urls'];
-      current?: PreviewProps['current'];
-    };
+import Preview from './Preview';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -20,7 +13,7 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: Preview;
+  preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   groupKey?: string;
@@ -63,7 +56,6 @@ const ImageInternal: React.FC<ImageProps> = ({
   const isError = status === 'error';
   const groupKeyRef = useRef<string>(groupKey);
   const srcRef = useRef<string>(src);
-  const urls = typeof preview === 'object' && Array.isArray(preview.urls) ? preview.urls : [];
   const [groupUrls, setGroupUrls] = useState<string[]>([...(groupCache.get(groupKey) || [])]);
 
   const onLoad = () => {
@@ -151,8 +143,6 @@ const ImageInternal: React.FC<ImageProps> = ({
     }),
   };
 
-  const mergedUrls = [...new Set([...urls, ...groupUrls])];
-
   return (
     <div
       {...otherProps}
@@ -184,8 +174,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          {...preview}
-          urls={mergedUrls}
+          urls={groupUrls}
         />
       )}
     </div>

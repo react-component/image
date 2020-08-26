@@ -16,12 +16,11 @@ import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 
 const { useState } = React;
 
-export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   src?: string;
   alt?: string;
   urls?: string[];
-  current?: string;
 }
 
 const initialPosition = {
@@ -30,7 +29,7 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, current, urls, ...restProps } = props;
+  const { prefixCls, src, alt, onClose, afterClose, visible, urls, ...restProps } = props;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useFrameSetState<{
@@ -57,7 +56,7 @@ const Preview: React.FC<PreviewProps> = props => {
     mergedUrls = [...new Set(urls.indexOf(src) > -1 ? urls : [src].concat(urls))];
   }
 
-  const [index, setIndex] = React.useState(mergedUrls.indexOf(current || src));
+  const [index, setIndex] = React.useState(mergedUrls.indexOf(src));
 
   const onAfterClose = () => {
     setScale(1);
@@ -194,7 +193,7 @@ const Preview: React.FC<PreviewProps> = props => {
     }
 
     if (visible) {
-      setIndex(mergedUrls.indexOf(current || src));
+      setIndex(mergedUrls.indexOf(src));
     }
 
     return () => {
@@ -206,7 +205,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
       if (!visible) {
-        setIndex(mergedUrls.indexOf(current || src));
+        setIndex(mergedUrls.indexOf(src));
       }
     };
   }, [visible, isMoving]);
