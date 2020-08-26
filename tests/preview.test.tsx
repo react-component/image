@@ -5,23 +5,20 @@ import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
 import Image from '../src';
 
 describe('Preview', () => {
-  let dateMock;
-  let initialTimeNow = 0;
   beforeEach(() => {
-    dateMock = jest.spyOn(global.Date, 'now').mockImplementation(() => {
-      initialTimeNow += 100;
-      return initialTimeNow;
-    });
     jest.useFakeTimers();
   });
 
   afterEach(() => {
     jest.useRealTimers();
-    dateMock.mockRestore();
-    initialTimeNow = 0;
   });
 
   it('Show preview and close', () => {
+    let initialTimeNow = 0;
+    const dateMock = jest.spyOn(global.Date, 'now').mockImplementation(() => {
+      initialTimeNow += 100;
+      return initialTimeNow;
+    });
     const onPreviewCloseMock = jest.fn();
     const wrapper = mount(
       <Image
@@ -57,6 +54,8 @@ describe('Preview', () => {
     });
 
     expect(onPreviewCloseMock).toBeCalledTimes(2);
+
+    dateMock.mockRestore();
   });
 
   it('Unmount', () => {

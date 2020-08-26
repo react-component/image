@@ -105,27 +105,29 @@ const ImageInternal: React.FC<ImageProps> = ({
   };
 
   return (
-    <div
-      {...otherProps}
-      className={className}
-      onClick={preview && !isError ? onPreview : onClick}
-      style={{
-        ...style,
-        width,
-        height,
-      }}
-    >
-      {isError && fallback ? (
-        <img {...imgCommonProps} src={fallback} />
-      ) : (
-        <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
-      )}
+    <>
+      <div
+        {...otherProps}
+        className={className}
+        onClick={preview && !isError ? onPreview : onClick}
+        style={{
+          ...style,
+          width,
+          height,
+        }}
+      >
+        {isError && fallback ? (
+          <img {...imgCommonProps} src={fallback} />
+        ) : (
+          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
+        )}
 
-      {status === 'loading' && (
-        <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
-          {placeholder}
-        </div>
-      )}
+        {status === 'loading' && (
+          <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+            {placeholder}
+          </div>
+        )}
+      </div>
       {preview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
@@ -137,7 +139,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           alt={alt}
         />
       )}
-    </div>
+    </>
   );
 };
 

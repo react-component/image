@@ -21,32 +21,32 @@ exports[`Basic snapshot 1`] = `
       onLoad={[Function]}
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     />
-    <Preview
+  </div>
+  <Preview
+    aria-hidden={true}
+    mousePosition={null}
+    onClose={[Function]}
+    prefixCls="rc-image-preview"
+    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    visible={false}
+  >
+    <Component
+      afterClose={[Function]}
       aria-hidden={true}
+      closable={false}
+      keyboard={true}
+      maskTransitionName="fade"
       mousePosition={null}
       onClose={[Function]}
       prefixCls="rc-image-preview"
-      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      transitionName="zoom"
       visible={false}
+      wrapClassName=""
     >
-      <Component
-        afterClose={[Function]}
-        aria-hidden={true}
-        closable={false}
-        keyboard={true}
-        maskTransitionName="fade"
-        mousePosition={null}
-        onClose={[Function]}
-        prefixCls="rc-image-preview"
-        transitionName="zoom"
+      <PortalWrapper
         visible={false}
-        wrapClassName=""
-      >
-        <PortalWrapper
-          visible={false}
-        />
-      </Component>
-    </Preview>
-  </div>
+      />
+    </Component>
+  </Preview>
 </Image>
 `;
