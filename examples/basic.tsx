@@ -11,6 +11,9 @@ export default function Base() {
         style={{
           marginRight: 24,
         }}
+        onClick={() => {
+          console.log('click');
+        }}
       />
 
       <Image
@@ -30,7 +33,6 @@ export default function Base() {
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
         width={200}
-        loading="lazy"
       />
     </div>
   );

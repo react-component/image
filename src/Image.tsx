@@ -129,28 +129,30 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   return (
-    <div
-      {...otherProps}
-      className={className}
-      onClick={mergedPreview && !isError ? onPreview : onClick}
-      style={{
-        ...style,
-        width,
-        height,
-      }}
-    >
-      {isError && fallback ? (
-        <img {...imgCommonProps} src={fallback} />
-      ) : (
-        <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
-      )}
+    <>
+      <div
+        {...otherProps}
+        className={className}
+        onClick={preview && !isError ? onPreview : onClick}
+        style={{
+          ...style,
+          width,
+          height,
+        }}
+      >
+        {isError && fallback ? (
+          <img {...imgCommonProps} src={fallback} />
+        ) : (
+          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
+        )}
 
-      {status === 'loading' && (
-        <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
-          {placeholder}
-        </div>
-      )}
-      {mergedPreview && !isError && (
+        {status === 'loading' && (
+          <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+            {placeholder}
+          </div>
+        )}
+      </div>
+      {preview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -162,7 +164,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           {...mergedPreview}
         />
       )}
-    </div>
+    </>
   );
 };
 
