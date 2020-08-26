@@ -18,6 +18,5 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': 0,
     'jsx-a11y/control-has-associated-label': 0,
     'jsx-a11y/alt-text': 0,
-    'import/no-named-as-default': 0,
   },
 };

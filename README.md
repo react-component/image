@@ -53,13 +53,34 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean | true | Whether to show preview |
+| preview | boolean \| Preview | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | onPreviewClose | function(e) | - | Preview close callback |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
-| groupKey | string | - | if preview is `true` will merge src |
+
+## Image.Group
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| preview | boolean \| Preview | - | Whether to show preview |
+
+```jsx
+const Image = require('rc-image');
+
+ReactDOM.render(
+  <Image.Group>
+    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+  </Image.Group>
+), document.getElementById('root'));
+```
+
+## Preview
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| groupKey | string | - | preview merged src from this same groupKey |
 
 ## Example
 

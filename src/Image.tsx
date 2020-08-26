@@ -1,8 +1,16 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
-import Preview from './Preview';
+import Preview, { PreviewProps } from './Preview';
+import Group from './group';
+import context from './context';
+
+export type Preview =
+  | boolean
+  | {
+      groupKey?: PreviewProps['groupKey'];
+    };
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -13,17 +21,18 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: boolean;
+  preview?: Preview;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  groupKey?: string;
+}
+
+interface CompoundedComponent<P> extends React.FC<P> {
+  Group: typeof Group;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
-const groupCache = new Map<string, Set<string>>();
-
-const ImageInternal: React.FC<ImageProps> = ({
+const ImageInternal: CompoundedComponent<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
@@ -37,7 +46,6 @@ const ImageInternal: React.FC<ImageProps> = ({
   preview = true,
   className: originalClassName,
   onClick,
-  groupKey,
 
   // Img
   crossOrigin,
@@ -54,9 +62,18 @@ const ImageInternal: React.FC<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
-  const groupKeyRef = useRef<string>(groupKey);
-  const srcRef = useRef<string>(src);
-  const [groupUrls, setGroupUrls] = useState<string[]>([...(groupCache.get(groupKey) || [])]);
+  const { preview: contextPreview } = React.useContext(context);
+
+  let mergedPreview = contextPreview || preview;
+
+  if (!preview) {
+    mergedPreview = false;
+  } else if (typeof preview === 'object' && typeof contextPreview === 'object') {
+    mergedPreview = {
+      ...contextPreview,
+      ...preview,
+    };
+  }
 
   const onLoad = () => {
     setStatus('normal');
@@ -69,7 +86,6 @@ const ImageInternal: React.FC<ImageProps> = ({
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
 
-    setGroupUrls([...(groupCache.get(groupKey) || [])]); // 因为groupCache数据受其他Image影响，触发需要使用最新的数据
     setShowPreview(true);
     setMousePosition({
       x: left,
@@ -91,38 +107,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
-    if (groupKey !== groupKeyRef.current || src !== srcRef.current) {
-      const set = groupCache.get(groupKeyRef.current);
-      if (set) {
-        set.delete(srcRef.current);
-      }
-      groupKeyRef.current = groupKey;
-      srcRef.current = src;
-    }
-    if (groupKey && src) {
-      let set = groupCache.get(groupKey);
-      if (set) {
-        if (!set.has(src)) {
-          set.add(src);
-        }
-      } else {
-        set = new Set();
-        set.add(src);
-        groupCache.set(groupKey, set);
-      }
-    }
-
-    return () => {
-      groupCache.forEach((set, key) => {
-        if (set || set.size === 0) {
-          groupCache.delete(key);
-        } else if (key === groupKey) {
-          set.delete(src);
-          groupCache.set(key, set);
-        }
-      });
-    };
-  }, [src, groupKey]);
+  }, [src]);
 
   const className = cn(prefixCls, originalClassName, {
     [`${prefixCls}-error`]: isError,
@@ -147,7 +132,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     <div
       {...otherProps}
       className={className}
-      onClick={preview && !isError ? onPreview : onClick}
+      onClick={mergedPreview && !isError ? onPreview : onClick}
       style={{
         ...style,
         width,
@@ -165,7 +150,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           {placeholder}
         </div>
       )}
-      {preview && !isError && (
+      {mergedPreview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -174,12 +159,14 @@ const ImageInternal: React.FC<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          urls={groupUrls}
+          {...mergedPreview}
         />
       )}
     </div>
   );
 };
+
+ImageInternal.Group = Group;
 
 ImageInternal.displayName = 'Image';
 
