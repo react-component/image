@@ -64,7 +64,9 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| Preview | - | Whether to show preview |
+| mergedPreview | boolean | - | preview merged Image.src from children |
+| prefixCls | string | rc-image | Classname prefix |
+| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 
 ```jsx
 const Image = require('rc-image');
@@ -72,15 +74,10 @@ const Image = require('rc-image');
 ReactDOM.render(
   <Image.Group>
     <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+    <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
   </Image.Group>
 ), document.getElementById('root'));
 ```
-
-## Preview
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| groupKey | string | - | preview merged src from this same groupKey |
 
 ## Example
 

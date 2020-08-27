@@ -343,98 +343,23 @@ describe('Preview', () => {
     jest.restoreAllMocks();
   });
 
-  it('preview groupKey', () => {
+  it('Group preview', () => {
     const wrapper = mount(
-      <>
+      <Image.Group>
         <Image
-          className="preview-group-1"
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          preview={{
-            groupKey: 'preview',
-          }}
-        />
-        <Image
-          className="preview-group-2"
-          src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
-          preview={{
-            groupKey: 'preview',
-          }}
-        />
-      </>,
-    );
-
-    act(() => {
-      wrapper.find('.rc-image.preview-group-1').simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    wrapper.find('.rc-image.preview-group-1 .rc-image-preview-wrap').simulate('click');
-
-    act(() => {
-      wrapper.find('.rc-image.preview-group-2').simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    wrapper.find('.rc-image.preview-group-2 .rc-image-preview-wrap').simulate('click');
-
-    act(() => {
-      wrapper
-        .find('.rc-image.preview-group-1 .rc-image-preview-switch-right')
-        .at(0)
-        .simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    act(() => {
-      wrapper
-        .find('.rc-image.preview-group-2 .rc-image-preview-switch-left')
-        .at(0)
-        .simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-  });
-
-  it('Group preview groupKey', () => {
-    const wrapper = mount(
-      <Image.Group
-        preview={{
-          groupKey: 'preview',
-        }}
-      >
-        <Image
-          className="preview-group-1"
+          className="group-1"
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         />
         <Image
-          className="preview-group-2"
+          className="group-2"
           src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
         />
       </Image.Group>,
     );
 
     act(() => {
-      wrapper.find('.rc-image.preview-group-1').simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    wrapper.find('.rc-image.preview-group-1 .rc-image-preview-wrap').simulate('click');
-
-    act(() => {
-      wrapper.find('.rc-image.preview-group-2').simulate('click');
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    wrapper.find('.rc-image.preview-group-2 .rc-image-preview-wrap').simulate('click');
-
-    act(() => {
       wrapper
-        .find('.rc-image.preview-group-1 .rc-image-preview-switch-right')
+        .find('.rc-image')
         .at(0)
         .simulate('click');
       jest.runAllTimers();
@@ -443,11 +368,33 @@ describe('Preview', () => {
 
     act(() => {
       wrapper
-        .find('.rc-image.preview-group-2 .rc-image-preview-switch-left')
+        .find('.anticon')
+        .at(1)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image-preview-wrap').simulate('click');
+
+    act(() => {
+      wrapper
+        .find('.rc-image')
+        .at(1)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper
+        .find('.anticon')
         .at(0)
         .simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
+
+    wrapper.find('.rc-image-preview-wrap').simulate('click');
   });
 });

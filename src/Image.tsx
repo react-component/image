@@ -2,15 +2,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
-import Preview, { PreviewProps } from './Preview';
+import Preview from './Preview';
 import Group from './group';
 import context from './context';
-
-export type Preview =
-  | boolean
-  | {
-      groupKey?: PreviewProps['groupKey'];
-    };
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -21,7 +15,7 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: Preview;
+  preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -36,8 +30,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
-  prefixCls = 'rc-image',
-  previewPrefixCls = `${prefixCls}-preview`,
+  prefixCls: localPrefixCls,
+  previewPrefixCls: localPreviewPrefixCls,
   placeholder,
   fallback,
   width,
@@ -62,18 +56,23 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
-  const { preview: contextPreview } = React.useContext(context);
+  const {
+    prefixCls: contextPrefixCls,
+    previewPrefixCls: contextPreviewPrefixCls,
+    mergedPreview,
+    previewUrls,
+    setPreviewUrls,
+    setCurrent,
+    setShowPreview: setGroupShowPreview,
+    setMousePosition: setGroupMousePosition,
+  } = React.useContext(context);
 
-  let mergedPreview = contextPreview || preview;
+  const groupIndexRef = React.useRef(0);
 
-  if (!preview) {
-    mergedPreview = false;
-  } else if (typeof preview === 'object' && typeof contextPreview === 'object') {
-    mergedPreview = {
-      ...contextPreview,
-      ...preview,
-    };
-  }
+  const prefixCls = localPrefixCls || contextPrefixCls || 'rc-image';
+
+  const previewPrefixCls =
+    localPreviewPrefixCls || contextPreviewPrefixCls || `${prefixCls}-preview`;
 
   const onLoad = () => {
     setStatus('normal');
@@ -81,16 +80,29 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const onError = () => {
     setStatus('error');
+    if (mergedPreview) {
+      previewUrls.splice(groupIndexRef.current);
+      setPreviewUrls(previewUrls);
+    }
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
 
-    setShowPreview(true);
-    setMousePosition({
-      x: left,
-      y: top,
-    });
+    if (mergedPreview) {
+      setCurrent(src);
+      setGroupShowPreview(true);
+      setGroupMousePosition({
+        x: left,
+        y: top,
+      });
+    } else {
+      setShowPreview(true);
+      setMousePosition({
+        x: left,
+        y: top,
+      });
+    }
 
     if (onClick) onClick(e);
   };
@@ -104,9 +116,20 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   React.useEffect(() => {
+    if (mergedPreview && previewUrls.indexOf(src) < 0) {
+      groupIndexRef.current = previewUrls.length;
+      previewUrls.push(src);
+      setPreviewUrls(previewUrls);
+    }
+  }, [previewUrls]);
+
+  React.useEffect(() => {
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
+    return () => {
+      setPreviewUrls(previewUrls.filter(url => url !== src));
+    };
   }, [src]);
 
   const className = cn(prefixCls, originalClassName, {
@@ -152,7 +175,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           </div>
         )}
       </div>
-      {preview && !isError && (
+      {!mergedPreview && preview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -161,7 +184,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          {...mergedPreview}
         />
       )}
     </>

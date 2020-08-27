@@ -5,11 +5,7 @@ import '../assets/index.less';
 export default function Group() {
   return (
     <div>
-      <Image.Group
-        preview={{
-          groupKey: 'group',
-        }}
-      >
+      <Image.Group>
         <Image
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
           width={200}
@@ -32,7 +28,8 @@ export default function Group() {
           }}
         />
         <Image
-          src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
+          src="error1"
+          fallback="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
           width={200}
           style={{
             marginRight: 24,

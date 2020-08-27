@@ -12,16 +12,16 @@ import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useFrameSetState from './hooks/useFrameSetState';
-import usePreviewUrls from './hooks/usePreviewUrls';
+import usePreviewIndex from './hooks/usePreviewIndex';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import context from './context';
 
 const { useState } = React;
 
-export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   src?: string;
   alt?: string;
-  groupKey?: string;
 }
 
 const initialPosition = {
@@ -30,7 +30,7 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, groupKey, ...restProps } = props;
+  const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useFrameSetState<{
@@ -51,9 +51,11 @@ const Preview: React.FC<PreviewProps> = props => {
   });
   const [isMoving, setMoving] = React.useState(false);
 
-  const [urls] = usePreviewUrls(src, groupKey);
+  const { previewUrls } = React.useContext(context);
 
-  const [index, setIndex] = React.useState(urls.indexOf(src));
+  const urls = previewUrls && previewUrls.length ? previewUrls : [src];
+
+  const [index, setIndex] = usePreviewIndex(src, urls);
 
   const onAfterClose = () => {
     setScale(1);
@@ -86,6 +88,7 @@ const Preview: React.FC<PreviewProps> = props => {
     // Without this mask close will abnormal
     event.stopPropagation();
     if (index > 0) {
+      onAfterClose();
       setIndex(index - 1);
     }
   };
@@ -95,6 +98,7 @@ const Preview: React.FC<PreviewProps> = props => {
     // Without this mask close will abnormal
     event.stopPropagation();
     if (index < urls.length - 1) {
+      onAfterClose();
       setIndex(index + 1);
     }
   };
@@ -189,10 +193,6 @@ const Preview: React.FC<PreviewProps> = props => {
       onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
     }
 
-    if (visible) {
-      setIndex(urls.indexOf(src));
-    }
-
     return () => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
@@ -255,8 +255,9 @@ const Preview: React.FC<PreviewProps> = props => {
           className={classnames(`${prefixCls}-switch-left`, {
             [`${prefixCls}-switch-left-disabled`]: index <= 0,
           })}
+          onClick={onSwitchLeft}
         >
-          <LeftOutlined onClick={onSwitchLeft} />
+          <LeftOutlined />
         </div>
       ) : null}
       {urls.length > 1 ? (
@@ -264,8 +265,9 @@ const Preview: React.FC<PreviewProps> = props => {
           className={classnames(`${prefixCls}-switch-right`, {
             [`${prefixCls}-switch-right-disabled`]: index >= urls.length - 1,
           })}
+          onClick={onSwitchRight}
         >
-          <RightOutlined onClick={onSwitchRight} />
+          <RightOutlined />
         </div>
       ) : null}
     </Dialog>
