@@ -343,9 +343,9 @@ describe('Preview', () => {
     jest.restoreAllMocks();
   });
 
-  it('Group preview', () => {
+  it('PreviewGroup', () => {
     const wrapper = mount(
-      <Image.Group>
+      <Image.PreviewGroup>
         <Image
           className="group-1"
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -354,7 +354,7 @@ describe('Preview', () => {
           className="group-2"
           src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
         />
-      </Image.Group>,
+      </Image.PreviewGroup>,
     );
 
     act(() => {

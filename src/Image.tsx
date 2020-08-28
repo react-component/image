@@ -3,8 +3,7 @@ import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import Preview from './Preview';
-import Group from './group';
-import context from './context';
+import PreviewGroup, { context } from './PreviewGroup';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -21,7 +20,7 @@ export interface ImageProps
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
-  Group: typeof Group;
+  PreviewGroup: typeof PreviewGroup;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
@@ -30,8 +29,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
-  prefixCls: localPrefixCls,
-  previewPrefixCls: localPreviewPrefixCls,
+  prefixCls = 'rc-image',
+  previewPrefixCls = `${prefixCls}-preview`,
   placeholder,
   fallback,
   width,
@@ -57,9 +56,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
   const {
-    prefixCls: contextPrefixCls,
-    previewPrefixCls: contextPreviewPrefixCls,
-    mergedPreview,
+    isPreviewGroup,
     previewUrls,
     setPreviewUrls,
     setCurrent,
@@ -69,18 +66,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const groupIndexRef = React.useRef(0);
 
-  const prefixCls = localPrefixCls || contextPrefixCls || 'rc-image';
-
-  const previewPrefixCls =
-    localPreviewPrefixCls || contextPreviewPrefixCls || `${prefixCls}-preview`;
-
   const onLoad = () => {
     setStatus('normal');
   };
 
   const onError = () => {
     setStatus('error');
-    if (mergedPreview) {
+    if (isPreviewGroup) {
       previewUrls.splice(groupIndexRef.current);
       setPreviewUrls(previewUrls);
     }
@@ -89,7 +81,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
 
-    if (mergedPreview) {
+    if (isPreviewGroup) {
       setCurrent(src);
       setGroupShowPreview(true);
       setGroupMousePosition({
@@ -116,7 +108,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   React.useEffect(() => {
-    if (mergedPreview && previewUrls.indexOf(src) < 0) {
+    if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
       groupIndexRef.current = previewUrls.length;
       previewUrls.push(src);
       setPreviewUrls(previewUrls);
@@ -175,7 +167,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           </div>
         )}
       </div>
-      {!mergedPreview && preview && !isError && (
+      {!isPreviewGroup && preview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -190,7 +182,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   );
 };
 
-ImageInternal.Group = Group;
+ImageInternal.PreviewGroup = PreviewGroup;
 
 ImageInternal.displayName = 'Image';
 

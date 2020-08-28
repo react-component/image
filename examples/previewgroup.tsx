@@ -2,10 +2,10 @@ import * as React from 'react';
 import Image from '../src';
 import '../assets/index.less';
 
-export default function Group() {
+export default function PreviewGroup() {
   return (
     <div>
-      <Image.Group>
+      <Image.PreviewGroup>
         <Image
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
           width={200}
@@ -35,7 +35,23 @@ export default function Group() {
             marginRight: 24,
           }}
         />
-      </Image.Group>
+        <Image.PreviewGroup>
+          <Image
+            src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
+            width={200}
+            style={{
+              marginRight: 24,
+            }}
+          />
+          <Image
+            src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*ngiJQaLQELEAAAAAAAAAAABkARQnAQ"
+            width={200}
+            style={{
+              marginRight: 24,
+            }}
+          />
+        </Image.PreviewGroup>
+      </Image.PreviewGroup>
     </div>
   );
 }

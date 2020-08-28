@@ -14,7 +14,7 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import useFrameSetState from './hooks/useFrameSetState';
 import usePreviewIndex from './hooks/usePreviewIndex';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
-import context from './context';
+import { context } from './PreviewGroup';
 
 const { useState } = React;
 

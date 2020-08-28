@@ -53,29 +53,25 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| Preview | true | Whether to show preview |
+| preview | boolean | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | onPreviewClose | function(e) | - | Preview close callback |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 
-## Image.Group
+## Image.PreviewGroup
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| mergedPreview | boolean | - | preview merged Image.src from children |
-| prefixCls | string | rc-image | Classname prefix |
-| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+preview the merged src
 
 ```jsx
 const Image = require('rc-image');
 
 ReactDOM.render(
-  <Image.Group>
+  <Image.PreviewGroup>
     <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
     <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
-  </Image.Group>
+  </Image.PreviewGroup>
 ), document.getElementById('root'));
 ```
 
