@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Dialog from 'rc-dialog';
-import IDialogPropTypes from 'rc-dialog/lib/IDialogPropTypes';
+import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
