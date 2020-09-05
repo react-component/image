@@ -164,6 +164,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
       }
     } catch (error) {
+      /* istanbul ignore next */
       warning(false, `[rc-image] ${error}`);
     }
 
