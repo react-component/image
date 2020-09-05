@@ -2,22 +2,32 @@
 
 ---
 
-React Image
+React Image.
 
-[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url] [![Test coverage][coveralls-image]][coveralls-url] [![gemnasium deps][gemnasium-image]][gemnasium-url] [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Dependencies][david-image]][david-url]
+[![DevDependencies][david-dev-image]][david-dev-url]
+[![npm download][download-image]][download-url]
+[![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
-[travis-image]: https://img.shields.io/travis/react-component/image.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/react-component/image/master?style=flat-square
 [travis-url]: https://travis-ci.org/react-component/image
+[circleci-image]: https://img.shields.io/circleci/react-component/image/master?style=flat-square
+[circleci-url]: https://circleci.com/gh/react-component/image
 [coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/img?branch=master
-[gemnasium-image]: http://img.shields.io/gemnasium/react-component/img.svg?style=flat-square
-[gemnasium-url]: https://gemnasium.com/react-component/img
-[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
-[node-url]: http://nodejs.org/download/
+[coveralls-url]: https://coveralls.io/r/react-component/image?branch=master
+[david-url]: https://david-dm.org/react-component/image
+[david-image]: https://david-dm.org/react-component/image/status.svg?style=flat-square
+[david-dev-url]: https://david-dm.org/react-component/image?type=dev
+[david-dev-image]: https://david-dm.org/react-component/image/dev-status.svg?style=flat-square
 [download-image]: https://img.shields.io/npm/dm/rc-image.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-image
+[bundlephobia-url]: https://bundlephobia.com/result?p=rc-image
+[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/rc-image
 
 ## Feature
 
