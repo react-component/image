@@ -6,7 +6,7 @@ React Image.
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
+[![Test coverage][codecov-image]][codecov-url]
 [![Dependencies][david-image]][david-url]
 [![DevDependencies][david-dev-image]][david-dev-url]
 [![npm download][download-image]][download-url]
@@ -20,6 +20,8 @@ React Image.
 [circleci-url]: https://circleci.com/gh/react-component/image
 [coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/react-component/image?branch=master
+[codecov-image]: https://img.shields.io/codecov/c/gh/react-component/image?style=flat-square
+[codecov-url]: https://codecov.io/gh/react-component/image
 [david-url]: https://david-dm.org/react-component/image
 [david-image]: https://david-dm.org/react-component/image/status.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/react-component/image?type=dev
