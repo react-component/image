@@ -5,7 +5,7 @@
 React Image.
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![CircleCI status][circleci-image]][circleci-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![Dependencies][david-image]][david-url]
 [![DevDependencies][david-dev-image]][david-dev-url]
@@ -16,7 +16,7 @@ React Image.
 [npm-url]: http://npmjs.org/package/rc-image
 [travis-image]: https://img.shields.io/travis/react-component/image/master?style=flat-square
 [travis-url]: https://travis-ci.org/react-component/image
-[circleci-image]: https://img.shields.io/circleci/react-component/image/master?style=flat-square
+[circleci-image]: https://img.shields.io/circleci/build/github/react-component/image/master?style=flat-square
 [circleci-url]: https://circleci.com/gh/react-component/image
 [coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/react-component/image?branch=master
