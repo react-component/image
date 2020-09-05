@@ -20,11 +20,6 @@ exports[`Basic snapshot 1`] = `
       onError={[Function]}
       onLoad={[Function]}
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-      style={
-        Object {
-          "height": undefined,
-        }
-      }
     />
   </div>
   <Preview
