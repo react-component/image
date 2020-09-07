@@ -102,6 +102,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     className: cn(`${prefixCls}-img`, {
       [`${prefixCls}-img-placeholder`]: placeholder === true,
     }),
+    style: height !== undefined ? { height } : undefined,
   };
 
   return (

@@ -8,6 +8,7 @@ import CloseOutlined from '@ant-design/icons/CloseOutlined';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
+import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 
@@ -155,11 +156,16 @@ const Preview: React.FC<PreviewProps> = props => {
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
 
-    // Resolve if in iframe lost event
-    /* istanbul ignore next */
-    if (window.top !== window.self) {
-      onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
-      onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+    try {
+      // Resolve if in iframe lost event
+      /* istanbul ignore next */
+      if (window.top !== window.self) {
+        onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
+        onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+      }
+    } catch (error) {
+      /* istanbul ignore next */
+      warning(false, `[rc-image] ${error}`);
     }
 
     return () => {
