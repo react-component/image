@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
+import Dialog from 'rc-dialog';
+import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
@@ -15,7 +16,7 @@ import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 const { useState } = React;
 
 interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
-  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => any;
+  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   src?: string;
   alt?: string;
 }
