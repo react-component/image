@@ -16,7 +16,7 @@ export interface ImageProps
   preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  getPreviewContainer?: (node: HTMLElement) => HTMLElement;
+  getPreviewContainer?: () => HTMLElement;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
