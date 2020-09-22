@@ -16,7 +16,7 @@ export interface ImageProps
   preview?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  getPreviewContainer?: () => HTMLElement;
+  getPopupContainer?: () => HTMLElement;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
@@ -25,7 +25,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
-  getPreviewContainer,
+  getPopupContainer,
   prefixCls = 'rc-image',
   previewPrefixCls = `${prefixCls}-preview`,
   placeholder,
@@ -140,7 +140,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          getContainer={getPreviewContainer}
+          getContainer={getPopupContainer}
         />
       )}
     </>
