@@ -14,6 +14,7 @@ export interface ImageProps
   placeholder?: React.ReactNode;
   fallback?: string;
   preview?: boolean;
+  previewVisible?: boolean;
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   getPopupContainer?: () => HTMLElement;
@@ -34,6 +35,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   height,
   style,
   preview = true,
+  previewVisible,
   className: originalClassName,
   onClick,
 
@@ -52,6 +54,8 @@ const ImageInternal: React.FC<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
+  const isControlled = previewVisible !== undefined;
+  const mergedPreviewVisible = isControlled ? previewVisible : isShowPreview;
 
   const onLoad = () => {
     setStatus('normal');
@@ -62,21 +66,25 @@ const ImageInternal: React.FC<ImageProps> = ({
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target);
+    if (!isControlled) {
+      const { left, top } = getOffset(e.target);
 
-    setShowPreview(true);
-    setMousePosition({
-      x: left,
-      y: top,
-    });
+      setShowPreview(true);
+      setMousePosition({
+        x: left,
+        y: top,
+      });
+    }
 
     if (onClick) onClick(e);
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    setShowPreview(false);
-    setMousePosition(null);
+    if (!isControlled) {
+      setShowPreview(false);
+      setMousePosition(null);
+    }
 
     if (onInitialPreviewClose) onInitialPreviewClose(e);
   };
@@ -133,8 +141,8 @@ const ImageInternal: React.FC<ImageProps> = ({
       </div>
       {preview && !isError && (
         <Preview
-          aria-hidden={!isShowPreview}
-          visible={isShowPreview}
+          aria-hidden={!mergedPreviewVisible}
+          visible={mergedPreviewVisible}
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}
