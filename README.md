@@ -65,6 +65,7 @@ ReactDOM.render(
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | preview | boolean | true | Whether to show preview |
+| previewVisible | boolean | - | controlled preview visible |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
