@@ -23,7 +23,9 @@ describe('Preview', () => {
     const wrapper = mount(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        onPreviewClose={onPreviewCloseMock}
+        preview={{
+          onClose: onPreviewCloseMock,
+        }}
       />,
     );
 

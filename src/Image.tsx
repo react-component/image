@@ -4,6 +4,11 @@ import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import Preview from './Preview';
 
+export interface ImagePreviewType {
+  visible?: boolean;
+  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+}
+
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
   // Original
@@ -13,8 +18,10 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: boolean;
-  previewVisible?: boolean;
+  preview?: boolean | ImagePreviewType;
+  /**
+   * @deprecated since version 3.2.1
+   */
   onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   getPopupContainer?: () => HTMLElement;
@@ -35,7 +42,6 @@ const ImageInternal: React.FC<ImageProps> = ({
   height,
   style,
   preview = true,
-  previewVisible,
   className: originalClassName,
   onClick,
 
@@ -54,8 +60,10 @@ const ImageInternal: React.FC<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
-  const isControlled = previewVisible !== undefined;
-  const mergedPreviewVisible = isControlled ? previewVisible : isShowPreview;
+  const { visible = undefined, onClose = onInitialPreviewClose } =
+    typeof preview === 'object' ? preview : {};
+  const isControlled = visible !== undefined;
+  const mergedPreviewVisible = isControlled ? visible : isShowPreview;
 
   const onLoad = () => {
     setStatus('normal');
@@ -86,7 +94,7 @@ const ImageInternal: React.FC<ImageProps> = ({
       setMousePosition(null);
     }
 
-    if (onInitialPreviewClose) onInitialPreviewClose(e);
+    if (onClose) onClose(e);
   };
 
   React.useEffect(() => {

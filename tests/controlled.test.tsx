@@ -15,14 +15,14 @@ describe('Controlled', () => {
     const wrapper = mount(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        previewVisible
+        preview={{ visible: true }}
       />,
     );
 
     expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
 
     act(() => {
-      wrapper.setProps({ previewVisible: false });
+      wrapper.setProps({ preview: { visible: false } });
       jest.runAllTimers();
       wrapper.update();
     });

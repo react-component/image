@@ -19,9 +19,11 @@ export default function Base() {
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
-        previewVisible={visible}
-        onPreviewClose={() => {
-          setVisible(false);
+        preview={{
+          visible,
+          onClose: () => {
+            setVisible(false);
+          },
         }}
       />
     </div>
