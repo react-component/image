@@ -2,11 +2,12 @@ import * as React from 'react';
 import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import Preview from './Preview';
 
 export interface ImagePreviewType {
   visible?: boolean;
-  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
 }
 
 export interface ImageProps
@@ -22,7 +23,7 @@ export interface ImageProps
   /**
    * @deprecated since version 3.2.1
    */
-  onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  onPreviewClose?: (value: boolean, prevValue: boolean) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   getPopupContainer?: () => HTMLElement;
 }
@@ -56,14 +57,16 @@ const ImageInternal: React.FC<ImageProps> = ({
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
-  const [isShowPreview, setShowPreview] = useState(false);
+  const { visible = undefined, onVisibleChange = onInitialPreviewClose } =
+    typeof preview === 'object' ? preview : {};
+  const isControlled = visible !== undefined;
+  const [isShowPreview, setShowPreview] = useMergedState(!!visible, {
+    value: visible,
+    onChange: onVisibleChange,
+  });
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
-  const { visible = undefined, onClose = onInitialPreviewClose } =
-    typeof preview === 'object' ? preview : {};
-  const isControlled = visible !== undefined;
-  const mergedPreviewVisible = isControlled ? visible : isShowPreview;
 
   const onLoad = () => {
     setStatus('normal');
@@ -77,24 +80,22 @@ const ImageInternal: React.FC<ImageProps> = ({
     if (!isControlled) {
       const { left, top } = getOffset(e.target);
 
-      setShowPreview(true);
       setMousePosition({
         x: left,
         y: top,
       });
     }
+    setShowPreview(true);
 
     if (onClick) onClick(e);
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    setShowPreview(false);
     if (!isControlled) {
-      setShowPreview(false);
       setMousePosition(null);
     }
-
-    if (onClose) onClose(e);
   };
 
   React.useEffect(() => {
@@ -149,8 +150,8 @@ const ImageInternal: React.FC<ImageProps> = ({
       </div>
       {preview && !isError && (
         <Preview
-          aria-hidden={!mergedPreviewVisible}
-          visible={mergedPreviewVisible}
+          aria-hidden={!isShowPreview}
+          visible={isShowPreview}
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}

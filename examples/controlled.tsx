@@ -21,8 +21,8 @@ export default function Base() {
         width={200}
         preview={{
           visible,
-          onClose: () => {
-            setVisible(false);
+          onVisibleChange: value => {
+            setVisible(value);
           },
         }}
       />

@@ -14,6 +14,11 @@ export default function Base() {
         onClick={() => {
           console.log('click');
         }}
+        preview={{
+          onVisibleChange: visible => {
+            console.log('visible', visible);
+          },
+        }}
       />
 
       <Image
