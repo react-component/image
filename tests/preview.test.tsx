@@ -14,16 +14,13 @@ describe('Preview', () => {
   });
 
   it('Show preview and close', () => {
-    let initialTimeNow = 0;
-    const dateMock = jest.spyOn(global.Date, 'now').mockImplementation(() => {
-      initialTimeNow += 100;
-      return initialTimeNow;
-    });
     const onPreviewCloseMock = jest.fn();
     const wrapper = mount(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        onPreviewClose={onPreviewCloseMock}
+        preview={{
+          onVisibleChange: onPreviewCloseMock,
+        }}
       />,
     );
 
@@ -36,8 +33,8 @@ describe('Preview', () => {
     expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
 
     // With mask close
+    expect(onPreviewCloseMock).toBeCalledWith(true, false);
     wrapper.find('.rc-image-preview-wrap').simulate('click');
-    expect(onPreviewCloseMock).toBeCalledTimes(1);
 
     // With btn close
     act(() => {
@@ -53,9 +50,9 @@ describe('Preview', () => {
         .simulate('click');
     });
 
-    expect(onPreviewCloseMock).toBeCalledTimes(2);
+    expect(onPreviewCloseMock).toBeCalledWith(false, true);
 
-    dateMock.mockRestore();
+    onPreviewCloseMock.mockRestore();
   });
 
   it('Unmount', () => {

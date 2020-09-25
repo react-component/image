@@ -4,13 +4,7 @@
 
 React Image.
 
-[![NPM version][npm-image]][npm-url]
-[![CircleCI status][circleci-image]][circleci-url]
-[![Test coverage][codecov-image]][codecov-url]
-[![Dependencies][david-image]][david-url]
-[![DevDependencies][david-dev-image]][david-dev-url]
-[![npm download][download-image]][download-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
+[![NPM version][npm-image]][npm-url] [![CircleCI status][circleci-image]][circleci-url] [![Test coverage][codecov-image]][codecov-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
@@ -64,11 +58,10 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean | true | Whether to show preview |
+| preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue) } | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
-| onPreviewClose | function(e) | - | Preview close callback |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 
 ## Example
