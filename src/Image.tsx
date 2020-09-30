@@ -2,8 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
+
+export interface ImagePreviewType {
+  visible?: boolean;
+  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
+}
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -14,9 +20,13 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  preview?: boolean;
-  onPreviewClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  preview?: boolean | ImagePreviewType;
+  /**
+   * @deprecated since version 3.2.1
+   */
+  onPreviewClose?: (value: boolean, prevValue: boolean) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  getPopupContainer?: () => HTMLElement;
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
@@ -29,6 +39,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
+  getPopupContainer,
   prefixCls = 'rc-image',
   previewPrefixCls = `${prefixCls}-preview`,
   placeholder,
@@ -51,7 +62,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
-  const [isShowPreview, setShowPreview] = useState(false);
+  const { visible = undefined, onVisibleChange = onInitialPreviewClose } =
+    typeof preview === 'object' ? preview : {};
+  const isControlled = visible !== undefined;
+  const [isShowPreview, setShowPreview] = useMergedState(!!visible, {
+    value: visible,
+    onChange: onVisibleChange,
+  });
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
@@ -79,21 +96,27 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target);
+    if (!isControlled) {
+      const { left, top } = getOffset(e.target);
+
+      if (isPreviewGroup) {
+        setCurrent(src);
+        setGroupMousePosition({
+          x: left,
+          y: top,
+        });
+      } else {
+        setMousePosition({
+          x: left,
+          y: top,
+        });
+      }
+    }
 
     if (isPreviewGroup) {
-      setCurrent(src);
       setGroupShowPreview(true);
-      setGroupMousePosition({
-        x: left,
-        y: top,
-      });
     } else {
       setShowPreview(true);
-      setMousePosition({
-        x: left,
-        y: top,
-      });
     }
 
     if (onClick) onClick(e);
@@ -102,9 +125,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setShowPreview(false);
-    setMousePosition(null);
-
-    if (onInitialPreviewClose) onInitialPreviewClose(e);
+    if (!isControlled) {
+      setMousePosition(null);
+    }
   };
 
   React.useEffect(() => {
@@ -141,6 +164,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     className: cn(`${prefixCls}-img`, {
       [`${prefixCls}-img-placeholder`]: placeholder === true,
     }),
+    style: height !== undefined ? { height } : undefined,
   };
 
   return (
@@ -176,6 +200,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
+          getContainer={getPopupContainer}
         />
       )}
     </>

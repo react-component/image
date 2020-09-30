@@ -1,6 +1,5 @@
 import * as React from 'react';
-import Dialog from 'rc-dialog';
-import IDialogPropTypes from 'rc-dialog/lib/IDialogPropTypes';
+import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
@@ -11,6 +10,7 @@ import RightOutlined from '@ant-design/icons/RightOutlined';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
+import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
 import usePreviewIndex from './hooks/usePreviewIndex';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
@@ -186,11 +186,16 @@ const Preview: React.FC<PreviewProps> = props => {
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
 
-    // Resolve if in iframe lost event
-    /* istanbul ignore next */
-    if (window.top !== window.self) {
-      onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
-      onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+    try {
+      // Resolve if in iframe lost event
+      /* istanbul ignore next */
+      if (window.top !== window.self) {
+        onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
+        onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+      }
+    } catch (error) {
+      /* istanbul ignore next */
+      warning(false, `[rc-image] ${error}`);
     }
 
     return () => {

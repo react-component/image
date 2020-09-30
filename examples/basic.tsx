@@ -14,6 +14,11 @@ export default function Base() {
         onClick={() => {
           console.log('click');
         }}
+        preview={{
+          onVisibleChange: visible => {
+            console.log('visible', visible);
+          },
+        }}
       />
 
       <Image
@@ -33,6 +38,12 @@ export default function Base() {
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
         width={200}
+      />
+
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width={200}
+        height={100}
       />
     </div>
   );

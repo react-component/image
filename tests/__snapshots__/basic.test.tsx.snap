@@ -30,7 +30,7 @@ exports[`Basic snapshot 1`] = `
     src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
     visible={false}
   >
-    <Component
+    <Dialog
       afterClose={[Function]}
       aria-hidden={true}
       closable={false}
@@ -46,7 +46,7 @@ exports[`Basic snapshot 1`] = `
       <PortalWrapper
         visible={false}
       />
-    </Component>
+    </Dialog>
   </Preview>
 </Image>
 `;
