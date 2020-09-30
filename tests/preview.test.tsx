@@ -82,8 +82,6 @@ describe('Preview', () => {
       wrapper.update();
     });
 
-    wrapper.find('.rc-image-preview-wrap').simulate('click');
-
     act(() => {
       wrapper
         .find('.rc-image-preview-operations-operation')
@@ -119,8 +117,6 @@ describe('Preview', () => {
       jest.runAllTimers();
       wrapper.update();
     });
-
-    wrapper.find('.rc-image-preview-wrap').simulate('click');
 
     act(() => {
       wrapper
