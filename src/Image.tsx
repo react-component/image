@@ -14,7 +14,8 @@ export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
   // Original
   src?: string;
-
+  imgClass?: string;
+  imgStyle?: React.CSSProperties;
   prefixCls?: string;
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
@@ -47,6 +48,8 @@ const ImageInternal: React.FC<ImageProps> = ({
   onClick,
 
   // Img
+  imgClass,
+  imgStyle,
   crossOrigin,
   decoding,
   loading,
@@ -118,10 +121,18 @@ const ImageInternal: React.FC<ImageProps> = ({
     srcSet,
     useMap,
     alt,
-    className: cn(`${prefixCls}-img`, {
-      [`${prefixCls}-img-placeholder`]: placeholder === true,
-    }),
-    style: height !== undefined ? { height } : undefined,
+    className: cn(
+      `${prefixCls}-img`,
+      {
+        [`${prefixCls}-img-placeholder`]: placeholder === true,
+      },
+      imgClass,
+    ),
+    style: {
+      height,
+      width,
+      ...imgStyle,
+    },
   };
 
   return (
@@ -132,8 +143,6 @@ const ImageInternal: React.FC<ImageProps> = ({
         onClick={preview && !isError ? onPreview : onClick}
         style={{
           ...style,
-          width,
-          height,
         }}
       >
         {isError && fallback ? (
