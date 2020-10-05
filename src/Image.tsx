@@ -14,8 +14,8 @@ export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
   // Original
   src?: string;
-  imgClass?: string;
-  imgStyle?: React.CSSProperties;
+  wrapperClassName?: string;
+  wrapperStyle?: React.CSSProperties;
   prefixCls?: string;
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
@@ -44,12 +44,12 @@ const ImageInternal: React.FC<ImageProps> = ({
   height,
   style,
   preview = true,
-  className: originalClassName,
+  className,
   onClick,
+  wrapperClassName,
+  wrapperStyle,
 
   // Img
-  imgClass,
-  imgStyle,
   crossOrigin,
   decoding,
   loading,
@@ -107,7 +107,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     }
   }, [src]);
 
-  const className = cn(prefixCls, originalClassName, {
+  const wrappperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
   });
 
@@ -126,12 +126,12 @@ const ImageInternal: React.FC<ImageProps> = ({
       {
         [`${prefixCls}-img-placeholder`]: placeholder === true,
       },
-      imgClass,
+      className,
     ),
     style: {
       height,
       width,
-      ...imgStyle,
+      ...style
     },
   };
 
@@ -139,11 +139,9 @@ const ImageInternal: React.FC<ImageProps> = ({
     <>
       <div
         {...otherProps}
-        className={className}
+        className={wrappperClass}
         onClick={preview && !isError ? onPreview : onClick}
-        style={{
-          ...style,
-        }}
+        style={wrapperStyle}
       >
         {isError && fallback ? (
           <img {...imgCommonProps} src={fallback} />

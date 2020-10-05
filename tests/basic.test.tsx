@@ -47,20 +47,34 @@ describe('Basic', () => {
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
-  test('imgClass and imgStyle props should work', () => {
+  test('className and style props should work on img element', () => {
     const wrapper = mount(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        imgClass="img"
-        imgStyle={{
+        className="img"
+        style={{
           objectFit: 'cover',
         }}
       />,
     );
-    const imgWrapper = wrapper.find('img');
-    expect(imgWrapper.props().className).toContain('img');
-    expect(imgWrapper.props().style.objectFit).toEqual('cover');
+    const img = wrapper.find('img');
+    expect(img.props().className).toContain('img');
+    expect(img.props().style.objectFit).toEqual('cover');
   });
+  test("wrapperClassName and wrapperStyle should work on image wrapper element",() => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        wrapperClassName="wrapper"
+        wrapperStyle={{
+          objectFit: 'cover',
+        }}
+      />,
+    );
+    const wrapperElement = wrapper.find('img').parent()
+    expect(wrapperElement.props().className).toContain("wrapper")
+    expect(wrapperElement.props().style.objectFit).toEqual("cover")
+  })
   // wrapper element will auto-scale to fit img element
   test('width and height props should only be applied on img element', () => {
     const wrapper = mount(
@@ -74,7 +88,7 @@ describe('Basic', () => {
     const parentWrapper = img.parent();
     expect(img.props().style.height).toEqual('400px');
     expect(img.props().style.width).toEqual('400px');
-    expect(parentWrapper.props().style.width).toBeUndefined();
-    expect(parentWrapper.props().style.height).toBeUndefined();
+    expect(parentWrapper.props().style?.width).toBeUndefined();
+    expect(parentWrapper.props().style?.height).toBeUndefined();
   });
 });
