@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Controlled With previewVisible 1`] = `
+<div
+  className="rc-image-preview"
+  onClick={[Function]}
+  role="document"
+  style={Object {}}
+>
+  <div
+    aria-hidden="true"
+    style={
+      Object {
+        "height": 0,
+        "outline": "none",
+        "overflow": "hidden",
+        "width": 0,
+      }
+    }
+    tabIndex={0}
+  />
+  <div
+    className="rc-image-preview-content"
+  >
+    <div
+      className="rc-image-preview-body"
+    >
+      <ul
+        className="rc-image-preview-operations"
+      >
+        <li
+          className="rc-image-preview-operations-operation"
+          onClick={[Function]}
+        >
+          <ForwardRef(CloseOutlined)
+            className="rc-image-preview-operations-icon"
+          />
+        </li>
+        <li
+          className="rc-image-preview-operations-operation"
+          onClick={[Function]}
+        >
+          <ForwardRef(ZoomInOutlined)
+            className="rc-image-preview-operations-icon"
+          />
+        </li>
+        <li
+          className="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
+          onClick={[Function]}
+        >
+          <ForwardRef(ZoomOutOutlined)
+            className="rc-image-preview-operations-icon"
+          />
+        </li>
+        <li
+          className="rc-image-preview-operations-operation"
+          onClick={[Function]}
+        >
+          <ForwardRef(RotateRightOutlined)
+            className="rc-image-preview-operations-icon"
+          />
+        </li>
+        <li
+          className="rc-image-preview-operations-operation"
+          onClick={[Function]}
+        >
+          <ForwardRef(RotateLeftOutlined)
+            className="rc-image-preview-operations-icon"
+          />
+        </li>
+      </ul>
+      <div
+        className="rc-image-preview-img-wrapper"
+        style={
+          Object {
+            "transform": "translate3d(0px, 0px, 0)",
+          }
+        }
+      >
+        <img
+          className="rc-image-preview-img"
+          onMouseDown={[Function]}
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          style={
+            Object {
+              "transform": "scale3d(1, 1, 1) rotate(0deg)",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    aria-hidden="true"
+    style={
+      Object {
+        "height": 0,
+        "outline": "none",
+        "overflow": "hidden",
+        "width": 0,
+      }
+    }
+    tabIndex={0}
+  />
+</div>
+`;
