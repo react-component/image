@@ -3,12 +3,13 @@ import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import { GetContainer } from 'rc-util/lib/PortalWrapper';
 import Preview from './Preview';
 
 export interface ImagePreviewType {
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
-  getContainer?: HTMLElement | (() => HTMLElement);
+  getContainer?: GetContainer | false;
 }
 
 export interface ImageProps
