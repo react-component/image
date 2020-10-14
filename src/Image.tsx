@@ -3,11 +3,13 @@ import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import { GetContainer } from 'rc-util/lib/PortalWrapper';
 import Preview from './Preview';
 
 export interface ImagePreviewType {
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
+  getContainer?: GetContainer | false;
 }
 
 export interface ImageProps
@@ -25,7 +27,6 @@ export interface ImageProps
    */
   onPreviewClose?: (value: boolean, prevValue: boolean) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
-  getPopupContainer?: () => HTMLElement;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
@@ -34,7 +35,6 @@ const ImageInternal: React.FC<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
-  getPopupContainer,
   prefixCls = 'rc-image',
   previewPrefixCls = `${prefixCls}-preview`,
   placeholder,
@@ -57,7 +57,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
-  const { visible = undefined, onVisibleChange = onInitialPreviewClose } =
+  const { visible = undefined, onVisibleChange = onInitialPreviewClose, getContainer = undefined } =
     typeof preview === 'object' ? preview : {};
   const isControlled = visible !== undefined;
   const [isShowPreview, setShowPreview] = useMergedState(!!visible, {
@@ -157,7 +157,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          getContainer={getPopupContainer}
+          getContainer={getContainer}
         />
       )}
     </>

@@ -58,7 +58,7 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue) } | true | Whether to show preview |
+| preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue),getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
