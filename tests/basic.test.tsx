@@ -61,7 +61,7 @@ describe('Basic', () => {
     expect(img.props().className).toContain('img');
     expect(img.props().style.objectFit).toEqual('cover');
   });
-  test("wrapperClassName and wrapperStyle should work on image wrapper element",() => {
+  test('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
     const wrapper = mount(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -71,24 +71,8 @@ describe('Basic', () => {
         }}
       />,
     );
-    const wrapperElement = wrapper.find('img').parent()
-    expect(wrapperElement.props().className).toContain("wrapper")
-    expect(wrapperElement.props().style.objectFit).toEqual("cover")
-  })
-  // wrapper element will auto-scale to fit img element
-  test('width and height props should only be applied on img element', () => {
-    const wrapper = mount(
-      <Image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        height="400px"
-        width="400px"
-      />,
-    );
-    const img = wrapper.find('img');
-    const parentWrapper = img.parent();
-    expect(img.props().style.height).toEqual('400px');
-    expect(img.props().style.width).toEqual('400px');
-    expect(parentWrapper.props().style?.width).toBeUndefined();
-    expect(parentWrapper.props().style?.height).toBeUndefined();
+    const wrapperElement = wrapper.find('img').parent();
+    expect(wrapperElement.props().className).toContain('wrapper');
+    expect(wrapperElement.props().style.objectFit).toEqual('cover');
   });
 });
