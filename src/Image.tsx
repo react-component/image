@@ -130,8 +130,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     ),
     style: {
       height,
-      width,
-      ...style
+      ...style,
     },
   };
 
@@ -141,7 +140,11 @@ const ImageInternal: React.FC<ImageProps> = ({
         {...otherProps}
         className={wrappperClass}
         onClick={preview && !isError ? onPreview : onClick}
-        style={wrapperStyle}
+        style={{
+          width,
+          height,
+          ...wrapperStyle,
+        }}
       >
         {isError && fallback ? (
           <img {...imgCommonProps} src={fallback} />
