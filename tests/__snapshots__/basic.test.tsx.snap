@@ -8,18 +8,18 @@ exports[`Basic snapshot 1`] = `
   <div
     className="rc-image"
     onClick={[Function]}
-    style={
-      Object {
-        "height": undefined,
-        "width": 200,
-      }
-    }
   >
     <img
       className="rc-image-img"
       onError={[Function]}
       onLoad={[Function]}
       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      style={
+        Object {
+          "height": undefined,
+          "width": 200,
+        }
+      }
     />
   </div>
   <Preview

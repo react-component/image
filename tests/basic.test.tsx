@@ -47,4 +47,32 @@ describe('Basic', () => {
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
+  test('className and style props should work on img element', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        className="img"
+        style={{
+          objectFit: 'cover',
+        }}
+      />,
+    );
+    const img = wrapper.find('img');
+    expect(img.props().className).toContain('img');
+    expect(img.props().style.objectFit).toEqual('cover');
+  });
+  test('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        wrapperClassName="wrapper"
+        wrapperStyle={{
+          objectFit: 'cover',
+        }}
+      />,
+    );
+    const wrapperElement = wrapper.find('img').parent();
+    expect(wrapperElement.props().className).toContain('wrapper');
+    expect(wrapperElement.props().style.objectFit).toEqual('cover');
+  });
 });
