@@ -23,6 +23,7 @@ export interface ImageProps
   placeholder?: React.ReactNode;
   fallback?: string;
   preview?: boolean | ImagePreviewType;
+  fit?: ImageFit;
   /**
    * @deprecated since version 3.2.1
    */
@@ -31,6 +32,8 @@ export interface ImageProps
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
+
+export type ImageFit = 'fill' | 'contain' | 'cover' | 'none' | 'scale-down';
 
 const ImageInternal: React.FC<ImageProps> = ({
   src,
@@ -57,6 +60,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   sizes,
   srcSet,
   useMap,
+  fit = 'fill',
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
@@ -130,6 +134,7 @@ const ImageInternal: React.FC<ImageProps> = ({
     ),
     style: {
       height,
+      objectFit: fit,
       ...style,
     },
   };
