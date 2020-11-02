@@ -8,6 +8,12 @@ exports[`Basic snapshot 1`] = `
   <div
     className="rc-image"
     onClick={[Function]}
+    style={
+      Object {
+        "height": undefined,
+        "width": 200,
+      }
+    }
   >
     <img
       className="rc-image-img"
@@ -17,7 +23,6 @@ exports[`Basic snapshot 1`] = `
       style={
         Object {
           "height": undefined,
-          "width": 200,
         }
       }
     />
