@@ -101,6 +101,12 @@ const ImageInternal: React.FC<ImageProps> = ({
     }
   };
 
+  const getImgRef = (img: HTMLImageElement) => {
+    if (img && img.complete && (img.naturalWidth || img.naturalHeight)) {
+      onLoad();
+    }
+  };
+
   React.useEffect(() => {
     if (isCustomPlaceholder) {
       setStatus('loading');
@@ -149,7 +155,7 @@ const ImageInternal: React.FC<ImageProps> = ({
         {isError && fallback ? (
           <img {...imgCommonProps} src={fallback} />
         ) : (
-          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} />
+          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={getImgRef} />
         )}
 
         {status === 'loading' && (
