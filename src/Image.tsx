@@ -102,7 +102,7 @@ const ImageInternal: React.FC<ImageProps> = ({
   };
 
   const getImgRef = (img: HTMLImageElement) => {
-    if (img && img.complete && (img.naturalWidth || img.naturalHeight)) {
+    if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
       onLoad();
     }
   };
