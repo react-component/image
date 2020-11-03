@@ -101,7 +101,8 @@ const ImageInternal: React.FC<ImageProps> = ({
     }
   };
 
-  const getImgRef = (img: HTMLImageElement) => {
+  const getImgRef = (img?: HTMLImageElement) => {
+    if (status !== 'loading') return;
     if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
       onLoad();
     }
