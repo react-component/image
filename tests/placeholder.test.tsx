@@ -40,7 +40,7 @@ describe('Placeholder', () => {
     expect(wrapper.find('.rc-image-placeholder').get(0)).toBeUndefined();
   });
 
-  it('Cache', () => {
+  it('Hide placeholder when load from cache', () => {
     const domSpy = spyElementPrototypes(HTMLImageElement, {
       complete: {
         get: () => true,
