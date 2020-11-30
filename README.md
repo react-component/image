@@ -32,6 +32,7 @@ React Image.
 - [x] Rotate
 - [x] Zoom
 - [x] Fallback
+- [x] Multiple Preview
 
 ### Keyboard
 
@@ -63,6 +64,21 @@ ReactDOM.render(
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+
+## Image.PreviewGroup
+
+preview the merged src
+
+```jsx
+const Image = require('rc-image');
+
+ReactDOM.render(
+  <Image.PreviewGroup>
+    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+    <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
+  </Image.PreviewGroup>
+), document.getElementById('root'));
+```
 
 ## Example
 

@@ -5,6 +5,7 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { GetContainer } from 'rc-util/lib/PortalWrapper';
 import Preview from './Preview';
+import PreviewGroup, { context } from './PreviewGroup';
 
 export interface ImagePreviewType {
   visible?: boolean;
@@ -30,9 +31,13 @@ export interface ImageProps
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
+interface CompoundedComponent<P> extends React.FC<P> {
+  PreviewGroup: typeof PreviewGroup;
+}
+
 type ImageStatus = 'normal' | 'error' | 'loading';
 
-const ImageInternal: React.FC<ImageProps> = ({
+const ImageInternal: CompoundedComponent<ImageProps> = ({
   src,
   alt,
   onPreviewClose: onInitialPreviewClose,
@@ -70,6 +75,16 @@ const ImageInternal: React.FC<ImageProps> = ({
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
+  const {
+    isPreviewGroup,
+    previewUrls,
+    setPreviewUrls,
+    setCurrent,
+    setShowPreview: setGroupShowPreview,
+    setMousePosition: setGroupMousePosition,
+  } = React.useContext(context);
+
+  const groupIndexRef = React.useRef(0);
 
   const onLoad = () => {
     setStatus('normal');
@@ -77,18 +92,35 @@ const ImageInternal: React.FC<ImageProps> = ({
 
   const onError = () => {
     setStatus('error');
+    if (isPreviewGroup) {
+      previewUrls.splice(groupIndexRef.current);
+      setPreviewUrls(previewUrls);
+    }
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     if (!isControlled) {
       const { left, top } = getOffset(e.target);
 
-      setMousePosition({
-        x: left,
-        y: top,
-      });
+      if (isPreviewGroup) {
+        setCurrent(src);
+        setGroupMousePosition({
+          x: left,
+          y: top,
+        });
+      } else {
+        setMousePosition({
+          x: left,
+          y: top,
+        });
+      }
     }
-    setShowPreview(true);
+
+    if (isPreviewGroup) {
+      setGroupShowPreview(true);
+    } else {
+      setShowPreview(true);
+    }
 
     if (onClick) onClick(e);
   };
@@ -109,9 +141,20 @@ const ImageInternal: React.FC<ImageProps> = ({
   };
 
   React.useEffect(() => {
+    if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
+      groupIndexRef.current = previewUrls.length;
+      previewUrls.push(src);
+      setPreviewUrls(previewUrls);
+    }
+  }, [previewUrls]);
+
+  React.useEffect(() => {
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
+    return () => {
+      setPreviewUrls(previewUrls.filter(url => url !== src));
+    };
   }, [src]);
 
   const wrappperClass = cn(prefixCls, wrapperClassName, {
@@ -165,7 +208,7 @@ const ImageInternal: React.FC<ImageProps> = ({
           </div>
         )}
       </div>
-      {preview && !isError && (
+      {!isPreviewGroup && preview && !isError && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -180,6 +223,8 @@ const ImageInternal: React.FC<ImageProps> = ({
     </>
   );
 };
+
+ImageInternal.PreviewGroup = PreviewGroup;
 
 ImageInternal.displayName = 'Image';
 

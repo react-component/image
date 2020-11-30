@@ -335,4 +335,59 @@ describe('Preview', () => {
     imgEleMock.mockRestore();
     jest.restoreAllMocks();
   });
+
+  it('PreviewGroup', () => {
+    const wrapper = mount(
+      <Image.PreviewGroup>
+        <Image
+          className="group-1"
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        />
+        <Image
+          className="group-2"
+          src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
+        />
+      </Image.PreviewGroup>,
+    );
+
+    act(() => {
+      wrapper
+        .find('.rc-image')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper
+        .find('.anticon')
+        .at(1)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image-preview-wrap').simulate('click');
+
+    act(() => {
+      wrapper
+        .find('.rc-image')
+        .at(1)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper
+        .find('.anticon')
+        .at(0)
+        .simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    wrapper.find('.rc-image-preview-wrap').simulate('click');
+  });
 });

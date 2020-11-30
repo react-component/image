@@ -5,12 +5,16 @@ import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import LeftOutlined from '@ant-design/icons/LeftOutlined';
+import RightOutlined from '@ant-design/icons/RightOutlined';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
+import usePreviewIndex from './hooks/usePreviewIndex';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import { context } from './PreviewGroup';
 
 const { useState } = React;
 
@@ -47,6 +51,12 @@ const Preview: React.FC<PreviewProps> = props => {
   });
   const [isMoving, setMoving] = React.useState(false);
 
+  const { previewUrls } = React.useContext(context);
+
+  const urls = previewUrls && previewUrls.length ? previewUrls : [src];
+
+  const [index, setIndex] = usePreviewIndex(src, urls);
+
   const onAfterClose = () => {
     setScale(1);
     setRotate(0);
@@ -71,6 +81,26 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onRotateLeft = () => {
     setRotate(value => value - 90);
+  };
+
+  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
+    event.preventDefault();
+    // Without this mask close will abnormal
+    event.stopPropagation();
+    if (index > 0) {
+      onAfterClose();
+      setIndex(index - 1);
+    }
+  };
+
+  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
+    event.preventDefault();
+    // Without this mask close will abnormal
+    event.stopPropagation();
+    if (index < urls.length - 1) {
+      onAfterClose();
+      setIndex(index + 1);
+    }
   };
 
   const wrapClassName = classnames({
@@ -176,6 +206,9 @@ const Preview: React.FC<PreviewProps> = props => {
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
+      if (!visible) {
+        setIndex(urls.indexOf(src));
+      }
     };
   }, [visible, isMoving]);
 
@@ -215,13 +248,33 @@ const Preview: React.FC<PreviewProps> = props => {
           onMouseDown={onMouseDown}
           ref={imgRef}
           className={`${prefixCls}-img`}
-          src={src}
+          src={urls[index]}
           alt={alt}
           style={{
             transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
           }}
         />
       </div>
+      {urls.length > 1 ? (
+        <div
+          className={classnames(`${prefixCls}-switch-left`, {
+            [`${prefixCls}-switch-left-disabled`]: index <= 0,
+          })}
+          onClick={onSwitchLeft}
+        >
+          <LeftOutlined />
+        </div>
+      ) : null}
+      {urls.length > 1 ? (
+        <div
+          className={classnames(`${prefixCls}-switch-right`, {
+            [`${prefixCls}-switch-right-disabled`]: index >= urls.length - 1,
+          })}
+          onClick={onSwitchRight}
+        >
+          <RightOutlined />
+        </div>
+      ) : null}
     </Dialog>
   );
 };
