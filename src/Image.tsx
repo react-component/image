@@ -11,7 +11,7 @@ export interface ImagePreviewType {
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
-  placeholder?: React.ReactNode;
+  mask?: React.ReactNode;
 }
 
 export interface ImageProps
@@ -70,7 +70,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
-    placeholder: previewPlaceholder,
+    mask: previewMask,
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const isControlled = previewVisible !== undefined;
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
@@ -216,7 +216,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         )}
 
         {/* Preview Click Mask */}
-        {previewPlaceholder && <div className={`${prefixCls}-mask`}>{previewPlaceholder}</div>}
+        {previewMask && <div className={`${prefixCls}-mask`}>{previewMask}</div>}
       </div>
       {!isPreviewGroup && canPreview && (
         <Preview

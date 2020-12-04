@@ -396,7 +396,7 @@ describe('Preview', () => {
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          placeholder: 'Bamboo Is Light',
+          mask: 'Bamboo Is Light',
         }}
       />,
     );
