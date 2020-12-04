@@ -27,6 +27,11 @@ describe('Controlled', () => {
       wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toMatchSnapshot();
+    expect(
+      wrapper
+        .find('.rc-image-preview')
+        .at(0)
+        .render(),
+    ).toMatchSnapshot();
   });
 });
