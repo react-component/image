@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
@@ -11,6 +11,7 @@ export interface ImagePreviewType {
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
+  mask?: React.ReactNode;
 }
 
 export interface ImageProps
@@ -65,12 +66,16 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
-  const { visible = undefined, onVisibleChange = onInitialPreviewClose, getContainer = undefined } =
-    typeof preview === 'object' ? preview : {};
-  const isControlled = visible !== undefined;
-  const [isShowPreview, setShowPreview] = useMergedState(!!visible, {
-    value: visible,
-    onChange: onVisibleChange,
+  const {
+    visible: previewVisible = undefined,
+    onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
+    getContainer: getPreviewContainer = undefined,
+    mask: previewMask,
+  }: ImagePreviewType = typeof preview === 'object' ? preview : {};
+  const isControlled = previewVisible !== undefined;
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
+    value: previewVisible,
+    onChange: onPreviewVisibleChange,
   });
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
@@ -140,7 +145,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
       groupIndexRef.current = previewUrls.length;
       previewUrls.push(src);
@@ -148,7 +153,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   }, [previewUrls]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
@@ -157,7 +162,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     };
   }, [src]);
 
-  const wrappperClass = cn(prefixCls, wrapperClassName, {
+  const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
   });
 
@@ -184,11 +189,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     },
   };
 
+  const canPreview = preview && !isError;
+
   return (
     <>
       <div
         {...otherProps}
-        className={wrappperClass}
+        className={wrapperClass}
         onClick={preview && !isError ? onPreview : onClick}
         style={{
           width,
@@ -207,8 +214,11 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
             {placeholder}
           </div>
         )}
+
+        {/* Preview Click Mask */}
+        {previewMask && <div className={`${prefixCls}-mask`}>{previewMask}</div>}
       </div>
-      {!isPreviewGroup && preview && !isError && (
+      {!isPreviewGroup && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}
@@ -217,7 +227,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          getContainer={getContainer}
+          getContainer={getPreviewContainer}
         />
       )}
     </>

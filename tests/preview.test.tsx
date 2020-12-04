@@ -390,4 +390,17 @@ describe('Preview', () => {
 
     wrapper.find('.rc-image-preview-wrap').simulate('click');
   });
+
+  it('preview placeholder', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          mask: 'Bamboo Is Light',
+        }}
+      />,
+    );
+
+    expect(wrapper.find('.rc-image-mask').text()).toEqual('Bamboo Is Light');
+  });
 });

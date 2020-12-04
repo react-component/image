@@ -20,7 +20,7 @@
 }
 
 .@{prefixCls} {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
   &-img {
     width: 100%;
@@ -35,6 +35,27 @@
 
   &-placeholder {
     .box;
+  }
+
+  // >>> Mask
+  &-mask {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: opacity 0.3s;
+  }
+
+  &:hover &-mask {
+    opacity: 1;
   }
 
   &-preview {
@@ -198,7 +219,7 @@
       }
       > .anticon {
         font-size: 24px;
-      } 
+      }
     }
   }
 }

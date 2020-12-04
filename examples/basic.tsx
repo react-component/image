@@ -27,6 +27,7 @@ export default function Base() {
         style={{
           marginRight: 24,
         }}
+        preview={{ mask: 'Click to Preview' }}
       />
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*ngiJQaLQELEAAAAAAAAAAABkARQnAQ"
