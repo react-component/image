@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Preview from './Preview';
 
 export interface GroupConsumerProps {
@@ -28,10 +29,10 @@ const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
 }) => {
-  const [previewUrls, setPreviewUrls] = React.useState([]);
-  const [current, setCurrent] = React.useState();
-  const [isShowPreview, setShowPreview] = React.useState(false);
-  const [mousePosition, setMousePosition] = React.useState<null | { x: number; y: number }>(null);
+  const [previewUrls, setPreviewUrls] = useState([]);
+  const [current, setCurrent] = useState();
+  const [isShowPreview, setShowPreview] = useState(false);
+  const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setShowPreview(false);

@@ -71,7 +71,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
     placeholder: previewPlaceholder,
-  } = typeof preview === 'object' ? preview : {};
+  }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const isControlled = previewVisible !== undefined;
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
