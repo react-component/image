@@ -146,7 +146,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   useEffect(() => {
-    if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
+    if (isPreviewGroup) {
       groupIndexRef.current = previewUrls.length;
       previewUrls.push(src);
       setPreviewUrls(previewUrls);

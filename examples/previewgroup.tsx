@@ -50,6 +50,13 @@ export default function PreviewGroup() {
               marginRight: 24,
             }}
           />
+          <Image
+            src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ"
+            width={200}
+            style={{
+              marginRight: 24,
+            }}
+          />
         </Image.PreviewGroup>
       </Image.PreviewGroup>
     </div>

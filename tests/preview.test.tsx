@@ -391,6 +391,25 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-wrap').simulate('click');
   });
 
+  it('PreviewGroup should support images with same src', () => {
+    const sameSrc = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(
+      <Image.PreviewGroup>
+        <Image wrapperClassName="img-1" src={sameSrc} />
+        <Image wrapperClassName="img-2" src={sameSrc} />
+      </Image.PreviewGroup>,
+    );
+
+    wrapper
+      .find('.rc-image')
+      .at(0)
+      .simulate('click');
+
+    expect(wrapper.find('.rc-image-preview-switch-right').prop('className')).toEqual(
+      'rc-image-preview-switch-right',
+    );
+  });
+
   it('preview placeholder', () => {
     const wrapper = mount(
       <Image
