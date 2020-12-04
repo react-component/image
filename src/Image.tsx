@@ -85,6 +85,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   } = React.useContext(context);
 
   const groupIndexRef = React.useRef(0);
+  const imgRef = React.useRef<HTMLImageElement>(null);
+
+  const isLoaded = (img?: HTMLImageElement) =>
+    img?.complete && (img.naturalWidth || img.naturalHeight);
 
   const onLoad = () => {
     setStatus('normal');
@@ -133,13 +137,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
-  const getImgRef = (img?: HTMLImageElement) => {
-    if (status !== 'loading') return;
-    if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
-      onLoad();
-    }
-  };
-
   React.useEffect(() => {
     if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
       groupIndexRef.current = previewUrls.length;
@@ -150,7 +147,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   React.useEffect(() => {
     if (isCustomPlaceholder) {
-      setStatus('loading');
+      setStatus(isLoaded(imgRef.current) ? 'normal' : 'loading');
     }
     return () => {
       setPreviewUrls(previewUrls.filter(url => url !== src));
@@ -199,7 +196,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         {isError && fallback ? (
           <img {...imgCommonProps} src={fallback} />
         ) : (
-          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={getImgRef} />
+          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={imgRef} />
         )}
 
         {status === 'loading' && (
