@@ -12,8 +12,9 @@ describe('Fallback', () => {
     jest.useRealTimers();
   });
 
+  const fallback = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+
   it('Fallback correct', () => {
-    const fallback = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     const wrapper = mount(<Image src="abc" fallback={fallback} />);
 
     act(() => {
@@ -31,5 +32,17 @@ describe('Fallback', () => {
     });
 
     expect(wrapper.find('.rc-image-preview').get(0)).toBeFalsy();
+  });
+
+  it('should not show preview', () => {
+    const wrapper = mount(<Image src="abc" fallback={fallback} />);
+
+    act(() => {
+      wrapper.find('.rc-image-img').simulate('error');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(wrapper.find('.rc-image-mask')).toHaveLength(0);
   });
 });
