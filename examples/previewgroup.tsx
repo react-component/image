@@ -7,11 +7,15 @@ export default function PreviewGroup() {
   return (
     <div>
       <Image.PreviewGroup>
-        <Image src={require('./images/1.jpeg')} />
-        <Image preview={false} src={require('./images/disabled.jpeg')} />
-        <Image src={require('./images/2.jpeg')} />
-        <Image src={require('./images/3.jpeg')} />
-        <Image src={require('./images/1.jpeg')} />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
+        <Image
+          wrapperStyle={{ marginRight: 24, width: 200 }}
+          preview={false}
+          src={require('./images/disabled.jpeg')}
+        />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/2.jpeg')} />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/3.jpeg')} />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
       </Image.PreviewGroup>
     </div>
   );
