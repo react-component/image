@@ -8,16 +8,18 @@ export interface GroupConsumerProps {
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
-  previewUrls: string[];
-  setPreviewUrls: React.Dispatch<React.SetStateAction<string[]>>;
-  setCurrent: React.Dispatch<React.SetStateAction<string>>;
+  previewUrls: Map<HTMLImageElement, string>;
+  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<HTMLImageElement, string>>>;
+  current: HTMLImageElement;
+  setCurrent: React.Dispatch<React.SetStateAction<HTMLImageElement>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
 }
 
 export const context = React.createContext<GroupConsumerValue>({
-  previewUrls: [],
+  previewUrls: new Map(),
   setPreviewUrls: () => null,
+  current: null,
   setCurrent: () => null,
   setShowPreview: () => null,
   setMousePosition: () => null,
@@ -29,8 +31,8 @@ const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
 }) => {
-  const [previewUrls, setPreviewUrls] = useState([]);
-  const [current, setCurrent] = useState();
+  const [previewUrls, setPreviewUrls] = useState<Map<HTMLImageElement, string>>(new Map());
+  const [current, setCurrent] = useState<HTMLImageElement>();
   const [isShowPreview, setShowPreview] = useState(false);
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
@@ -44,6 +46,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         isPreviewGroup: true,
         previewUrls,
         setPreviewUrls,
+        current,
         setCurrent,
         setShowPreview,
         setMousePosition,
@@ -56,7 +59,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
-        src={current}
+        src={previewUrls.get(current)}
       />
     </Provider>
   );

@@ -88,8 +88,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
   } = React.useContext(context);
-
-  const groupIndexRef = React.useRef(0);
+  const imageRef = React.useRef<HTMLImageElement>();
 
   const onLoad = () => {
     setStatus('normal');
@@ -98,7 +97,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const onError = () => {
     setStatus('error');
     if (isPreviewGroup) {
-      previewUrls.splice(groupIndexRef.current);
       setPreviewUrls(previewUrls);
     }
   };
@@ -108,7 +106,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       const { left, top } = getOffset(e.target);
 
       if (isPreviewGroup) {
-        setCurrent(src);
+        setCurrent(imageRef.current);
         setGroupMousePosition({
           x: left,
           y: top,
@@ -146,21 +144,19 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   useEffect(() => {
-    if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
-      groupIndexRef.current = previewUrls.length;
-      previewUrls.push(src);
-      setPreviewUrls(previewUrls);
-    }
-  }, [previewUrls]);
-
-  useEffect(() => {
     if (isCustomPlaceholder) {
       setStatus('loading');
     }
-    return () => {
-      setPreviewUrls(previewUrls.filter(url => url !== src));
-    };
   }, [src]);
+
+  React.useEffect(() => {
+    if (imageRef.current && src) {
+      getImgRef(imageRef.current);
+      if (preview) {
+        setPreviewUrls(new Map(previewUrls.set(imageRef.current, src)));
+      }
+    }
+  }, [imageRef.current, src]);
 
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
@@ -206,7 +202,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         {isError && fallback ? (
           <img {...imgCommonProps} src={fallback} />
         ) : (
-          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={getImgRef} />
+          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={imageRef} />
         )}
 
         {status === 'loading' && (
