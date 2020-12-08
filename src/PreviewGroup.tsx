@@ -54,7 +54,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     >
       {children}
       <Preview
-        ria-hidden={!isShowPreview}
+        aria-hidden={!isShowPreview}
         visible={isShowPreview}
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
