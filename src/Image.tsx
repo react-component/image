@@ -199,11 +199,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           ...wrapperStyle,
         }}
       >
-        {isError && fallback ? (
-          <img {...imgCommonProps} src={fallback} />
-        ) : (
-          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={imageRef} />
-        )}
+        <img
+          {...imgCommonProps}
+          ref={imageRef}
+          {...(isError && fallback
+            ? {
+                src: fallback,
+              }
+            : { onLoad, onError, src })}
+        />
 
         {status === 'loading' && (
           <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
