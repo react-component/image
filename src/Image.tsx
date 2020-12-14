@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
@@ -87,8 +87,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setCurrent,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
+    registerImage,
   } = React.useContext(context);
-  const imageRef = React.useRef<HTMLImageElement>();
+  const currntGroupIdRef = React.useRef<number>();
+  const canPreview = preview && !isError;
 
   const onLoad = () => {
     setStatus('normal');
@@ -106,7 +108,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       const { left, top } = getOffset(e.target);
 
       if (isPreviewGroup) {
-        setCurrent(imageRef.current);
+        setCurrent(currntGroupIdRef.current);
         setGroupMousePosition({
           x: left,
           y: top,
@@ -128,7 +130,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     if (onClick) onClick(e);
   };
 
-  const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
+  const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
     e.stopPropagation();
     setShowPreview(false);
     if (!isControlled) {
@@ -143,20 +145,21 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (isCustomPlaceholder) {
-      setStatus('loading');
-    }
-  }, [src]);
-
   React.useEffect(() => {
-    if (imageRef.current && src) {
-      getImgRef(imageRef.current);
-      if (preview) {
-        setPreviewUrls(new Map(previewUrls.set(imageRef.current, src)));
-      }
+    if (!isPreviewGroup || !canPreview) {
+      return () => {};
     }
-  }, [imageRef.current, src]);
+
+    const { id, unRegister } = registerImage(currntGroupIdRef.current, src);
+
+    currntGroupIdRef.current = id;
+
+    return () => {
+      if (unRegister) {
+        unRegister();
+      }
+    };
+  }, [src]);
 
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
@@ -185,8 +188,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     },
   };
 
-  const canPreview = preview && !isError;
-
   return (
     <>
       <div
@@ -201,7 +202,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       >
         <img
           {...imgCommonProps}
-          ref={imageRef}
+          ref={getImgRef}
           {...(isError && fallback
             ? {
                 src: fallback,

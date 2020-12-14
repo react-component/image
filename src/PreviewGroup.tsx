@@ -8,12 +8,13 @@ export interface GroupConsumerProps {
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
-  previewUrls: Map<HTMLImageElement, string>;
-  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<HTMLImageElement, string>>>;
-  current: HTMLImageElement;
-  setCurrent: React.Dispatch<React.SetStateAction<HTMLImageElement>>;
+  previewUrls: Map<number, string>;
+  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<number, string>>>;
+  current: number;
+  setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
+  registerImage: (id: number, url: string) => { id: number; unRegister: () => boolean };
 }
 
 export const context = React.createContext<GroupConsumerValue>({
@@ -23,6 +24,7 @@ export const context = React.createContext<GroupConsumerValue>({
   setCurrent: () => null,
   setShowPreview: () => null,
   setMousePosition: () => null,
+  registerImage: null,
 });
 
 const { Provider } = context;
@@ -31,15 +33,33 @@ const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
 }) => {
-  const [previewUrls, setPreviewUrls] = useState<Map<HTMLImageElement, string>>(new Map());
-  const [current, setCurrent] = useState<HTMLImageElement>();
+  const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
+  const [current, setCurrent] = useState<number>();
   const [isShowPreview, setShowPreview] = useState(false);
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
-  const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
+  const indexRef = React.useRef(0);
+
+  // eslint-disable-next-line no-plusplus
+  const registerImage = (id: number = indexRef.current++, url: string) => {
+    setPreviewUrls(new Map(previewUrls.set(id, url)));
+
+    return {
+      id,
+      unRegister: () => {
+        const removeResult = previewUrls.delete(id);
+        setPreviewUrls(new Map(previewUrls));
+
+        return removeResult;
+      },
+    };
+  };
+
+  const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
     e.stopPropagation();
     setShowPreview(false);
     setMousePosition(null);
   };
+
   return (
     <Provider
       value={{
@@ -50,6 +70,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         setCurrent,
         setShowPreview,
         setMousePosition,
+        registerImage,
       }}
     >
       {children}

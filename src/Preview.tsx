@@ -18,7 +18,7 @@ import { context } from './PreviewGroup';
 const { useState } = React;
 
 interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
-  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
 }
