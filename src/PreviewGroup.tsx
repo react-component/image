@@ -17,6 +17,7 @@ export interface GroupConsumerValue extends GroupConsumerProps {
   registerImage: (id: number, url: string) => () => boolean;
 }
 
+/* istanbul ignore next */
 export const context = React.createContext<GroupConsumerValue>({
   previewUrls: new Map(),
   setPreviewUrls: () => null,

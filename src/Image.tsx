@@ -84,8 +84,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const isError = status === 'error';
   const {
     isPreviewGroup,
-    previewUrls,
-    setPreviewUrls,
     setCurrent,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
@@ -103,9 +101,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const onError = () => {
     setStatus('error');
-    if (isPreviewGroup) {
-      setPreviewUrls(previewUrls);
-    }
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
