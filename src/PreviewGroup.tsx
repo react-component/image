@@ -44,7 +44,10 @@ const Group: React.FC<GroupConsumerProps> = ({
 
     return () => {
       const removeResult = previewUrls.delete(id);
-      setPreviewUrls(new Map(previewUrls));
+
+      if (removeResult) {
+        setPreviewUrls(new Map(previewUrls));
+      }
 
       return removeResult;
     };

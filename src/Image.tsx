@@ -151,18 +151,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   React.useEffect(() => {
-    if (!isPreviewGroup || !canPreview) {
+    if (!isPreviewGroup) {
       return () => {};
     }
 
     const unRegister = registerImage(currntGroupId, src);
 
-    return () => {
-      if (unRegister) {
-        unRegister();
-      }
-    };
-  }, [src]);
+    if (!canPreview) {
+      unRegister();
+    }
+
+    return unRegister;
+  }, [src, canPreview]);
 
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,

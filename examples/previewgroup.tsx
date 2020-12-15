@@ -15,6 +15,7 @@ export default function PreviewGroup() {
         />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/2.jpeg')} />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/3.jpeg')} />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src='error' alt="error" />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
       </Image.PreviewGroup>
     </div>
