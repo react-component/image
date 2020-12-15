@@ -14,6 +14,8 @@ export interface ImagePreviewType {
   mask?: React.ReactNode;
 }
 
+let uuid = 0;
+
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
   // Original
@@ -89,7 +91,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setMousePosition: setGroupMousePosition,
     registerImage,
   } = React.useContext(context);
-  const currntGroupIdRef = React.useRef<number>();
+  const [currntGroupId] = React.useState<number>(() => {
+    uuid += 1;
+    return uuid;
+  });
   const canPreview = preview && !isError;
 
   const onLoad = () => {
@@ -108,7 +113,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       const { left, top } = getOffset(e.target);
 
       if (isPreviewGroup) {
-        setCurrent(currntGroupIdRef.current);
+        setCurrent(currntGroupId);
         setGroupMousePosition({
           x: left,
           y: top,
@@ -150,9 +155,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       return () => {};
     }
 
-    const { id, unRegister } = registerImage(currntGroupIdRef.current, src);
-
-    currntGroupIdRef.current = id;
+    const unRegister = registerImage(currntGroupId, src);
 
     return () => {
       if (unRegister) {

@@ -14,7 +14,7 @@ export interface GroupConsumerValue extends GroupConsumerProps {
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  registerImage: (id: number, url: string) => { id: number; unRegister: () => boolean };
+  registerImage: (id: number, url: string) => () => boolean;
 }
 
 export const context = React.createContext<GroupConsumerValue>({
@@ -37,20 +37,16 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [current, setCurrent] = useState<number>();
   const [isShowPreview, setShowPreview] = useState(false);
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
-  const indexRef = React.useRef(0);
 
   // eslint-disable-next-line no-plusplus
-  const registerImage = (id: number = indexRef.current++, url: string) => {
+  const registerImage = (id: number, url: string) => {
     setPreviewUrls(new Map(previewUrls.set(id, url)));
 
-    return {
-      id,
-      unRegister: () => {
-        const removeResult = previewUrls.delete(id);
-        setPreviewUrls(new Map(previewUrls));
+    return () => {
+      const removeResult = previewUrls.delete(id);
+      setPreviewUrls(new Map(previewUrls));
 
-        return removeResult;
-      },
+      return removeResult;
     };
   };
 
