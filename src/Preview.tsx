@@ -51,9 +51,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const [isMoving, setMoving] = React.useState(false);
   const { previewUrls, current, isPreviewGroup, setCurrent } = React.useContext(context);
   const previewGroupCount = previewUrls.size;
-  const currentPreviewIndex = Array.from(previewUrls.keys()).indexOf(current);
+  const previewUrlsKeys = Array.from(previewUrls.keys());
+  const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
-  const showLeftOrRightSwitchs = isPreviewGroup && previewGroupCount > 1;
+  const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
 
   const onAfterClose = () => {
     setScale(1);
@@ -86,7 +87,7 @@ const Preview: React.FC<PreviewProps> = props => {
     // Without this mask close will abnormal
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
-      setCurrent(Array.from(previewUrls.entries())[currentPreviewIndex - 1][0]);
+      setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
   };
 
@@ -95,7 +96,7 @@ const Preview: React.FC<PreviewProps> = props => {
     // Without this mask close will abnormal
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
-      setCurrent(Array.from(previewUrls.entries())[currentPreviewIndex + 1][0]);
+      setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
   };
 
@@ -248,7 +249,7 @@ const Preview: React.FC<PreviewProps> = props => {
           }}
         />
       </div>
-      {showLeftOrRightSwitchs && (
+      {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-left`, {
             [`${prefixCls}-switch-left-disabled`]: currentPreviewIndex === 0,
@@ -258,7 +259,7 @@ const Preview: React.FC<PreviewProps> = props => {
           <LeftOutlined />
         </div>
       )}
-      {showLeftOrRightSwitchs && (
+      {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-right`, {
             [`${prefixCls}-switch-right-disabled`]: currentPreviewIndex === previewGroupCount - 1,

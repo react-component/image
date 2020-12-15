@@ -89,7 +89,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setMousePosition: setGroupMousePosition,
     registerImage,
   } = React.useContext(context);
-  const [currntGroupId] = React.useState<number>(() => {
+  const [currentId] = React.useState<number>(() => {
     uuid += 1;
     return uuid;
   });
@@ -108,7 +108,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       const { left, top } = getOffset(e.target);
 
       if (isPreviewGroup) {
-        setCurrent(currntGroupId);
+        setCurrent(currentId);
         setGroupMousePosition({
           x: left,
           y: top,
@@ -150,7 +150,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       return () => {};
     }
 
-    const unRegister = registerImage(currntGroupId, src);
+    const unRegister = registerImage(currentId, src);
 
     if (!canPreview) {
       unRegister();

@@ -39,18 +39,21 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [isShowPreview, setShowPreview] = useState(false);
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
-  // eslint-disable-next-line no-plusplus
   const registerImage = (id: number, url: string) => {
-    setPreviewUrls(new Map(previewUrls.set(id, url)));
+    setPreviewUrls(oldPreviewUrls => {
+      return new Map(oldPreviewUrls).set(id, url);
+    });
 
     return () => {
-      const removeResult = previewUrls.delete(id);
+      let deleteResult = false;
 
-      if (removeResult) {
-        setPreviewUrls(new Map(previewUrls));
-      }
+      setPreviewUrls(oldPreviewUrls => {
+        const clonePreviewUrls = new Map(oldPreviewUrls);
+        deleteResult = clonePreviewUrls.delete(id);
+        return deleteResult ? clonePreviewUrls : oldPreviewUrls;
+      });
 
-      return removeResult;
+      return deleteResult;
     };
   };
 
