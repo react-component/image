@@ -14,7 +14,7 @@ export interface GroupConsumerValue extends GroupConsumerProps {
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  registerImage: (id: number, url: string) => () => boolean;
+  registerImage: (id: number, url: string) => () => void;
 }
 
 /* istanbul ignore next */
