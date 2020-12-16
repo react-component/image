@@ -45,15 +45,11 @@ const Group: React.FC<GroupConsumerProps> = ({
     });
 
     return () => {
-      let deleteResult = false;
-
       setPreviewUrls(oldPreviewUrls => {
         const clonePreviewUrls = new Map(oldPreviewUrls);
-        deleteResult = clonePreviewUrls.delete(id);
+        const deleteResult = clonePreviewUrls.delete(id);
         return deleteResult ? clonePreviewUrls : oldPreviewUrls;
       });
-
-      return deleteResult;
     };
   };
 
