@@ -12,14 +12,13 @@ import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
-import usePreviewIndex from './hooks/usePreviewIndex';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
 
 const { useState } = React;
 
 interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
-  onClose?: (e: React.SyntheticEvent<HTMLDivElement | HTMLLIElement>) => void;
+  onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
 }
@@ -50,12 +49,12 @@ const Preview: React.FC<PreviewProps> = props => {
     deltaY: 0,
   });
   const [isMoving, setMoving] = React.useState(false);
-
-  const { previewUrls } = React.useContext(context);
-
-  const urls = previewUrls && previewUrls.length ? previewUrls : [src];
-
-  const [index, setIndex] = usePreviewIndex(src, urls);
+  const { previewUrls, current, isPreviewGroup, setCurrent } = React.useContext(context);
+  const previewGroupCount = previewUrls.size;
+  const previewUrlsKeys = Array.from(previewUrls.keys());
+  const currentPreviewIndex = previewUrlsKeys.indexOf(current);
+  const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
+  const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
 
   const onAfterClose = () => {
     setScale(1);
@@ -87,9 +86,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    if (index > 0) {
-      onAfterClose();
-      setIndex(index - 1);
+    if (currentPreviewIndex > 0) {
+      setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
   };
 
@@ -97,9 +95,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
-    if (index < urls.length - 1) {
-      onAfterClose();
-      setIndex(index + 1);
+    if (currentPreviewIndex < previewGroupCount - 1) {
+      setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
   };
 
@@ -206,9 +203,6 @@ const Preview: React.FC<PreviewProps> = props => {
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
-      if (!visible) {
-        setIndex(urls.indexOf(src));
-      }
     };
   }, [visible, isMoving]);
 
@@ -248,33 +242,33 @@ const Preview: React.FC<PreviewProps> = props => {
           onMouseDown={onMouseDown}
           ref={imgRef}
           className={`${prefixCls}-img`}
-          src={urls[index]}
+          src={combinationSrc}
           alt={alt}
           style={{
             transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
           }}
         />
       </div>
-      {urls.length > 1 ? (
+      {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-left`, {
-            [`${prefixCls}-switch-left-disabled`]: index <= 0,
+            [`${prefixCls}-switch-left-disabled`]: currentPreviewIndex === 0,
           })}
           onClick={onSwitchLeft}
         >
           <LeftOutlined />
         </div>
-      ) : null}
-      {urls.length > 1 ? (
+      )}
+      {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-right`, {
-            [`${prefixCls}-switch-right-disabled`]: index >= urls.length - 1,
+            [`${prefixCls}-switch-right-disabled`]: currentPreviewIndex === previewGroupCount - 1,
           })}
           onClick={onSwitchRight}
         >
           <RightOutlined />
         </div>
-      ) : null}
+      )}
     </Dialog>
   );
 };

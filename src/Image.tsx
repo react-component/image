@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
@@ -13,6 +13,8 @@ export interface ImagePreviewType {
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
 }
+
+let uuid = 0;
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -82,14 +84,16 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const isError = status === 'error';
   const {
     isPreviewGroup,
-    previewUrls,
-    setPreviewUrls,
     setCurrent,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
+    registerImage,
   } = React.useContext(context);
-
-  const groupIndexRef = React.useRef(0);
+  const [currentId] = React.useState<number>(() => {
+    uuid += 1;
+    return uuid;
+  });
+  const canPreview = preview && !isError;
 
   const onLoad = () => {
     setStatus('normal');
@@ -97,10 +101,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const onError = () => {
     setStatus('error');
-    if (isPreviewGroup) {
-      previewUrls.splice(groupIndexRef.current);
-      setPreviewUrls(previewUrls);
-    }
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
@@ -108,7 +108,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       const { left, top } = getOffset(e.target);
 
       if (isPreviewGroup) {
-        setCurrent(src);
+        setCurrent(currentId);
         setGroupMousePosition({
           x: left,
           y: top,
@@ -130,7 +130,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     if (onClick) onClick(e);
   };
 
-  const onPreviewClose = (e: React.SyntheticEvent<HTMLDivElement>) => {
+  const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
     e.stopPropagation();
     setShowPreview(false);
     if (!isControlled) {
@@ -145,22 +145,19 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (isPreviewGroup && previewUrls.indexOf(src) < 0) {
-      groupIndexRef.current = previewUrls.length;
-      previewUrls.push(src);
-      setPreviewUrls(previewUrls);
+  React.useEffect(() => {
+    if (!isPreviewGroup) {
+      return () => {};
     }
-  }, [previewUrls]);
 
-  useEffect(() => {
-    if (isCustomPlaceholder) {
-      setStatus('loading');
+    const unRegister = registerImage(currentId, src);
+
+    if (!canPreview) {
+      unRegister();
     }
-    return () => {
-      setPreviewUrls(previewUrls.filter(url => url !== src));
-    };
-  }, [src]);
+
+    return unRegister;
+  }, [src, canPreview]);
 
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
@@ -189,8 +186,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     },
   };
 
-  const canPreview = preview && !isError;
-
   return (
     <>
       <div
@@ -203,11 +198,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           ...wrapperStyle,
         }}
       >
-        {isError && fallback ? (
-          <img {...imgCommonProps} src={fallback} />
-        ) : (
-          <img {...imgCommonProps} onLoad={onLoad} onError={onError} src={src} ref={getImgRef} />
-        )}
+        <img
+          {...imgCommonProps}
+          ref={getImgRef}
+          {...(isError && fallback
+            ? {
+                src: fallback,
+              }
+            : { onLoad, onError, src })}
+        />
 
         {status === 'loading' && (
           <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
