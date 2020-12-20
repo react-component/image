@@ -153,6 +153,28 @@ describe('Preview', () => {
     expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
+
+    act(() => {
+      const wheelEvent = new Event('wheel');
+      wheelEvent.deltaY = -50;
+      global.dispatchEvent(wheelEvent);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+    });
+
+    act(() => {
+      const wheelEvent = new Event('wheel');
+      wheelEvent.deltaY = 50;
+      global.dispatchEvent(wheelEvent);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
   });
 
   it('Mouse Event', () => {
