@@ -178,9 +178,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onWheelMove: React.WheelEventHandler<HTMLBodyElement> = event => {
-    if (!visible) {
-      return;
-    }
+    if (!visible) return;
     event.preventDefault();
     const wheelDirection = event.deltaY;
     setLastWheelZoomDirection(wheelDirection);
