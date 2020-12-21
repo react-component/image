@@ -55,7 +55,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
-  const [lastWheelZoomDirection, setLastWheelZoomDirection] = React.useState(0);
+  const [lastWheelZoomDirection, setLastWheelZoomDirection] = React.useState({});
 
   const onAfterClose = () => {
     setScale(1);
@@ -181,13 +181,14 @@ const Preview: React.FC<PreviewProps> = props => {
     if (!visible) return;
     event.preventDefault();
     const wheelDirection = event.deltaY;
-    setLastWheelZoomDirection(wheelDirection);
+    setLastWheelZoomDirection({ wheelDirection });
   };
 
   useEffect(() => {
-    if (lastWheelZoomDirection > 0) {
+    const { wheelDirection } = lastWheelZoomDirection;
+    if (wheelDirection > 0) {
       onZoomOut();
-    } else if (lastWheelZoomDirection < 0) {
+    } else if (wheelDirection < 0) {
       onZoomIn();
     }
   }, [lastWheelZoomDirection]);
