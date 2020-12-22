@@ -15,7 +15,7 @@ import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
 
-const { useState } = React;
+const { useState, useEffect } = React;
 
 interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
@@ -55,6 +55,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
+  const [lastWheelZoomDirection, setLastWheelZoomDirection] = React.useState({ wheelDirection: 0 });
 
   const onAfterClose = () => {
     setScale(1);
@@ -176,12 +177,31 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
-  React.useEffect(() => {
+  const onWheelMove: React.WheelEventHandler<HTMLBodyElement> = event => {
+    if (!visible) return;
+    event.preventDefault();
+    const wheelDirection = event.deltaY;
+    setLastWheelZoomDirection({ wheelDirection });
+  };
+
+  useEffect(() => {
+    const { wheelDirection } = lastWheelZoomDirection;
+    if (wheelDirection > 0) {
+      onZoomOut();
+    } else if (wheelDirection < 0) {
+      onZoomIn();
+    }
+  }, [lastWheelZoomDirection]);
+
+  useEffect(() => {
     let onTopMouseUpListener;
     let onTopMouseMoveListener;
 
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
+    const onScrollWheelListener = addEventListener(window, 'wheel', onWheelMove, {
+      passive: false,
+    });
 
     try {
       // Resolve if in iframe lost event
@@ -198,6 +218,7 @@ const Preview: React.FC<PreviewProps> = props => {
     return () => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
+      onScrollWheelListener.remove();
 
       /* istanbul ignore next */
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
