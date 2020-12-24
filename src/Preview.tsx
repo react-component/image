@@ -14,13 +14,16 @@ import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
 
 const { useState, useEffect } = React;
 
-interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
+  onAfterClose?: () => void;
   src?: string;
   alt?: string;
+  isSelfControl?: boolean;
 }
 
 const initialPosition = {
@@ -29,7 +32,17 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
+  const {
+    prefixCls,
+    src,
+    alt,
+    onClose: onInternalClose,
+    afterClose,
+    visible: internalVisible,
+    onAfterClose: onInternalAfterClose,
+    isSelfControl,
+    ...restProps
+  } = props;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useFrameSetState<{
@@ -56,11 +69,24 @@ const Preview: React.FC<PreviewProps> = props => {
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const [lastWheelZoomDirection, setLastWheelZoomDirection] = React.useState({ wheelDirection: 0 });
+  const [visible, setVisible] = useMergedState(internalVisible, {
+    defaultValue: isSelfControl,
+    value: internalVisible,
+  });
+
+  const onClose = e => {
+    if (isSelfControl) {
+      setVisible(false);
+    }
+    onInternalClose?.(e);
+  };
 
   const onAfterClose = () => {
     setScale(1);
     setRotate(0);
     setPosition(initialPosition);
+
+    onInternalAfterClose?.();
   };
 
   const onZoomIn = () => {

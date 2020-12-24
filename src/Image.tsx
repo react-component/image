@@ -6,6 +6,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { GetContainer } from 'rc-util/lib/PortalWrapper';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
+import previewer from './previewer';
 
 export interface ImagePreviewType {
   visible?: boolean;
@@ -36,6 +37,7 @@ export interface ImageProps
 
 interface CompoundedComponent<P> extends React.FC<P> {
   PreviewGroup: typeof PreviewGroup;
+  previewer: typeof previewer;
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
@@ -234,6 +236,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 };
 
 ImageInternal.PreviewGroup = PreviewGroup;
+
+ImageInternal.previewer = previewer;
 
 ImageInternal.displayName = 'Image';
 
