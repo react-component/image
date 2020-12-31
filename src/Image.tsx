@@ -8,6 +8,7 @@ import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 
 export interface ImagePreviewType {
+  src?: string;
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
@@ -41,7 +42,7 @@ interface CompoundedComponent<P> extends React.FC<P> {
 type ImageStatus = 'normal' | 'error' | 'loading';
 
 const ImageInternal: CompoundedComponent<ImageProps> = ({
-  src,
+  src: imgSrc,
   alt,
   onPreviewClose: onInitialPreviewClose,
   prefixCls = 'rc-image',
@@ -69,11 +70,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
   const {
+    src: previewSrc,
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
+  const src = previewSrc ?? imgSrc;
   const isControlled = previewVisible !== undefined;
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
@@ -205,7 +208,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
             ? {
                 src: fallback,
               }
-            : { onLoad, onError, src })}
+            : { onLoad, onError, src: imgSrc })}
         />
 
         {status === 'loading' && (

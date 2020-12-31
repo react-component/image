@@ -156,7 +156,7 @@ describe('Preview', () => {
 
     act(() => {
       const wheelEvent = new Event('wheel');
-      wheelEvent.deltaY = -50;
+      (wheelEvent as any).deltaY = -50;
       global.dispatchEvent(wheelEvent);
       jest.runAllTimers();
       wrapper.update();
@@ -167,7 +167,7 @@ describe('Preview', () => {
 
     act(() => {
       const wheelEvent = new Event('wheel');
-      wheelEvent.deltaY = 50;
+      (wheelEvent as any).deltaY = 50;
       global.dispatchEvent(wheelEvent);
       jest.runAllTimers();
       wrapper.update();
@@ -424,5 +424,26 @@ describe('Preview', () => {
     );
 
     expect(wrapper.find('.rc-image-mask').text()).toEqual('Bamboo Is Light');
+  });
+
+  it('previewSrc', () => {
+    const src =
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/auto-orient,1/resize,p_10/quality,q_10';
+    const previewSrc =
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(<Image src={src} preview={{ src: previewSrc }} />);
+
+    expect(wrapper.find('.rc-image-img').prop('src')).toBe(src);
+
+    expect(wrapper.find('.rc-image-preview').get(0)).toBeFalsy();
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
+    expect(wrapper.find('.rc-image-preview-img').prop('src')).toBe(previewSrc);
   });
 });
