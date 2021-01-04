@@ -13,6 +13,7 @@ export interface ImagePreviewType {
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
+  maskClassName?: string;
 }
 
 let uuid = 0;
@@ -75,6 +76,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
+    maskClassName,
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
   const isControlled = previewVisible !== undefined;
@@ -218,7 +220,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         )}
 
         {/* Preview Click Mask */}
-        {previewMask && canPreview && <div className={`${prefixCls}-mask`}>{previewMask}</div>}
+        {previewMask && canPreview && (
+          <div className={cn(`${prefixCls}-mask`, maskClassName)}>{previewMask}</div>
+        )}
       </div>
       {!isPreviewGroup && canPreview && (
         <Preview
