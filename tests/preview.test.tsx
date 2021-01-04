@@ -419,11 +419,13 @@ describe('Preview', () => {
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
           mask: 'Bamboo Is Light',
+          maskClassName: 'bamboo',
         }}
       />,
     );
 
     expect(wrapper.find('.rc-image-mask').text()).toEqual('Bamboo Is Light');
+    expect(wrapper.find('.rc-image-mask').hasClass('bamboo')).toBeTruthy();
   });
 
   it('previewSrc', () => {
