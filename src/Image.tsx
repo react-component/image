@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { GetContainer } from 'rc-util/lib/PortalWrapper';
-import Preview from './Preview';
+import Preview, { PreviewProps } from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 
 export interface ImagePreviewType {
@@ -13,6 +13,7 @@ export interface ImagePreviewType {
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
+  icons?: PreviewProps['icons'];
 }
 
 let uuid = 0;
@@ -75,6 +76,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
+    icons,
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
   const isControlled = previewVisible !== undefined;
@@ -230,6 +232,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           src={mergedSrc}
           alt={alt}
           getContainer={getPreviewContainer}
+          icons={icons}
         />
       )}
     </>
