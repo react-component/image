@@ -1,12 +1,5 @@
 import * as React from 'react';
 import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
-import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
-import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
-import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
-import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
-import LeftOutlined from '@ant-design/icons/LeftOutlined';
-import RightOutlined from '@ant-design/icons/RightOutlined';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { getOffset } from 'rc-util/lib/Dom/css';
@@ -17,10 +10,19 @@ import { context } from './PreviewGroup';
 
 const { useState, useEffect } = React;
 
-interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
+  icons?: {
+    rotateLeft?: React.ReactNode;
+    rotateRight?: React.ReactNode;
+    zoomIn?: React.ReactNode;
+    zoomOut?: React.ReactNode;
+    close?: React.ReactNode;
+    left?: React.ReactNode;
+    right?: React.ReactNode;
+  };
 }
 
 const initialPosition = {
@@ -29,7 +31,17 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, ...restProps } = props;
+  const {
+    prefixCls,
+    src,
+    alt,
+    onClose,
+    afterClose,
+    visible,
+    icons = {},
+    ...restProps
+  } = props;
+  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [position, setPosition] = useFrameSetState<{
@@ -108,28 +120,28 @@ const Preview: React.FC<PreviewProps> = props => {
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
     {
-      Icon: CloseOutlined,
+      icon: close,
       onClick: onClose,
       type: 'close',
     },
     {
-      Icon: ZoomInOutlined,
+      icon: zoomIn,
       onClick: onZoomIn,
       type: 'zoomIn',
     },
     {
-      Icon: ZoomOutOutlined,
+      icon: zoomOut,
       onClick: onZoomOut,
       type: 'zoomOut',
       disabled: scale === 1,
     },
     {
-      Icon: RotateRightOutlined,
+      icon: rotateRight,
       onClick: onRotateRight,
       type: 'rotateRight',
     },
     {
-      Icon: RotateLeftOutlined,
+      icon: rotateLeft,
       onClick: onRotateLeft,
       type: 'rotateLeft',
     },
@@ -139,6 +151,7 @@ const Preview: React.FC<PreviewProps> = props => {
     if (visible && isMoving) {
       const width = imgRef.current.offsetWidth * scale;
       const height = imgRef.current.offsetHeight * scale;
+      // eslint-disable-next-line @typescript-eslint/no-shadow
       const { left, top } = getOffset(imgRef.current);
       const isRotate = rotate % 180 !== 0;
 
@@ -241,7 +254,7 @@ const Preview: React.FC<PreviewProps> = props => {
       wrapClassName={wrapClassName}
     >
       <ul className={`${prefixCls}-operations`}>
-        {tools.map(({ Icon, onClick, type, disabled }) => (
+        {tools.map(({ icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {
               [`${prefixCls}-operations-operation-disabled`]: !!disabled,
@@ -249,7 +262,9 @@ const Preview: React.FC<PreviewProps> = props => {
             onClick={onClick}
             key={type}
           >
-            <Icon className={iconClassName} />
+            {React.isValidElement(icon)
+              ? React.cloneElement(icon, { className: iconClassName })
+              : icon}
           </li>
         ))}
       </ul>
@@ -277,7 +292,7 @@ const Preview: React.FC<PreviewProps> = props => {
           })}
           onClick={onSwitchLeft}
         >
-          <LeftOutlined />
+          {left}
         </div>
       )}
       {showLeftOrRightSwitches && (
@@ -287,7 +302,7 @@ const Preview: React.FC<PreviewProps> = props => {
           })}
           onClick={onSwitchRight}
         >
-          <RightOutlined />
+          {right}
         </div>
       )}
     </Dialog>

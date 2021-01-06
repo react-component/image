@@ -2,6 +2,13 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
+import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
+import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
+import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
+import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
+import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import LeftOutlined from '@ant-design/icons/LeftOutlined';
+import RightOutlined from '@ant-design/icons/RightOutlined';
 import Image from '../src';
 
 describe('Preview', () => {
@@ -360,7 +367,17 @@ describe('Preview', () => {
 
   it('PreviewGroup', () => {
     const wrapper = mount(
-      <Image.PreviewGroup>
+      <Image.PreviewGroup
+        icons={{
+          rotateLeft: <RotateLeftOutlined />,
+          rotateRight: <RotateRightOutlined />,
+          zoomIn: <ZoomInOutlined />,
+          zoomOut: <ZoomOutOutlined />,
+          close: <CloseOutlined />,
+          left: <LeftOutlined />,
+          right: <RightOutlined />,
+        }}
+      >
         <Image
           className="group-1"
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
