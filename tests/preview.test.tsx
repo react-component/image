@@ -367,15 +367,17 @@ describe('Preview', () => {
 
   it('PreviewGroup', () => {
     const wrapper = mount(
-      <Image.PreviewGroup icons={{
-        rotateLeft: <RotateLeftOutlined />,
-        rotateRight: <RotateRightOutlined />,
-        zoomIn: <ZoomInOutlined />,
-        zoomOut: <ZoomOutOutlined />,
-        close: <CloseOutlined />,
-        left: <LeftOutlined />,
-        right: <RightOutlined />,
-      }}>
+      <Image.PreviewGroup
+        icons={{
+          rotateLeft: <RotateLeftOutlined />,
+          rotateRight: <RotateRightOutlined />,
+          zoomIn: <ZoomInOutlined />,
+          zoomOut: <ZoomOutOutlined />,
+          close: <CloseOutlined />,
+          left: <LeftOutlined />,
+          right: <RightOutlined />,
+        }}
+      >
         <Image
           className="group-1"
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
