@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-import Preview from './Preview';
+import Preview, { PreviewProps } from './Preview';
 
 export interface GroupConsumerProps {
   previewPrefixCls?: string;
+  icons?: PreviewProps['icons'];
 }
 
 export interface GroupConsumerValue extends GroupConsumerProps {
@@ -33,6 +34,7 @@ const { Provider } = context;
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
+  icons = {},
 }) => {
   const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
   const [current, setCurrent] = useState<number>();
@@ -80,6 +82,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         onClose={onPreviewClose}
         mousePosition={mousePosition}
         src={previewUrls.get(current)}
+        icons={icons}
       />
     </Provider>
   );
