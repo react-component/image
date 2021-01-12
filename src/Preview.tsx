@@ -171,6 +171,8 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
+    // Only allow main button
+    if (event.button !== 0) return;
     event.preventDefault();
     // Without this mask close will abnormal
     event.stopPropagation();
