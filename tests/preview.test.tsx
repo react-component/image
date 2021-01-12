@@ -214,6 +214,14 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 2,
+    });
+    expect(wrapper.find('.rc-image-preview-moving').get(0)).toBeUndefined();
+
+    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
     });
 
     expect(wrapper.find('.rc-image-preview-moving').get(0)).toBeTruthy();
@@ -250,6 +258,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
@@ -267,6 +276,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
@@ -286,6 +296,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
@@ -305,6 +316,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
@@ -324,6 +336,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
@@ -343,6 +356,7 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-img').simulate('mousedown', {
       pageX: 0,
       pageY: 0,
+      button: 0,
     });
 
     act(() => {
