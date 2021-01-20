@@ -26,7 +26,7 @@ export const context = React.createContext<GroupConsumerValue>({
   setCurrent: () => null,
   setShowPreview: () => null,
   setMousePosition: () => null,
-  registerImage: null,
+  registerImage: () => () => null,
 });
 
 const { Provider } = context;
@@ -42,17 +42,25 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
   const registerImage = (id: number, url: string) => {
-    setPreviewUrls(oldPreviewUrls => {
-      return new Map(oldPreviewUrls).set(id, url);
-    });
-
-    return () => {
+    const unRegister = () => {
       setPreviewUrls(oldPreviewUrls => {
         const clonePreviewUrls = new Map(oldPreviewUrls);
         const deleteResult = clonePreviewUrls.delete(id);
         return deleteResult ? clonePreviewUrls : oldPreviewUrls;
       });
     };
+
+    // we don't to test this if canPreview changed when same url
+    /* istanbul ignore next */
+    if (previewUrls.get(id) === url) {
+      return unRegister;
+    }
+
+    setPreviewUrls(oldPreviewUrls => {
+      return new Map(oldPreviewUrls).set(id, url);
+    });
+
+    return unRegister;
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<Element>) => {

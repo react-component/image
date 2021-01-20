@@ -152,19 +152,23 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
+  // Keep order start
+  // Resolve https://github.com/ant-design/ant-design/issues/28881
+  // Only need unRegister when component unMount
   React.useEffect(() => {
-    if (!isPreviewGroup) {
-      return () => {};
-    }
+    const unRegister = registerImage(currentId, src);
 
+    return unRegister;
+  }, []);
+
+  React.useEffect(() => {
     const unRegister = registerImage(currentId, src);
 
     if (!canPreview) {
       unRegister();
     }
-
-    return unRegister;
   }, [src, canPreview]);
+  // Keep order end
 
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
