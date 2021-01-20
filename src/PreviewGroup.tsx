@@ -50,7 +50,7 @@ const Group: React.FC<GroupConsumerProps> = ({
       });
     };
 
-    // we don't to test this if canPreview changed when same url
+    // we don't need to test this if canPreview changed when url stays the same
     /* istanbul ignore next */
     if (previewUrls.get(id) === url) {
       return unRegister;
