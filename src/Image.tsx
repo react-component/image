@@ -170,6 +170,12 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   }, [src, canPreview]);
   // Keep order end
 
+  React.useEffect(() => {
+    if (isCustomPlaceholder) {
+      setStatus('loading');
+    }
+  }, [imgSrc]);
+
   const wrapperClass = cn(prefixCls, wrapperClassName, {
     [`${prefixCls}-error`]: isError,
   });
