@@ -1,10 +1,22 @@
 import * as React from 'react';
 import { useState } from 'react';
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import { ImagePreviewType } from './Image';
 import Preview, { PreviewProps } from './Preview';
+
+export interface PreviewGroupPreview
+  extends Pick<ImagePreviewType, 'visible' | 'onVisibleChange' | 'getContainer'> {
+  /**
+   * If Preview the show img index
+   * @default 0
+   */
+  defaultShowIndex?: number;
+}
 
 export interface GroupConsumerProps {
   previewPrefixCls?: string;
   icons?: PreviewProps['icons'];
+  preview?: boolean | PreviewGroupPreview;
 }
 
 export interface GroupConsumerValue extends GroupConsumerProps {
@@ -35,10 +47,20 @@ const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
   icons = {},
+  preview,
 }) => {
+  const {
+    visible: previewVisible = undefined,
+    onVisibleChange: onPreviewVisibleChange = undefined,
+    getContainer = undefined,
+    defaultShowIndex = 0,
+  } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
   const [current, setCurrent] = useState<number>();
-  const [isShowPreview, setShowPreview] = useState(false);
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
+    value: previewVisible,
+    onChange: onPreviewVisibleChange,
+  });
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
   const registerImage = (id: number, url: string) => {
@@ -69,6 +91,14 @@ const Group: React.FC<GroupConsumerProps> = ({
     setMousePosition(null);
   };
 
+  React.useEffect(() => {
+    const previewUrlsKeys = Array.from(previewUrls.keys());
+
+    if (previewUrlsKeys.length) {
+      setCurrent(previewUrlsKeys[defaultShowIndex]);
+    }
+  }, [defaultShowIndex, previewUrls]);
+
   return (
     <Provider
       value={{
@@ -91,6 +121,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         mousePosition={mousePosition}
         src={previewUrls.get(current)}
         icons={icons}
+        getContainer={getContainer}
       />
     </Provider>
   );
