@@ -62,6 +62,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     onChange: onPreviewVisibleChange,
   });
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
+  const isControlled = previewVisible !== undefined;
 
   const registerImage = (id: number, url: string) => {
     const unRegister = () => {
@@ -98,6 +99,16 @@ const Group: React.FC<GroupConsumerProps> = ({
       setCurrent(previewUrlsKeys[defaultShowIndex]);
     }
   }, [defaultShowIndex, previewUrls]);
+
+  React.useEffect(() => {
+    if (!isShowPreview && isControlled) {
+      const previewUrlsKeys = Array.from(previewUrls.keys());
+
+      if (previewUrlsKeys.length) {
+        setCurrent(previewUrlsKeys[defaultShowIndex]);
+      }
+    }
+  }, [isControlled, isShowPreview]);
 
   return (
     <Provider
