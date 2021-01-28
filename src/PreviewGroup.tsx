@@ -10,7 +10,7 @@ export interface PreviewGroupPreview
    * If Preview the show img index
    * @default 0
    */
-  defaultShowIndex?: number;
+  defaultCurrent?: number;
 }
 
 export interface GroupConsumerProps {
@@ -53,7 +53,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = undefined,
     getContainer = undefined,
-    defaultShowIndex = 0,
+    defaultCurrent = 0,
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
   const [current, setCurrent] = useState<number>();
@@ -96,16 +96,16 @@ const Group: React.FC<GroupConsumerProps> = ({
     const previewUrlsKeys = Array.from(previewUrls.keys());
 
     if (previewUrlsKeys.length) {
-      setCurrent(previewUrlsKeys[defaultShowIndex]);
+      setCurrent(previewUrlsKeys[defaultCurrent]);
     }
-  }, [defaultShowIndex, previewUrls]);
+  }, [defaultCurrent, previewUrls]);
 
   React.useEffect(() => {
     if (!isShowPreview && isControlled) {
       const previewUrlsKeys = Array.from(previewUrls.keys());
 
       if (previewUrlsKeys.length) {
-        setCurrent(previewUrlsKeys[defaultShowIndex]);
+        setCurrent(previewUrlsKeys[defaultCurrent]);
       }
     }
   }, [isControlled, isShowPreview]);
