@@ -53,7 +53,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = undefined,
     getContainer = undefined,
-    current: initialCurrent = 0,
+    current: currentIndex = 0,
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
   const [current, setCurrent] = useState<number>();
@@ -64,6 +64,10 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
   const previewUrlsKeys = React.useMemo(() => Array.from(previewUrls.keys()), [previewUrls]);
+  const currentControlledKey = React.useMemo(() => previewUrlsKeys[currentIndex], [
+    currentIndex,
+    previewUrlsKeys,
+  ]);
 
   const registerImage = (id: number, url: string) => {
     const unRegister = () => {
@@ -94,18 +98,14 @@ const Group: React.FC<GroupConsumerProps> = ({
   };
 
   React.useEffect(() => {
-    if (previewUrlsKeys.length) {
-      setCurrent(previewUrlsKeys[initialCurrent]);
-    }
-  }, [initialCurrent, previewUrlsKeys]);
+    setCurrent(currentControlledKey);
+  }, [currentControlledKey]);
 
   React.useEffect(() => {
     if (!isShowPreview && isControlled) {
-      if (previewUrlsKeys.length) {
-        setCurrent(previewUrlsKeys[initialCurrent]);
-      }
+      setCurrent(currentControlledKey);
     }
-  }, [initialCurrent, isControlled, isShowPreview, previewUrlsKeys]);
+  }, [currentControlledKey, isControlled, isShowPreview]);
 
   return (
     <Provider
