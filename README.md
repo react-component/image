@@ -85,7 +85,7 @@ ReactDOM.render(
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue),getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
-| defaultCurrent | number | 0 | If Preview the show img index |
+| current | number | 0 | If Preview the show img index |
 
 ## Example
 

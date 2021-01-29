@@ -23,7 +23,7 @@ export default function Base() {
           onVisibleChange: value => {
             setVisible(value);
           },
-          defaultCurrent: 1,
+          current: 1,
         }}
       >
         <Image
