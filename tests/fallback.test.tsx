@@ -45,4 +45,17 @@ describe('Fallback', () => {
 
     expect(wrapper.find('.rc-image-mask')).toHaveLength(0);
   });
+
+  it('With onError', () => {
+    const onErrorMock = jest.fn();
+    const wrapper = mount(<Image src="abc" onError={onErrorMock} />);
+
+    act(() => {
+      wrapper.find('.rc-image-img').simulate('error');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(onErrorMock).toHaveBeenCalledTimes(1);
+  });
 });
