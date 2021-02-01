@@ -63,11 +63,8 @@ const Group: React.FC<GroupConsumerProps> = ({
   });
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
-  const previewUrlsKeys = React.useMemo(() => Array.from(previewUrls.keys()), [previewUrls]);
-  const currentControlledKey = React.useMemo(() => previewUrlsKeys[currentIndex], [
-    currentIndex,
-    previewUrlsKeys,
-  ]);
+  const previewUrlsKeys = Array.from(previewUrls.keys());
+  const currentControlledKey = previewUrlsKeys[currentIndex];
 
   const registerImage = (id: number, url: string) => {
     const unRegister = () => {
