@@ -97,4 +97,27 @@ describe('Preview', () => {
       wrapper.find('.rc-image-preview .rc-image-preview-switch-left-disabled').get(0),
     ).toBeTruthy();
   });
+
+  it('With Controlled', () => {
+    const wrapper = mount(
+      <Image.PreviewGroup preview={{ visible: true }}>
+        <Image src="src1" />
+      </Image.PreviewGroup>,
+    );
+
+    expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
+
+    act(() => {
+      wrapper.setProps({ preview: { visible: false } });
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(
+      wrapper
+        .find('.rc-image-preview')
+        .at(0)
+        .render(),
+    ).toMatchSnapshot();
+  });
 });
