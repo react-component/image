@@ -64,6 +64,7 @@ ReactDOM.render(
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+| onError | (event: Event) => void | - | Load failed callback |
 
 ## Image.PreviewGroup
 

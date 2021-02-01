@@ -35,6 +35,7 @@ export interface ImageProps
    */
   onPreviewClose?: (value: boolean, prevValue: boolean) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
@@ -57,6 +58,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   preview = true,
   className,
   onClick,
+  onError: onImageError,
   wrapperClassName,
   wrapperStyle,
 
@@ -106,7 +108,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setStatus('normal');
   };
 
-  const onError = () => {
+  const onError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    if (onImageError) {
+      onImageError(e);
+    }
     setStatus('error');
   };
 
