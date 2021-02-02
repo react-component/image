@@ -65,17 +65,17 @@ const Preview: React.FC<PreviewProps> = props => {
     setPosition(initialPosition);
   };
 
-  const onZoomIn = useCallback(() => {
+  const onZoomIn = () => {
     setScale(value => value + 1);
     setPosition(initialPosition);
-  });
+  };
 
-  const onZoomOut = useCallback(() => {
+  const onZoomOut = () => {
     if (scale > 1) {
       setScale(value => value - 1);
     }
     setPosition(initialPosition);
-  });
+  };
 
   const onRotateRight = () => {
     setRotate(value => value + 90);
@@ -196,7 +196,7 @@ const Preview: React.FC<PreviewProps> = props => {
     } else if (wheelDirection < 0) {
       onZoomIn();
     }
-  }, [lastWheelZoomDirection, onZoomIn, onZoomOut]);
+  }, [lastWheelZoomDirection]);
 
   useEffect(() => {
     let onTopMouseUpListener;
@@ -230,7 +230,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isMoving, onMouseUp, onMouseMove, onWheelMove]);
+  }, [visible, isMoving]);
 
   return (
     <Dialog
