@@ -2,7 +2,6 @@ import * as React from 'react';
 import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
-import { getOffset } from 'rc-util/lib/Dom/css';
 import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
@@ -31,16 +30,7 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const {
-    prefixCls,
-    src,
-    alt,
-    onClose,
-    afterClose,
-    visible,
-    icons = {},
-    ...restProps
-  } = props;
+  const { prefixCls, src, alt, onClose, afterClose, visible, icons = {}, ...restProps } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
@@ -152,7 +142,7 @@ const Preview: React.FC<PreviewProps> = props => {
       const width = imgRef.current.offsetWidth * scale;
       const height = imgRef.current.offsetHeight * scale;
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { left, top } = getOffset(imgRef.current);
+      const { left, top } = imgRef.current.getBoundingClientRect();
       const isRotate = rotate % 180 !== 0;
 
       setMoving(false);
