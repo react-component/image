@@ -26,14 +26,16 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "cross-env NODE_ENV=development father doc dev --storybook",
-    "build": "father doc build --storybook",
+    "start": "dumi dev",
+    "docs:build": "dumi build",
+    "docs:deploy": "gh-pages -d docs-dist",
     "compile": "father build && lessc assets/index.less assets/index.css",
     "prepublishOnly": "npm run compile && np --yolo --no-publish --any-branch",
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "father test",
-    "coverage": "father test --coverage"
+    "coverage": "father test --coverage",
+    "now-build": "npm run docs:build"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
@@ -54,11 +56,13 @@
     "@types/react-dom": "^16.9.8",
     "@umijs/fabric": "^2.2.2",
     "cross-env": "^7.0.2",
+    "dumi": "^1.1.4",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.5.0",
     "eslint": "^7.6.0",
     "father": "^2.29.6",
+    "glob": "^7.1.6",
     "less": "^3.12.2",
     "np": "^7.0.0",
     "react": "^16.13.1",

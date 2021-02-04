@@ -33,3 +33,7 @@ es/
 .storybook
 .doc
 .history
+# umi
+.umi
+.umi-production
+.umi-test

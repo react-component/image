@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 import * as React from 'react';
-import Image from '../src';
-import '../assets/index.less';
+import Image from 'rc-image';
+import '../../assets/index.less';
 
 export default function PreviewGroup() {
   return (
