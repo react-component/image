@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Image from '../src';
-import '../assets/index.less';
+import Image from 'rc-image';
+import '../../assets/index.less';
 
 export default function Base() {
   const [random, setRandom] = React.useState(Date.now());

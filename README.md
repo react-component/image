@@ -1,7 +1,5 @@
 # rc-image
 
----
-
 React Image.
 
 [![NPM version][npm-image]][npm-url] [![CircleCI status][circleci-image]][circleci-url] [![Test coverage][codecov-image]][codecov-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
@@ -34,8 +32,6 @@ React Image.
 - [x] Fallback
 - [x] Multiple Preview
 
-### Keyboard
-
 ## install
 
 [![rc-image](https://nodei.co/npm/rc-image.png)](https://npmjs.org/package/rc-image)
@@ -47,7 +43,7 @@ npm install
 npm start
 ```
 
-```jsx
+```js
 const Image = require('rc-image');
 
 ReactDOM.render(
@@ -70,7 +66,7 @@ ReactDOM.render(
 
 preview the merged src
 
-```jsx
+```js
 const Image = require('rc-image');
 
 ReactDOM.render(
