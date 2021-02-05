@@ -176,6 +176,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   // Keep order end
 
   React.useEffect(() => {
+    if (isError) {
+      setStatus('normal');
+    }
     if (isCustomPlaceholder) {
       setStatus('loading');
     }

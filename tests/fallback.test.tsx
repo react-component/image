@@ -58,4 +58,19 @@ describe('Fallback', () => {
 
     expect(onErrorMock).toHaveBeenCalledTimes(1);
   });
+
+  it('should change image, not error', () => {
+    const wrapper = mount(<Image width={200} src="error" fallback='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' />);
+    act(() => {
+      wrapper.setProps({
+        src: 'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
+      });
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-img').prop('src')).toBe(
+      'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
+    );
+  });
+  
 });
