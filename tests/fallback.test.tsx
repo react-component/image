@@ -72,4 +72,5 @@ describe('Fallback', () => {
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
     );
   });
+  
 });
