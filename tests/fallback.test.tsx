@@ -60,10 +60,18 @@ describe('Fallback', () => {
   });
 
   it('should change image, not error', () => {
-    const wrapper = mount(<Image width={200} src="error" fallback='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png' />);
+    const wrapper = mount(
+      <Image
+        width={200}
+        src="error"
+        fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      />,
+    );
     act(() => {
+      wrapper.find('.rc-image-img').simulate('error');
       wrapper.setProps({
-        src: 'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
+        src:
+          'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
       });
       jest.runAllTimers();
       wrapper.update();
@@ -72,5 +80,4 @@ describe('Fallback', () => {
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
     );
   });
-  
 });
