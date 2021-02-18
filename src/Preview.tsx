@@ -234,7 +234,6 @@ const Preview: React.FC<PreviewProps> = props => {
 
   return (
     <Dialog
-      {...restProps}
       transitionName="zoom"
       maskTransitionName="fade"
       closable={false}
@@ -244,6 +243,7 @@ const Preview: React.FC<PreviewProps> = props => {
       afterClose={onAfterClose}
       visible={visible}
       wrapClassName={wrapClassName}
+      {...restProps}
     >
       <ul className={`${prefixCls}-operations`}>
         {tools.map(({ icon, onClick, type, disabled }) => (

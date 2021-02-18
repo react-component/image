@@ -51,10 +51,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(0).simulate('click');
     });
 
     expect(onPreviewCloseMock).toBeCalledWith(false, true);
@@ -90,10 +87,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(3)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(3).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -102,10 +96,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(4)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(4).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -126,10 +117,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(2)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -138,10 +126,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -150,10 +135,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(2)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -404,19 +386,13 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
 
     act(() => {
-      wrapper
-        .find('.anticon')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.anticon').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -424,19 +400,13 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-wrap').simulate('click');
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.rc-image').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
 
     act(() => {
-      wrapper
-        .find('.anticon')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.anticon').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -478,5 +448,36 @@ describe('Preview', () => {
 
     expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
     expect(wrapper.find('.rc-image-preview-img').prop('src')).toBe(previewSrc);
+  });
+
+  it('Customize preview props', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(
+      <Image
+        src={src}
+        preview={{
+          visible: true,
+          transitionName: 'abc',
+          maskTransitionName: 'def',
+        }}
+      />,
+    );
+
+    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
+    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+  });
+
+  it('Customize Group preview props', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(
+      <Image.PreviewGroup
+        preview={{ visible: true, transitionName: 'abc', maskTransitionName: 'def' }}
+      >
+        <Image src={src} />
+      </Image.PreviewGroup>,
+    );
+
+    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
+    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
   });
 });
