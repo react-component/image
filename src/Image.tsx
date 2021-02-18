@@ -8,7 +8,11 @@ import Preview, { PreviewProps } from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
-export interface ImagePreviewType extends Omit<IDialogPropTypes, 'mask' | 'visible'> {
+export interface ImagePreviewType
+  extends Omit<
+    IDialogPropTypes,
+    'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
+  > {
   src?: string;
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
