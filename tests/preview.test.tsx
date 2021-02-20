@@ -479,4 +479,35 @@ describe('Preview', () => {
     expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
     expect(wrapper.find('.rc-image-preview-img').prop('src')).toBe(previewSrc);
   });
+
+  it('Customize preview props', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(
+      <Image
+        src={src}
+        preview={{
+          visible: true,
+          transitionName: 'abc',
+          maskTransitionName: 'def',
+        }}
+      />,
+    );
+
+    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
+    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+  });
+
+  it('Customize Group preview props', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(
+      <Image.PreviewGroup
+        preview={{ visible: true, transitionName: 'abc', maskTransitionName: 'def' }}
+      >
+        <Image src={src} />
+      </Image.PreviewGroup>,
+    );
+
+    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
+    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+  });
 });

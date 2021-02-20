@@ -5,7 +5,7 @@ import { ImagePreviewType } from './Image';
 import Preview, { PreviewProps } from './Preview';
 
 export interface PreviewGroupPreview
-  extends Pick<ImagePreviewType, 'visible' | 'onVisibleChange' | 'getContainer'> {
+  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName'> {
   /**
    * If Preview the show img index
    * @default 0
@@ -54,6 +54,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     onVisibleChange: onPreviewVisibleChange = undefined,
     getContainer = undefined,
     current: currentIndex = 0,
+    ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
   const [current, setCurrent] = useState<number>();
@@ -127,6 +128,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         src={previewUrls.get(current)}
         icons={icons}
         getContainer={getContainer}
+        {...dialogProps}
       />
     </Provider>
   );

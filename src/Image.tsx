@@ -6,8 +6,13 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import { GetContainer } from 'rc-util/lib/PortalWrapper';
 import Preview, { PreviewProps } from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
+import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
-export interface ImagePreviewType {
+export interface ImagePreviewType
+  extends Omit<
+    IDialogPropTypes,
+    'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
+  > {
   src?: string;
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
@@ -81,6 +86,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     mask: previewMask,
     maskClassName,
     icons,
+    ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
   const isControlled = previewVisible !== undefined;
@@ -255,6 +261,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           alt={alt}
           getContainer={getPreviewContainer}
           icons={icons}
+          {...dialogProps}
         />
       )}
     </>
