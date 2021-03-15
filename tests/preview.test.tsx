@@ -51,10 +51,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(0).simulate('click');
     });
 
     expect(onPreviewCloseMock).toBeCalledWith(false, true);
@@ -90,10 +87,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(3)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(3).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -102,10 +96,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(4)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(4).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -126,10 +117,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(2)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -138,10 +126,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -150,10 +135,7 @@ describe('Preview', () => {
     });
 
     act(() => {
-      wrapper
-        .find('.rc-image-preview-operations-operation')
-        .at(2)
-        .simulate('click');
+      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -404,19 +386,13 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
 
     act(() => {
-      wrapper
-        .find('.anticon')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.anticon').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -424,19 +400,13 @@ describe('Preview', () => {
     wrapper.find('.rc-image-preview-wrap').simulate('click');
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(1)
-        .simulate('click');
+      wrapper.find('.rc-image').at(1).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
 
     act(() => {
-      wrapper
-        .find('.anticon')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.anticon').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -509,5 +479,43 @@ describe('Preview', () => {
 
     expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
     expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+  });
+
+  it('if async src set should be correct', () => {
+    const src =
+      'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ';
+    const AsyncImage = ({ src: imgSrc }) => {
+      const normalSrc =
+        'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+      return (
+        <Image.PreviewGroup>
+          <Image src={imgSrc} />
+          <Image src={normalSrc} />
+        </Image.PreviewGroup>
+      );
+    };
+
+    const wrapper = mount(<AsyncImage src="" />);
+
+    act(() => {
+      wrapper.setProps({
+        src,
+      });
+    });
+
+    act(() => {
+      wrapper.find('.rc-image').at(0).simulate('click');
+    });
+
+    jest.runAllTimers();
+    wrapper.update();
+
+    expect(wrapper.find('.rc-image-preview-img').at(0).prop('src')).toBe(src);
+
+    expect(
+      wrapper
+        .find('.rc-image-preview-switch-left')
+        .hasClass('rc-image-preview-switch-left-disabled'),
+    ).toBe(true);
   });
 });

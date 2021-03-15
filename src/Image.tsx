@@ -173,11 +173,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   }, []);
 
   React.useEffect(() => {
-    const unRegister = registerImage(currentId, src);
-
-    if (!canPreview) {
-      unRegister();
-    }
+    registerImage(currentId, src, canPreview);
   }, [src, canPreview]);
   // Keep order end
 
