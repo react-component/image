@@ -60,14 +60,6 @@ describe('Placeholder', () => {
       />,
     );
 
-    expect(wrapper.find('.rc-image-placeholder').get(0)).toBeTruthy();
-
-    act(() => {
-      wrapper.setProps({});
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
     expect(wrapper.find('.rc-image-placeholder').get(0)).toBeFalsy();
 
     domSpy.mockRestore();

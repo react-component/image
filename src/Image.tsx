@@ -110,6 +110,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   });
   const canPreview = preview && !isError;
 
+  const isLoaded = React.useRef(false);
+
   const onLoad = () => {
     setStatus('normal');
   };
@@ -157,8 +159,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   const getImgRef = (img?: HTMLImageElement) => {
+    isLoaded.current = false;
     if (status !== 'loading') return;
     if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
+      isLoaded.current = true;
       onLoad();
     }
   };
@@ -185,7 +189,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     if (isError) {
       setStatus('normal');
     }
-    if (isCustomPlaceholder) {
+    if (isCustomPlaceholder && !isLoaded.current) {
       setStatus('loading');
     }
   }, [imgSrc]);
