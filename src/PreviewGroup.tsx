@@ -19,15 +19,20 @@ export interface GroupConsumerProps {
   preview?: boolean | PreviewGroupPreview;
 }
 
+interface PreviewUrl {
+  url: string;
+  canPreview: boolean;
+}
+
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
   previewUrls: Map<number, string>;
-  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<number, string>>>;
+  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<number, PreviewUrl>>>;
   current: number;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  registerImage: (id: number, url: string) => () => void;
+  registerImage: (id: number, url: string, canPreview?: boolean) => () => void;
 }
 
 /* istanbul ignore next */
@@ -56,7 +61,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     current: currentIndex = 0,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
-  const [previewUrls, setPreviewUrls] = useState<Map<number, string>>(new Map());
+  const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
   const [current, setCurrent] = useState<number>();
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
@@ -66,8 +71,13 @@ const Group: React.FC<GroupConsumerProps> = ({
   const isControlled = previewVisible !== undefined;
   const previewUrlsKeys = Array.from(previewUrls.keys());
   const currentControlledKey = previewUrlsKeys[currentIndex];
+  const canPreviewUrls = new Map<number, string>(
+    Array.from(previewUrls)
+      .filter(([, { canPreview }]) => !!canPreview)
+      .map(([id, { url }]) => [id, url]),
+  );
 
-  const registerImage = (id: number, url: string) => {
+  const registerImage = (id: number, url: string, canPreview: boolean = true) => {
     const unRegister = () => {
       setPreviewUrls(oldPreviewUrls => {
         const clonePreviewUrls = new Map(oldPreviewUrls);
@@ -76,14 +86,11 @@ const Group: React.FC<GroupConsumerProps> = ({
       });
     };
 
-    // we don't need to test this if canPreview changed when url stays the same
-    /* istanbul ignore next */
-    if (previewUrls.get(id) === url) {
-      return unRegister;
-    }
-
     setPreviewUrls(oldPreviewUrls => {
-      return new Map(oldPreviewUrls).set(id, url);
+      return new Map(oldPreviewUrls).set(id, {
+        url,
+        canPreview,
+      });
     });
 
     return unRegister;
@@ -109,7 +116,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     <Provider
       value={{
         isPreviewGroup: true,
-        previewUrls,
+        previewUrls: canPreviewUrls,
         setPreviewUrls,
         current,
         setCurrent,
@@ -125,7 +132,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
-        src={previewUrls.get(current)}
+        src={canPreviewUrls.get(current)}
         icons={icons}
         getContainer={getContainer}
         {...dialogProps}
