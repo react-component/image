@@ -35,6 +35,7 @@ export interface ImageProps
   placeholder?: React.ReactNode;
   fallback?: string;
   preview?: boolean | ImagePreviewType;
+  children?: React.ReactNode;
   /**
    * @deprecated since version 3.2.1
    */
@@ -66,6 +67,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   onError: onImageError,
   wrapperClassName,
   wrapperStyle,
+  children,
 
   // Img
   crossOrigin,
@@ -229,26 +231,32 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           ...wrapperStyle,
         }}
       >
-        <img
-          {...imgCommonProps}
-          ref={getImgRef}
-          {...(isError && fallback
-            ? {
-                src: fallback,
-              }
-            : { onLoad, onError, src: imgSrc })}
-        />
+        {
+          children || (
+            <>
+              <img
+                {...imgCommonProps}
+                ref={getImgRef}
+                {...(isError && fallback
+                  ? {
+                    src: fallback,
+                  }
+                  : { onLoad, onError, src: imgSrc })}
+              />
 
-        {status === 'loading' && (
-          <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
-            {placeholder}
-          </div>
-        )}
+              {status === 'loading' && (
+                <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+                  {placeholder}
+                </div>
+              )}
 
-        {/* Preview Click Mask */}
-        {previewMask && canPreview && (
-          <div className={cn(`${prefixCls}-mask`, maskClassName)}>{previewMask}</div>
-        )}
+              {/* Preview Click Mask */}
+              {previewMask && canPreview && (
+                <div className={cn(`${prefixCls}-mask`, maskClassName)}>{previewMask}</div>
+              )}
+            </>
+          )
+        }
       </div>
       {!isPreviewGroup && canPreview && (
         <Preview

@@ -46,6 +46,14 @@ export default function Base() {
         width={200}
         height={100}
       />
+
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width={200}
+        height={100}
+      >
+        <a>查看示例</a>
+      </Image>
     </div>
   );
 }
