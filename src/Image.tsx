@@ -222,7 +222,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       <div
         {...otherProps}
         className={wrapperClass}
-        onClick={preview && !isError ? onPreview : onClick}
+        onClick={canPreview ? onPreview : onClick}
         style={{
           width,
           height,
