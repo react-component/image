@@ -518,4 +518,74 @@ describe('Preview', () => {
         .hasClass('rc-image-preview-switch-left-disabled'),
     ).toBe(true);
   });
+
+  it('Support scale', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          scale: 0.5,
+        }}
+      />,
+    );
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper.find('.rc-image-preview-operations-operation').at(1).simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    act(() => {
+      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
+  it('Support rotate', () => {
+    const wrapper = mount(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          rotate: 45,
+        }}
+      />,
+    );
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper.find('.rc-image-preview-operations-operation').at(3).simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1, 1, 1) rotate(45deg)',
+    });
+
+    act(() => {
+      wrapper.find('.rc-image-preview-operations-operation').at(4).simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
 });

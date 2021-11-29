@@ -3,10 +3,11 @@ import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import { GetContainer } from 'rc-util/lib/PortalWrapper';
-import Preview, { PreviewProps } from './Preview';
+import type { GetContainer } from 'rc-util/lib/PortalWrapper';
+import type { PreviewProps } from './Preview';
+import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
-import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
+import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
 export interface ImagePreviewType
   extends Omit<
@@ -20,6 +21,8 @@ export interface ImagePreviewType
   mask?: React.ReactNode;
   maskClassName?: string;
   icons?: PreviewProps['icons'];
+  scale?: number;
+  rotate?: number;
 }
 
 let uuid = 0;
