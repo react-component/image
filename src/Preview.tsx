@@ -115,7 +115,7 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
-  const wrapClassName = classnames(rootClassName, {
+  const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
   const toolClassName = `${prefixCls}-operations-operation`;
