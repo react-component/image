@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import { ImagePreviewType } from './Image';
-import Preview, { PreviewProps } from './Preview';
+import type { ImagePreviewType } from './Image';
+import type { PreviewProps } from './Preview';
+import Preview from './Preview';
 
 export interface PreviewGroupPreview
   extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName'> {
@@ -33,6 +34,7 @@ export interface GroupConsumerValue extends GroupConsumerProps {
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
   registerImage: (id: number, url: string, canPreview?: boolean) => () => void;
+  rootClassName?: string;
 }
 
 /* istanbul ignore next */
@@ -44,6 +46,7 @@ export const context = React.createContext<GroupConsumerValue>({
   setShowPreview: () => null,
   setMousePosition: () => null,
   registerImage: () => () => null,
+  rootClassName: '',
 });
 
 const { Provider } = context;

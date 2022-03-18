@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Preview add rootClassName should be correct 1`] = `
+<div
+  class="rc-image custom-className"
+>
+  <img
+    class="rc-image-img"
+    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+  />
+</div>
+`;
+
+exports[`Preview add rootClassName should be correct when open preview 1`] = `
+Array [
+  <div
+    class="rc-image custom-className"
+  >
+    <img
+      class="rc-image-img"
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    />
+  </div>,
+  <div
+    class="rc-image-preview-root custom-className"
+  >
+    <div
+      class="rc-image-preview-mask"
+    />
+    <div
+      class="rc-image-preview-wrap"
+      role="dialog"
+      tabindex="-1"
+    >
+      <div
+        class="rc-image-preview"
+        role="document"
+      >
+        <div
+          aria-hidden="true"
+          style="width: 0px; height: 0px; overflow: hidden; outline: none;"
+          tabindex="0"
+        />
+        <div
+          class="rc-image-preview-content"
+        >
+          <div
+            class="rc-image-preview-body"
+          >
+            <ul
+              class="rc-image-preview-operations"
+            >
+              <li
+                class="rc-image-preview-operations-operation"
+              />
+              <li
+                class="rc-image-preview-operations-operation"
+              />
+              <li
+                class="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
+              />
+              <li
+                class="rc-image-preview-operations-operation"
+              />
+              <li
+                class="rc-image-preview-operations-operation"
+              />
+            </ul>
+            <div
+              class="rc-image-preview-img-wrapper"
+              style="transform: translate3d(0px, 0px, 0);"
+            >
+              <img
+                class="rc-image-preview-img"
+                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                style="transform: scale3d(1, 1, 1) rotate(0deg);"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          aria-hidden="true"
+          style="width: 0px; height: 0px; overflow: hidden; outline: none;"
+          tabindex="0"
+        />
+      </div>
+    </div>
+  </div>,
+]
+`;

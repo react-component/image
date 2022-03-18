@@ -481,6 +481,42 @@ describe('Preview', () => {
     expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
   });
 
+  it('add rootClassName should be correct', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(<Image src={src} rootClassName="custom-className" />);
+
+    expect(wrapper.find('.custom-className').length).toBe(1);
+    expect(wrapper.render()).toMatchSnapshot();
+  });
+
+  it('add rootClassName should be correct when open preview', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const previewSrc =
+      'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+
+    const wrapper = mount(
+      <Image src={src} preview={{ src: previewSrc }} rootClassName="custom-className" />,
+    );
+    expect(wrapper.find('.rc-image.custom-className .rc-image-img').prop('src')).toBe(src);
+    expect(wrapper.find('.rc-image-preview-root.custom-className').get(0)).toBeFalsy();
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(
+      wrapper.find('.rc-image-preview-root.custom-className .rc-image-preview').get(0),
+    ).toBeTruthy();
+    expect(wrapper.find('.rc-image-preview-root.custom-className').get(0)).toBeTruthy();
+    expect(
+      wrapper.find('.rc-image-preview-root.custom-className .rc-image-preview-img').prop('src'),
+    ).toBe(previewSrc);
+
+    expect(wrapper.render()).toMatchSnapshot();
+  });
+
   it('if async src set should be correct', () => {
     const src =
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ';

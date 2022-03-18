@@ -3,10 +3,11 @@ import { useState } from 'react';
 import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import { GetContainer } from 'rc-util/lib/PortalWrapper';
-import Preview, { PreviewProps } from './Preview';
+import type { GetContainer } from 'rc-util/lib/PortalWrapper';
+import type { PreviewProps } from './Preview';
+import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
-import { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
+import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
 export interface ImagePreviewType
   extends Omit<
@@ -34,6 +35,7 @@ export interface ImageProps
   previewPrefixCls?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
+  rootClassName?: string;
   preview?: boolean | ImagePreviewType;
   /**
    * @deprecated since version 3.2.1
@@ -66,6 +68,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   onError: onImageError,
   wrapperClassName,
   wrapperStyle,
+  rootClassName,
 
   // Img
   crossOrigin,
@@ -190,7 +193,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   }, [imgSrc]);
 
-  const wrapperClass = cn(prefixCls, wrapperClassName, {
+  const wrapperClass = cn(prefixCls, wrapperClassName, rootClassName, {
     [`${prefixCls}-error`]: isError,
   });
 
@@ -261,6 +264,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           alt={alt}
           getContainer={getPreviewContainer}
           icons={icons}
+          rootClassName={rootClassName}
           {...dialogProps}
         />
       )}

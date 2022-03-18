@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Dialog, { DialogProps as IDialogPropTypes } from 'rc-dialog';
+import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
+import Dialog from 'rc-dialog';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { warning } from 'rc-util/lib/warning';
@@ -13,6 +14,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
+  rootClassName?: string;
   icons?: {
     rotateLeft?: React.ReactNode;
     rotateRight?: React.ReactNode;
@@ -30,7 +32,17 @@ const initialPosition = {
 };
 
 const Preview: React.FC<PreviewProps> = props => {
-  const { prefixCls, src, alt, onClose, afterClose, visible, icons = {}, ...restProps } = props;
+  const {
+    prefixCls,
+    src,
+    alt,
+    onClose,
+    afterClose,
+    visible,
+    icons = {},
+    rootClassName,
+    ...restProps
+  } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
@@ -243,6 +255,7 @@ const Preview: React.FC<PreviewProps> = props => {
       afterClose={onAfterClose}
       visible={visible}
       wrapClassName={wrapClassName}
+      rootClassName={rootClassName}
       {...restProps}
     >
       <ul className={`${prefixCls}-operations`}>
