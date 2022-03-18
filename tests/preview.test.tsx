@@ -481,6 +481,14 @@ describe('Preview', () => {
     expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
   });
 
+  it('add rootClassName should be correct', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const wrapper = mount(<Image src={src} rootClassName="custom-className" />);
+
+    expect(wrapper.find('.custom-className').length).toBe(1);
+    expect(wrapper.render()).toMatchSnapshot();
+  });
+
   it('if async src set should be correct', () => {
     const src =
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ';
