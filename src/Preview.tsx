@@ -3,12 +3,13 @@ import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
+import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import useFrameSetState from './hooks/useFrameSetState';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
 
-const { useState, useEffect } = React;
+const { useState, useEffect, useCallback, useRef, useContext } = React;
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
@@ -50,8 +51,8 @@ const Preview: React.FC<PreviewProps> = props => {
     x: number;
     y: number;
   }>(initialPosition);
-  const imgRef = React.useRef<HTMLImageElement>();
-  const originPositionRef = React.useRef<{
+  const imgRef = useRef<HTMLImageElement>();
+  const originPositionRef = useRef<{
     originX: number;
     originY: number;
     deltaX: number;
@@ -62,14 +63,14 @@ const Preview: React.FC<PreviewProps> = props => {
     deltaX: 0,
     deltaY: 0,
   });
-  const [isMoving, setMoving] = React.useState(false);
-  const { previewUrls, current, isPreviewGroup, setCurrent } = React.useContext(context);
+  const [isMoving, setMoving] = useState(false);
+  const { previewUrls, current, isPreviewGroup, setCurrent } = useContext(context);
   const previewGroupCount = previewUrls.size;
   const previewUrlsKeys = Array.from(previewUrls.keys());
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
-  const [lastWheelZoomDirection, setLastWheelZoomDirection] = React.useState({ wheelDirection: 0 });
+  const [lastWheelZoomDirection, setLastWheelZoomDirection] = useState({ wheelDirection: 0 });
 
   const onAfterClose = () => {
     setScale(1);
@@ -201,6 +202,31 @@ const Preview: React.FC<PreviewProps> = props => {
     setLastWheelZoomDirection({ wheelDirection });
   };
 
+  const onKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!visible || !showLeftOrRightSwitches) return;
+
+      event.preventDefault();
+      if (event.keyCode === KeyCode.LEFT) {
+        if (currentPreviewIndex > 0) {
+          setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
+        }
+      } else if (event.keyCode === KeyCode.RIGHT) {
+        if (currentPreviewIndex < previewGroupCount - 1) {
+          setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
+        }
+      }
+    },
+    [
+      currentPreviewIndex,
+      previewGroupCount,
+      previewUrlsKeys,
+      setCurrent,
+      showLeftOrRightSwitches,
+      visible,
+    ],
+  );
+
   useEffect(() => {
     const { wheelDirection } = lastWheelZoomDirection;
     if (wheelDirection > 0) {
@@ -219,6 +245,7 @@ const Preview: React.FC<PreviewProps> = props => {
     const onScrollWheelListener = addEventListener(window, 'wheel', onWheelMove, {
       passive: false,
     });
+    const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
 
     try {
       // Resolve if in iframe lost event
@@ -236,13 +263,14 @@ const Preview: React.FC<PreviewProps> = props => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
       onScrollWheelListener.remove();
+      onKeyDownListener.remove();
 
       /* istanbul ignore next */
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isMoving]);
+  }, [visible, isMoving, onKeyDown]);
 
   return (
     <Dialog

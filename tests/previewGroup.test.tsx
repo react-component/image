@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
 
 describe('Preview', () => {
@@ -21,10 +22,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -44,10 +42,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -65,10 +60,7 @@ describe('Preview', () => {
     );
 
     act(() => {
-      wrapper
-        .find('.rc-image')
-        .at(0)
-        .simulate('click');
+      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -96,6 +88,28 @@ describe('Preview', () => {
     expect(
       wrapper.find('.rc-image-preview .rc-image-preview-switch-left-disabled').get(0),
     ).toBeTruthy();
+
+    act(() => {
+      const event = new KeyboardEvent('keydown', { keyCode: KeyCode.RIGHT });
+      global.dispatchEvent(event);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(
+      wrapper.find('.rc-image-preview .rc-image-preview-switch-right-disabled').get(0),
+    ).toBeTruthy();
+
+    act(() => {
+      const event = new KeyboardEvent('keydown', { keyCode: KeyCode.LEFT });
+      global.dispatchEvent(event);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(
+      wrapper.find('.rc-image-preview .rc-image-preview-switch-left-disabled').get(0),
+    ).toBeTruthy();
   });
 
   it('With Controlled', () => {
@@ -113,11 +127,6 @@ describe('Preview', () => {
       wrapper.update();
     });
 
-    expect(
-      wrapper
-        .find('.rc-image-preview')
-        .at(0)
-        .render(),
-    ).toMatchSnapshot();
+    expect(wrapper.find('.rc-image-preview').at(0).render()).toMatchSnapshot();
   });
 });
