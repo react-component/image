@@ -287,6 +287,11 @@ const Preview: React.FC<PreviewProps> = props => {
       {...restProps}
     >
       <ul className={`${prefixCls}-operations`}>
+        {showLeftOrRightSwitches && (
+          <li className={`${prefixCls}-operations-progress`}>
+            {currentPreviewIndex + 1} / {previewGroupCount}
+          </li>
+        )}
         {tools.map(({ icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {

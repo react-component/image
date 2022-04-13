@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils';
 import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
 
-describe('Preview', () => {
+describe('PreviewGroup', () => {
   beforeEach(() => {
     jest.useFakeTimers();
   });
@@ -26,8 +26,14 @@ describe('Preview', () => {
       jest.runAllTimers();
       wrapper.update();
     });
-
     expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
+
+    const previewProgressElement = wrapper.find(
+      '.rc-image-preview .rc-image-preview-operations-progress',
+    );
+
+    expect(previewProgressElement).toBeTruthy();
+    expect(previewProgressElement.text()).toEqual('1 / 2');
 
     expect(() => {
       wrapper.unmount();
@@ -51,6 +57,7 @@ describe('Preview', () => {
   });
 
   it('Switch', () => {
+    const previewProgressElementPath = '.rc-image-preview .rc-image-preview-operations-progress';
     const wrapper = mount(
       <Image.PreviewGroup>
         <Image src="src1" />
@@ -68,6 +75,7 @@ describe('Preview', () => {
     expect(
       wrapper.find('.rc-image-preview .rc-image-preview-switch-left-disabled').get(0),
     ).toBeTruthy();
+    expect(wrapper.find(previewProgressElementPath).text()).toEqual('1 / 2');
 
     act(() => {
       wrapper.find('.rc-image-preview .rc-image-preview-switch-right').simulate('click');
@@ -78,6 +86,7 @@ describe('Preview', () => {
     expect(
       wrapper.find('.rc-image-preview .rc-image-preview-switch-right-disabled').get(0),
     ).toBeTruthy();
+    expect(wrapper.find(previewProgressElementPath).text()).toEqual('2 / 2');
 
     act(() => {
       wrapper.find('.rc-image-preview .rc-image-preview-switch-left').simulate('click');
