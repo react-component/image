@@ -6,7 +6,11 @@ import '../../assets/index.less';
 export default function PreviewGroup() {
   return (
     <div>
-      <Image.PreviewGroup>
+      <Image.PreviewGroup
+        preview={{
+          countRender: (current, total) => `第${current}张 / 总共${total}张`,
+        }}
+      >
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
         <Image
           wrapperStyle={{ marginRight: 24, width: 200 }}
@@ -15,7 +19,7 @@ export default function PreviewGroup() {
         />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/2.jpeg')} />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/3.jpeg')} />
-        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src='error' alt="error" />
+        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src="error" alt="error" />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
       </Image.PreviewGroup>
     </div>

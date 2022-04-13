@@ -18,7 +18,7 @@ export default function Base() {
       <div>
         <Image
           // eslint-disable-next-line global-require
-          src={`${require('./demo1.png')}?random=${random}`}
+          src={`${require('./images/placeholder.png')}?random=${random}`}
           width={400}
           placeholder
         />
@@ -28,7 +28,7 @@ export default function Base() {
       <h1>Custom placeholder</h1>
       <Image
         // eslint-disable-next-line global-require
-        src={`${require('./demo1.png')}?random=${random + 1}`}
+        src={`${require('./images/placeholder.png')}?random=${random + 1}`}
         width={400}
         placeholder={
           <Image
