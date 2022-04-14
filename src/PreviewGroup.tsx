@@ -12,6 +12,7 @@ export interface PreviewGroupPreview
    * @default 0
    */
   current?: number;
+  countRender?: (current: number, total: number) => string;
 }
 
 export interface GroupConsumerProps {
@@ -62,6 +63,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     onVisibleChange: onPreviewVisibleChange = undefined,
     getContainer = undefined,
     current: currentIndex = 0,
+    countRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
@@ -138,6 +140,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         src={canPreviewUrls.get(current)}
         icons={icons}
         getContainer={getContainer}
+        countRender={countRender}
         {...dialogProps}
       />
     </Provider>

@@ -25,6 +25,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     left?: React.ReactNode;
     right?: React.ReactNode;
   };
+  countRender?: (current: number, total: number) => string;
 }
 
 const initialPosition = {
@@ -42,6 +43,7 @@ const Preview: React.FC<PreviewProps> = props => {
     visible,
     icons = {},
     rootClassName,
+    countRender,
     ...restProps
   } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
@@ -287,6 +289,12 @@ const Preview: React.FC<PreviewProps> = props => {
       {...restProps}
     >
       <ul className={`${prefixCls}-operations`}>
+        {showLeftOrRightSwitches && (
+          <li className={`${prefixCls}-operations-progress`}>
+            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
+              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
+          </li>
+        )}
         {tools.map(({ icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {

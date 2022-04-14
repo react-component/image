@@ -55,7 +55,7 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue),getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
+| preview | boolean \| { visible: boolean, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
@@ -81,8 +81,9 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| {visible: boolean,onVisibleChange:function(value, prevValue),getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
-| current | number | 0 | If Preview the show img index |
+| preview | boolean \|<br> { visible: boolean, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
+| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
+| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' 
 
 ## Example
 

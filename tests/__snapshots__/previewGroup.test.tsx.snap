@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Preview With Controlled 1`] = `
+exports[`PreviewGroup With Controlled 1`] = `
 <div
   class="rc-image-preview"
   role="document"
