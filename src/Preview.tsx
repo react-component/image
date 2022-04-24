@@ -229,6 +229,13 @@ const Preview: React.FC<PreviewProps> = props => {
     ],
   );
 
+  const onDoubleClick: React.MouseEventHandler<HTMLBodyElement> = () => {
+    if (visible) {
+      setScale(1);
+      setPosition(initialPosition);
+    }
+  };
+
   useEffect(() => {
     const { wheelDirection } = lastWheelZoomDirection;
     if (wheelDirection > 0) {
@@ -248,6 +255,7 @@ const Preview: React.FC<PreviewProps> = props => {
       passive: false,
     });
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
+    const onDoubleClickLister = addEventListener(window, 'dblclick', onDoubleClick, false);
 
     try {
       // Resolve if in iframe lost event
@@ -266,13 +274,14 @@ const Preview: React.FC<PreviewProps> = props => {
       onMouseMoveListener.remove();
       onScrollWheelListener.remove();
       onKeyDownListener.remove();
+      onDoubleClickLister.remove();
 
       /* istanbul ignore next */
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isMoving, onKeyDown]);
+  }, [visible, isMoving, onKeyDown, onDoubleClick]);
 
   return (
     <Dialog
