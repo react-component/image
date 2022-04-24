@@ -185,9 +185,8 @@ describe('Preview', () => {
       transform: 'scale3d(2, 2, 1) rotate(0deg)',
     });
 
-    const doubleClickEvent = new Event('dblclick');
     act(() => {
-      global.dispatchEvent(doubleClickEvent);
+      wrapper.find('.rc-image-preview-img').simulate('dblclick');
       jest.runAllTimers();
       wrapper.update();
     });
@@ -225,9 +224,8 @@ describe('Preview', () => {
       transform: 'translate3d(50px, 50px, 0)',
     });
 
-    const doubleClickEvent = new Event('dblclick');
     act(() => {
-      global.dispatchEvent(doubleClickEvent);
+      wrapper.find('.rc-image-preview-img').simulate('dblclick');
       jest.runAllTimers();
       wrapper.update();
     });
