@@ -280,7 +280,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isMoving, onKeyDown, onDoubleClick]);
+  }, [visible, isMoving, onKeyDown]);
 
   return (
     <Dialog
