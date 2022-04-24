@@ -165,6 +165,77 @@ describe('Preview', () => {
     });
   });
 
+  it('Reset scale on double click', () => {
+    const wrapper = mount(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    act(() => {
+      wrapper.find('.rc-image').simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    act(() => {
+      wrapper.find('.rc-image-preview-operations-operation').at(1).simulate('click');
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+    });
+
+    const doubleClickEvent = new Event('dblclick');
+    act(() => {
+      global.dispatchEvent(doubleClickEvent);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
+  it('Reset position on double click', () => {
+    const wrapper = mount(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    wrapper.find('.rc-image').simulate('click');
+    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
+    });
+
+    const mousemoveEvent = new Event('mousemove');
+
+    // @ts-ignore
+    mousemoveEvent.pageX = 50;
+    // @ts-ignore
+    mousemoveEvent.pageY = 50;
+
+    act(() => {
+      global.dispatchEvent(mousemoveEvent);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+
+    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+      transform: 'translate3d(50px, 50px, 0)',
+    });
+
+    const doubleClickEvent = new Event('dblclick');
+    act(() => {
+      global.dispatchEvent(doubleClickEvent);
+      jest.runAllTimers();
+      wrapper.update();
+    });
+    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+      transform: 'translate3d(0px, 0px, 0)',
+    });
+  });
+
   it('Mouse Event', () => {
     const clientWidthMock = jest
       .spyOn(document.documentElement, 'clientWidth', 'get')
