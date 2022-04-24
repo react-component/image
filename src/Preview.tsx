@@ -229,13 +229,13 @@ const Preview: React.FC<PreviewProps> = props => {
     ],
   );
 
-  const onDoubleClick: React.MouseEventHandler<HTMLBodyElement> = () => {
+  const onDoubleClick = useCallback(() => {
     if (!visible) {
       return;
     }
     setScale(1);
     setPosition(initialPosition);
-  };
+  }, [setScale, setPosition, visible]);
 
   useEffect(() => {
     const { wheelDirection } = lastWheelZoomDirection;
