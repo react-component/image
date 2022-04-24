@@ -230,10 +230,11 @@ const Preview: React.FC<PreviewProps> = props => {
   );
 
   const onDoubleClick: React.MouseEventHandler<HTMLBodyElement> = () => {
-    if (visible) {
-      setScale(1);
-      setPosition(initialPosition);
+    if (!visible) {
+      return;
     }
+    setScale(1);
+    setPosition(initialPosition);
   };
 
   useEffect(() => {
