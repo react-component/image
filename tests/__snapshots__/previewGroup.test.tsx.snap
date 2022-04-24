@@ -2,8 +2,9 @@
 
 exports[`PreviewGroup With Controlled 1`] = `
 <div
+  aria-modal="true"
   class="rc-image-preview"
-  role="document"
+  role="dialog"
 >
   <div
     aria-hidden="true"

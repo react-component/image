@@ -29,12 +29,12 @@ Array [
     />
     <div
       class="rc-image-preview-wrap"
-      role="dialog"
       tabindex="-1"
     >
       <div
+        aria-modal="true"
         class="rc-image-preview"
-        role="document"
+        role="dialog"
       >
         <div
           aria-hidden="true"
