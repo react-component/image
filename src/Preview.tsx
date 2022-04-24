@@ -256,7 +256,7 @@ const Preview: React.FC<PreviewProps> = props => {
       passive: false,
     });
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
-    const onDoubleClickLister = addEventListener(window, 'dblclick', onDoubleClick, false);
+    const onDoubleClickListener = addEventListener(window, 'dblclick', onDoubleClick, false);
 
     try {
       // Resolve if in iframe lost event
@@ -275,7 +275,7 @@ const Preview: React.FC<PreviewProps> = props => {
       onMouseMoveListener.remove();
       onScrollWheelListener.remove();
       onKeyDownListener.remove();
-      onDoubleClickLister.remove();
+      onDoubleClickListener.remove();
 
       /* istanbul ignore next */
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
