@@ -229,13 +229,13 @@ const Preview: React.FC<PreviewProps> = props => {
     ],
   );
 
-  const onDoubleClick = useCallback(() => {
+  const onDoubleClick = () => {
     if (!visible) {
       return;
     }
     setScale(1);
     setPosition(initialPosition);
-  }, [setScale, setPosition, visible]);
+  };
 
   useEffect(() => {
     const { wheelDirection } = lastWheelZoomDirection;
@@ -256,7 +256,6 @@ const Preview: React.FC<PreviewProps> = props => {
       passive: false,
     });
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
-    const onDoubleClickListener = addEventListener(window, 'dblclick', onDoubleClick, false);
 
     try {
       // Resolve if in iframe lost event
@@ -275,7 +274,6 @@ const Preview: React.FC<PreviewProps> = props => {
       onMouseMoveListener.remove();
       onScrollWheelListener.remove();
       onKeyDownListener.remove();
-      onDoubleClickListener.remove();
 
       /* istanbul ignore next */
       if (onTopMouseUpListener) onTopMouseUpListener.remove();
@@ -327,6 +325,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <img
           onMouseDown={onMouseDown}
+          onDoubleClick={onDoubleClick}
           ref={imgRef}
           className={`${prefixCls}-img`}
           src={combinationSrc}
