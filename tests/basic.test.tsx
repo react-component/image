@@ -1,41 +1,36 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent } from '@testing-library/react';
 import Image from '../src';
 
 describe('Basic', () => {
   it('snapshot', () => {
-    let wrapper;
+    const { asFragment } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width={200}
+      />,
+    );
 
-    act(() => {
-      wrapper = mount(
-        <Image
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          width={200}
-        />,
-      );
-    });
-
-    expect(wrapper).toMatchSnapshot();
+    expect(asFragment().firstChild).toMatchSnapshot();
   });
 
   it('With click', () => {
     const onClickMock = jest.fn();
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         onClick={onClickMock}
       />,
     );
 
-    wrapper.simulate('click');
+    fireEvent.click(container.querySelector('.rc-image'));
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
 
   it('With click when disable preview', () => {
     const onClickMock = jest.fn();
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         onClick={onClickMock}
@@ -43,12 +38,12 @@ describe('Basic', () => {
       />,
     );
 
-    wrapper.simulate('click');
+    fireEvent.click(container.querySelector('.rc-image'));
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
   test('className and style props should work on img element', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         className="img"
@@ -57,12 +52,12 @@ describe('Basic', () => {
         }}
       />,
     );
-    const img = wrapper.find('img');
-    expect(img.props().className).toContain('img');
-    expect(img.props().style.objectFit).toEqual('cover');
+    const img = container.querySelector('img');
+    expect(img).toHaveClass('img');
+    expect(img).toHaveStyle({ objectFit: 'cover' });
   });
   test('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         wrapperClassName="wrapper"
@@ -71,8 +66,8 @@ describe('Basic', () => {
         }}
       />,
     );
-    const wrapperElement = wrapper.find('img').parent();
-    expect(wrapperElement.props().className).toContain('wrapper');
-    expect(wrapperElement.props().style.objectFit).toEqual('cover');
+    const wrapperElement = container.querySelector('img').parentElement;
+    expect(wrapperElement).toHaveClass('wrapper');
+    expect(wrapperElement).toHaveStyle({ objectFit: 'cover' });
   });
 });

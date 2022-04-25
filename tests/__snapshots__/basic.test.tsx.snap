@@ -1,57 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Basic snapshot 1`] = `
-<Image
-  src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-  width={200}
+<div
+  class="rc-image"
+  style="width: 200px;"
 >
-  <div
-    className="rc-image"
-    onClick={[Function]}
-    style={
-      Object {
-        "height": undefined,
-        "width": 200,
-      }
-    }
-  >
-    <img
-      className="rc-image-img"
-      onError={[Function]}
-      onLoad={[Function]}
-      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-      style={
-        Object {
-          "height": undefined,
-        }
-      }
-    />
-  </div>
-  <Preview
-    aria-hidden={true}
-    mousePosition={null}
-    onClose={[Function]}
-    prefixCls="rc-image-preview"
+  <img
+    class="rc-image-img"
     src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-    visible={false}
-  >
-    <Dialog
-      afterClose={[Function]}
-      aria-hidden={true}
-      closable={false}
-      keyboard={true}
-      maskTransitionName="fade"
-      mousePosition={null}
-      onClose={[Function]}
-      prefixCls="rc-image-preview"
-      transitionName="zoom"
-      visible={false}
-      wrapClassName=""
-    >
-      <PortalWrapper
-        visible={false}
-      />
-    </Dialog>
-  </Preview>
-</Image>
+  />
+</div>
 `;
