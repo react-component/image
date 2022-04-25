@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent, act } from '@testing-library/react';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
 import Image from '../src';
 
@@ -15,29 +14,28 @@ describe('Placeholder', () => {
 
   it('Default placeholder', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const wrapper = mount(<Image src={src} placeholder />);
+    const { container } = render(<Image src={src} placeholder />);
 
-    expect(wrapper.find('.rc-image-placeholder').get(0)).toBeFalsy();
-    expect(wrapper.find('.rc-image-img-placeholder').prop('src')).toBe(src);
+    expect(container.querySelector('.rc-image-placeholder')).toBeFalsy();
+    expect(container.querySelector('.rc-image-img-placeholder')).toHaveAttribute('src', src);
   });
 
   it('Set correct', () => {
     const placeholder = 'placeholder';
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         placeholder={placeholder}
       />,
     );
-    expect(wrapper.find('.rc-image-placeholder').text()).toBe(placeholder);
+    expect(container.querySelector('.rc-image-placeholder').textContent).toBe(placeholder);
 
+    fireEvent.load(container.querySelector('.rc-image-img'));
     act(() => {
-      wrapper.find('.rc-image-img').simulate('load');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-placeholder').get(0)).toBeUndefined();
+    expect(container.querySelector('.rc-image-placeholder')).toBeFalsy();
   });
 
   it('Hide placeholder when load from cache', () => {
@@ -53,14 +51,14 @@ describe('Placeholder', () => {
       },
     });
 
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         placeholder={<></>}
       />,
     );
 
-    expect(wrapper.find('.rc-image-placeholder').get(0)).toBeFalsy();
+    expect(container.querySelector('.rc-image-placeholder')).toBeFalsy();
 
     domSpy.mockRestore();
   });

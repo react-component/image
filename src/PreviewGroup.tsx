@@ -19,6 +19,7 @@ export interface GroupConsumerProps {
   previewPrefixCls?: string;
   icons?: PreviewProps['icons'];
   preview?: boolean | PreviewGroupPreview;
+  children?: React.ReactNode;
 }
 
 interface PreviewUrl {

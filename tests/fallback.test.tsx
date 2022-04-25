@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent, act } from '@testing-library/react';
 import Image from '../src';
 
 describe('Fallback', () => {
@@ -15,68 +14,69 @@ describe('Fallback', () => {
   const fallback = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
 
   it('Fallback correct', () => {
-    const wrapper = mount(<Image src="abc" fallback={fallback} />);
+    const { container } = render(<Image src="abc" fallback={fallback} />);
 
+    fireEvent.error(container.querySelector('.rc-image-img'));
     act(() => {
-      wrapper.find('.rc-image-img').simulate('error');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-img').prop('src')).toBe(fallback);
+    expect(container.querySelector('.rc-image-img')).toHaveAttribute('src', fallback);
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toBeFalsy();
+    expect(container.querySelector('.rc-image-preview')).toBeFalsy();
   });
 
   it('should not show preview', () => {
-    const wrapper = mount(<Image src="abc" fallback={fallback} />);
+    const { container } = render(<Image src="abc" fallback={fallback} />);
 
+    fireEvent.error(container.querySelector('.rc-image-img'));
     act(() => {
-      wrapper.find('.rc-image-img').simulate('error');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-mask')).toHaveLength(0);
+    expect(container.querySelector('.rc-image-mask')).toBeFalsy();
   });
 
   it('With onError', () => {
     const onErrorMock = jest.fn();
-    const wrapper = mount(<Image src="abc" onError={onErrorMock} />);
+    const { container } = render(<Image src="abc" onError={onErrorMock} />);
 
+    fireEvent.error(container.querySelector('.rc-image-img'));
     act(() => {
-      wrapper.find('.rc-image-img').simulate('error');
       jest.runAllTimers();
-      wrapper.update();
     });
 
     expect(onErrorMock).toHaveBeenCalledTimes(1);
   });
 
   it('should change image, not error', () => {
-    const wrapper = mount(
+    const { container, rerender } = render(
       <Image
         width={200}
         src="error"
         fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       />,
     );
+
+    fireEvent.error(container.querySelector('.rc-image-img'));
+
+    rerender(
+      <Image
+        width={200}
+        src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
+        fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      />,
+    );
     act(() => {
-      wrapper.find('.rc-image-img').simulate('error');
-      wrapper.setProps({
-        src:
-          'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
-      });
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-img').prop('src')).toBe(
+    expect(container.querySelector('.rc-image-img')).toHaveAttribute(
+      'src',
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ',
     );
   });

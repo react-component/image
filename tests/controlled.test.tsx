@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, act } from '@testing-library/react';
 import Image from '../src';
 
 describe('Controlled', () => {
@@ -12,26 +11,26 @@ describe('Controlled', () => {
     jest.useRealTimers();
   });
   it('With previewVisible', () => {
-    const wrapper = mount(
+    const { rerender } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{ visible: true }}
       />,
     );
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    rerender(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ visible: false }}
+      />,
+    );
 
     act(() => {
-      wrapper.setProps({ preview: { visible: false } });
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(
-      wrapper
-        .find('.rc-image-preview')
-        .at(0)
-        .render(),
-    ).toMatchSnapshot();
+    expect(document.querySelector('.rc-image-preview')).toMatchSnapshot();
   });
 });

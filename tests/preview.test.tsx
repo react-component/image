@@ -1,6 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+import { render, fireEvent, act, createEvent } from '@testing-library/react';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
@@ -9,6 +8,20 @@ import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import CloseOutlined from '@ant-design/icons/CloseOutlined';
 import LeftOutlined from '@ant-design/icons/LeftOutlined';
 import RightOutlined from '@ant-design/icons/RightOutlined';
+
+jest.mock('../src/Preview', () => {
+  const MockPreview = (props: any) => {
+    global._previewProps = props;
+
+    let Preview = jest.requireActual('../src/Preview');
+    Preview = Preview.default || Preview;
+
+    return <Preview {...props} />;
+  };
+
+  return MockPreview;
+});
+
 import Image from '../src';
 
 describe('Preview', () => {
@@ -22,7 +35,7 @@ describe('Preview', () => {
 
   it('Show preview and close', () => {
     const onPreviewCloseMock = jest.fn();
-    const wrapper = mount(
+    const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
@@ -31,28 +44,24 @@ describe('Preview', () => {
       />,
     );
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
     // With mask close
     expect(onPreviewCloseMock).toBeCalledWith(true, false);
-    wrapper.find('.rc-image-preview-wrap').simulate('click');
+    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
 
     // With btn close
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(0).simulate('click');
-    });
+    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation'));
 
     expect(onPreviewCloseMock).toBeCalledWith(false, true);
 
@@ -60,108 +69,98 @@ describe('Preview', () => {
   });
 
   it('Unmount', () => {
-    const wrapper = mount(
+    const { container, unmount } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
     expect(() => {
-      wrapper.unmount();
+      unmount();
     }).not.toThrow();
   });
 
   it('Rotate', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
     act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(3).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(90deg)',
     });
 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(4).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
   });
 
   it('Scale', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
     act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
     act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(1).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(2, 2, 1) rotate(0deg)',
     });
 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
     act(() => {
-      wrapper.find('.rc-image-preview-operations-operation').at(2).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    act(() => {
-      const wheelEvent = new Event('wheel');
-      (wheelEvent as any).deltaY = -50;
-      global.dispatchEvent(wheelEvent);
-      jest.runAllTimers();
-      wrapper.update();
+    fireEvent.wheel(window, {
+      deltaY: -50,
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(2, 2, 1) rotate(0deg)',
     });
 
-    act(() => {
-      const wheelEvent = new Event('wheel');
-      (wheelEvent as any).deltaY = 50;
-      global.dispatchEvent(wheelEvent);
-      jest.runAllTimers();
-      wrapper.update();
+    fireEvent.wheel(window, {
+      deltaY: 50,
     });
-    expect(wrapper.find('.rc-image-preview-img').prop('style')).toMatchObject({
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
   });
@@ -176,6 +175,31 @@ describe('Preview', () => {
     let left = 0;
     let top = 0;
 
+    const fireMouseEvent = (
+      eventName: 'mouseDown' | 'mouseMove' | 'mouseUp',
+      element: Element | Window,
+      info: {
+        pageX?: number;
+        pageY?: number;
+        button?: number;
+      } = {},
+    ) => {
+      const event = createEvent[eventName](element);
+      Object.keys(info).forEach(key => {
+        Object.defineProperty(event, key, {
+          get: () => info[key],
+        });
+      });
+
+      act(() => {
+        fireEvent(element, event);
+      });
+
+      act(() => {
+        jest.runAllTimers();
+      });
+    };
+
     const imgEleMock = spyElementPrototypes(HTMLImageElement, {
       offsetWidth: {
         get: () => offsetWidth,
@@ -187,171 +211,131 @@ describe('Preview', () => {
         return { left, top };
       },
     });
-    const wrapper = mount(
+    const { container } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
-    wrapper.find('.rc-image').simulate('click');
+    fireEvent.click(container.querySelector('.rc-image'));
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 2,
     });
-    expect(wrapper.find('.rc-image-preview-moving').get(0)).toBeUndefined();
+    expect(document.querySelector('.rc-image-preview-moving')).toBeFalsy();
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
+    expect(document.querySelector('.rc-image-preview-moving')).toBeTruthy();
 
-    expect(wrapper.find('.rc-image-preview-moving').get(0)).toBeTruthy();
-
-    const mousemoveEvent = new Event('mousemove');
-
-    // @ts-ignore
-    mousemoveEvent.pageX = 50;
-    // @ts-ignore
-    mousemoveEvent.pageY = 50;
-
-    act(() => {
-      global.dispatchEvent(mousemoveEvent);
-      jest.runAllTimers();
-      wrapper.update();
+    fireMouseEvent('mouseMove', window, {
+      pageX: 50,
+      pageY: 50,
     });
-
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(50px, 50px, 0)',
     });
 
-    const mouseupEvent = new Event('mouseup');
+    fireMouseEvent('mouseUp', window);
 
-    act(() => {
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
-
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      offsetWidth = 2000;
-      offsetHeight = 1000;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    fireMouseEvent('mouseUp', window);
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      left = 100;
-      top = 100;
-      offsetWidth = 2000;
-      offsetHeight = 1000;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    left = 100;
+    top = 100;
+    offsetWidth = 2000;
+    offsetHeight = 1000;
+    fireMouseEvent('mouseUp', window);
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(460px, 116px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      left = -200;
-      top = -200;
-      offsetWidth = 2000;
-      offsetHeight = 1000;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    left = -200;
+    top = -200;
+    offsetWidth = 2000;
+    offsetHeight = 1000;
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    fireMouseEvent('mouseUp', window);
+
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(460px, 116px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      left = -200;
-      top = -200;
-      offsetWidth = 1000;
-      offsetHeight = 500;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    left = -200;
+    top = -200;
+    offsetWidth = 1000;
+    offsetHeight = 500;
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    fireMouseEvent('mouseUp', window);
+
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      left = -200;
-      top = -200;
-      offsetWidth = 1200;
-      offsetHeight = 600;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    left = -200;
+    top = -200;
+    offsetWidth = 1200;
+    offsetHeight = 600;
+    fireMouseEvent('mouseUp', window);
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(-60px, -84px, 0)',
     });
 
-    wrapper.find('.rc-image-preview-img').simulate('mousedown', {
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
     });
 
-    act(() => {
-      left = -200;
-      top = -200;
-      offsetWidth = 1000;
-      offsetHeight = 900;
-      global.dispatchEvent(mouseupEvent);
-      jest.runAllTimers();
-      wrapper.update();
-    });
+    left = -200;
+    top = -200;
+    offsetWidth = 1000;
+    offsetHeight = 900;
+    fireMouseEvent('mouseUp', window);
 
-    expect(wrapper.find('.rc-image-preview-img-wrapper').prop('style')).toMatchObject({
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
       transform: 'translate3d(-40px, -66px, 0)',
     });
 
@@ -362,7 +346,7 @@ describe('Preview', () => {
   });
 
   it('PreviewGroup', () => {
-    const wrapper = mount(
+    const { container } = render(
       <Image.PreviewGroup
         icons={{
           rotateLeft: <RotateLeftOutlined />,
@@ -385,37 +369,33 @@ describe('Preview', () => {
       </Image.PreviewGroup>,
     );
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').at(0).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
+    fireEvent.click(document.querySelectorAll('.anticon')[1]);
     act(() => {
-      wrapper.find('.anticon').at(1).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    wrapper.find('.rc-image-preview-wrap').simulate('click');
+    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
 
+    fireEvent.click(container.querySelectorAll('.rc-image')[1]);
     act(() => {
-      wrapper.find('.rc-image').at(1).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
+    fireEvent.click(document.querySelectorAll('.anticon')[0]);
     act(() => {
-      wrapper.find('.anticon').at(0).simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    wrapper.find('.rc-image-preview-wrap').simulate('click');
+    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
   });
 
   it('preview placeholder', () => {
-    const wrapper = mount(
+    render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
@@ -425,8 +405,8 @@ describe('Preview', () => {
       />,
     );
 
-    expect(wrapper.find('.rc-image-mask').text()).toEqual('Bamboo Is Light');
-    expect(wrapper.find('.rc-image-mask').hasClass('bamboo')).toBeTruthy();
+    expect(document.querySelector('.rc-image-mask').textContent).toEqual('Bamboo Is Light');
+    expect(document.querySelector('.rc-image-mask')).toHaveClass('bamboo');
   });
 
   it('previewSrc', () => {
@@ -434,25 +414,23 @@ describe('Preview', () => {
       'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/auto-orient,1/resize,p_10/quality,q_10';
     const previewSrc =
       'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const wrapper = mount(<Image src={src} preview={{ src: previewSrc }} />);
+    const { container } = render(<Image src={src} preview={{ src: previewSrc }} />);
 
-    expect(wrapper.find('.rc-image-img').prop('src')).toBe(src);
+    expect(container.querySelector('.rc-image-img')).toHaveAttribute('src', src);
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toBeFalsy();
-
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
-    expect(wrapper.find('.rc-image-preview').get(0)).toBeTruthy();
-    expect(wrapper.find('.rc-image-preview-img').prop('src')).toBe(previewSrc);
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', previewSrc);
   });
 
   it('Customize preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const wrapper = mount(
+    render(
       <Image
         src={src}
         preview={{
@@ -463,13 +441,17 @@ describe('Preview', () => {
       />,
     );
 
-    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
-    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+    expect(global._previewProps).toEqual(
+      expect.objectContaining({
+        transitionName: 'abc',
+        maskTransitionName: 'def',
+      }),
+    );
   });
 
   it('Customize Group preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const wrapper = mount(
+    render(
       <Image.PreviewGroup
         preview={{ visible: true, transitionName: 'abc', maskTransitionName: 'def' }}
       >
@@ -477,16 +459,20 @@ describe('Preview', () => {
       </Image.PreviewGroup>,
     );
 
-    expect(wrapper.find('Preview').prop('transitionName')).toBe('abc');
-    expect(wrapper.find('Preview').prop('maskTransitionName')).toBe('def');
+    expect(global._previewProps).toEqual(
+      expect.objectContaining({
+        transitionName: 'abc',
+        maskTransitionName: 'def',
+      }),
+    );
   });
 
   it('add rootClassName should be correct', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const wrapper = mount(<Image src={src} rootClassName="custom-className" />);
+    const { container, asFragment } = render(<Image src={src} rootClassName="custom-className" />);
 
-    expect(wrapper.find('.custom-className').length).toBe(1);
-    expect(wrapper.render()).toMatchSnapshot();
+    expect(container.querySelectorAll('.custom-className')).toHaveLength(1);
+    expect(asFragment().firstChild).toMatchSnapshot();
   });
 
   it('add rootClassName should be correct when open preview', () => {
@@ -494,27 +480,29 @@ describe('Preview', () => {
     const previewSrc =
       'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
 
-    const wrapper = mount(
+    const { container } = render(
       <Image src={src} preview={{ src: previewSrc }} rootClassName="custom-className" />,
     );
-    expect(wrapper.find('.rc-image.custom-className .rc-image-img').prop('src')).toBe(src);
-    expect(wrapper.find('.rc-image-preview-root.custom-className').get(0)).toBeFalsy();
+    expect(container.querySelector('.rc-image.custom-className .rc-image-img')).toHaveAttribute(
+      'src',
+      src,
+    );
+    expect(document.querySelector('.rc-image-preview-root.custom-className')).toBeFalsy();
 
+    fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
-      wrapper.find('.rc-image').simulate('click');
       jest.runAllTimers();
-      wrapper.update();
     });
 
     expect(
-      wrapper.find('.rc-image-preview-root.custom-className .rc-image-preview').get(0),
+      document.querySelector('.rc-image-preview-root.custom-className .rc-image-preview'),
     ).toBeTruthy();
-    expect(wrapper.find('.rc-image-preview-root.custom-className').get(0)).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-root.custom-className')).toBeTruthy();
     expect(
-      wrapper.find('.rc-image-preview-root.custom-className .rc-image-preview-img').prop('src'),
-    ).toBe(previewSrc);
+      document.querySelector('.rc-image-preview-root.custom-className .rc-image-preview-img'),
+    ).toHaveAttribute('src', previewSrc);
 
-    expect(wrapper.render()).toMatchSnapshot();
+    expect(Array.from(document.body.children)).toMatchSnapshot();
   });
 
   it('if async src set should be correct', () => {
@@ -531,27 +519,19 @@ describe('Preview', () => {
       );
     };
 
-    const wrapper = mount(<AsyncImage src="" />);
+    const { container, rerender } = render(<AsyncImage src="" />);
+    rerender(<AsyncImage src={src} />);
+
+    fireEvent.click(container.querySelector('.rc-image'));
 
     act(() => {
-      wrapper.setProps({
-        src,
-      });
+      jest.runAllTimers();
     });
 
-    act(() => {
-      wrapper.find('.rc-image').at(0).simulate('click');
-    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', src);
 
-    jest.runAllTimers();
-    wrapper.update();
-
-    expect(wrapper.find('.rc-image-preview-img').at(0).prop('src')).toBe(src);
-
-    expect(
-      wrapper
-        .find('.rc-image-preview-switch-left')
-        .hasClass('rc-image-preview-switch-left-disabled'),
-    ).toBe(true);
+    expect(document.querySelector('.rc-image-preview-switch-left')).toHaveClass(
+      'rc-image-preview-switch-left-disabled',
+    );
   });
 });
