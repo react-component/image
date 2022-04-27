@@ -230,7 +230,7 @@ const Preview: React.FC<PreviewProps> = props => {
   );
 
   const onDoubleClick = () => {
-    if (visible) {
+    if (visible && scale !== 1) {
       setScale(1);
       setPosition(initialPosition);
     }
