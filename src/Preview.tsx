@@ -229,6 +229,17 @@ const Preview: React.FC<PreviewProps> = props => {
     ],
   );
 
+  const onDoubleClick = () => {
+    if (visible) {
+      if (scale !== 1) {
+        setScale(1);
+      }
+      if (position.x !== initialPosition.x || position.y !== initialPosition.y) {
+        setPosition(initialPosition);
+      }
+    }
+  };
+
   useEffect(() => {
     const { wheelDirection } = lastWheelZoomDirection;
     if (wheelDirection > 0) {
@@ -317,6 +328,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <img
           onMouseDown={onMouseDown}
+          onDoubleClick={onDoubleClick}
           ref={imgRef}
           className={`${prefixCls}-img`}
           src={combinationSrc}

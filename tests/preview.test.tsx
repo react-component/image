@@ -33,6 +33,31 @@ describe('Preview', () => {
     jest.useRealTimers();
   });
 
+  const fireMouseEvent = (
+    eventName: 'mouseDown' | 'mouseMove' | 'mouseUp',
+    element: Element | Window,
+    info: {
+      pageX?: number;
+      pageY?: number;
+      button?: number;
+    } = {},
+  ) => {
+    const event = createEvent[eventName](element);
+    Object.keys(info).forEach(key => {
+      Object.defineProperty(event, key, {
+        get: () => info[key],
+      });
+    });
+
+    act(() => {
+      fireEvent(element, event);
+    });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+  };
+
   it('Show preview and close', () => {
     const onPreviewCloseMock = jest.fn();
     const { container } = render(
@@ -165,6 +190,65 @@ describe('Preview', () => {
     });
   });
 
+  it('Reset scale on double click', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+    });
+
+    fireEvent.dblClick(document.querySelector('.rc-image-preview-img'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
+  it('Reset position on double click', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
+    });
+    fireMouseEvent('mouseMove', window, {
+      pageX: 50,
+      pageY: 50,
+    });
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
+      transform: 'translate3d(50px, 50px, 0)',
+    });
+
+    fireEvent.dblClick(document.querySelector('.rc-image-preview-img'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0)',
+    });
+  });
+
   it('Mouse Event', () => {
     const clientWidthMock = jest
       .spyOn(document.documentElement, 'clientWidth', 'get')
@@ -174,31 +258,6 @@ describe('Preview', () => {
     let offsetHeight = 100;
     let left = 0;
     let top = 0;
-
-    const fireMouseEvent = (
-      eventName: 'mouseDown' | 'mouseMove' | 'mouseUp',
-      element: Element | Window,
-      info: {
-        pageX?: number;
-        pageY?: number;
-        button?: number;
-      } = {},
-    ) => {
-      const event = createEvent[eventName](element);
-      Object.keys(info).forEach(key => {
-        Object.defineProperty(event, key, {
-          get: () => info[key],
-        });
-      });
-
-      act(() => {
-        fireEvent(element, event);
-      });
-
-      act(() => {
-        jest.runAllTimers();
-      });
-    };
 
     const imgEleMock = spyElementPrototypes(HTMLImageElement, {
       offsetWidth: {
