@@ -230,11 +230,10 @@ const Preview: React.FC<PreviewProps> = props => {
   );
 
   const onDoubleClick = () => {
-    if (!visible) {
-      return;
+    if (visible) {
+      setScale(1);
+      setPosition(initialPosition);
     }
-    setScale(1);
-    setPosition(initialPosition);
   };
 
   useEffect(() => {
