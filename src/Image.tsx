@@ -78,6 +78,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   sizes,
   srcSet,
   useMap,
+  draggable,
   ...otherProps
 }) => {
   const isCustomPlaceholder = placeholder && placeholder !== true;
@@ -201,6 +202,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const imgCommonProps = {
     crossOrigin,
     decoding,
+    draggable,
     loading,
     referrerPolicy,
     sizes,
