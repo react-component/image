@@ -252,7 +252,14 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
         {/* Preview Click Mask */}
         {previewMask && canPreview && (
-          <div className={cn(`${prefixCls}-mask`, maskClassName)}>{previewMask}</div>
+          <div
+            className={cn(`${prefixCls}-mask`, maskClassName)}
+            style={{
+              display: imgCommonProps.style?.display === 'none' ? 'none' : undefined,
+            }}
+          >
+            {previewMask}
+          </div>
         )}
       </div>
       {!isPreviewGroup && canPreview && (
