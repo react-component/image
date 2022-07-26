@@ -42,7 +42,8 @@ describe('Basic', () => {
 
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
-  test('className and style props should work on img element', () => {
+
+  it('className and style props should work on img element', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -56,7 +57,8 @@ describe('Basic', () => {
     expect(img).toHaveClass('img');
     expect(img).toHaveStyle({ objectFit: 'cover' });
   });
-  test('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
+
+  it('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -69,5 +71,20 @@ describe('Basic', () => {
     const wrapperElement = container.querySelector('img').parentElement;
     expect(wrapperElement).toHaveClass('wrapper');
     expect(wrapperElement).toHaveStyle({ objectFit: 'cover' });
+  });
+
+  // https://github.com/ant-design/ant-design/issues/36680
+  it('preview mask should be hidden when image has style { display: "none" }', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        style={{
+          display: 'none',
+        }}
+        preview={{ mask: 'Click to Preview' }}
+      />,
+    );
+    const maskElement = container.querySelector('.rc-image-mask');
+    expect(maskElement).toHaveStyle({ display: 'none' });
   });
 });
