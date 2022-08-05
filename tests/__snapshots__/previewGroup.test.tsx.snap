@@ -42,8 +42,10 @@ exports[`PreviewGroup With Controlled 1`] = `
       >
         <img
           class="rc-image-preview-img"
+          height="auto"
           src="src1"
           style="transform: scale3d(1, 1, 1) rotate(0deg);"
+          width="auto"
         />
       </div>
     </div>

@@ -237,11 +237,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         <img
           {...imgCommonProps}
           ref={getImgRef}
-          {...(isError && fallback
-            ? {
-                src: fallback,
-              }
-            : { onLoad, onError, src: imgSrc })}
+          {...(isError && fallback ? { src: fallback } : { onLoad, onError, src: imgSrc })}
+          width={imgCommonProps.style.width ?? 'auto'}
+          height={imgCommonProps.style.height ?? 'auto'}
         />
 
         {status === 'loading' && (
