@@ -9,7 +9,7 @@ exports[`Basic snapshot 1`] = `
     class="rc-image-img"
     height="auto"
     src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-    width="auto"
+    width="200"
   />
 </div>
 `;
