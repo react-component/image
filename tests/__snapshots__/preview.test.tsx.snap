@@ -6,9 +6,7 @@ exports[`Preview add rootClassName should be correct 1`] = `
 >
   <img
     class="rc-image-img"
-    height="auto"
     src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-    width="auto"
   />
 </div>
 `;
@@ -21,9 +19,7 @@ Array [
     >
       <img
         class="rc-image-img"
-        height="auto"
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        width="auto"
       />
     </div>
   </div>,
@@ -79,10 +75,8 @@ Array [
               >
                 <img
                   class="rc-image-preview-img"
-                  height="auto"
                   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                   style="transform: scale3d(1, 1, 1) rotate(0deg);"
-                  width="auto"
                 />
               </div>
             </div>

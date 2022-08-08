@@ -325,8 +325,8 @@ const Preview: React.FC<PreviewProps> = props => {
         style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
       >
         <img
-          width="auto"
-          height="auto"
+          width={props.width}
+          height={props.height}
           onMouseDown={onMouseDown}
           onDoubleClick={onDoubleClick}
           ref={imgRef}
