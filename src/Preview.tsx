@@ -322,20 +322,18 @@ const Preview: React.FC<PreviewProps> = props => {
       </ul>
       <div
         className={`${prefixCls}-img-wrapper`}
-        style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-        }}
+        style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
       >
         <img
+          width={props.width}
+          height={props.height}
           onMouseDown={onMouseDown}
           onDoubleClick={onDoubleClick}
           ref={imgRef}
           className={`${prefixCls}-img`}
           src={combinationSrc}
           alt={alt}
-          style={{
-            transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)`,
-          }}
+          style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
         />
       </div>
       {showLeftOrRightSwitches && (
