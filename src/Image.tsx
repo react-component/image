@@ -21,6 +21,7 @@ export interface ImagePreviewType
   mask?: React.ReactNode;
   maskClassName?: string;
   icons?: PreviewProps['icons'];
+  scaleOffset?: number;
 }
 
 let uuid = 0;
@@ -90,6 +91,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     mask: previewMask,
     maskClassName,
     icons,
+    scaleOffset,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -271,6 +273,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           alt={alt}
           getContainer={getPreviewContainer}
           icons={icons}
+          scaleOffset={scaleOffset}
           rootClassName={rootClassName}
           {...dialogProps}
         />
