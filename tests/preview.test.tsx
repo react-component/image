@@ -190,12 +190,12 @@ describe('Preview', () => {
     });
   });
 
-  it('scaleOffset', () => {
+  it('scaleStep', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          scaleOffset: 1,
+          scaleStep: 1,
         }}
       />,
     );

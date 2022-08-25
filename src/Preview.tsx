@@ -26,7 +26,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     right?: React.ReactNode;
   };
   countRender?: (current: number, total: number) => string;
-  scaleOffset?: number;
+  scaleStep?: number;
 }
 
 const initialPosition = {
@@ -45,7 +45,7 @@ const Preview: React.FC<PreviewProps> = props => {
     icons = {},
     rootClassName,
     countRender,
-    scaleOffset = 0.5,
+    scaleStep = 0.5,
     ...restProps
   } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
@@ -83,13 +83,13 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onZoomIn = () => {
-    setScale(value => value + scaleOffset);
+    setScale(value => value + scaleStep);
     setPosition(initialPosition);
   };
 
   const onZoomOut = () => {
     if (scale > 1) {
-      setScale(value => value - scaleOffset);
+      setScale(value => value - scaleStep);
     }
     setPosition(initialPosition);
   };
