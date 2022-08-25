@@ -158,6 +158,66 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.wheel(window, {
+      deltaY: -50,
+    });
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.wheel(window, {
+      deltaY: 50,
+    });
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
+  it('scaleStep', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          scaleStep: 1,
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(2, 2, 1) rotate(0deg)',
     });
 
@@ -205,7 +265,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
     fireEvent.dblClick(document.querySelector('.rc-image-preview-img'));
