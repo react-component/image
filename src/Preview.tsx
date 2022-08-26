@@ -74,6 +74,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
+  const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
   const [lastWheelZoomDirection, setLastWheelZoomDirection] = useState({ wheelDirection: 0 });
 
   const onAfterClose = () => {
@@ -302,7 +303,7 @@ const Preview: React.FC<PreviewProps> = props => {
       {...restProps}
     >
       <ul className={`${prefixCls}-operations`}>
-        {showLeftOrRightSwitches && (
+        {showOperationsProgress && (
           <li className={`${prefixCls}-operations-progress`}>
             {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
               `${currentPreviewIndex + 1} / ${previewGroupCount}`}
@@ -317,7 +318,7 @@ const Preview: React.FC<PreviewProps> = props => {
             key={type}
           >
             {React.isValidElement(icon)
-              ? React.cloneElement(icon, { className: iconClassName })
+              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
               : icon}
           </li>
         ))}

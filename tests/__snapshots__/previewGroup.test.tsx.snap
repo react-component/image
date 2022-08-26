@@ -21,6 +21,11 @@ exports[`PreviewGroup With Controlled 1`] = `
         class="rc-image-preview-operations"
       >
         <li
+          class="rc-image-preview-operations-progress"
+        >
+          1 / 1
+        </li>
+        <li
           class="rc-image-preview-operations-operation"
         />
         <li
