@@ -258,6 +258,7 @@ const Preview: React.FC<PreviewProps> = props => {
     let onTopMouseMoveListener;
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
+    // fix: https://github.com/ant-design/ant-design/issues/37157
     const onScrollWheelListener = addEventListener(
       contentRef.current || window,
       'wheel',
