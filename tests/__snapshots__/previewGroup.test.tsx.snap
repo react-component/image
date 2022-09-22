@@ -17,39 +17,43 @@ exports[`PreviewGroup With Controlled 1`] = `
     <div
       class="rc-image-preview-body"
     >
-      <ul
-        class="rc-image-preview-operations"
-      >
-        <li
-          class="rc-image-preview-operations-progress"
-        >
-          1 / 1
-        </li>
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-      </ul>
       <div
-        class="rc-image-preview-img-wrapper"
-        style="transform: translate3d(0px, 0px, 0);"
+        class="rc-image-preview-scroll-holder"
       >
-        <img
-          class="rc-image-preview-img"
-          src="src1"
-          style="transform: scale3d(1, 1, 1) rotate(0deg);"
-        />
+        <ul
+          class="rc-image-preview-operations"
+        >
+          <li
+            class="rc-image-preview-operations-progress"
+          >
+            1 / 1
+          </li>
+          <li
+            class="rc-image-preview-operations-operation"
+          />
+          <li
+            class="rc-image-preview-operations-operation"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
+          />
+          <li
+            class="rc-image-preview-operations-operation"
+          />
+          <li
+            class="rc-image-preview-operations-operation"
+          />
+        </ul>
+        <div
+          class="rc-image-preview-img-wrapper"
+          style="transform: translate3d(0px, 0px, 0);"
+        >
+          <img
+            class="rc-image-preview-img"
+            src="src1"
+            style="transform: scale3d(1, 1, 1) rotate(0deg);"
+          />
+        </div>
       </div>
     </div>
   </div>

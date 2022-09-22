@@ -56,6 +56,7 @@ const Preview: React.FC<PreviewProps> = props => {
     y: number;
   }>(initialPosition);
   const imgRef = useRef<HTMLImageElement>();
+  const contentRef = useRef<HTMLDivElement>();
   const originPositionRef = useRef<{
     originX: number;
     originY: number;
@@ -255,12 +256,16 @@ const Preview: React.FC<PreviewProps> = props => {
   useEffect(() => {
     let onTopMouseUpListener;
     let onTopMouseMoveListener;
-
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
-    const onScrollWheelListener = addEventListener(window, 'wheel', onWheelMove, {
-      passive: false,
-    });
+    const onScrollWheelListener = addEventListener(
+      contentRef.current || window,
+      'wheel',
+      onWheelMove,
+      {
+        passive: false,
+      },
+    );
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
 
     try {
@@ -286,7 +291,7 @@ const Preview: React.FC<PreviewProps> = props => {
       /* istanbul ignore next */
       if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
     };
-  }, [visible, isMoving, onKeyDown]);
+  }, [visible, isMoving, onKeyDown, restProps.getContainer]);
 
   return (
     <Dialog
@@ -302,63 +307,65 @@ const Preview: React.FC<PreviewProps> = props => {
       rootClassName={rootClassName}
       {...restProps}
     >
-      <ul className={`${prefixCls}-operations`}>
-        {showOperationsProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
-              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+      <div ref={contentRef} className={`${prefixCls}-scroll-holder`}>
+        <ul className={`${prefixCls}-operations`}>
+          {showOperationsProgress && (
+            <li className={`${prefixCls}-operations-progress`}>
+              {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
+                `${currentPreviewIndex + 1} / ${previewGroupCount}`}
+            </li>
+          )}
+          {tools.map(({ icon, onClick, type, disabled }) => (
+            <li
+              className={classnames(toolClassName, {
+                [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+              })}
+              onClick={onClick}
+              key={type}
+            >
+              {React.isValidElement(icon)
+                ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+                : icon}
+            </li>
+          ))}
+        </ul>
+        <div
+          className={`${prefixCls}-img-wrapper`}
+          style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
+        >
+          <img
+            width={props.width}
+            height={props.height}
+            onMouseDown={onMouseDown}
+            onDoubleClick={onDoubleClick}
+            ref={imgRef}
+            className={`${prefixCls}-img`}
+            src={combinationSrc}
+            alt={alt}
+            style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
+          />
+        </div>
+        {showLeftOrRightSwitches && (
+          <div
+            className={classnames(`${prefixCls}-switch-left`, {
+              [`${prefixCls}-switch-left-disabled`]: currentPreviewIndex === 0,
             })}
-            onClick={onClick}
-            key={type}
+            onClick={onSwitchLeft}
           >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
-      <div
-        className={`${prefixCls}-img-wrapper`}
-        style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
-      >
-        <img
-          width={props.width}
-          height={props.height}
-          onMouseDown={onMouseDown}
-          onDoubleClick={onDoubleClick}
-          ref={imgRef}
-          className={`${prefixCls}-img`}
-          src={combinationSrc}
-          alt={alt}
-          style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
-        />
+            {left}
+          </div>
+        )}
+        {showLeftOrRightSwitches && (
+          <div
+            className={classnames(`${prefixCls}-switch-right`, {
+              [`${prefixCls}-switch-right-disabled`]: currentPreviewIndex === previewGroupCount - 1,
+            })}
+            onClick={onSwitchRight}
+          >
+            {right}
+          </div>
+        )}
       </div>
-      {showLeftOrRightSwitches && (
-        <div
-          className={classnames(`${prefixCls}-switch-left`, {
-            [`${prefixCls}-switch-left-disabled`]: currentPreviewIndex === 0,
-          })}
-          onClick={onSwitchLeft}
-        >
-          {left}
-        </div>
-      )}
-      {showLeftOrRightSwitches && (
-        <div
-          className={classnames(`${prefixCls}-switch-right`, {
-            [`${prefixCls}-switch-right-disabled`]: currentPreviewIndex === previewGroupCount - 1,
-          })}
-          onClick={onSwitchRight}
-        >
-          {right}
-        </div>
-      )}
     </Dialog>
   );
 };
