@@ -169,7 +169,7 @@ describe('Preview', () => {
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-scroll-holder'), {
       deltaY: -50,
     });
     act(() => {
@@ -179,7 +179,7 @@ describe('Preview', () => {
       transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-scroll-holder'), {
       deltaY: 50,
     });
     act(() => {
@@ -229,7 +229,7 @@ describe('Preview', () => {
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-scroll-holder'), {
       deltaY: -50,
     });
     act(() => {
@@ -239,7 +239,7 @@ describe('Preview', () => {
       transform: 'scale3d(2, 2, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-scroll-holder'), {
       deltaY: 50,
     });
     act(() => {
