@@ -158,4 +158,13 @@ describe('PreviewGroup', () => {
 
     expect(document.querySelector('.rc-image-preview')).toMatchSnapshot();
   });
+
+  it('should show error img', () => {
+    const { rerender } = render(
+      <Image.PreviewGroup preview={{ visible: true }}>
+        <Image src="errorsrc" />
+      </Image.PreviewGroup>,
+    );
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
+  })
 });
