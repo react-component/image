@@ -12,7 +12,7 @@ exports[`Preview add rootClassName should be correct 1`] = `
 `;
 
 exports[`Preview add rootClassName should be correct when open preview 1`] = `
-Array [
+[
   <div>
     <div
       class="rc-image custom-className"
