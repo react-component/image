@@ -114,7 +114,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     uuid += 1;
     return uuid;
   });
-  const canPreview = preview;
+  const canPreview = !!preview;
 
   const isLoaded = React.useRef(false);
 
