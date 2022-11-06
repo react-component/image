@@ -288,63 +288,7 @@ const Preview: React.FC<PreviewProps> = props => {
   }, [visible, isMoving, onKeyDown]);
 
   const operations = (
-    <ul className={`${prefixCls}-operations`}>
-      {showOperationsProgress && (
-        <li className={`${prefixCls}-operations-progress`}>
-          {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
-            `${currentPreviewIndex + 1} / ${previewGroupCount}`}
-        </li>
-      )}
-      {tools.map(({ icon, onClick, type, disabled }) => (
-        <li
-          className={classnames(toolClassName, {
-            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-          })}
-          onClick={onClick}
-          key={type}
-        >
-          {React.isValidElement(icon)
-            ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-            : icon}
-        </li>
-      ))}
-    </ul>
-  );
-
-  return (
-    <Dialog
-      maskTransitionName="fade"
-      closable={false}
-      keyboard
-      prefixCls={prefixCls}
-      onClose={onClose}
-      afterClose={onAfterClose}
-      visible={visible}
-      wrapClassName={wrapClassName}
-      rootClassName={rootClassName}
-      destroyOnClose
-      {...restProps}
-    >
-      <CSSMotion visible={visible} motionName="zoom">
-        {({ className, style }) => (
-          <div
-            className={classnames(`${prefixCls}-img-wrapper`, className)}
-            style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)`, ...style }}
-          >
-            <img
-              width={props.width}
-              height={props.height}
-              onMouseDown={onMouseDown}
-              onDoubleClick={onDoubleClick}
-              ref={imgRef}
-              className={`${prefixCls}-img`}
-              src={combinationSrc}
-              alt={alt}
-              style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
-            />
-          </div>
-        )}
-      </CSSMotion>
+    <>
       {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-left`, {
@@ -365,8 +309,68 @@ const Preview: React.FC<PreviewProps> = props => {
           {right}
         </div>
       )}
-      {operations}
-    </Dialog>
+      <ul className={`${prefixCls}-operations`}>
+        {showOperationsProgress && (
+          <li className={`${prefixCls}-operations-progress`}>
+            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
+              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
+          </li>
+        )}
+        {tools.map(({ icon, onClick, type, disabled }) => (
+          <li
+            className={classnames(toolClassName, {
+              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+            })}
+            onClick={onClick}
+            key={type}
+          >
+            {React.isValidElement(icon)
+              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+              : icon}
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+
+  return (
+    <>
+      <Dialog
+        maskTransitionName="fade"
+        transitionName="zoom"
+        closable={false}
+        keyboard
+        prefixCls={prefixCls}
+        onClose={onClose}
+        afterClose={onAfterClose}
+        visible={visible}
+        wrapClassName={wrapClassName}
+        rootClassName={rootClassName}
+        {...restProps}
+      >
+        <div
+          className={`${prefixCls}-img-wrapper`}
+          style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
+        >
+          <img
+            width={props.width}
+            height={props.height}
+            onMouseDown={onMouseDown}
+            onDoubleClick={onDoubleClick}
+            ref={imgRef}
+            className={`${prefixCls}-img`}
+            src={combinationSrc}
+            alt={alt}
+            style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
+          />
+        </div>
+      </Dialog>
+      <CSSMotion visible={visible} motionName="fade">
+        {({ className, style }) => (
+          <div className={className} style={style}>{operations}</div>
+        )}
+      </CSSMotion>
+    </>
   );
 };
 
