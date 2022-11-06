@@ -212,7 +212,6 @@ const Preview: React.FC<PreviewProps> = props => {
     (event: KeyboardEvent) => {
       if (!visible || !showLeftOrRightSwitches) return;
 
-      event.preventDefault();
       if (event.keyCode === KeyCode.LEFT) {
         if (currentPreviewIndex > 0) {
           setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
