@@ -324,12 +324,13 @@ const Preview: React.FC<PreviewProps> = props => {
       visible={visible}
       wrapClassName={wrapClassName}
       rootClassName={rootClassName}
+      destroyOnClose
       {...restProps}
     >
       <CSSMotion visible={visible} motionName="zoom">
         {({ className, style }) => (
           <div
-            className={`${prefixCls}-img-wrapper ${className}`}
+            className={classnames(`${prefixCls}-img-wrapper`, className)}
             style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)`, ...style }}
           >
             <img
