@@ -17,25 +17,6 @@ exports[`Controlled With previewVisible 1`] = `
     <div
       class="rc-image-preview-body"
     >
-      <ul
-        class="rc-image-preview-operations"
-      >
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-        <li
-          class="rc-image-preview-operations-operation"
-        />
-      </ul>
       <div
         class="rc-image-preview-img-wrapper"
         style="transform: translate3d(0px, 0px, 0);"
