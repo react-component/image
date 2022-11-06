@@ -281,11 +281,10 @@ const Preview: React.FC<PreviewProps> = props => {
       onMouseMoveListener.remove();
       onScrollWheelListener.remove();
       onKeyDownListener.remove();
-
       /* istanbul ignore next */
-      if (onTopMouseUpListener) onTopMouseUpListener.remove();
+      onTopMouseUpListener?.remove();
       /* istanbul ignore next */
-      if (onTopMouseMoveListener) onTopMouseMoveListener.remove();
+      onTopMouseMoveListener?.remove();
     };
   }, [visible, isMoving, onKeyDown]);
 
