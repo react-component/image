@@ -336,8 +336,8 @@ const Preview: React.FC<PreviewProps> = props => {
   return (
     <>
       <Dialog
-        maskTransitionName="fade"
         transitionName="zoom"
+        maskTransitionName="fade"
         closable={false}
         keyboard
         prefixCls={prefixCls}

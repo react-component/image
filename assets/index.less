@@ -68,6 +68,13 @@
       overflow: hidden;
     }
 
+    &.zoom-enter,
+    &.zoom-appear {
+      transform: none;
+      opacity: 0;
+      animation-duration: 0.3s;
+    }
+
     &-mask {
       position: fixed;
       top: 0;
