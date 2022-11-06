@@ -22,6 +22,7 @@
 .@{prefixCls} {
   display: inline-flex;
   position: relative;
+
   &-img {
     width: 100%;
     height: auto;
@@ -83,8 +84,7 @@
       left: 0;
       z-index: @zindex-preview-mask;
       height: 100%;
-      background-color: @preview-mask-bg;
-      filter: ~'alpha(opacity=50)';
+      background-color: fade(@preview-mask-bg, 45%);
 
       &-hidden {
         display: none;
@@ -145,7 +145,7 @@
       width: 100%;
       align-items: center;
       flex-direction: row-reverse;
-      z-index: 1;
+      z-index: @zindex-preview-mask + 1;
       color: @text-color;
       background: fade(@preview-mask-bg, 45%);
 
@@ -184,7 +184,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1;
+      z-index: @zindex-preview-mask + 1;
       pointer-events: auto;
       color: @text-color;
       &-disabled {
@@ -212,7 +212,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1;
+      z-index: @zindex-preview-mask + 1;
       pointer-events: auto;
       color: @text-color;
       &-disabled {
@@ -232,12 +232,12 @@
 
 .fade-enter,
 .fade-appear {
-  animation-duration: 0.2s;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
   animation-play-state: paused;
 }
 .fade-leave {
-  animation-duration: 0.2s;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
   animation-play-state: paused;
 }
@@ -280,67 +280,51 @@
 
 .zoom-enter,
 .zoom-appear {
-  -webkit-animation-duration: 0.2s;
-  animation-duration: 0.2s;
-  -webkit-animation-fill-mode: both;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
-  -webkit-animation-play-state: paused;
   animation-play-state: paused;
 }
 .zoom-leave {
-  -webkit-animation-duration: 0.2s;
-  animation-duration: 0.2s;
-  -webkit-animation-fill-mode: both;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
-  -webkit-animation-play-state: paused;
   animation-play-state: paused;
 }
 .zoom-enter.zoom-enter-active,
 .zoom-appear.zoom-appear-active {
-  -webkit-animation-name: rcImageZoomIn;
   animation-name: rcImageZoomIn;
-  -webkit-animation-play-state: running;
   animation-play-state: running;
 }
 .zoom-leave.zoom-leave-active {
-  -webkit-animation-name: rcImageZoomOut;
   animation-name: rcImageZoomOut;
-  -webkit-animation-play-state: running;
   animation-play-state: running;
   pointer-events: none;
 }
 .zoom-enter,
 .zoom-appear {
-  -webkit-transform: scale(0);
   transform: scale(0);
   opacity: 0;
-  -webkit-animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
   animation-timing-function: cubic-bezier(0.08, 0.82, 0.17, 1);
 }
 .zoom-leave {
-  -webkit-animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
   animation-timing-function: cubic-bezier(0.78, 0.14, 0.15, 0.86);
 }
 
 @keyframes rcImageZoomIn {
   0% {
-    -webkit-transform: scale(0.2);
     transform: scale(0.2);
     opacity: 0;
   }
   100% {
-    -webkit-transform: scale(1);
     transform: scale(1);
     opacity: 1;
   }
 }
+
 @keyframes rcImageZoomOut {
   0% {
-    -webkit-transform: scale(1);
     transform: scale(1);
   }
   100% {
-    -webkit-transform: scale(0.2);
     transform: scale(0.2);
     opacity: 0;
   }
