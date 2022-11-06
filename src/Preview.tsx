@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
+import CSSMotion from 'rc-motion';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
@@ -288,9 +289,32 @@ const Preview: React.FC<PreviewProps> = props => {
     };
   }, [visible, isMoving, onKeyDown]);
 
+  const operations = (
+    <ul className={`${prefixCls}-operations`}>
+      {showOperationsProgress && (
+        <li className={`${prefixCls}-operations-progress`}>
+          {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
+            `${currentPreviewIndex + 1} / ${previewGroupCount}`}
+        </li>
+      )}
+      {tools.map(({ icon, onClick, type, disabled }) => (
+        <li
+          className={classnames(toolClassName, {
+            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+          })}
+          onClick={onClick}
+          key={type}
+        >
+          {React.isValidElement(icon)
+            ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+            : icon}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <Dialog
-      transitionName="zoom"
       maskTransitionName="fade"
       closable={false}
       keyboard
@@ -302,43 +326,26 @@ const Preview: React.FC<PreviewProps> = props => {
       rootClassName={rootClassName}
       {...restProps}
     >
-      <ul className={`${prefixCls}-operations`}>
-        {showOperationsProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
-              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
+      <CSSMotion visible={visible} motionName="zoom">
+        {({ className, style }) => (
+          <div
+            className={`${prefixCls}-img-wrapper ${className}`}
+            style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)`, ...style }}
           >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
-      <div
-        className={`${prefixCls}-img-wrapper`}
-        style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
-      >
-        <img
-          width={props.width}
-          height={props.height}
-          onMouseDown={onMouseDown}
-          onDoubleClick={onDoubleClick}
-          ref={imgRef}
-          className={`${prefixCls}-img`}
-          src={combinationSrc}
-          alt={alt}
-          style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
-        />
-      </div>
+            <img
+              width={props.width}
+              height={props.height}
+              onMouseDown={onMouseDown}
+              onDoubleClick={onDoubleClick}
+              ref={imgRef}
+              className={`${prefixCls}-img`}
+              src={combinationSrc}
+              alt={alt}
+              style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
+            />
+          </div>
+        )}
+      </CSSMotion>
       {showLeftOrRightSwitches && (
         <div
           className={classnames(`${prefixCls}-switch-left`, {
@@ -359,6 +366,7 @@ const Preview: React.FC<PreviewProps> = props => {
           {right}
         </div>
       )}
+      {operations}
     </Dialog>
   );
 };

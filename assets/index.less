@@ -83,8 +83,7 @@
       left: 0;
       z-index: @zindex-preview-mask;
       height: 100%;
-      background-color: @preview-mask-bg;
-      filter: ~'alpha(opacity=50)';
+      background-color: fade(@preview-mask-bg, 45%);
 
       &-hidden {
         display: none;
