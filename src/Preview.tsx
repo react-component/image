@@ -47,6 +47,8 @@ const Preview: React.FC<PreviewProps> = props => {
     rootClassName,
     countRender,
     scaleStep = 0.5,
+    transitionName = 'zoom',
+    maskTransitionName = 'fade',
     ...restProps
   } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
@@ -319,6 +321,7 @@ const Preview: React.FC<PreviewProps> = props => {
         {tools.map(({ icon, onClick, type, disabled }) => (
           <li
             className={classnames(toolClassName, {
+              [`${prefixCls}-operations-operation-${type}`]: true,
               [`${prefixCls}-operations-operation-disabled`]: !!disabled,
             })}
             onClick={onClick}
@@ -336,8 +339,8 @@ const Preview: React.FC<PreviewProps> = props => {
   return (
     <>
       <Dialog
-        transitionName="zoom"
-        maskTransitionName="fade"
+        transitionName={transitionName}
+        maskTransitionName={maskTransitionName}
         closable={false}
         keyboard
         prefixCls={prefixCls}
@@ -365,9 +368,14 @@ const Preview: React.FC<PreviewProps> = props => {
           />
         </div>
       </Dialog>
-      <CSSMotion visible={visible} motionName="fade">
+      <CSSMotion visible={visible} motionName={maskTransitionName}>
         {({ className, style }) => (
-          <div className={className} style={style}>{operations}</div>
+          <div
+            className={className}
+            style={style}
+          >
+            {operations}
+          </div>
         )}
       </CSSMotion>
     </>
