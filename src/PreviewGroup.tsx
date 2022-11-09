@@ -13,6 +13,7 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => string;
+  onChange?: (current: number, prevCurrent: number) => void;
 }
 
 export interface GroupConsumerProps {
@@ -65,10 +66,12 @@ const Group: React.FC<GroupConsumerProps> = ({
     getContainer = undefined,
     current: currentIndex = 0,
     countRender = undefined,
+    onChange = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
   const [current, setCurrent] = useState<number>();
+  const prevCurrent = React.useRef<number | undefined>();
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: onPreviewVisibleChange,
@@ -117,6 +120,12 @@ const Group: React.FC<GroupConsumerProps> = ({
       setCurrent(currentControlledKey);
     }
   }, [currentControlledKey, isControlled, isShowPreview]);
+
+  React.useEffect(() => {
+    if(!isShowPreview) return;
+    onChange?.(current, prevCurrent.current);
+    prevCurrent.current = current;
+  }, [current, isShowPreview])
 
   return (
     <Provider

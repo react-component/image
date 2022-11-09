@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { render, fireEvent, act, cleanup } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
 
@@ -10,6 +10,41 @@ describe('PreviewGroup', () => {
 
   afterEach(() => {
     jest.useRealTimers();
+    cleanup();
+  });
+
+  it('onChange should be called', () => {
+    const onChange = jest.fn();
+    const { container } = render(
+      <Image.PreviewGroup preview={{ onChange }}>
+        <Image src="src1" className='firstImg' />
+        <Image
+          preview={false}
+          src="src2"
+        />
+        <Image src="src3" />
+        <Image src="errorsrc" alt="error" />
+      </Image.PreviewGroup>,
+    );
+    
+    fireEvent.click(container.querySelector('.firstImg'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(onChange).toHaveBeenCalledWith(1, undefined);
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(onChange).toHaveBeenCalledWith(3, 1);
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(onChange).toHaveBeenCalledWith(4, 3);
+
   });
 
   it('Mount and UnMount', () => {
@@ -160,11 +195,12 @@ describe('PreviewGroup', () => {
   });
 
   it('should show error img', () => {
-    const { rerender } = render(
+    render(
       <Image.PreviewGroup preview={{ visible: true }}>
         <Image src="errorsrc" />
       </Image.PreviewGroup>,
     );
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
-  })
+  });
+
 });
