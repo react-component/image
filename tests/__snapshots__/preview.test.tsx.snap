@@ -23,7 +23,7 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
       />
     </div>
     <div
-      class="custom-className"
+      class="rc-image-preview-operations-wrapper custom-className"
     >
       <ul
         class="rc-image-preview-operations"
