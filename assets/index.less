@@ -134,6 +134,11 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    &-operations-wrapper {
+      position: fixed;
+      z-index: @zindex-preview-mask + 1;
+    }
+
     &-operations {
       .reset;
       pointer-events: auto;

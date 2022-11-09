@@ -34,7 +34,7 @@
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "rc-test",
-    "coverage": "father test --coverage",
+    "coverage": "rc-test --coverage",
     "now-build": "npm run docs:build"
   },
   "peerDependencies": {

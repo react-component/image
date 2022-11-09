@@ -371,7 +371,7 @@ const Preview: React.FC<PreviewProps> = props => {
       <CSSMotion visible={visible} motionName={maskTransitionName}>
         {({ className, style }) => (
           <div
-            className={classnames(className, rootClassName)}
+            className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
             style={style}
           >
             {operations}
