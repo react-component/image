@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, act, cleanup } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
 
@@ -10,7 +10,6 @@ describe('PreviewGroup', () => {
 
   afterEach(() => {
     jest.useRealTimers();
-    cleanup();
   });
 
   it('onChange should be called', () => {
