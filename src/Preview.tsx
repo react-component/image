@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Portal from '@rc-component/portal';
 import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
 import CSSMotion from 'rc-motion';
@@ -45,6 +46,7 @@ const Preview: React.FC<PreviewProps> = props => {
     visible,
     icons = {},
     rootClassName,
+    getContainer,
     countRender,
     scaleStep = 0.5,
     transitionName = 'zoom',
@@ -349,6 +351,7 @@ const Preview: React.FC<PreviewProps> = props => {
         visible={visible}
         wrapClassName={wrapClassName}
         rootClassName={rootClassName}
+        getContainer={getContainer}
         {...restProps}
       >
         <div
@@ -370,12 +373,14 @@ const Preview: React.FC<PreviewProps> = props => {
       </Dialog>
       <CSSMotion visible={visible} motionName={maskTransitionName}>
         {({ className, style }) => (
-          <div
-            className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
-            style={style}
-          >
-            {operations}
-          </div>
+          <Portal open getContainer={getContainer}>
+            <div
+              className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
+              style={style}
+            >
+              {operations}
+            </div>
+          </Portal>
         )}
       </CSSMotion>
     </>
