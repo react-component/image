@@ -94,7 +94,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onZoomOut = () => {
-    if (scale > 1) {
+    if (scale - scaleStep > 0) {
       setScale(value => value - scaleStep);
     }
     setPosition(initialPosition);

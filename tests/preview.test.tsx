@@ -150,6 +150,23 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(0.5, 0.5, 1) rotate(0deg)',
+    });
+
+    // can not be scale 0 
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(0.5, 0.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'scale3d(1, 1, 1) rotate(0deg)',
     });
 
