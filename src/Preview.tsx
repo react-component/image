@@ -146,7 +146,7 @@ const Preview: React.FC<PreviewProps> = props => {
       icon: zoomOut,
       onClick: onZoomOut,
       type: 'zoomOut',
-      disabled: scale === 1,
+      disabled: scale - scaleStep <= 0,
     },
     {
       icon: rotateRight,
