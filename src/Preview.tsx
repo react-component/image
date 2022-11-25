@@ -373,7 +373,7 @@ const Preview: React.FC<PreviewProps> = props => {
       </Dialog>
       <CSSMotion visible={visible} motionName={maskTransitionName}>
         {({ className, style }) => (
-          <Portal open getContainer={getContainer}>
+          <Portal open getContainer={getContainer ?? document.body}>
             <div
               className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
               style={style}
