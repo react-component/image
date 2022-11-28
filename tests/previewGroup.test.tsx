@@ -28,7 +28,7 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
     const previewProgressElement = document.querySelector(
-      '.rc-image-preview .rc-image-preview-operations-progress',
+      '.rc-image-preview-operations-progress',
     );
 
     expect(previewProgressElement).toBeTruthy();
@@ -73,7 +73,7 @@ describe('PreviewGroup', () => {
     });
 
     const previewProgressElement = document.querySelector(
-      '.rc-image-preview .rc-image-preview-operations-progress',
+      '.rc-image-preview-operations-progress',
     );
 
     expect(previewProgressElement).toBeTruthy();
@@ -81,7 +81,7 @@ describe('PreviewGroup', () => {
   });
 
   it('Switch', () => {
-    const previewProgressElementPath = '.rc-image-preview .rc-image-preview-operations-progress';
+    const previewProgressElementPath = '.rc-image-preview-operations-progress';
     const { container } = render(
       <Image.PreviewGroup>
         <Image src="src1" />
@@ -96,27 +96,27 @@ describe('PreviewGroup', () => {
     });
 
     expect(
-      document.querySelector('.rc-image-preview .rc-image-preview-switch-left-disabled'),
+      document.querySelector('.rc-image-preview-switch-left-disabled'),
     ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('1 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview .rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
 
     expect(
-      document.querySelector('.rc-image-preview .rc-image-preview-switch-right-disabled'),
+      document.querySelector('.rc-image-preview-switch-right-disabled'),
     ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('2 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview .rc-image-preview-switch-left'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-left'));
     act(() => {
       jest.runAllTimers();
     });
 
     expect(
-      document.querySelector('.rc-image-preview .rc-image-preview-switch-left-disabled'),
+      document.querySelector('.rc-image-preview-switch-left-disabled'),
     ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.RIGHT });
@@ -125,7 +125,7 @@ describe('PreviewGroup', () => {
     });
 
     expect(
-      document.querySelector('.rc-image-preview .rc-image-preview-switch-right-disabled'),
+      document.querySelector('.rc-image-preview-switch-right-disabled'),
     ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.LEFT });
@@ -134,7 +134,7 @@ describe('PreviewGroup', () => {
     });
 
     expect(
-      document.querySelector('.rc-image-preview .rc-image-preview-switch-left-disabled'),
+      document.querySelector('.rc-image-preview-switch-left-disabled'),
     ).toBeTruthy();
   });
 

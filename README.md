@@ -2,10 +2,17 @@
 
 React Image.
 
-[![NPM version][npm-image]][npm-url] [![dumi](https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square)](https://github.com/umijs/dumi) [![CircleCI status][circleci-image]][circleci-url] [![Test coverage][codecov-image]][codecov-url] [![Dependencies][david-image]][david-url] [![DevDependencies][david-dev-image]][david-dev-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
+[![NPM version][npm-image]][npm-url]
+[![dumi](https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square)](https://github.com/umijs/dumi)
+[![build status][github-actions-image]][github-actions-url]
+[![Test coverage][codecov-image]][codecov-url]
+[![npm download][download-image]][download-url]
+[![bundle size][bundlephobia-image]][bundlephobia-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
+[github-actions-image]: https://github.com/react-component/image/workflows/CI/badge.svg
+[github-actions-url]: https://github.com/react-component/image/actions
 [travis-image]: https://img.shields.io/travis/react-component/image/master?style=flat-square
 [travis-url]: https://travis-ci.org/react-component/image
 [circleci-image]: https://img.shields.io/circleci/build/github/react-component/image/master?style=flat-square

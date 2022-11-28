@@ -50,25 +50,6 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
             <div
               class="rc-image-preview-body"
             >
-              <ul
-                class="rc-image-preview-operations"
-              >
-                <li
-                  class="rc-image-preview-operations-operation"
-                />
-                <li
-                  class="rc-image-preview-operations-operation"
-                />
-                <li
-                  class="rc-image-preview-operations-operation rc-image-preview-operations-operation-disabled"
-                />
-                <li
-                  class="rc-image-preview-operations-operation"
-                />
-                <li
-                  class="rc-image-preview-operations-operation"
-                />
-              </ul>
               <div
                 class="rc-image-preview-img-wrapper"
                 style="transform: translate3d(0px, 0px, 0);"
@@ -89,6 +70,29 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
         </div>
       </div>
     </div>
+  </div>,
+  <div
+    class="rc-image-preview-operations-wrapper custom-className"
+  >
+    <ul
+      class="rc-image-preview-operations"
+    >
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-close"
+      />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
+      />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
+      />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
+      />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
+      />
+    </ul>
   </div>,
 ]
 `;
