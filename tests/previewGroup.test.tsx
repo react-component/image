@@ -167,4 +167,25 @@ describe('PreviewGroup', () => {
     );
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
   })
+
+  it('toolbarRender should work when set both countRender and toolbarRender', () => {
+    const { container } = render(
+      <Image.PreviewGroup
+        preview={{
+          visible: true,
+          countRender: (current, total) => `current:${current} / total:${total}`,
+          toolbarRender: () => <div>show this</div>
+        }}
+      >
+        <Image src="src1" />
+        <Image src="src2" />
+      </Image.PreviewGroup>,
+    );
+
+    const wrapper = document.querySelector(
+      '.rc-image-preview-operations',
+    );
+
+    expect(wrapper.textContent).toEqual('show this');
+  });
 });

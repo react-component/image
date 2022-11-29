@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
-import type { PreviewProps } from './Preview';
+import type { PreviewProps, ToolBarRender } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
@@ -22,6 +22,7 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  toolbarRender?: ToolBarRender;
 }
 
 let uuid = 0;
@@ -92,6 +93,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
+    toolbarRender = true,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -275,6 +277,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
+          toolbarRender={toolbarRender}
           {...dialogProps}
         />
       )}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { ImagePreviewType } from './Image';
-import type { PreviewProps } from './Preview';
+import type { PreviewProps, ToolBarRender } from './Preview';
 import Preview from './Preview';
 
 export interface PreviewGroupPreview
@@ -13,6 +13,7 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => string;
+  toolbarRender?: ToolBarRender;
 }
 
 export interface GroupConsumerProps {
@@ -65,6 +66,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     getContainer = undefined,
     current: currentIndex = 0,
     countRender = undefined,
+    toolbarRender = true,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
@@ -142,6 +144,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         icons={icons}
         getContainer={getContainer}
         countRender={countRender}
+        toolbarRender={toolbarRender}
         {...dialogProps}
       />
     </Provider>

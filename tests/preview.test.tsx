@@ -586,6 +586,76 @@ describe('Preview', () => {
     );
   });
 
+  it('customize toolbarRender', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const mockClose = jest.fn();
+    render(
+      <Image
+        src={src}
+        preview={{
+          visible: true,
+          onVisibleChange: mockClose,
+          toolbarRender: ({rotateLeft, rotateRight, zoomIn, zoomOut, close}) => (
+            <div
+              style={{
+                width: '100%',
+                height: '50px',
+                display: 'flex',
+                justifyContent: 'space-around',
+              }}
+            >
+              <a onClick={rotateLeft}>left</a>
+              <a onClick={rotateRight}>right</a>
+              <a onClick={zoomIn}>zoomIn</a>
+              <a onClick={zoomOut}>zoomOut</a>
+              <a onClick={close}>close</a>
+            </div>
+          ),
+        }}
+      />,
+    );
+    const operationDom = document.querySelector('.rc-image-preview-operations');
+    const children = operationDom.getElementsByTagName('a');
+
+    fireEvent.click(children[0]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(-90deg)',
+    });
+
+    fireEvent.click(children[1]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(children[2]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(children[3]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(children[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(mockClose).toBeCalledWith(false, true);
+  });
+
   it('add rootClassName should be correct', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     const { container, asFragment } = render(<Image src={src} rootClassName="custom-className" />);

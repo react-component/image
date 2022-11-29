@@ -13,6 +13,18 @@ import { context } from './PreviewGroup';
 
 const { useState, useEffect, useCallback, useRef, useContext } = React;
 
+export type Operations = {
+  rotateLeft?: () => void;
+  rotateRight?: () => void;
+  zoomIn?: () => void;
+  zoomOut?: () => void;
+  close?: (e: React.SyntheticEvent<Element>) => void;
+  current?: number;
+  total?: number;
+};
+
+export type ToolBarRender = boolean | ((operations: Operations) => React.ReactNode);
+
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
@@ -29,6 +41,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  toolbarRender?: ToolBarRender;
 }
 
 const initialPosition = {
@@ -51,6 +64,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    toolbarRender = true,
     ...restProps
   } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
@@ -78,8 +92,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const previewUrlsKeys = Array.from(previewUrls.keys());
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
+  const showOperations = typeof toolbarRender === 'boolean' && toolbarRender === true || typeof toolbarRender === 'function';
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
-  const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
+  const showOperationsProgress =
+    isPreviewGroup && previewGroupCount >= 1 && typeof toolbarRender !== 'function';
   const [lastWheelZoomDirection, setLastWheelZoomDirection] = useState({ wheelDirection: 0 });
 
   const onAfterClose = () => {
@@ -313,28 +329,40 @@ const Preview: React.FC<PreviewProps> = props => {
           {right}
         </div>
       )}
-      <ul className={`${prefixCls}-operations`}>
-        {showOperationsProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
-              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-${type}`]: true,
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
-          >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
+      {showOperations && (
+        <ul className={`${prefixCls}-operations`}>
+          {showOperationsProgress && (
+            <li className={`${prefixCls}-operations-progress`}>
+              {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
+                `${currentPreviewIndex + 1} / ${previewGroupCount}`}
+            </li>
+          )}
+          {typeof toolbarRender === 'function'
+            ? toolbarRender({
+                rotateLeft: onRotateLeft,
+                rotateRight: onRotateRight,
+                zoomIn: onZoomIn,
+                zoomOut: onZoomOut,
+                close: onClose,
+                current: currentPreviewIndex + 1,
+                total: previewGroupCount,
+              })
+            : tools.map(({ icon, onClick, type, disabled }) => (
+                <li
+                  className={classnames(toolClassName, {
+                    [`${prefixCls}-operations-operation-${type}`]: true,
+                    [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+                  })}
+                  onClick={onClick}
+                  key={type}
+                >
+                  {React.isValidElement(icon)
+                    ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+                    : icon}
+                </li>
+              ))}
+        </ul>
+      )}
     </>
   );
 
