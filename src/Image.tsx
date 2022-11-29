@@ -93,7 +93,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
-    toolbarRender = true,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -277,7 +276,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
-          toolbarRender={toolbarRender}
           {...dialogProps}
         />
       )}
