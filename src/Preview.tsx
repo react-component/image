@@ -13,12 +13,27 @@ import { context } from './PreviewGroup';
 
 const { useState, useEffect, useCallback, useRef, useContext } = React;
 
-export type Operations = {
+export type ImageActions = {
   rotateLeft?: () => void;
   rotateRight?: () => void;
   zoomIn?: () => void;
   zoomOut?: () => void;
   close?: (e: React.SyntheticEvent<Element>) => void;
+};
+
+export type ImageIcons = {
+  rotateLeft?: React.ReactNode;
+  rotateRight?: React.ReactNode;
+  zoomIn?: React.ReactNode;
+  zoomOut?: React.ReactNode;
+  close?: React.ReactNode;
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+};
+
+export type Operations = {
+  icons?: ImageIcons;
+  actions?: ImageActions;
   current?: number;
   total?: number;
 };
@@ -30,15 +45,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   src?: string;
   alt?: string;
   rootClassName?: string;
-  icons?: {
-    rotateLeft?: React.ReactNode;
-    rotateRight?: React.ReactNode;
-    zoomIn?: React.ReactNode;
-    zoomOut?: React.ReactNode;
-    close?: React.ReactNode;
-    left?: React.ReactNode;
-    right?: React.ReactNode;
-  };
+  icons?: ImageIcons;
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
   toolbarRender?: ToolBarRender;
@@ -339,11 +346,14 @@ const Preview: React.FC<PreviewProps> = props => {
           )}
           {typeof toolbarRender === 'function'
             ? toolbarRender({
-                rotateLeft: onRotateLeft,
-                rotateRight: onRotateRight,
-                zoomIn: onZoomIn,
-                zoomOut: onZoomOut,
-                close: onClose,
+                icons,
+                actions: {
+                  rotateLeft: onRotateLeft,
+                  rotateRight: onRotateRight,
+                  zoomIn: onZoomIn,
+                  zoomOut: onZoomOut,
+                  close: onClose,
+                },
                 current: currentPreviewIndex + 1,
                 total: previewGroupCount,
               })

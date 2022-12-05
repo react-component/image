@@ -594,8 +594,17 @@ describe('Preview', () => {
         src={src}
         preview={{
           visible: true,
+          icons: {
+            rotateLeft: 'rotateLeftIcon',
+            rotateRight: 'rotateRightIcon',
+            zoomIn: 'zoomInIcon',
+            zoomOut: 'zoomOutIcon',
+            close: 'closeIcon',
+            left: 'leftIcon',
+            right: 'rightIcon',
+          },
           onVisibleChange: mockClose,
-          toolbarRender: ({rotateLeft, rotateRight, zoomIn, zoomOut, close}) => (
+          toolbarRender: ({ icons, actions }) => (
             <div
               style={{
                 width: '100%',
@@ -604,11 +613,11 @@ describe('Preview', () => {
                 justifyContent: 'space-around',
               }}
             >
-              <a onClick={rotateLeft}>left</a>
-              <a onClick={rotateRight}>right</a>
-              <a onClick={zoomIn}>zoomIn</a>
-              <a onClick={zoomOut}>zoomOut</a>
-              <a onClick={close}>close</a>
+              <a onClick={actions.rotateLeft}>{icons.left}</a>
+              <a onClick={actions.rotateRight}>{icons.right}</a>
+              <a onClick={actions.zoomIn}>{icons.zoomIn}</a>
+              <a onClick={actions.zoomOut}>{icons.zoomOut}</a>
+              <a onClick={actions.close}>{icons.close}</a>
             </div>
           ),
         }}
@@ -616,6 +625,12 @@ describe('Preview', () => {
     );
     const operationDom = document.querySelector('.rc-image-preview-operations');
     const children = operationDom.getElementsByTagName('a');
+
+    expect(children[0].textContent).toEqual('leftIcon');
+    expect(children[1].textContent).toEqual('rightIcon');
+    expect(children[2].textContent).toEqual('zoomInIcon');
+    expect(children[3].textContent).toEqual('zoomOutIcon');
+    expect(children[4].textContent).toEqual('closeIcon');
 
     fireEvent.click(children[0]);
     act(() => {

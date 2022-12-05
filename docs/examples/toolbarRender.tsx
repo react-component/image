@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
 
@@ -35,7 +34,7 @@ export default function Base() {
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
-          toolbarRender: false
+          toolbarRender: false,
         }}
       />
       <h1>basic usage</h1>
@@ -52,14 +51,14 @@ export default function Base() {
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
-          toolbarRender: ({ rotateLeft, rotateRight, close, zoomIn, zoomOut }) => {
+          toolbarRender: ({ actions }) => {
             return (
               <div style={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
-                <a onClick={rotateLeft}>left</a>
-                <a onClick={rotateRight}>right</a>
-                <a onClick={zoomIn}>zoomIn</a>
-                <a onClick={zoomOut}>zoomOut</a>
-                <a onClick={close}>close</a>
+                <a onClick={actions.rotateLeft}>left</a>
+                <a onClick={actions.rotateRight}>right</a>
+                <a onClick={actions.zoomIn}>zoomIn</a>
+                <a onClick={actions.zoomOut}>zoomOut</a>
+                <a onClick={actions.close}>close</a>
               </div>
             );
           },
@@ -89,7 +88,7 @@ export default function Base() {
         <Image.PreviewGroup
           preview={{
             // countRender: (current, total) => `第${current}张 / 总共${total}张`,
-            toolbarRender: false
+            toolbarRender: false,
           }}
         >
           <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
@@ -107,8 +106,17 @@ export default function Base() {
       <h1>preview group usage</h1>
       <div>
         <Image.PreviewGroup
+          icons={{
+            rotateLeft: 'rotateLeft icon',
+            rotateRight: 'rotateRight icon',
+            close: 'close icon',
+            zoomIn: 'zoomIn icon',
+            zoomOut: 'zoomOut icon',
+            left: 'left icon',
+            right: 'right icon',
+          }}
           preview={{
-            toolbarRender: ({ rotateLeft, rotateRight, close, zoomIn, zoomOut, current, total }) => {
+            toolbarRender: ({ icons, actions, current, total }) => {
               return (
                 <div
                   style={{
@@ -117,12 +125,14 @@ export default function Base() {
                     justifyContent: 'space-around',
                   }}
                 >
-                  <a onClick={rotateLeft}>left</a>
-                  <a onClick={rotateRight}>right</a>
-                  <a onClick={close}>close</a>
-                  <a onClick={zoomIn}>zoomIn</a>
-                  <a onClick={zoomOut}>zoomOut</a>
-                  <span>{current}/{total}</span>
+                  <a onClick={actions.rotateLeft}>{icons.left}</a>
+                  <a onClick={actions.rotateRight}>{icons.right}</a>
+                  <a onClick={actions.close}>{icons.close}</a>
+                  <a onClick={actions.zoomIn}>{icons.zoomIn}</a>
+                  <a onClick={actions.zoomOut}>{icons.zoomOut}</a>
+                  <span>
+                    {current}/{total}
+                  </span>
                 </div>
               );
             },

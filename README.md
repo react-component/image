@@ -88,19 +88,34 @@ ReactDOM.render(
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number }, toolbarRender?: [toolbarRender](/#toolbarrender), current: number }  | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
+| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number }, toolbarRender?: [toolbarRender](/#toolbarrender), current: number } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
-| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' 
+| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
 
 ### toolbarRender
 
 ```
-export type Operations = {
+export type ImageActions = {
   rotateLeft?: () => void;
   rotateRight?: () => void;
   zoomIn?: () => void;
   zoomOut?: () => void;
   close?: (e: React.SyntheticEvent<Element>) => void;
+};
+
+export type ImageIcons = {
+  rotateLeft?: React.ReactNode;
+  rotateRight?: React.ReactNode;
+  zoomIn?: React.ReactNode;
+  zoomOut?: React.ReactNode;
+  close?: React.ReactNode;
+  left?: React.ReactNode;
+  right?: React.ReactNode;
+};
+
+export type Operations = {
+  icons?: ImageIcons;
+  actions?: ImageActions;
   current?: number;
   total?: number;
 };
