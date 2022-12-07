@@ -66,7 +66,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     getContainer = undefined,
     current: currentIndex = 0,
     countRender = undefined,
-    toolbarRender = true,
+    toolbarRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());

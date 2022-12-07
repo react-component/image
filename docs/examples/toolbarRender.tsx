@@ -17,27 +17,10 @@ export default function Base() {
         preview={{
           onVisibleChange: visible => {
             console.log('visible', visible);
-          }
-        }}
-      />
-      <h1>toolbarRender = false</h1>
-      <Image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        width={200}
-        style={{
-          marginRight: 24,
-        }}
-        onClick={() => {
-          console.log('click');
-        }}
-        preview={{
-          onVisibleChange: visible => {
-            console.log('visible', visible);
           },
-          toolbarRender: false,
         }}
       />
-      <h1>basic usage</h1>
+      <h1>custom toolbarRender</h1>
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
@@ -83,27 +66,7 @@ export default function Base() {
           <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
         </Image.PreviewGroup>
       </div>
-      <h1>preview group toobarRender = false</h1>
-      <div>
-        <Image.PreviewGroup
-          preview={{
-            // countRender: (current, total) => `第${current}张 / 总共${total}张`,
-            toolbarRender: false,
-          }}
-        >
-          <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
-          <Image
-            wrapperStyle={{ marginRight: 24, width: 200 }}
-            preview={false}
-            src={require('./images/disabled.jpeg')}
-          />
-          <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/2.jpeg')} />
-          <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/3.jpeg')} />
-          <Image wrapperStyle={{ marginRight: 24, width: 200 }} src="error" alt="error" />
-          <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
-        </Image.PreviewGroup>
-      </div>
-      <h1>preview group usage</h1>
+      <h1>preview group toolbarRender</h1>
       <div>
         <Image.PreviewGroup
           icons={{

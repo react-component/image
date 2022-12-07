@@ -120,7 +120,7 @@ export type Operations = {
   total?: number;
 };
 
-export type ToolBarRender = boolean | ((operations: Operations) => React.ReactNode);
+export type ToolBarRender = (operations: Operations) => React.ReactNode;
 ```
 
 ## Example
