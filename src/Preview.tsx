@@ -181,7 +181,7 @@ const Preview: React.FC<PreviewProps> = props => {
     },
   ];
 
-  const defaultToolbarRender = () => (
+  const defaultToolbarRender: ToolBarRender = () => (
     <>
       {tools.map(({ icon, onClick, type, disabled }) => (
         <li
