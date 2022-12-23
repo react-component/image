@@ -46,6 +46,7 @@
     "@rc-component/portal": "^1.0.2",
     "classnames": "^2.2.6",
     "rc-dialog": "~9.0.0",
+    "rc-motion": "^2.6.2",
     "rc-util": "^5.0.6"
   },
   "devDependencies": {
