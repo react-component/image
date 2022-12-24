@@ -123,7 +123,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(90deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
     fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
@@ -131,7 +131,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
   });
 
@@ -150,7 +150,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
@@ -158,7 +158,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+      transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
     fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
@@ -166,31 +166,44 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: -50,
     });
+    
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1.1, 1.1, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: 50,
     });
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    for (let i = 0; i < 50; i++) {
+      fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
+        deltaY: -100,
+      });
+      act(() => {
+        jest.runAllTimers();
+      });
+    }
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(50, 50, 1) rotate(0deg)',
     });
   });
 
-  it('scaleStep', () => {
+  it('scaleStep = 1', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -210,7 +223,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
@@ -218,7 +231,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+      transform: 'translate3d(-512px, -384px, 0) scale3d(2, 2, 1) rotate(0deg)',
     });
 
     fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
@@ -226,27 +239,28 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: -50,
     });
+    
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(2, 2, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1.2, 1.2, 1) rotate(0deg)',
     });
 
-    fireEvent.wheel(window, {
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: 50,
     });
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
   });
 
@@ -265,7 +279,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1.5, 1.5, 1) rotate(0deg)',
+      transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
     fireEvent.dblClick(document.querySelector('.rc-image-preview-img'));
@@ -273,7 +287,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'scale3d(1, 1, 1) rotate(0deg)',
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
   });
 
@@ -296,16 +310,17 @@ describe('Preview', () => {
       pageX: 50,
       pageY: 50,
     });
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(50px, 50px, 0)',
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(50px, 50px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireEvent.dblClick(document.querySelector('.rc-image-preview-img'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(75px, 75px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
   });
 
@@ -354,14 +369,14 @@ describe('Preview', () => {
       pageX: 50,
       pageY: 50,
     });
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(50px, 50px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(50px, 50px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
@@ -372,14 +387,19 @@ describe('Preview', () => {
 
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
+    });
+
+    fireMouseEvent('mouseMove', window, {
+      pageX: 1,
+      pageY: 1,
     });
 
     left = 100;
@@ -388,8 +408,8 @@ describe('Preview', () => {
     offsetHeight = 1000;
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(460px, 116px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(460px, 116px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
@@ -405,14 +425,19 @@ describe('Preview', () => {
 
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(460px, 116px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(460px, 116px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
+    });
+
+    fireMouseEvent('mouseMove', window, {
+      pageX: 1,
+      pageY: 1,
     });
 
     left = -200;
@@ -422,14 +447,19 @@ describe('Preview', () => {
 
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
       button: 0,
+    });
+
+    fireMouseEvent('mouseMove', window, {
+      pageX: 1,
+      pageY: 1,
     });
 
     left = -200;
@@ -438,8 +468,8 @@ describe('Preview', () => {
     offsetHeight = 600;
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(-60px, -84px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-60px, -84px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
@@ -448,14 +478,40 @@ describe('Preview', () => {
       button: 0,
     });
 
+    fireMouseEvent('mouseMove', window, {
+      pageX: 1,
+      pageY: 1,
+    });
+
     left = -200;
     top = -200;
     offsetWidth = 1000;
     offsetHeight = 900;
     fireMouseEvent('mouseUp', window);
 
-    expect(document.querySelector('.rc-image-preview-img-wrapper')).toHaveStyle({
-      transform: 'translate3d(-40px, -66px, 0)',
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-40px, -66px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
+      deltaY: -50,
+    });
+
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
+    });
+
+    fireMouseEvent('mouseMove', window, {
+      pageX: 1,
+      pageY: 1,
+    });
+
+    fireMouseEvent('mouseUp', window);
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-10px, -65px, 0) scale3d(1.1, 1.1, 1) rotate(0deg)',
     });
 
     // Clear
