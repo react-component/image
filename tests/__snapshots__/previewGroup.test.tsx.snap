@@ -19,12 +19,11 @@ exports[`PreviewGroup With Controlled 1`] = `
     >
       <div
         class="rc-image-preview-img-wrapper"
-        style="transform: translate3d(0px, 0px, 0);"
       >
         <img
           class="rc-image-preview-img"
           src="src1"
-          style="transform: scale3d(1, 1, 1) rotate(0deg);"
+          style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
         />
       </div>
     </div>

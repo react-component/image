@@ -52,12 +52,11 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
             >
               <div
                 class="rc-image-preview-img-wrapper"
-                style="transform: translate3d(0px, 0px, 0);"
               >
                 <img
                   class="rc-image-preview-img"
                   src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                  style="transform: scale3d(1, 1, 1) rotate(0deg);"
+                  style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
                 />
               </div>
             </div>
