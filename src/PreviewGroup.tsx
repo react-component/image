@@ -84,6 +84,7 @@ const Group: React.FC<GroupConsumerProps> = ({
       onChange?.(current, prevCurrent.current);
     },
   });
+  
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
   const previewUrlsKeys = Array.from(previewUrls.keys());
