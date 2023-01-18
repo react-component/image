@@ -1,17 +1,15 @@
-import * as React from 'react';
-import Portal from '@rc-component/portal';
+import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
 import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
-import CSSMotion from 'rc-motion';
 import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
-import useFrameSetState from './hooks/useFrameSetState';
-import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { context } from './PreviewGroup';
-
-const { useState, useEffect, useCallback, useRef, useContext } = React;
+import Operations from './Operations';
+import useImageTransform from './hooks/useImageTransform';
+import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
@@ -31,12 +29,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   scaleStep?: number;
 }
 
-const initialPosition = {
-  x: 0,
-  y: 0,
-};
-
-const Preview: React.FC<PreviewProps> = props => {
+const Preview: React.FC<PreviewProps> = (props) => {
   const {
     prefixCls,
     src,
@@ -54,24 +47,13 @@ const Preview: React.FC<PreviewProps> = props => {
     onChange,
     ...restProps
   } = props;
-  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
-  const [scale, setScale] = useState(1);
-  const [rotate, setRotate] = useState(0);
-  const [position, setPosition] = useFrameSetState<{
-    x: number;
-    y: number;
-  }>(initialPosition);
+
   const imgRef = useRef<HTMLImageElement>();
-  const originPositionRef = useRef<{
-    originX: number;
-    originY: number;
-    deltaX: number;
-    deltaY: number;
-  }>({
-    originX: 0,
-    originY: 0,
+  const downPositionRef = useRef({
     deltaX: 0,
     deltaY: 0,
+    transformX: 0,
+    transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
   const { previewUrls, current, isPreviewGroup, setCurrent } = useContext(context);
@@ -81,95 +63,65 @@ const Preview: React.FC<PreviewProps> = props => {
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
-  const [lastWheelZoomDirection, setLastWheelZoomDirection] = useState({ wheelDirection: 0 });
+  const { transform, resetTransform, updateTransform, dispatchZoonChange } = useImageTransform(imgRef);
+  const { rotate, scale } = transform;
+
+  const wrapClassName = classnames({
+    [`${prefixCls}-moving`]: isMoving,
+  });
 
   const onAfterClose = () => {
-    setScale(1);
-    setRotate(0);
-    setPosition(initialPosition);
+    resetTransform();
   };
 
   const onZoomIn = () => {
-    setScale(value => value + scaleStep);
-    setPosition(initialPosition);
+    dispatchZoonChange(BASE_SCALE_RATIO + scaleStep);
   };
 
   const onZoomOut = () => {
-    if (scale > 1) {
-      setScale(value => value - scaleStep);
-    }
-    setPosition(initialPosition);
+    dispatchZoonChange(BASE_SCALE_RATIO - scaleStep);
   };
 
   const onRotateRight = () => {
-    setRotate(value => value + 90);
+    updateTransform({ rotate: rotate + 90 });
   };
 
   const onRotateLeft = () => {
-    setRotate(value => value - 90);
+    updateTransform({ rotate: rotate - 90 });
   };
 
-  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
+  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
-    // Without this mask close will abnormal
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
       setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
   };
 
-  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
+  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.preventDefault();
-    // Without this mask close will abnormal
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
       setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
   };
 
-  const wrapClassName = classnames({
-    [`${prefixCls}-moving`]: isMoving,
-  });
-  const toolClassName = `${prefixCls}-operations-operation`;
-  const iconClassName = `${prefixCls}-operations-icon`;
-  const tools = [
-    {
-      icon: close,
-      onClick: onClose,
-      type: 'close',
-    },
-    {
-      icon: zoomIn,
-      onClick: onZoomIn,
-      type: 'zoomIn',
-    },
-    {
-      icon: zoomOut,
-      onClick: onZoomOut,
-      type: 'zoomOut',
-      disabled: scale === 1,
-    },
-    {
-      icon: rotateRight,
-      onClick: onRotateRight,
-      type: 'rotateRight',
-    },
-    {
-      icon: rotateLeft,
-      onClick: onRotateLeft,
-      type: 'rotateLeft',
-    },
-  ];
-
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isMoving) {
+      setMoving(false);
+
+      /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
+      const { transformX, transformY } = downPositionRef.current;
+      const hasChangedPosition = transform.x !== transformX && transform.y !== transformY;
+      if (!hasChangedPosition) {
+        return;
+      }
+
       const width = imgRef.current.offsetWidth * scale;
       const height = imgRef.current.offsetHeight * scale;
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const { left, top } = imgRef.current.getBoundingClientRect();
       const isRotate = rotate % 180 !== 0;
-
-      setMoving(false);
 
       const fixState = getFixScaleEleTransPosition(
         isRotate ? height : width,
@@ -179,38 +131,46 @@ const Preview: React.FC<PreviewProps> = props => {
       );
 
       if (fixState) {
-        setPosition({ ...fixState });
+        updateTransform({ ...fixState });
       }
     }
   };
 
-  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
+  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {
     // Only allow main button
     if (event.button !== 0) return;
     event.preventDefault();
-    // Without this mask close will abnormal
     event.stopPropagation();
-    originPositionRef.current.deltaX = event.pageX - position.x;
-    originPositionRef.current.deltaY = event.pageY - position.y;
-    originPositionRef.current.originX = position.x;
-    originPositionRef.current.originY = position.y;
+    downPositionRef.current = {
+      deltaX: event.pageX - transform.x,
+      deltaY: event.pageY - transform.y,
+      transformX: transform.x,
+      transformY: transform.y,
+    };
     setMoving(true);
   };
 
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
+  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = (event) => {
     if (visible && isMoving) {
-      setPosition({
-        x: event.pageX - originPositionRef.current.deltaX,
-        y: event.pageY - originPositionRef.current.deltaY,
+      updateTransform({
+        x: event.pageX - downPositionRef.current.deltaX,
+        y: event.pageY - downPositionRef.current.deltaY,
       });
     }
   };
-
-  const onWheelMove: React.WheelEventHandler<HTMLBodyElement> = event => {
-    if (!visible) return;
-    event.preventDefault();
-    const wheelDirection = event.deltaY;
-    setLastWheelZoomDirection({ wheelDirection });
+ 
+  const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
+    if (!visible || event.deltaY == 0) return;
+    // Scale ratio depends on the deltaY size
+    const scaleRatio = Math.abs(event.deltaY / 100);
+    // Limit the maximum scale ratio
+    const mergedScaleRatio = Math.min(scaleRatio, WHEEL_MAX_SCALE_RATIO);
+    // Scale the ratio each time
+    let ratio = BASE_SCALE_RATIO + (mergedScaleRatio * scaleStep);
+    if (event.deltaY > 0) {
+      ratio = BASE_SCALE_RATIO / ratio;
+    }
+    dispatchZoonChange(ratio, event.clientX, event.clientY);
   };
 
   const onKeyDown = useCallback(
@@ -237,25 +197,15 @@ const Preview: React.FC<PreviewProps> = props => {
     ],
   );
 
-  const onDoubleClick = () => {
+  const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (visible) {
       if (scale !== 1) {
-        setScale(1);
-      }
-      if (position.x !== initialPosition.x || position.y !== initialPosition.y) {
-        setPosition(initialPosition);
+        updateTransform({ x: 0, y: 0, scale: 1 });
+      } else {
+        dispatchZoonChange(BASE_SCALE_RATIO + scaleStep, event.clientX, event.clientY);
       }
     }
   };
-
-  useEffect(() => {
-    const { wheelDirection } = lastWheelZoomDirection;
-    if (wheelDirection > 0) {
-      onZoomOut();
-    } else if (wheelDirection < 0) {
-      onZoomIn();
-    }
-  }, [lastWheelZoomDirection]);
 
   useEffect(() => {
     let onTopMouseUpListener;
@@ -263,9 +213,6 @@ const Preview: React.FC<PreviewProps> = props => {
 
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
-    const onScrollWheelListener = addEventListener(window, 'wheel', onWheelMove, {
-      passive: false,
-    });
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
 
     try {
@@ -283,7 +230,6 @@ const Preview: React.FC<PreviewProps> = props => {
     return () => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
-      onScrollWheelListener.remove();
       onKeyDownListener.remove();
       /* istanbul ignore next */
       onTopMouseUpListener?.remove();
@@ -291,53 +237,6 @@ const Preview: React.FC<PreviewProps> = props => {
       onTopMouseMoveListener?.remove();
     };
   }, [visible, isMoving, onKeyDown]);
-
-  const operations = (
-    <>
-      {showLeftOrRightSwitches && (
-        <div
-          className={classnames(`${prefixCls}-switch-left`, {
-            [`${prefixCls}-switch-left-disabled`]: currentPreviewIndex === 0,
-          })}
-          onClick={onSwitchLeft}
-        >
-          {left}
-        </div>
-      )}
-      {showLeftOrRightSwitches && (
-        <div
-          className={classnames(`${prefixCls}-switch-right`, {
-            [`${prefixCls}-switch-right-disabled`]: currentPreviewIndex === previewGroupCount - 1,
-          })}
-          onClick={onSwitchRight}
-        >
-          {right}
-        </div>
-      )}
-      <ul className={`${prefixCls}-operations`}>
-        {showOperationsProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(currentPreviewIndex + 1, previewGroupCount) ??
-              `${currentPreviewIndex + 1} / ${previewGroupCount}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-${type}`]: true,
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
-          >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
 
   return (
     <>
@@ -355,35 +254,42 @@ const Preview: React.FC<PreviewProps> = props => {
         getContainer={getContainer}
         {...restProps}
       >
-        <div
-          className={`${prefixCls}-img-wrapper`}
-          style={{ transform: `translate3d(${position.x}px, ${position.y}px, 0)` }}
-        >
+        <div className={`${prefixCls}-img-wrapper`}>
           <img
             width={props.width}
             height={props.height}
+            onWheel={onWheel}
             onMouseDown={onMouseDown}
             onDoubleClick={onDoubleClick}
             ref={imgRef}
             className={`${prefixCls}-img`}
             src={combinationSrc}
             alt={alt}
-            style={{ transform: `scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
+            style={{ transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
           />
         </div>
       </Dialog>
-      <CSSMotion visible={visible} motionName={maskTransitionName}>
-        {({ className, style }) => (
-          <Portal open getContainer={getContainer}>
-            <div
-              className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
-              style={style}
-            >
-              {operations}
-            </div>
-          </Portal>
-        )}
-      </CSSMotion>
+      <Operations
+        visible={visible}
+        maskTransitionName={maskTransitionName}
+        getContainer={getContainer}
+        prefixCls={prefixCls}
+        rootClassName={rootClassName}
+        icons={icons}
+        countRender={countRender}
+        showSwitch={showLeftOrRightSwitches}
+        showProgress={showOperationsProgress}
+        current={currentPreviewIndex}
+        count={previewGroupCount}
+        scale={scale}
+        onSwitchLeft={onSwitchLeft}
+        onSwitchRight={onSwitchRight}
+        onZoomIn={onZoomIn}
+        onZoomOut={onZoomOut}
+        onRotateRight={onRotateRight}
+        onRotateLeft={onRotateLeft}
+        onClose={onClose}
+      />
     </>
   );
 };
