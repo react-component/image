@@ -5,6 +5,7 @@ exports[`Controlled With previewVisible 1`] = `
   aria-modal="true"
   class="rc-image-preview"
   role="dialog"
+  style="display: none;"
 >
   <div
     aria-hidden="true"
