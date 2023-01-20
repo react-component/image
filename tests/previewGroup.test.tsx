@@ -194,12 +194,11 @@ describe('PreviewGroup', () => {
   });
 
   it('should show error img', () => {
-    const { container } = render(
+    render(
       <Image.PreviewGroup preview={{ visible: true }}>
         <Image src="errorsrc" />
       </Image.PreviewGroup>,
     );
-    console.log(container.innerHTML);
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
   });
 
