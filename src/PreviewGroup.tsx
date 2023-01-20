@@ -54,6 +54,13 @@ export const context = React.createContext<GroupConsumerValue>({
 
 const { Provider } = context;
 
+function getSafeIndex(keys: number[], key: number) {
+  if(key === undefined) return undefined;
+  const idx = keys.indexOf(key);
+  if(idx === -1) return undefined;
+  return idx;
+}
+
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
@@ -70,31 +77,37 @@ const Group: React.FC<GroupConsumerProps> = ({
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
+  const previewUrlsKeys = Array.from(previewUrls.keys());
   const prevCurrent = React.useRef<number | undefined>();
   const [current, setCurrent] = useMergedState<number>(undefined, {
     onChange: (val, prev) => {
-      onChange?.(val, prev);
+      if(prevCurrent.current !== undefined) {
+        onChange?.(getSafeIndex(previewUrlsKeys, val), getSafeIndex(previewUrlsKeys, prev));
+      }
       prevCurrent.current = prev;
     }
   });
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
+      if(val && prevCurrent.current === undefined) {
+        onChange?.(getSafeIndex(previewUrlsKeys, current), getSafeIndex(previewUrlsKeys, prevCurrent.current));
+        prevCurrent.current = current;
+      }
       onPreviewVisibleChange?.(val, prevVal);
-      onChange?.(current, prevCurrent.current);
     },
   });
   
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
-  const previewUrlsKeys = Array.from(previewUrls.keys());
+  
   const currentControlledKey = previewUrlsKeys[currentIndex];
   const canPreviewUrls = new Map<number, string>(
     Array.from(previewUrls)
       .filter(([, { canPreview }]) => !!canPreview)
       .map(([id, { url }]) => [id, url]),
   );
-
+  
   const registerImage = (id: number, url: string, canPreview: boolean = true) => {
     const unRegister = () => {
       setPreviewUrls(oldPreviewUrls => {

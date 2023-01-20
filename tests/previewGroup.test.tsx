@@ -30,19 +30,19 @@ describe('PreviewGroup', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(1, undefined);
+    expect(onChange).toHaveBeenCalledWith(0, undefined);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(3, 1);
+    expect(onChange).toHaveBeenCalledWith(2, 0);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(4, 3);
+    expect(onChange).toHaveBeenCalledWith(3, 2);
 
   });
 
@@ -194,11 +194,12 @@ describe('PreviewGroup', () => {
   });
 
   it('should show error img', () => {
-    render(
+    const { container } = render(
       <Image.PreviewGroup preview={{ visible: true }}>
         <Image src="errorsrc" />
       </Image.PreviewGroup>,
     );
+    console.log(container.innerHTML);
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
   });
 
