@@ -37,3 +37,8 @@ es/
 .umi
 .umi-production
 .umi-test
+
+
+# dumi
+.dumi/tmp
+.dumi/tmp-production
