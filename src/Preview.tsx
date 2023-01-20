@@ -44,6 +44,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    onChange,
     ...restProps
   } = props;
 

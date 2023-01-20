@@ -1,6 +1,6 @@
+import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
-import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { ImagePreviewType } from './Image';
 import type { PreviewProps } from './Preview';
 import Preview from './Preview';
@@ -13,6 +13,7 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => string;
+  onChange?: (current: number, prevCurrent: number) => void;
 }
 
 export interface GroupConsumerProps {
@@ -65,14 +66,25 @@ const Group: React.FC<GroupConsumerProps> = ({
     getContainer = undefined,
     current: currentIndex = 0,
     countRender = undefined,
+    onChange = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
-  const [current, setCurrent] = useState<number>();
+  const prevCurrent = React.useRef<number | undefined>();
+  const [current, setCurrent] = useMergedState<number>(undefined, {
+    onChange: (val, prev) => {
+      onChange?.(val, prev);
+      prevCurrent.current = prev;
+    }
+  });
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
-    onChange: onPreviewVisibleChange,
+    onChange: (val, prevVal) => {
+      onPreviewVisibleChange?.(val, prevVal);
+      onChange?.(current, prevCurrent.current);
+    },
   });
+  
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
   const previewUrlsKeys = Array.from(previewUrls.keys());
