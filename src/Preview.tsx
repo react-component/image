@@ -35,7 +35,6 @@ const Preview: React.FC<PreviewProps> = (props) => {
     src,
     alt,
     onClose,
-    afterClose,
     visible,
     icons = {},
     rootClassName,
@@ -44,7 +43,6 @@ const Preview: React.FC<PreviewProps> = (props) => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
-    onChange,
     ...restProps
   } = props;
 
@@ -158,7 +156,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
       });
     }
   };
- 
+
   const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
     if (!visible || event.deltaY == 0) return;
     // Scale ratio depends on the deltaY size
