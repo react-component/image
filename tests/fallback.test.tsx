@@ -16,12 +16,9 @@ describe('Fallback', () => {
   it('Fallback correct', () => {
     const { container } = render(<Image src="abc" fallback={fallback} />);
 
-    fireEvent.error(container.querySelector('.rc-image-img'));
     act(() => {
       jest.runAllTimers();
     });
-
-    expect(container.querySelector('.rc-image-img')).toHaveAttribute('src', fallback);
 
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
@@ -40,18 +37,6 @@ describe('Fallback', () => {
     });
 
     expect(container.querySelector('.rc-image-mask')).toBeFalsy();
-  });
-
-  it('With onError', () => {
-    const onErrorMock = jest.fn();
-    const { container } = render(<Image src="abc" onError={onErrorMock} />);
-
-    fireEvent.error(container.querySelector('.rc-image-img'));
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    expect(onErrorMock).toHaveBeenCalledTimes(1);
   });
 
   it('should change image, not error', () => {

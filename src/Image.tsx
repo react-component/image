@@ -75,7 +75,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   preview = true,
   className,
   onClick,
-  onError: onImageError,
+  onError,
   wrapperClassName,
   wrapperStyle,
   rootClassName,
@@ -131,11 +131,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setStatus('normal');
   };
 
-  const onError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    onImageError?.(e);
-    setStatus('error');
-  };
-
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     if (!isControlled) {
       const { left, top } = getOffset(e.target);
@@ -160,7 +155,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       setShowPreview(true);
     }
 
-    if (onClick) onClick(e);
+    onClick?.(e);
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
@@ -225,6 +220,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     sizes,
     srcSet,
     useMap,
+    onError,
     alt,
     className: cn(
       `${prefixCls}-img`,
@@ -254,7 +250,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         <img
           {...imgCommonProps}
           ref={getImgRef}
-          {...(isError && fallback ? { src: fallback } : { onLoad, onError, src: imgSrc })}
+          {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
           width={width}
           height={height}
         />
