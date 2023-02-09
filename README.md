@@ -36,6 +36,7 @@ React Image.
 - [x] Preview
 - [x] Rotate
 - [x] Zoom
+- [x] Flip
 - [x] Fallback
 - [x] Multiple Preview
 
