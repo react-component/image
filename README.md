@@ -36,6 +36,7 @@ React Image.
 - [x] Preview
 - [x] Rotate
 - [x] Zoom
+- [x] Flip
 - [x] Fallback
 - [x] Multiple Preview
 
@@ -55,7 +56,7 @@ const Image = require('rc-image');
 
 ReactDOM.render(
   <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-), document.getElementById('root'));
+, document.getElementById('root'));
 ```
 
 ## API
@@ -81,7 +82,7 @@ ReactDOM.render(
     <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
     <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
   </Image.PreviewGroup>
-), document.getElementById('root'));
+, document.getElementById('root'));
 ```
 
 ### API

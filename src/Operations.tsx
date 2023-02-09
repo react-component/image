@@ -28,6 +28,8 @@ interface OperationsProps
   onZoomOut: () => void;
   onRotateRight: () => void;
   onRotateLeft: () => void;
+  onFlipX: () => void;
+  onFlipY: () => void;
 }
 
 const Operations: React.FC<OperationsProps> = (props) => {
@@ -51,8 +53,10 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onZoomOut,
     onRotateRight,
     onRotateLeft,
+    onFlipX,
+    onFlipY
   } = props;
-  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right } = icons;
+  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
@@ -82,6 +86,16 @@ const Operations: React.FC<OperationsProps> = (props) => {
       icon: rotateLeft,
       onClick: onRotateLeft,
       type: 'rotateLeft',
+    },
+    {
+      icon: flipX,
+      onClick: onFlipX,
+      type: 'flipX',
+    },
+    {
+      icon: flipY,
+      onClick: onFlipY,
+      type: 'flipY',
     },
   ];
 
@@ -145,7 +159,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
         </Portal>
       )}
     </CSSMotion>
-  )
+  );
 };
 
 export default Operations;

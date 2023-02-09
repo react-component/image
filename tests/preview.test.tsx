@@ -135,6 +135,49 @@ describe('Preview', () => {
     });
   });
 
+  it('Flip', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(-1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(-1, -1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, -1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
   it('Scale', () => {
     const { container } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,

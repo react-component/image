@@ -91,6 +91,12 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
       <li
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
       />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
+      />
+      <li
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
+      />
     </ul>
   </div>,
 ]
