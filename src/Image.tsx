@@ -54,7 +54,7 @@ type ImageStatus = 'normal' | 'error' | 'loading';
 
 function isImageValid(src) {
   return new Promise(resolve => {
-    let img = document.createElement('img');
+    const img = document.createElement('img');
     img.onerror = () => resolve(false);
     img.onload = () => resolve(true);
     img.src = src;
