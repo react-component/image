@@ -8,6 +8,8 @@ type TransformType = {
   y: number,
   rotate: number,
   scale: number,
+  flipX: boolean,
+  flipY: boolean,
 };
 
 const initialTransform = {
@@ -15,6 +17,8 @@ const initialTransform = {
   y: 0,
   rotate: 0,
   scale: 1,
+  flipX: false,
+  flipY: false,
 };
 
 export default function useImageTransform(imgRef: React.MutableRefObject<HTMLImageElement>) {

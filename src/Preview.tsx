@@ -24,6 +24,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     close?: React.ReactNode;
     left?: React.ReactNode;
     right?: React.ReactNode;
+    flipX?: React.ReactNode;
+    flipY?: React.ReactNode;
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
@@ -87,6 +89,14 @@ const Preview: React.FC<PreviewProps> = (props) => {
 
   const onRotateLeft = () => {
     updateTransform({ rotate: rotate - 90 });
+  };
+
+  const onFlipX = () => {
+    updateTransform({flipX: !transform.flipX})
+  };
+
+  const onFlipY = () => {
+    updateTransform({flipY: !transform.flipY})
   };
 
   const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = (event) => {
@@ -157,7 +167,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
       });
     }
   };
- 
+
   const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
     if (!visible || event.deltaY == 0) return;
     // Scale ratio depends on the deltaY size
@@ -264,7 +274,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
             className={`${prefixCls}-img`}
             src={combinationSrc}
             alt={alt}
-            style={{ transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${scale}, ${scale}, 1) rotate(${rotate}deg)` }}
+            style={{ transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''}${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)` }}
           />
         </div>
       </Dialog>
@@ -287,6 +297,8 @@ const Preview: React.FC<PreviewProps> = (props) => {
         onZoomOut={onZoomOut}
         onRotateRight={onRotateRight}
         onRotateLeft={onRotateLeft}
+        onFlipX={onFlipX}
+        onFlipY={onFlipY}
         onClose={onClose}
       />
     </>
