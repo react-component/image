@@ -52,6 +52,15 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
+function isImageValid(src) {
+  return new Promise(resolve => {
+    let img = document.createElement('img');
+    img.onerror = () => resolve(false);
+    img.onload = () => resolve(true);
+    img.src = src;
+  });
+}
+
 const ImageInternal: CompoundedComponent<ImageProps> = ({
   src: imgSrc,
   alt,
@@ -123,9 +132,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   const onError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (onImageError) {
-      onImageError(e);
-    }
+    onImageError?.(e);
     setStatus('error');
   };
 
@@ -172,6 +179,14 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       onLoad();
     }
   };
+
+  React.useEffect(() => {
+    isImageValid(src).then(isValid => {
+      if (!isValid) {
+        setStatus('error');
+      }
+    });
+  }, [src]);
 
   // Keep order start
   // Resolve https://github.com/ant-design/ant-design/issues/28881
