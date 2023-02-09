@@ -63,8 +63,8 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
     }
 
     /** Default center point scaling */
-    const mergedClientX = clientX ?? innerWidth / 2
-    const mergedClientY = clientY ?? innerHeight / 2
+    const mergedClientX = clientX ?? innerWidth / 2;
+    const mergedClientY = clientY ?? innerHeight / 2;
 
     const diffRatio = newRatio - 1;
     /** Deviation calculated from image size */
@@ -73,7 +73,7 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
     /** The difference between the click position and the edge of the document */
     const diffOffsetLeft = diffRatio * (mergedClientX - transform.x - offsetLeft);
     const diffOffsetTop = diffRatio * (mergedClientY - transform.y - offsetTop);
-    /** Final positioning */  
+    /** Final positioning */
     let newX = transform.x - (diffOffsetLeft - diffImgX);
     let newY = transform.y - (diffOffsetTop - diffImgY);
 
@@ -95,7 +95,7 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
       x: newX,
       y: newY,
       scale: newScale,
-    })
+    });
   };
 
   return {
