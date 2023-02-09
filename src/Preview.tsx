@@ -37,7 +37,6 @@ const Preview: React.FC<PreviewProps> = (props) => {
     src,
     alt,
     onClose,
-    afterClose,
     visible,
     icons = {},
     rootClassName,
@@ -256,12 +255,12 @@ const Preview: React.FC<PreviewProps> = (props) => {
         keyboard
         prefixCls={prefixCls}
         onClose={onClose}
-        afterClose={onAfterClose}
         visible={visible}
         wrapClassName={wrapClassName}
         rootClassName={rootClassName}
         getContainer={getContainer}
         {...restProps}
+        afterClose={onAfterClose}
       >
         <div className={`${prefixCls}-img-wrapper`}>
           <img

@@ -52,6 +52,15 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
+function isImageValid(src) {
+  return new Promise(resolve => {
+    const img = document.createElement('img');
+    img.onerror = () => resolve(false);
+    img.onload = () => resolve(true);
+    img.src = src;
+  });
+}
+
 const ImageInternal: CompoundedComponent<ImageProps> = ({
   src: imgSrc,
   alt,
@@ -66,7 +75,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   preview = true,
   className,
   onClick,
-  onError: onImageError,
+  onError,
   wrapperClassName,
   wrapperStyle,
   rootClassName,
@@ -122,13 +131,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     setStatus('normal');
   };
 
-  const onError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (onImageError) {
-      onImageError(e);
-    }
-    setStatus('error');
-  };
-
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     if (!isControlled) {
       const { left, top } = getOffset(e.target);
@@ -153,7 +155,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       setShowPreview(true);
     }
 
-    if (onClick) onClick(e);
+    onClick?.(e);
   };
 
   const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
@@ -172,6 +174,14 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       onLoad();
     }
   };
+
+  React.useEffect(() => {
+    isImageValid(src).then(isValid => {
+      if (!isValid) {
+        setStatus('error');
+      }
+    });
+  }, [src]);
 
   // Keep order start
   // Resolve https://github.com/ant-design/ant-design/issues/28881
@@ -210,6 +220,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     sizes,
     srcSet,
     useMap,
+    onError,
     alt,
     className: cn(
       `${prefixCls}-img`,
@@ -239,7 +250,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
         <img
           {...imgCommonProps}
           ref={getImgRef}
-          {...(isError && fallback ? { src: fallback } : { onLoad, onError, src: imgSrc })}
+          {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
           width={width}
           height={height}
         />
