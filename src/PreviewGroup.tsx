@@ -90,7 +90,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
-      onPreviewVisibleChange?.(val, prevVal);
+      onPreviewVisibleChange?.(val, prevVal, getSafeIndex(previewUrlsKeys, current));
       prevCurrent.current = val ? current : undefined;
     },
   });

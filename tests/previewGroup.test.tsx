@@ -14,8 +14,9 @@ describe('PreviewGroup', () => {
 
   it('onChange should be called', () => {
     const onChange = jest.fn();
+    const onVisibleChange = jest.fn();
     const { container } = render(
-      <Image.PreviewGroup preview={{ onChange }}>
+      <Image.PreviewGroup preview={{ onChange, onVisibleChange }}>
         <Image src="src1" className='firstImg' />
         <Image
           preview={false}
@@ -31,6 +32,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).not.toHaveBeenCalled();
+    expect(onVisibleChange).toBeCalledWith(true, false, 0);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {

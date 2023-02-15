@@ -16,7 +16,7 @@ export interface ImagePreviewType
   > {
   src?: string;
   visible?: boolean;
-  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
+  onVisibleChange?: (value: boolean, prevValue: boolean, currentIndex?: number) => void;
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
   maskClassName?: string;
