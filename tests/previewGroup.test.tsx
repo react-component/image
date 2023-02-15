@@ -30,7 +30,7 @@ describe('PreviewGroup', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(0, undefined);
+    expect(onChange).not.toHaveBeenCalled();
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
