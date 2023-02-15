@@ -56,9 +56,9 @@ const { Provider } = context;
 
 function getSafeIndex(keys: number[], key: number) {
   if(key === undefined) return undefined;
-  const idx = keys.indexOf(key);
-  if(idx === -1) return undefined;
-  return idx;
+  const index = keys.indexOf(key);
+  if(index === -1) return undefined;
+  return index;
 }
 
 const Group: React.FC<GroupConsumerProps> = ({
