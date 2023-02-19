@@ -53,7 +53,7 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
   };
 
   /** Scale according to the position of clientX and clientY */
-  const dispatchZoonChange = (ratio: number, clientX?: number, clientY?: number) => {
+  const dispatchZooMChange = (ratio: number, clientX?: number, clientY?: number) => {
     const { width, height, offsetWidth, offsetHeight, offsetLeft, offsetTop } = imgRef.current;
 
     let newRatio = ratio;
@@ -106,6 +106,6 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
     transform,
     resetTransform,
     updateTransform,
-    dispatchZoonChange,
+    dispatchZooMChange,
   };
 };

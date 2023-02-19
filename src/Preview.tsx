@@ -63,7 +63,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
-  const { transform, resetTransform, updateTransform, dispatchZoonChange } = useImageTransform(imgRef);
+  const { transform, resetTransform, updateTransform, dispatchZooMChange } = useImageTransform(imgRef);
   const { rotate, scale } = transform;
 
   const wrapClassName = classnames({
@@ -75,11 +75,11 @@ const Preview: React.FC<PreviewProps> = (props) => {
   };
 
   const onZoomIn = () => {
-    dispatchZoonChange(BASE_SCALE_RATIO + scaleStep);
+    dispatchZooMChange(BASE_SCALE_RATIO + scaleStep);
   };
 
   const onZoomOut = () => {
-    dispatchZoonChange(BASE_SCALE_RATIO - scaleStep);
+    dispatchZooMChange(BASE_SCALE_RATIO - scaleStep);
   };
 
   const onRotateRight = () => {
@@ -178,7 +178,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     if (event.deltaY > 0) {
       ratio = BASE_SCALE_RATIO / ratio;
     }
-    dispatchZoonChange(ratio, event.clientX, event.clientY);
+    dispatchZooMChange(ratio, event.clientX, event.clientY);
   };
 
   const onKeyDown = useCallback(
@@ -210,7 +210,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
       if (scale !== 1) {
         updateTransform({ x: 0, y: 0, scale: 1 });
       } else {
-        dispatchZoonChange(BASE_SCALE_RATIO + scaleStep, event.clientX, event.clientY);
+        dispatchZooMChange(BASE_SCALE_RATIO + scaleStep, event.clientX, event.clientY);
       }
     }
   };
