@@ -52,11 +52,11 @@ npm start
 ```
 
 ```js
-const Image = require('rc-image');
+import Image from 'rc-image';
 
-ReactDOM.render(
+export default () => (
   <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-, document.getElementById('root'));
+);
 ```
 
 ## API
@@ -75,14 +75,14 @@ ReactDOM.render(
 preview the merged src
 
 ```js
-const Image = require('rc-image');
+import Image from 'rc-image';
 
-ReactDOM.render(
+export default () => (
   <Image.PreviewGroup>
     <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
     <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
   </Image.PreviewGroup>
-, document.getElementById('root'));
+);
 ```
 
 ### API
