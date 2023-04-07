@@ -104,7 +104,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
       onClick: onFlipY,
       type: 'flipY',
     },
-  ];
+  ].filter((tool) => tool.icon !== undefined);
 
   const operations = (
     <>
