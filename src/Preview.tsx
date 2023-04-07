@@ -29,6 +29,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  resetPositionAfterDrag?: boolean;
 }
 
 const Preview: React.FC<PreviewProps> = (props) => {
@@ -45,6 +46,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    resetPositionAfterDrag = true,
     ...restProps
   } = props;
 
@@ -117,6 +119,10 @@ const Preview: React.FC<PreviewProps> = (props) => {
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isMoving) {
       setMoving(false);
+
+      if(!resetPositionAfterDrag){
+        return;
+      }
 
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
       const { transformX, transformY } = downPositionRef.current;

@@ -39,6 +39,12 @@ export interface ImageProps
   rootClassName?: string;
   preview?: boolean | ImagePreviewType;
   /**
+   * whether to reset the position after drag
+   * @default true
+   * @since 5.17.0
+   */
+  resetPositionAfterDrag?: boolean;
+  /**
    * @deprecated since version 3.2.1
    */
   onPreviewClose?: (value: boolean, prevValue: boolean) => void;
@@ -73,6 +79,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   height,
   style,
   preview = true,
+  resetPositionAfterDrag = true,
   className,
   onClick,
   onError,
@@ -286,6 +293,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
+          resetPositionAfterDrag={resetPositionAfterDrag}
           {...dialogProps}
         />
       )}
