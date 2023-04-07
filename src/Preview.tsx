@@ -78,13 +78,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
   };
 
   const onRefresh = ()=> {
-    console.log('refresh');
-    updateTransform({
-      rotate: 0,
-      x: 0,
-      y: 0,
-      scale: 1,
-    })
+    resetTransform();
   }
 
   const onZoomIn = () => {

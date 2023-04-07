@@ -107,7 +107,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
-    dragRebound,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -289,7 +288,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           mousePosition={mousePosition}
           src={mergedSrc}
           alt={alt}
-          dragRebound={dragRebound}
           getContainer={getPreviewContainer}
           icons={icons}
           scaleStep={scaleStep}

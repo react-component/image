@@ -24,7 +24,7 @@ interface OperationsProps
   scale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
-  onRefresh: ()=> void;
+  onRefresh: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onRotateRight: () => void;
