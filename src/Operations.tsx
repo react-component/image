@@ -24,6 +24,7 @@ interface OperationsProps
   scale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
+  onRefresh: ()=> void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onRotateRight: () => void;
@@ -49,6 +50,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onSwitchLeft,
     onSwitchRight,
     onClose,
+    onRefresh,
     onZoomIn,
     onZoomOut,
     onRotateRight,
@@ -56,7 +58,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onFlipX,
     onFlipY
   } = props;
-  const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
+  const { rotateLeft, rotateRight, refresh, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
@@ -64,6 +66,11 @@ const Operations: React.FC<OperationsProps> = (props) => {
       icon: close,
       onClick: onClose,
       type: 'close',
+    },
+    {
+      icon: refresh,
+      onClick: onRefresh,
+      type: 'refresh',
     },
     {
       icon: zoomIn,

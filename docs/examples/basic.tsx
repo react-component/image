@@ -35,6 +35,10 @@ export default function Base() {
         style={{
           marginRight: 24,
         }}
+        preview={{
+          dragRebound: false,
+          mask: 'close drag rebound'
+        }}
       />
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"

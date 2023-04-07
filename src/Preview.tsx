@@ -21,6 +21,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     rotateRight?: React.ReactNode;
     zoomIn?: React.ReactNode;
     zoomOut?: React.ReactNode;
+    refresh?: React.ReactNode;
     close?: React.ReactNode;
     left?: React.ReactNode;
     right?: React.ReactNode;
@@ -75,6 +76,16 @@ const Preview: React.FC<PreviewProps> = (props) => {
   const onAfterClose = () => {
     resetTransform();
   };
+
+  const onRefresh = ()=> {
+    console.log('refresh');
+    updateTransform({
+      rotate: 0,
+      x: 0,
+      y: 0,
+      scale: 1,
+    })
+  }
 
   const onZoomIn = () => {
     dispatchZoomChange(BASE_SCALE_RATIO + scaleStep);
@@ -304,6 +315,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
         onRotateLeft={onRotateLeft}
         onFlipX={onFlipX}
         onFlipY={onFlipY}
+        onRefresh={onRefresh}
         onClose={onClose}
       />
     </>
