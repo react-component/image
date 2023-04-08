@@ -78,14 +78,8 @@ const Preview: React.FC<PreviewProps> = (props) => {
   };
 
   const onRefresh = ()=> {
-    console.log('refresh');
-    updateTransform({
-      rotate: 0,
-      x: 0,
-      y: 0,
-      scale: 1,
-    })
-  }
+    resetTransform();
+  };
 
   const onZoomIn = () => {
     dispatchZoomChange(BASE_SCALE_RATIO + scaleStep);
@@ -131,7 +125,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     if (visible && isMoving) {
       setMoving(false);
       if (!dragRebound) {
-        return
+        return;
       }
 
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
