@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
+import classnames from 'classnames';
 import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
-import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
-import { context } from './PreviewGroup';
-import Operations from './Operations';
-import useImageTransform from './hooks/useImageTransform';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import useImageTransform from './hooks/useImageTransform';
+import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
+import { context } from './PreviewGroup';
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
@@ -31,7 +31,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   scaleStep?: number;
 }
 
-const Preview: React.FC<PreviewProps> = (props) => {
+const Preview: React.FC<PreviewProps> = props => {
   const {
     prefixCls,
     src,
@@ -63,12 +63,20 @@ const Preview: React.FC<PreviewProps> = (props) => {
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
-  const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(imgRef);
+  const { transform, resetTransform, updateTransform, dispatchZoomChange } =
+    useImageTransform(imgRef);
+  const [enableTransition, setEnableTransition] = useState(true);
   const { rotate, scale } = transform;
 
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
+
+  useEffect(() => {
+    if (!enableTransition) {
+      setEnableTransition(true);
+    }
+  }, [enableTransition]);
 
   const onAfterClose = () => {
     resetTransform();
@@ -91,25 +99,29 @@ const Preview: React.FC<PreviewProps> = (props) => {
   };
 
   const onFlipX = () => {
-    updateTransform({flipX: !transform.flipX})
+    updateTransform({ flipX: !transform.flipX });
   };
 
   const onFlipY = () => {
-    updateTransform({flipY: !transform.flipY})
+    updateTransform({ flipY: !transform.flipY });
   };
 
-  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
+      setEnableTransition(false);
+      resetTransform();
       setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
   };
 
-  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
+      setEnableTransition(false);
+      resetTransform();
       setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
   };
@@ -144,7 +156,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     }
   };
 
-  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
     // Only allow main button
     if (event.button !== 0) return;
     event.preventDefault();
@@ -158,7 +170,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     setMoving(true);
   };
 
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = (event) => {
+  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isMoving) {
       updateTransform({
         x: event.pageX - downPositionRef.current.deltaX,
@@ -174,7 +186,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     // Limit the maximum scale ratio
     const mergedScaleRatio = Math.min(scaleRatio, WHEEL_MAX_SCALE_RATIO);
     // Scale the ratio each time
-    let ratio = BASE_SCALE_RATIO + (mergedScaleRatio * scaleStep);
+    let ratio = BASE_SCALE_RATIO + mergedScaleRatio * scaleStep;
     if (event.deltaY > 0) {
       ratio = BASE_SCALE_RATIO / ratio;
     }
@@ -273,7 +285,12 @@ const Preview: React.FC<PreviewProps> = (props) => {
             className={`${prefixCls}-img`}
             src={combinationSrc}
             alt={alt}
-            style={{ transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''}${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)` }}
+            style={{
+              transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
+                transform.flipX ? '-' : ''
+              }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+              transitionDuration: !enableTransition && '0s',
+            }}
           />
         </div>
       </Dialog>
