@@ -21,6 +21,7 @@ export interface GroupConsumerProps {
   icons?: PreviewProps['icons'];
   preview?: boolean | PreviewGroupPreview;
   children?: React.ReactNode;
+  preserveImageState?: boolean;
 }
 
 interface PreviewUrl {
@@ -55,9 +56,9 @@ export const context = React.createContext<GroupConsumerValue>({
 const { Provider } = context;
 
 function getSafeIndex(keys: number[], key: number) {
-  if(key === undefined) return undefined;
+  if (key === undefined) return undefined;
   const index = keys.indexOf(key);
-  if(index === -1) return undefined;
+  if (index === -1) return undefined;
   return index;
 }
 
@@ -66,6 +67,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   children,
   icons = {},
   preview,
+  preserveImageState = false,
 }) => {
   const {
     visible: previewVisible = undefined,
@@ -81,11 +83,11 @@ const Group: React.FC<GroupConsumerProps> = ({
   const prevCurrent = React.useRef<number | undefined>();
   const [current, setCurrent] = useMergedState<number>(undefined, {
     onChange: (val, prev) => {
-      if(prevCurrent.current !== undefined) {
+      if (prevCurrent.current !== undefined) {
         onChange?.(getSafeIndex(previewUrlsKeys, val), getSafeIndex(previewUrlsKeys, prev));
       }
       prevCurrent.current = prev;
-    }
+    },
   });
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
@@ -151,6 +153,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         setShowPreview,
         setMousePosition,
         registerImage,
+        preserveImageState,
       }}
     >
       {children}

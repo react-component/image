@@ -31,7 +31,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   scaleStep?: number;
 }
 
-const Preview: React.FC<PreviewProps> = (props) => {
+const Preview: React.FC<PreviewProps> = props => {
   const {
     prefixCls,
     src,
@@ -56,14 +56,16 @@ const Preview: React.FC<PreviewProps> = (props) => {
     transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
-  const { previewUrls, current, isPreviewGroup, setCurrent } = useContext(context);
+  const { previewUrls, current, isPreviewGroup, setCurrent, preserveImageState } =
+    useContext(context);
   const previewGroupCount = previewUrls.size;
   const previewUrlsKeys = Array.from(previewUrls.keys());
   const currentPreviewIndex = previewUrlsKeys.indexOf(current);
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
-  const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(imgRef);
+  const { transform, resetTransform, updateTransform, dispatchZoomChange } =
+    useImageTransform(imgRef);
   const { rotate, scale } = transform;
 
   const wrapClassName = classnames({
@@ -91,27 +93,29 @@ const Preview: React.FC<PreviewProps> = (props) => {
   };
 
   const onFlipX = () => {
-    updateTransform({flipX: !transform.flipX})
+    updateTransform({ flipX: !transform.flipX });
   };
 
   const onFlipY = () => {
-    updateTransform({flipY: !transform.flipY})
+    updateTransform({ flipY: !transform.flipY });
   };
 
-  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
       setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
+    preserveImageState && resetTransform();
   };
 
-  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
       setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
+    preserveImageState && resetTransform();
   };
 
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
@@ -144,7 +148,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     }
   };
 
-  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
     // Only allow main button
     if (event.button !== 0) return;
     event.preventDefault();
@@ -158,7 +162,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     setMoving(true);
   };
 
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = (event) => {
+  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isMoving) {
       updateTransform({
         x: event.pageX - downPositionRef.current.deltaX,
@@ -174,7 +178,7 @@ const Preview: React.FC<PreviewProps> = (props) => {
     // Limit the maximum scale ratio
     const mergedScaleRatio = Math.min(scaleRatio, WHEEL_MAX_SCALE_RATIO);
     // Scale the ratio each time
-    let ratio = BASE_SCALE_RATIO + (mergedScaleRatio * scaleStep);
+    let ratio = BASE_SCALE_RATIO + mergedScaleRatio * scaleStep;
     if (event.deltaY > 0) {
       ratio = BASE_SCALE_RATIO / ratio;
     }
@@ -273,7 +277,11 @@ const Preview: React.FC<PreviewProps> = (props) => {
             className={`${prefixCls}-img`}
             src={combinationSrc}
             alt={alt}
-            style={{ transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''}${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)` }}
+            style={{
+              transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
+                transform.flipX ? '-' : ''
+              }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+            }}
           />
         </div>
       </Dialog>
