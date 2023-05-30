@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useCallback, useRef, useContext } from 'react';
+import classnames from 'classnames';
 import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
-import classnames from 'classnames';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
-import { context } from './PreviewGroup';
-import Operations from './Operations';
-import useImageTransform from './hooks/useImageTransform';
+import React,{ useCallback,useContext,useEffect,useRef,useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
-import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
+import useImageTransform from './hooks/useImageTransform';
+import useSwitchResetTransform from './hooks/useSwitchResetTransform';
+import Operations from './Operations';
+import { BASE_SCALE_RATIO,WHEEL_MAX_SCALE_RATIO } from './previewConfig';
+import { context } from './PreviewGroup';
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
@@ -68,6 +69,8 @@ const Preview: React.FC<PreviewProps> = props => {
     useImageTransform(imgRef);
   const { rotate, scale } = transform;
 
+  const [switchResetTransform] = useSwitchResetTransform(imgRef.current, resetTransform, transform);
+  
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
@@ -106,7 +109,6 @@ const Preview: React.FC<PreviewProps> = props => {
     if (currentPreviewIndex > 0) {
       setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
-    preserveImageState && resetTransform();
   };
 
   const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
@@ -115,8 +117,10 @@ const Preview: React.FC<PreviewProps> = props => {
     if (currentPreviewIndex < previewGroupCount - 1) {
       setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
-    preserveImageState && resetTransform();
   };
+  useEffect(() => {
+    preserveImageState && switchResetTransform();
+  },[current])
 
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isMoving) {
