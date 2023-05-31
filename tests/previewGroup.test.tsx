@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
 
@@ -17,16 +16,13 @@ describe('PreviewGroup', () => {
     const onVisibleChange = jest.fn();
     const { container } = render(
       <Image.PreviewGroup preview={{ onChange, onVisibleChange }}>
-        <Image src="src1" className='firstImg' />
-        <Image
-          preview={false}
-          src="src2"
-        />
+        <Image src="src1" className="firstImg" />
+        <Image preview={false} src="src2" />
         <Image src="src3" />
         <Image src="errorsrc" alt="error" />
       </Image.PreviewGroup>,
     );
-    
+
     fireEvent.click(container.querySelector('.firstImg'));
     act(() => {
       jest.runAllTimers();
@@ -45,7 +41,6 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).toHaveBeenCalledWith(3, 2);
-
   });
 
   it('Mount and UnMount', () => {
@@ -63,9 +58,7 @@ describe('PreviewGroup', () => {
     });
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    const previewProgressElement = document.querySelector(
-      '.rc-image-preview-operations-progress',
-    );
+    const previewProgressElement = document.querySelector('.rc-image-preview-operations-progress');
 
     expect(previewProgressElement).toBeTruthy();
     expect(previewProgressElement.textContent).toEqual('1 / 2');
@@ -108,9 +101,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    const previewProgressElement = document.querySelector(
-      '.rc-image-preview-operations-progress',
-    );
+    const previewProgressElement = document.querySelector('.rc-image-preview-operations-progress');
 
     expect(previewProgressElement).toBeTruthy();
     expect(previewProgressElement.textContent).toEqual('current:1 / total:3');
@@ -131,9 +122,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-switch-left-disabled'),
-    ).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('1 / 2');
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
@@ -141,9 +130,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-switch-right-disabled'),
-    ).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('2 / 2');
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-left'));
@@ -151,27 +138,21 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-switch-left-disabled'),
-    ).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.RIGHT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-switch-right-disabled'),
-    ).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.LEFT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-switch-left-disabled'),
-    ).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
   });
 
   it('With Controlled', () => {
@@ -204,4 +185,35 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
   });
 
+  it('Rotate', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" />
+        <Image src="src2" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
+    });
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
 });
