@@ -185,7 +185,7 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'errorsrc');
   });
 
-  it('Rotate', () => {
+  it('should reset transform when switch', () => {
     const { container } = render(
       <Image.PreviewGroup>
         <Image src="src1" />
