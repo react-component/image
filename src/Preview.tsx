@@ -38,7 +38,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
       rotateRight: () => void;
       zoomOut: () => void;
       zoomIn: () => void;
-      close: (e: React.SyntheticEvent<Element, Event>) => void;
+      close: () => void;
     };
     current: number;
     count: number;

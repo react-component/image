@@ -31,7 +31,7 @@ export interface ImagePreviewType
       rotateRight: () => void;
       zoomOut: () => void;
       zoomIn: () => void;
-      close: (e: React.SyntheticEvent<Element, Event>) => void;
+      close: () => void;
     };
   }) => React.ReactNode;
 }
