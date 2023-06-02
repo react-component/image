@@ -2,7 +2,12 @@
 
 React Image.
 
-[![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![bundle size][bundlephobia-image]][bundlephobia-url] [![dumi][dumi-image]][dumi-url]
+[![NPM version][npm-image]][npm-url]
+[![npm download][download-image]][download-url]
+[![build status][github-actions-image]][github-actions-url]
+[![Codecov][codecov-image]][codecov-url]
+[![bundle size][bundlephobia-image]][bundlephobia-url]
+[![dumi][dumi-image]][dumi-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
