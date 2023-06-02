@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { useState } from 'react';
 import cn from 'classnames';
+import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
+import * as React from 'react';
+import { useState } from 'react';
 import type { PreviewProps } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
-import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
 export interface ImagePreviewType
   extends Omit<
@@ -22,6 +22,18 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  toolbarRender?: (params: {
+    originalNode: React.ReactNode;
+    actions: {
+      flipY: () => void;
+      flipX: () => void;
+      rotateLeft: () => void;
+      rotateRight: () => void;
+      zoomOut: () => void;
+      zoomIn: () => void;
+      close: (e: React.SyntheticEvent<Element, Event>) => void;
+    };
+  }) => React.ReactNode;
 }
 
 let uuid = 0;
@@ -101,6 +113,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
+    toolbarRender,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -286,6 +299,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
+          toolbarRender={toolbarRender}
           {...dialogProps}
         />
       )}

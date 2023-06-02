@@ -6,7 +6,7 @@ import type { PreviewProps } from './Preview';
 import Preview from './Preview';
 
 export interface PreviewGroupPreview
-  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName'> {
+  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName' | 'toolbarRender'> {
   /**
    * If Preview the show img index
    * @default 0
@@ -14,6 +14,7 @@ export interface PreviewGroupPreview
   current?: number;
   countRender?: (current: number, total: number) => string;
   onChange?: (current: number, prevCurrent: number) => void;
+  toolbarRender?: PreviewProps['toolbarRender'];
 }
 
 export interface GroupConsumerProps {
@@ -55,9 +56,9 @@ export const context = React.createContext<GroupConsumerValue>({
 const { Provider } = context;
 
 function getSafeIndex(keys: number[], key: number) {
-  if(key === undefined) return undefined;
+  if (key === undefined) return undefined;
   const index = keys.indexOf(key);
-  if(index === -1) return undefined;
+  if (index === -1) return undefined;
   return index;
 }
 
@@ -74,6 +75,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     current: currentIndex = 0,
     countRender = undefined,
     onChange = undefined,
+    toolbarRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
@@ -81,11 +83,11 @@ const Group: React.FC<GroupConsumerProps> = ({
   const prevCurrent = React.useRef<number | undefined>();
   const [current, setCurrent] = useMergedState<number>(undefined, {
     onChange: (val, prev) => {
-      if(prevCurrent.current !== undefined) {
+      if (prevCurrent.current !== undefined) {
         onChange?.(getSafeIndex(previewUrlsKeys, val), getSafeIndex(previewUrlsKeys, prev));
       }
       prevCurrent.current = prev;
-    }
+    },
   });
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
@@ -94,17 +96,17 @@ const Group: React.FC<GroupConsumerProps> = ({
       prevCurrent.current = val ? current : undefined;
     },
   });
-  
+
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
-  
+
   const currentControlledKey = previewUrlsKeys[currentIndex];
   const canPreviewUrls = new Map<number, string>(
     Array.from(previewUrls)
       .filter(([, { canPreview }]) => !!canPreview)
       .map(([id, { url }]) => [id, url]),
   );
-  
+
   const registerImage = (id: number, url: string, canPreview: boolean = true) => {
     const unRegister = () => {
       setPreviewUrls(oldPreviewUrls => {
@@ -164,6 +166,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         icons={icons}
         getContainer={getContainer}
         countRender={countRender}
+        toolbarRender={toolbarRender}
         {...dialogProps}
       />
     </Provider>

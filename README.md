@@ -2,12 +2,7 @@
 
 React Image.
 
-[![NPM version][npm-image]][npm-url]
-[![npm download][download-image]][download-url]
-[![build status][github-actions-image]][github-actions-url]
-[![Codecov][codecov-image]][codecov-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
-[![dumi][dumi-image]][dumi-url]
+[![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![bundle size][bundlephobia-image]][bundlephobia-url] [![dumi][dumi-image]][dumi-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
@@ -91,9 +86,9 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
+| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number, toolbarRender: { originalNode: React.ReactNode, actions: { flipY: () => void, flipX: () => void, rotateLeft: () => void, rotateRight: () => void, zoomOut: () => void, zoomIn: () => void, close: () => void }, current?:number, count?: number } => React.ReactNode } } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
-| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' 
+| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
 
 ## Example
 

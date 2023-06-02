@@ -1,9 +1,10 @@
-import * as React from 'react';
+import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
-import Portal from '@rc-component/portal';
-import { MIN_SCALE, MAX_SCALE } from './previewConfig';
+import * as React from 'react';
 import type { PreviewProps } from './Preview';
+import { MAX_SCALE, MIN_SCALE } from './previewConfig';
+import { context } from './PreviewGroup';
 
 interface OperationsProps
   extends Pick<
@@ -16,6 +17,7 @@ interface OperationsProps
     | 'icons'
     | 'countRender'
     | 'onClose'
+    | 'toolbarRender'
   > {
   showSwitch: boolean;
   showProgress: boolean;
@@ -32,7 +34,7 @@ interface OperationsProps
   onFlipY: () => void;
 }
 
-const Operations: React.FC<OperationsProps> = (props) => {
+const Operations: React.FC<OperationsProps> = props => {
   const {
     visible,
     maskTransitionName,
@@ -54,8 +56,10 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onRotateRight,
     onRotateLeft,
     onFlipX,
-    onFlipY
+    onFlipY,
+    toolbarRender,
   } = props;
+  const { isPreviewGroup } = React.useContext(context);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
@@ -99,6 +103,30 @@ const Operations: React.FC<OperationsProps> = (props) => {
     },
   ];
 
+  const toolbar = (
+    <ul className={`${prefixCls}-operations`}>
+      {showProgress && (
+        <li className={`${prefixCls}-operations-progress`}>
+          {countRender?.(current + 1, count) ?? `${current + 1} / ${count}`}
+        </li>
+      )}
+      {tools.map(({ icon, onClick, type, disabled }) => (
+        <li
+          className={classnames(toolClassName, {
+            [`${prefixCls}-operations-operation-${type}`]: true,
+            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+          })}
+          onClick={onClick}
+          key={type}
+        >
+          {React.isValidElement(icon)
+            ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+            : icon}
+        </li>
+      ))}
+    </ul>
+  );
+
   const operations = (
     <>
       {showSwitch && (
@@ -121,28 +149,26 @@ const Operations: React.FC<OperationsProps> = (props) => {
           </div>
         </>
       )}
-      <ul className={`${prefixCls}-operations`}>
-        {showProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(current + 1, count) ??
-              `${current + 1} / ${count}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-${type}`]: true,
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
-          >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
+      {toolbarRender
+        ? toolbarRender({
+            originalNode: toolbar,
+            actions: {
+              flipY: onFlipY,
+              flipX: onFlipX,
+              rotateLeft: onRotateLeft,
+              rotateRight: onRotateRight,
+              zoomOut: onZoomOut,
+              zoomIn: onZoomIn,
+              close: onClose,
+            },
+            ...((isPreviewGroup
+              ? {
+                  current: current + 1,
+                  count,
+                }
+              : {}) as any),
+          })
+        : toolbar}
     </>
   );
 
