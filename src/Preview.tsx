@@ -21,6 +21,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     rotateRight?: React.ReactNode;
     zoomIn?: React.ReactNode;
     zoomOut?: React.ReactNode;
+    refresh?: React.ReactNode;
     close?: React.ReactNode;
     left?: React.ReactNode;
     right?: React.ReactNode;
@@ -29,6 +30,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  dragRebound?: boolean;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -45,6 +47,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    dragRebound = true,
     ...restProps
   } = props;
 
@@ -79,6 +82,10 @@ const Preview: React.FC<PreviewProps> = props => {
   }, [enableTransition]);
 
   const onAfterClose = () => {
+    resetTransform();
+  };
+
+  const onRefresh = ()=> {
     resetTransform();
   };
 
@@ -129,6 +136,9 @@ const Preview: React.FC<PreviewProps> = props => {
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isMoving) {
       setMoving(false);
+      if (!dragRebound) {
+        return;
+      }
 
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
       const { transformX, transformY } = downPositionRef.current;
@@ -315,6 +325,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onRotateLeft={onRotateLeft}
         onFlipX={onFlipX}
         onFlipY={onFlipY}
+        onRefresh={onRefresh}
         onClose={onClose}
       />
     </>
