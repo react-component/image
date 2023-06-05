@@ -96,6 +96,7 @@ export default () => (
 | icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
 
 ### PreviewType
+
 ```typescript
 { 
   visible?: boolean;
