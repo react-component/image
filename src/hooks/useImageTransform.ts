@@ -1,15 +1,16 @@
-import { useState, useRef } from 'react';
-import raf from 'rc-util/lib/raf';
 import { getClientSize } from 'rc-util/lib/Dom/css';
-import { MIN_SCALE, MAX_SCALE } from '../previewConfig';
+import isEqual from 'rc-util/lib/isEqual';
+import raf from 'rc-util/lib/raf';
+import { useRef, useState } from 'react';
+import { MAX_SCALE, MIN_SCALE } from '../previewConfig';
 
-type TransformType = {
-  x: number,
-  y: number,
-  rotate: number,
-  scale: number,
-  flipX: boolean,
-  flipY: boolean,
+export type TransformType = {
+  x: number;
+  y: number;
+  rotate: number;
+  scale: number;
+  flipX: boolean;
+  flipY: boolean;
 };
 
 const initialTransform = {
@@ -21,13 +22,19 @@ const initialTransform = {
   flipY: false,
 };
 
-export default function useImageTransform(imgRef: React.MutableRefObject<HTMLImageElement>) {
+export default function useImageTransform(
+  imgRef: React.MutableRefObject<HTMLImageElement>,
+  onTransform: (transform: TransformType) => void,
+) {
   const frame = useRef(null);
   const queue = useRef<TransformType[]>([]);
   const [transform, setTransform] = useState(initialTransform);
 
   const resetTransform = () => {
     setTransform(initialTransform);
+    if (onTransform && !isEqual(initialTransform, transform)) {
+      onTransform(initialTransform);
+    }
   };
 
   /** Direct update transform */
@@ -42,6 +49,7 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
           });
           frame.current = null;
 
+          onTransform?.(memoState);
           return memoState;
         });
       });
@@ -108,4 +116,4 @@ export default function useImageTransform(imgRef: React.MutableRefObject<HTMLIma
     updateTransform,
     dispatchZoomChange,
   };
-};
+}

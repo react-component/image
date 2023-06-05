@@ -6,13 +6,13 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import type { TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 import { context } from './PreviewGroup';
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
-  onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
   rootClassName?: string;
@@ -29,6 +29,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  onClose?: (e: React.SyntheticEvent<Element>) => void;
+  onTransform?: (transform: TransformType) => void;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -45,6 +47,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    onTransform,
     ...restProps
   } = props;
 
@@ -63,8 +66,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
-  const { transform, resetTransform, updateTransform, dispatchZoomChange } =
-    useImageTransform(imgRef);
+  const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
+    imgRef,
+    onTransform,
+  );
   const [enableTransition, setEnableTransition] = useState(true);
   const { rotate, scale } = transform;
 
