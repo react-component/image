@@ -113,7 +113,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onZoomOut = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO - scaleStep);
+    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep));
   };
 
   const onRotateRight = () => {
