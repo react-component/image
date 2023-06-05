@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
 import type { PreviewProps } from './Preview';
-import { MAX_SCALE, MIN_SCALE } from './previewConfig';
 import { context } from './PreviewGroup';
 
 interface OperationsProps
@@ -23,7 +22,6 @@ interface OperationsProps
   showProgress: boolean;
   current: number;
   count: number;
-  scale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
   onZoomIn: () => void;
@@ -47,7 +45,6 @@ const Operations: React.FC<OperationsProps> = props => {
     showProgress,
     current,
     count,
-    scale,
     onSwitchLeft,
     onSwitchRight,
     onClose,
@@ -88,13 +85,11 @@ const Operations: React.FC<OperationsProps> = props => {
       icon: zoomOut,
       onClick: onZoomOut,
       type: 'zoomOut',
-      disabled: scale === MIN_SCALE,
     },
     {
       icon: zoomIn,
       onClick: onZoomIn,
       type: 'zoomIn',
-      disabled: scale === MAX_SCALE,
     },
     {
       icon: close,
@@ -103,6 +98,20 @@ const Operations: React.FC<OperationsProps> = props => {
     },
   ];
 
+  const toolsNode = tools.map(({ icon, onClick, type }) => (
+    <li
+      className={classnames(toolClassName, {
+        [`${prefixCls}-operations-operation-${type}`]: true,
+      })}
+      onClick={onClick}
+      key={type}
+    >
+      {React.isValidElement(icon)
+        ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+        : icon}
+    </li>
+  ));
+
   const toolbar = (
     <ul className={`${prefixCls}-operations`}>
       {showProgress && (
@@ -110,20 +119,7 @@ const Operations: React.FC<OperationsProps> = props => {
           {countRender?.(current + 1, count) ?? `${current + 1} / ${count}`}
         </li>
       )}
-      {tools.map(({ icon, onClick, type, disabled }) => (
-        <li
-          className={classnames(toolClassName, {
-            [`${prefixCls}-operations-operation-${type}`]: true,
-            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-          })}
-          onClick={onClick}
-          key={type}
-        >
-          {React.isValidElement(icon)
-            ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-            : icon}
-        </li>
-      ))}
+      {toolsNode}
     </ul>
   );
 
@@ -152,6 +148,15 @@ const Operations: React.FC<OperationsProps> = props => {
       {toolbarRender
         ? toolbarRender({
             originalNode: toolbar,
+            icons: {
+              flipYIcon: toolsNode[0],
+              flipXIcon: toolsNode[1],
+              rotateLeftIcon: toolsNode[2],
+              rotateRightIcon: toolsNode[3],
+              zoomOutIcon: toolsNode[4],
+              zoomInIcon: toolsNode[5],
+              closeIcon: toolsNode[6],
+            },
             actions: {
               flipY: onFlipY,
               flipX: onFlipX,
