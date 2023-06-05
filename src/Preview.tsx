@@ -91,11 +91,18 @@ const Preview: React.FC<PreviewProps> = props => {
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } =
     useImageTransform(imgRef);
+  const [enableTransition, setEnableTransition] = useState(true);
   const { rotate, scale } = transform;
 
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
   });
+
+  useEffect(() => {
+    if (!enableTransition) {
+      setEnableTransition(true);
+    }
+  }, [enableTransition]);
 
   const onAfterClose = () => {
     resetTransform();
@@ -129,6 +136,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
+      setEnableTransition(false);
+      resetTransform();
       setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
     }
   };
@@ -137,6 +146,8 @@ const Preview: React.FC<PreviewProps> = props => {
     event.preventDefault();
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
+      setEnableTransition(false);
+      resetTransform();
       setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
     }
   };
@@ -304,6 +315,7 @@ const Preview: React.FC<PreviewProps> = props => {
               transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
                 transform.flipX ? '-' : ''
               }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+              transitionDuration: !enableTransition && '0s',
             }}
           />
         </div>
