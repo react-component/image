@@ -65,15 +65,24 @@ const Operations: React.FC<OperationsProps> = props => {
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
     {
-      icon: close,
-      onClick: onClose,
-      type: 'close',
+      icon: flipY,
+      onClick: onFlipY,
+      type: 'flipY',
     },
     {
-      icon: zoomIn,
-      onClick: onZoomIn,
-      type: 'zoomIn',
-      disabled: scale === MAX_SCALE,
+      icon: flipX,
+      onClick: onFlipX,
+      type: 'flipX',
+    },
+    {
+      icon: rotateLeft,
+      onClick: onRotateLeft,
+      type: 'rotateLeft',
+    },
+    {
+      icon: rotateRight,
+      onClick: onRotateRight,
+      type: 'rotateRight',
     },
     {
       icon: zoomOut,
@@ -82,24 +91,15 @@ const Operations: React.FC<OperationsProps> = props => {
       disabled: scale === MIN_SCALE,
     },
     {
-      icon: rotateRight,
-      onClick: onRotateRight,
-      type: 'rotateRight',
+      icon: zoomIn,
+      onClick: onZoomIn,
+      type: 'zoomIn',
+      disabled: scale === MAX_SCALE,
     },
     {
-      icon: rotateLeft,
-      onClick: onRotateLeft,
-      type: 'rotateLeft',
-    },
-    {
-      icon: flipX,
-      onClick: onFlipX,
-      type: 'flipX',
-    },
-    {
-      icon: flipY,
-      onClick: onFlipY,
-      type: 'flipY',
+      icon: close,
+      onClick: onClose,
+      type: 'close',
     },
   ];
 
@@ -164,7 +164,7 @@ const Operations: React.FC<OperationsProps> = props => {
             ...((isPreviewGroup
               ? {
                   current: current + 1,
-                  count,
+                  total: count,
                 }
               : {}) as any),
           })

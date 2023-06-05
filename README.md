@@ -91,7 +91,7 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number, toolbarRender: { originalNode: React.ReactNode, actions: { flipY: () => void, flipX: () => void, rotateLeft: () => void, rotateRight: () => void, zoomOut: () => void, zoomIn: () => void, close: () => void }, current?:number, count?: number } => React.ReactNode } } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
+| preview | boolean \|<br> { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false, countRender?: (current: number, total: number) => string, current: number, toolbarRender: { originalNode: React.ReactNode, actions: { flipY: () => void, flipX: () => void, rotateLeft: () => void, rotateRight: () => void, zoomOut: () => void, zoomIn: () => void, close: () => void }, current?:number, total?: number } => React.ReactNode } } | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 | icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
 

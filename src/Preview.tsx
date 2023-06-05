@@ -41,7 +41,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
       close: () => void;
     };
     current: number;
-    count: number;
+    total: number;
   }) => React.ReactNode;
 }
 
