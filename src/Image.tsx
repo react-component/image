@@ -5,7 +5,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useState } from 'react';
-import type { PreviewProps, toolbarRenderParams } from './Preview';
+import type { PreviewProps, toolbarRenderProps } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 
@@ -22,7 +22,7 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
-  toolbarRender?: (params: Omit<toolbarRenderParams, 'current' | 'total'>) => React.ReactNode;
+  toolbarRender?: (params: Omit<toolbarRenderProps, 'current' | 'total'>) => React.ReactNode;
 }
 
 let uuid = 0;

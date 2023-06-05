@@ -11,7 +11,7 @@ import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 import { context } from './PreviewGroup';
 
-export interface toolbarRenderParams {
+export interface toolbarRenderProps {
   originalNode: React.ReactNode;
   icons: {
     flipYIcon: React.ReactNode;
@@ -53,7 +53,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
-  toolbarRender?: (params: toolbarRenderParams) => React.ReactNode;
+  toolbarRender?: (params: toolbarRenderProps) => React.ReactNode;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
