@@ -77,7 +77,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
 
-  const mergedGetContainer = React.useMemo(() => {
+  const mergedGetContainer = React.useCallback(() => {
     if (!getContainer) return getContainer;
     let target: HTMLElement | null = null;
     if (typeof getContainer === 'string') {
@@ -179,7 +179,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         mousePosition={mousePosition}
         src={canPreviewUrls.get(current)}
         icons={icons}
-        getContainer={mergedGetContainer}
+        getContainer={mergedGetContainer()}
         countRender={countRender}
         {...dialogProps}
       />

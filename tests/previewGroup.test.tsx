@@ -1,3 +1,4 @@
+import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
 import Image from '../src';
@@ -215,5 +216,70 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
+  });
+
+  it('getContainer', () => {
+    const { container, rerender } = render(
+      <div className="container">
+        <Image.PreviewGroup preview={{ getContainer: '.container' }}>
+          <Image src="src1" />
+          <Image src="src2" />
+        </Image.PreviewGroup>
+      </div>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(
+      document.querySelector('.container').querySelector('.rc-image-preview-root'),
+    ).toBeTruthy();
+
+    const App = () => {
+      const warp = React.useRef(null);
+      return (
+        <div className="container2" ref={warp}>
+          <Image.PreviewGroup preview={{ getContainer: () => warp.current }}>
+            <Image src="src1" />
+            <Image src="src2" />
+          </Image.PreviewGroup>
+        </div>
+      );
+    };
+    rerender(<App />);
+
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(
+      document.querySelector('.container2').querySelector('.rc-image-preview-root'),
+    ).toBeTruthy();
+
+    const App2 = () => {
+      return (
+        <div className="container3">
+          <Image.PreviewGroup preview={{ getContainer: document.body }}>
+            <Image src="src1" />
+            <Image src="src2" />
+          </Image.PreviewGroup>
+        </div>
+      );
+    };
+    rerender(<App2 />);
+
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(
+      document.querySelector('body').querySelector('.rc-image-preview-root'),
+    ).toBeTruthy();
   });
 });
