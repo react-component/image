@@ -1,6 +1,6 @@
-import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
+import React from 'react';
 import Image from '../src';
 
 describe('PreviewGroup', () => {
@@ -228,6 +228,9 @@ describe('PreviewGroup', () => {
       </div>,
     );
 
+    act(() => {
+      jest.runAllTimers();
+    });
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
       jest.runAllTimers();
@@ -250,7 +253,9 @@ describe('PreviewGroup', () => {
     };
     rerender(<App />);
 
-
+    act(() => {
+      jest.runAllTimers();
+    });
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
       jest.runAllTimers();
@@ -271,15 +276,15 @@ describe('PreviewGroup', () => {
       );
     };
     rerender(<App2 />);
-
+    act(() => {
+      jest.runAllTimers();
+    });
 
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('body').querySelector('.rc-image-preview-root'),
-    ).toBeTruthy();
+    expect(document.querySelector('body').querySelector('.rc-image-preview-root')).toBeTruthy();
   });
 });
