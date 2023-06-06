@@ -27,6 +27,40 @@ exports[`PreviewGroup With Controlled 1`] = `
           style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
         />
       </div>
+      <div
+        class="rc-image-preview-operations-wrapper"
+      >
+        <ul
+          class="rc-image-preview-operations"
+        >
+          <li
+            class="rc-image-preview-operations-progress"
+          >
+            1 / 1
+          </li>
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-close"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
+          />
+          <li
+            class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
+          />
+        </ul>
+      </div>
     </div>
   </div>
   <div

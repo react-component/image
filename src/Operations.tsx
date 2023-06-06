@@ -1,9 +1,8 @@
-import * as React from 'react';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
-import Portal from '@rc-component/portal';
-import { MIN_SCALE, MAX_SCALE } from './previewConfig';
+import * as React from 'react';
 import type { PreviewProps } from './Preview';
+import { MAX_SCALE, MIN_SCALE } from './previewConfig';
 
 interface OperationsProps
   extends Pick<
@@ -32,11 +31,10 @@ interface OperationsProps
   onFlipY: () => void;
 }
 
-const Operations: React.FC<OperationsProps> = (props) => {
+const Operations: React.FC<OperationsProps> = props => {
   const {
     visible,
     maskTransitionName,
-    getContainer,
     prefixCls,
     rootClassName,
     icons,
@@ -54,7 +52,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onRotateRight,
     onRotateLeft,
     onFlipX,
-    onFlipY
+    onFlipY,
   } = props;
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
@@ -124,8 +122,7 @@ const Operations: React.FC<OperationsProps> = (props) => {
       <ul className={`${prefixCls}-operations`}>
         {showProgress && (
           <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(current + 1, count) ??
-              `${current + 1} / ${count}`}
+            {countRender?.(current + 1, count) ?? `${current + 1} / ${count}`}
           </li>
         )}
         {tools.map(({ icon, onClick, type, disabled }) => (
@@ -149,14 +146,12 @@ const Operations: React.FC<OperationsProps> = (props) => {
   return (
     <CSSMotion visible={visible} motionName={maskTransitionName}>
       {({ className, style }) => (
-        <Portal open getContainer={getContainer ?? document.body}>
-          <div
-            className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
-            style={style}
-          >
-            {operations}
-          </div>
-        </Portal>
+        <div
+          className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
+          style={style}
+        >
+          {operations}
+        </div>
       )}
     </CSSMotion>
   );
