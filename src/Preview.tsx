@@ -293,30 +293,30 @@ const Preview: React.FC<PreviewProps> = props => {
             }}
           />
         </div>
+        <Operations
+          visible={visible}
+          maskTransitionName={maskTransitionName}
+          getContainer={getContainer}
+          prefixCls={prefixCls}
+          rootClassName={rootClassName}
+          icons={icons}
+          countRender={countRender}
+          showSwitch={showLeftOrRightSwitches}
+          showProgress={showOperationsProgress}
+          current={currentPreviewIndex}
+          count={previewGroupCount}
+          scale={scale}
+          onSwitchLeft={onSwitchLeft}
+          onSwitchRight={onSwitchRight}
+          onZoomIn={onZoomIn}
+          onZoomOut={onZoomOut}
+          onRotateRight={onRotateRight}
+          onRotateLeft={onRotateLeft}
+          onFlipX={onFlipX}
+          onFlipY={onFlipY}
+          onClose={onClose}
+        />
       </Dialog>
-      <Operations
-        visible={visible}
-        maskTransitionName={maskTransitionName}
-        getContainer={getContainer}
-        prefixCls={prefixCls}
-        rootClassName={rootClassName}
-        icons={icons}
-        countRender={countRender}
-        showSwitch={showLeftOrRightSwitches}
-        showProgress={showOperationsProgress}
-        current={currentPreviewIndex}
-        count={previewGroupCount}
-        scale={scale}
-        onSwitchLeft={onSwitchLeft}
-        onSwitchRight={onSwitchRight}
-        onZoomIn={onZoomIn}
-        onZoomOut={onZoomOut}
-        onRotateRight={onRotateRight}
-        onRotateLeft={onRotateLeft}
-        onFlipX={onFlipX}
-        onFlipY={onFlipY}
-        onClose={onClose}
-      />
     </>
   );
 };

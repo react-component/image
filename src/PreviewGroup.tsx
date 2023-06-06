@@ -76,6 +76,23 @@ const Group: React.FC<GroupConsumerProps> = ({
     onChange = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
+
+  const mergedGetContainer = React.useMemo(() => {
+    if (!getContainer) return getContainer;
+    let target: HTMLElement | null = null;
+    if (typeof getContainer === 'string') {
+      target = document.querySelector(getContainer);
+    } else if (typeof getContainer === 'function') {
+      target = getContainer();
+    } else {
+      target = getContainer;
+    }
+    if (!target) return target;
+    if (target.style.position === '' || target.style.position === 'static') {
+      target.style.position = 'relative';
+    }
+    return target;
+  }, [getContainer]);
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
   const previewUrlsKeys = Array.from(previewUrls.keys());
   const prevCurrent = React.useRef<number | undefined>();
@@ -162,7 +179,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         mousePosition={mousePosition}
         src={canPreviewUrls.get(current)}
         icons={icons}
-        getContainer={getContainer}
+        getContainer={mergedGetContainer}
         countRender={countRender}
         {...dialogProps}
       />
