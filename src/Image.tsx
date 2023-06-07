@@ -22,6 +22,7 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  onTransform?: PreviewProps['onTransform'];
   toolbarRender?: (params: Omit<toolbarRenderType, 'current' | 'total'>) => React.ReactNode;
 }
 

@@ -76,6 +76,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     current: currentIndex = 0,
     countRender = undefined,
     onChange = undefined,
+    onTransform = undefined,
     toolbarRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
@@ -165,6 +166,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         icons={icons}
         getContainer={getContainer}
         countRender={countRender}
+        onTransform={onTransform}
         toolbarRender={toolbarRender}
         {...dialogProps}
       />

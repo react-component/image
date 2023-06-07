@@ -79,6 +79,7 @@ export default () => (
   visible?: boolean;
   scaleStep?: number;
   onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
+  onTransform: (transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean }) => void }
   getContainer?: string | HTMLElement | (() => HTMLElement) | false;
   toolbarRender?: (params: {
     originalNode: React.ReactNode;
@@ -130,10 +131,11 @@ export default () => (
 ### PreviewGroupType
 
 ```typescript
-{ 
+{
   visible?: boolean;
   scaleStep?: number;
   onVisibleChange?: (visible, prevVisible, current: number) => void;
+  onTransform: (transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean }) => void }
   getContainer?: string | HTMLElement | (() => HTMLElement) | false;
   countRender?: (current: number, total: number) => string;
   current?: number;

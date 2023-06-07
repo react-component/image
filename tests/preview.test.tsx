@@ -809,4 +809,36 @@ describe('Preview', () => {
 
     expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
   });
+
+  it('onTransform should be triggered when transform change', () => {
+    const onTransform = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ onTransform }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(onTransform).toBeCalledTimes(1);
+    expect(onTransform).toBeCalledWith({
+      flipX: false,
+      flipY: true,
+      rotate: 0,
+      scale: 1,
+      x: 0,
+      y: 0,
+    });
+  });
 });
