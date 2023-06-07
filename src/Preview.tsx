@@ -55,7 +55,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
   onClose?: (e: React.SyntheticEvent<Element>) => void;
-  onTransform?: (transform: TransformType, action: TransformAction) => void;
+  onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
   toolbarRender?: (params: toolbarRenderType) => React.ReactNode;
 }
 

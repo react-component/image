@@ -38,7 +38,7 @@ const initialTransform = {
 
 export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
-  onTransform: (transform: TransformType, action: TransformAction) => void,
+  onTransform: (params: { transform: TransformType; action: TransformAction }) => void,
 ) {
   const frame = useRef(null);
   const queue = useRef<TransformType[]>([]);
@@ -47,7 +47,7 @@ export default function useImageTransform(
   const resetTransform = (action: TransformAction) => {
     setTransform(initialTransform);
     if (onTransform && !isEqual(initialTransform, transform)) {
-      onTransform(initialTransform, action);
+      onTransform({ transform: initialTransform, action });
     }
   };
 
@@ -63,7 +63,7 @@ export default function useImageTransform(
           });
           frame.current = null;
 
-          onTransform?.(memoState, action);
+          onTransform?.({ transform: memoState, action });
           return memoState;
         });
       });

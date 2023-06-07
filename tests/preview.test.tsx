@@ -832,8 +832,8 @@ describe('Preview', () => {
     });
 
     expect(onTransform).toBeCalledTimes(1);
-    expect(onTransform).toBeCalledWith(
-      {
+    expect(onTransform).toBeCalledWith({
+      transform: {
         flipY: true,
         flipX: false,
         rotate: 0,
@@ -841,7 +841,7 @@ describe('Preview', () => {
         x: 0,
         y: 0,
       },
-      'flipY',
-    );
+      action: 'flipY',
+    });
   });
 });
