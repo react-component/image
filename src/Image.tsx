@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { useState } from 'react';
 import cn from 'classnames';
+import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
+import * as React from 'react';
+import { useState } from 'react';
 import type { PreviewProps } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
-import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
 
 export interface ImagePreviewType
   extends Omit<
@@ -127,6 +127,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const isLoaded = React.useRef(false);
 
+  const imgCommonProps = {
+    crossOrigin,
+    decoding,
+    draggable,
+    loading,
+    referrerPolicy,
+    sizes,
+    srcSet,
+    useMap,
+    alt,
+  };
+
   const onLoad = () => {
     setStatus('normal');
   };
@@ -187,14 +199,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   // Resolve https://github.com/ant-design/ant-design/issues/28881
   // Only need unRegister when component unMount
   React.useEffect(() => {
-    const unRegister = registerImage(currentId, src);
+    const unRegister = registerImage(currentId, {
+      src,
+      imgCommonProps,
+      canPreview,
+    });
 
     return unRegister;
   }, []);
 
   React.useEffect(() => {
-    registerImage(currentId, src, canPreview);
-  }, [src, canPreview]);
+    registerImage(currentId, { src, imgCommonProps, canPreview });
+  }, [src, canPreview, JSON.stringify(imgCommonProps)]);
   // Keep order end
 
   React.useEffect(() => {
@@ -211,29 +227,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   });
 
   const mergedSrc = isError && fallback ? fallback : src;
-  const imgCommonProps = {
-    crossOrigin,
-    decoding,
-    draggable,
-    loading,
-    referrerPolicy,
-    sizes,
-    srcSet,
-    useMap,
-    onError,
-    alt,
-    className: cn(
-      `${prefixCls}-img`,
-      {
-        [`${prefixCls}-img-placeholder`]: placeholder === true,
-      },
-      className,
-    ),
-    style: {
-      height,
-      ...style,
-    },
-  };
 
   return (
     <>
@@ -249,10 +242,22 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
       >
         <img
           {...imgCommonProps}
+          className={cn(
+            `${prefixCls}-img`,
+            {
+              [`${prefixCls}-img-placeholder`]: placeholder === true,
+            },
+            className,
+          )}
+          style={{
+            height,
+            ...style,
+          }}
           ref={getImgRef}
           {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
           width={width}
           height={height}
+          onError={onError}
         />
 
         {status === 'loading' && (
@@ -266,7 +271,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           <div
             className={cn(`${prefixCls}-mask`, maskClassName)}
             style={{
-              display: imgCommonProps.style?.display === 'none' ? 'none' : undefined,
+              display: style?.display === 'none' ? 'none' : undefined,
             }}
           >
             {previewMask}
@@ -286,6 +291,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
+          imgCommonProps={imgCommonProps}
           {...dialogProps}
         />
       )}

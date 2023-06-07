@@ -23,27 +23,28 @@ export interface GroupConsumerProps {
   children?: React.ReactNode;
 }
 
-interface PreviewUrl {
-  url: string;
+interface PreviewData {
+  src: string;
+  imgCommonProps: React.ImgHTMLAttributes<HTMLImageElement>;
   canPreview: boolean;
 }
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
-  previewUrls: Map<number, string>;
-  setPreviewUrls: React.Dispatch<React.SetStateAction<Map<number, PreviewUrl>>>;
+  previewData: Map<number, PreviewData>;
+  setPreviewData: React.Dispatch<React.SetStateAction<Map<number, PreviewData>>>;
   current: number;
   setCurrent: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  registerImage: (id: number, url: string, canPreview?: boolean) => () => void;
+  registerImage: (id: number, data: PreviewData) => () => void;
   rootClassName?: string;
 }
 
 /* istanbul ignore next */
 export const context = React.createContext<GroupConsumerValue>({
-  previewUrls: new Map(),
-  setPreviewUrls: () => null,
+  previewData: new Map(),
+  setPreviewData: () => null,
   current: null,
   setCurrent: () => null,
   setShowPreview: () => null,
@@ -55,9 +56,9 @@ export const context = React.createContext<GroupConsumerValue>({
 const { Provider } = context;
 
 function getSafeIndex(keys: number[], key: number) {
-  if(key === undefined) return undefined;
+  if (key === undefined) return undefined;
   const index = keys.indexOf(key);
-  if(index === -1) return undefined;
+  if (index === -1) return undefined;
   return index;
 }
 
@@ -76,49 +77,44 @@ const Group: React.FC<GroupConsumerProps> = ({
     onChange = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
-  const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
-  const previewUrlsKeys = Array.from(previewUrls.keys());
+  const [previewData, setPreviewData] = useState<Map<number, PreviewData>>(new Map());
+  const previewDataKeys = Array.from(previewData.keys());
   const prevCurrent = React.useRef<number | undefined>();
   const [current, setCurrent] = useMergedState<number>(undefined, {
     onChange: (val, prev) => {
-      if(prevCurrent.current !== undefined) {
-        onChange?.(getSafeIndex(previewUrlsKeys, val), getSafeIndex(previewUrlsKeys, prev));
+      if (prevCurrent.current !== undefined) {
+        onChange?.(getSafeIndex(previewDataKeys, val), getSafeIndex(previewDataKeys, prev));
       }
       prevCurrent.current = prev;
-    }
+    },
   });
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
-      onPreviewVisibleChange?.(val, prevVal, getSafeIndex(previewUrlsKeys, current));
+      onPreviewVisibleChange?.(val, prevVal, getSafeIndex(previewDataKeys, current));
       prevCurrent.current = val ? current : undefined;
     },
   });
-  
+
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isControlled = previewVisible !== undefined;
-  
-  const currentControlledKey = previewUrlsKeys[currentIndex];
-  const canPreviewUrls = new Map<number, string>(
-    Array.from(previewUrls)
-      .filter(([, { canPreview }]) => !!canPreview)
-      .map(([id, { url }]) => [id, url]),
+
+  const currentControlledKey = previewDataKeys[currentIndex];
+  const canPreviewData = new Map<number, PreviewData>(
+    Array.from(previewData).filter(([, { canPreview }]) => !!canPreview),
   );
-  
-  const registerImage = (id: number, url: string, canPreview: boolean = true) => {
+
+  const registerImage = (id: number, data: PreviewData) => {
     const unRegister = () => {
-      setPreviewUrls(oldPreviewUrls => {
-        const clonePreviewUrls = new Map(oldPreviewUrls);
-        const deleteResult = clonePreviewUrls.delete(id);
-        return deleteResult ? clonePreviewUrls : oldPreviewUrls;
+      setPreviewData(oldPreviewData => {
+        const clonePreviewData = new Map(oldPreviewData);
+        const deleteResult = clonePreviewData.delete(id);
+        return deleteResult ? clonePreviewData : oldPreviewData;
       });
     };
 
-    setPreviewUrls(oldPreviewUrls => {
-      return new Map(oldPreviewUrls).set(id, {
-        url,
-        canPreview,
-      });
+    setPreviewData(oldPreviewData => {
+      return new Map(oldPreviewData).set(id, data);
     });
 
     return unRegister;
@@ -140,12 +136,14 @@ const Group: React.FC<GroupConsumerProps> = ({
     }
   }, [currentControlledKey, isControlled, isShowPreview]);
 
+  const canPreviewCurrentData = canPreviewData.get(current);
+
   return (
     <Provider
       value={{
         isPreviewGroup: true,
-        previewUrls: canPreviewUrls,
-        setPreviewUrls,
+        previewData: canPreviewData,
+        setPreviewData,
         current,
         setCurrent,
         setShowPreview,
@@ -160,7 +158,8 @@ const Group: React.FC<GroupConsumerProps> = ({
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
-        src={canPreviewUrls.get(current)}
+        imgCommonProps={canPreviewCurrentData?.imgCommonProps}
+        src={canPreviewCurrentData?.src}
         icons={icons}
         getContainer={getContainer}
         countRender={countRender}

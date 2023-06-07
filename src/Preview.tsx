@@ -12,6 +12,7 @@ import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 import { context } from './PreviewGroup';
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+  imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
   alt?: string;
@@ -45,6 +46,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    imgCommonProps,
     ...restProps
   } = props;
 
@@ -56,11 +58,10 @@ const Preview: React.FC<PreviewProps> = props => {
     transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
-  const { previewUrls, current, isPreviewGroup, setCurrent } = useContext(context);
-  const previewGroupCount = previewUrls.size;
-  const previewUrlsKeys = Array.from(previewUrls.keys());
-  const currentPreviewIndex = previewUrlsKeys.indexOf(current);
-  const combinationSrc = isPreviewGroup ? previewUrls.get(current) : src;
+  const { previewData, current, isPreviewGroup, setCurrent } = useContext(context);
+  const previewGroupCount = previewData.size;
+  const previewDataKeys = Array.from(previewData.keys());
+  const currentPreviewIndex = previewDataKeys.indexOf(current);
   const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } =
@@ -112,7 +113,7 @@ const Preview: React.FC<PreviewProps> = props => {
     if (currentPreviewIndex > 0) {
       setEnableTransition(false);
       resetTransform();
-      setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
+      setCurrent(previewDataKeys[currentPreviewIndex - 1]);
     }
   };
 
@@ -122,7 +123,7 @@ const Preview: React.FC<PreviewProps> = props => {
     if (currentPreviewIndex < previewGroupCount - 1) {
       setEnableTransition(false);
       resetTransform();
-      setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
+      setCurrent(previewDataKeys[currentPreviewIndex + 1]);
     }
   };
 
@@ -199,18 +200,18 @@ const Preview: React.FC<PreviewProps> = props => {
 
       if (event.keyCode === KeyCode.LEFT) {
         if (currentPreviewIndex > 0) {
-          setCurrent(previewUrlsKeys[currentPreviewIndex - 1]);
+          setCurrent(previewDataKeys[currentPreviewIndex - 1]);
         }
       } else if (event.keyCode === KeyCode.RIGHT) {
         if (currentPreviewIndex < previewGroupCount - 1) {
-          setCurrent(previewUrlsKeys[currentPreviewIndex + 1]);
+          setCurrent(previewDataKeys[currentPreviewIndex + 1]);
         }
       }
     },
     [
       currentPreviewIndex,
       previewGroupCount,
-      previewUrlsKeys,
+      previewDataKeys,
       setCurrent,
       showLeftOrRightSwitches,
       visible,
@@ -276,6 +277,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <div className={`${prefixCls}-img-wrapper`}>
           <img
+            {...imgCommonProps}
             width={props.width}
             height={props.height}
             onWheel={onWheel}
@@ -283,7 +285,7 @@ const Preview: React.FC<PreviewProps> = props => {
             onDoubleClick={onDoubleClick}
             ref={imgRef}
             className={`${prefixCls}-img`}
-            src={combinationSrc}
+            src={src}
             alt={alt}
             style={{
               transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
