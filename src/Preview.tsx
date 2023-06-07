@@ -6,7 +6,7 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
-import type { TransformType } from './hooks/useImageTransform';
+import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
@@ -55,7 +55,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
   onClose?: (e: React.SyntheticEvent<Element>) => void;
-  onTransform?: (transform: TransformType) => void;
+  onTransform?: (transform: TransformType, action: TransformAction) => void;
   toolbarRender?: (params: toolbarRenderType) => React.ReactNode;
 }
 
