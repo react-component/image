@@ -11,6 +11,30 @@ import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 import { context } from './PreviewGroup';
 
+export type toolbarRenderType = {
+  originalNode: React.ReactNode;
+  icons: {
+    flipYIcon: React.ReactNode;
+    flipXIcon: React.ReactNode;
+    rotateLeftIcon: React.ReactNode;
+    rotateRightIcon: React.ReactNode;
+    zoomOutIcon: React.ReactNode;
+    zoomInIcon: React.ReactNode;
+    closeIcon: React.ReactNode;
+  };
+  actions: {
+    flipY: () => void;
+    flipX: () => void;
+    rotateLeft: () => void;
+    rotateRight: () => void;
+    zoomOut: () => void;
+    zoomIn: () => void;
+    close: () => void;
+  };
+  current: number;
+  total: number;
+}
+
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: (e: React.SyntheticEvent<Element>) => void;
   src?: string;
@@ -29,6 +53,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  toolbarRender?: (params: toolbarRenderType) => React.ReactNode;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -45,6 +70,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    toolbarRender,
     ...restProps
   } = props;
 
@@ -87,7 +113,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onZoomOut = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO - scaleStep);
+    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep));
   };
 
   const onRotateRight = () => {
@@ -306,7 +332,7 @@ const Preview: React.FC<PreviewProps> = props => {
         showProgress={showOperationsProgress}
         current={currentPreviewIndex}
         count={previewGroupCount}
-        scale={scale}
+        toolbarRender={toolbarRender}
         onSwitchLeft={onSwitchLeft}
         onSwitchRight={onSwitchRight}
         onZoomIn={onZoomIn}
