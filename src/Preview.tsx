@@ -6,7 +6,7 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
-import type { TransformType } from './hooks/useImageTransform';
+import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
@@ -55,7 +55,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
   onClose?: (e: React.SyntheticEvent<Element>) => void;
-  onTransform?: (transform: TransformType) => void;
+  onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
   toolbarRender?: (params: toolbarRenderType) => React.ReactNode;
 }
 
@@ -111,31 +111,31 @@ const Preview: React.FC<PreviewProps> = props => {
   }, [enableTransition]);
 
   const onAfterClose = () => {
-    resetTransform();
+    resetTransform('close');
   };
 
   const onZoomIn = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO + scaleStep);
+    dispatchZoomChange(BASE_SCALE_RATIO + scaleStep, 'zoomIn');
   };
 
   const onZoomOut = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep));
+    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep), 'zoomOut');
   };
 
   const onRotateRight = () => {
-    updateTransform({ rotate: rotate + 90 });
+    updateTransform({ rotate: rotate + 90 }, 'rotateRight');
   };
 
   const onRotateLeft = () => {
-    updateTransform({ rotate: rotate - 90 });
+    updateTransform({ rotate: rotate - 90 }, 'rotateLeft');
   };
 
   const onFlipX = () => {
-    updateTransform({ flipX: !transform.flipX });
+    updateTransform({ flipX: !transform.flipX }, 'flipX');
   };
 
   const onFlipY = () => {
-    updateTransform({ flipY: !transform.flipY });
+    updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
   const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
@@ -143,7 +143,7 @@ const Preview: React.FC<PreviewProps> = props => {
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
       setEnableTransition(false);
-      resetTransform();
+      resetTransform('switch');
       setCurrent(previewDataKeys[currentPreviewIndex - 1]);
     }
   };
@@ -153,7 +153,7 @@ const Preview: React.FC<PreviewProps> = props => {
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
       setEnableTransition(false);
-      resetTransform();
+      resetTransform('switch');
       setCurrent(previewDataKeys[currentPreviewIndex + 1]);
     }
   };
@@ -161,7 +161,6 @@ const Preview: React.FC<PreviewProps> = props => {
   const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
     if (visible && isMoving) {
       setMoving(false);
-
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
       const { transformX, transformY } = downPositionRef.current;
       const hasChangedPosition = transform.x !== transformX && transform.y !== transformY;
@@ -183,7 +182,7 @@ const Preview: React.FC<PreviewProps> = props => {
       );
 
       if (fixState) {
-        updateTransform({ ...fixState });
+        updateTransform({ ...fixState }, 'dragRebound');
       }
     }
   };
@@ -204,10 +203,13 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isMoving) {
-      updateTransform({
-        x: event.pageX - downPositionRef.current.deltaX,
-        y: event.pageY - downPositionRef.current.deltaY,
-      });
+      updateTransform(
+        {
+          x: event.pageX - downPositionRef.current.deltaX,
+          y: event.pageY - downPositionRef.current.deltaY,
+        },
+        'move',
+      );
     }
   };
 
@@ -222,7 +224,7 @@ const Preview: React.FC<PreviewProps> = props => {
     if (event.deltaY > 0) {
       ratio = BASE_SCALE_RATIO / ratio;
     }
-    dispatchZoomChange(ratio, event.clientX, event.clientY);
+    dispatchZoomChange(ratio, 'wheel', event.clientX, event.clientY);
   };
 
   const onKeyDown = useCallback(
@@ -252,9 +254,14 @@ const Preview: React.FC<PreviewProps> = props => {
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (visible) {
       if (scale !== 1) {
-        updateTransform({ x: 0, y: 0, scale: 1 });
+        updateTransform({ x: 0, y: 0, scale: 1 }, 'doubleClick');
       } else {
-        dispatchZoomChange(BASE_SCALE_RATIO + scaleStep, event.clientX, event.clientY);
+        dispatchZoomChange(
+          BASE_SCALE_RATIO + scaleStep,
+          'doubleClick',
+          event.clientX,
+          event.clientY,
+        );
       }
     }
   };
