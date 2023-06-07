@@ -65,12 +65,44 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| { visible: boolean, scaleStep: number, onVisibleChange: function(value, prevValue), getContainer: string \| HTMLElement \| (() => HTMLElement) \| false } | true | Whether to show preview |
+| preview | boolean \| [PreviewType](#PreviewType) | true | Whether to show preview |
 | prefixCls | string | rc-image | Classname prefix |
 | placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
 | fallback | string | - | Load failed src |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 | onError | (event: Event) => void | - | Load failed callback |
+
+### PreviewType
+
+```typescript
+{
+  visible?: boolean;
+  scaleStep?: number;
+  onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
+  getContainer?: string | HTMLElement | (() => HTMLElement) | false;
+  toolbarRender?: (params: {
+    originalNode: React.ReactNode;
+    icons: {
+      flipYIcon: React.ReactNode;
+      flipXIcon: React.ReactNode;
+      rotateLeftIcon: React.ReactNode;
+      rotateRightIcon: React.ReactNode;
+      zoomOutIcon: React.ReactNode;
+      zoomInIcon: React.ReactNode;
+      closeIcon: React.ReactNode;
+    };
+    actions: {
+      flipY: () => void;
+      flipX: () => void;
+      rotateLeft: () => void;
+      rotateRight: () => void;
+      zoomOut: () => void;
+      zoomIn: () => void;
+      close: () => void;
+    };
+  }) => React.ReactNode }
+}
+```
 
 ## Image.PreviewGroup
 
@@ -91,11 +123,11 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| preview | boolean \| [PreviewType](#PreviewType) | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
+| preview | boolean \| [PreviewGroupType](#PreviewGroupType) | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 | icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
 
-### PreviewType
+### PreviewGroupType
 
 ```typescript
 { 
@@ -125,8 +157,8 @@ export default () => (
       zoomIn: () => void;
       close: () => void;
     };
-    current?: number;
-    total?: number;
+    current: number;
+    total: number;
   }) => React.ReactNode }
 ```
 
