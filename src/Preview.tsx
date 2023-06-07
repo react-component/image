@@ -131,11 +131,11 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onFlipX = () => {
-    updateTransform({ flipX: !transform.flipX }, 'flipY');
+    updateTransform({ flipX: !transform.flipX }, 'flipX');
   };
 
   const onFlipY = () => {
-    updateTransform({ flipY: !transform.flipY }, 'flipX');
+    updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
   const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {

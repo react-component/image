@@ -832,13 +832,16 @@ describe('Preview', () => {
     });
 
     expect(onTransform).toBeCalledTimes(1);
-    expect(onTransform).toBeCalledWith({
-      flipX: false,
-      flipY: true,
-      rotate: 0,
-      scale: 1,
-      x: 0,
-      y: 0,
-    });
+    expect(onTransform).toBeCalledWith(
+      {
+        flipY: true,
+        flipX: false,
+        rotate: 0,
+        scale: 1,
+        x: 0,
+        y: 0,
+      },
+      'flipY',
+    );
   });
 });
