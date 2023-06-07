@@ -752,4 +752,20 @@ describe('Preview', () => {
       'rc-image-preview-switch-left-disabled',
     );
   });
+
+  it('pass img common props to previewed image', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        referrerPolicy='no-referrer'
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('referrerPolicy', 'no-referrer');
+  });
 });
