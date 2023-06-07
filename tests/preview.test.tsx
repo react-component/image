@@ -125,7 +125,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
     act(() => {
       jest.runAllTimers();
     });
@@ -144,7 +144,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -152,7 +152,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -160,7 +160,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -168,7 +168,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -187,15 +187,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -203,7 +195,23 @@ describe('Preview', () => {
       transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -260,7 +268,15 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(256px, 192px, 0) scale3d(0.5, 0.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -268,15 +284,15 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(-512px, -384px, 0) scale3d(2, 2, 1) rotate(0deg)',
+      transform: 'translate3d(256px, 192px, 0) scale3d(0.5, 0.5, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -316,7 +332,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -782,5 +798,28 @@ describe('Preview', () => {
       x: 0,
       y: 0,
     });
+  });
+
+  it('toolbarRender', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          toolbarRender: ({ icons }) => (
+            <>
+              {icons.flipYIcon}
+              {icons.flipXIcon}
+            </>
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
   });
 });

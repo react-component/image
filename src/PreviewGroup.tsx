@@ -6,7 +6,7 @@ import type { PreviewProps } from './Preview';
 import Preview from './Preview';
 
 export interface PreviewGroupPreview
-  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName'> {
+  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName' | 'toolbarRender'> {
   /**
    * If Preview the show img index
    * @default 0
@@ -14,6 +14,7 @@ export interface PreviewGroupPreview
   current?: number;
   countRender?: (current: number, total: number) => string;
   onChange?: (current: number, prevCurrent: number) => void;
+  toolbarRender?: PreviewProps['toolbarRender'];
 }
 
 export interface GroupConsumerProps {
@@ -75,6 +76,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     countRender = undefined,
     onChange = undefined,
     onTransform = undefined,
+    toolbarRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewUrls, setPreviewUrls] = useState<Map<number, PreviewUrl>>(new Map());
@@ -166,6 +168,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         getContainer={getContainer}
         countRender={countRender}
         onTransform={onTransform}
+        toolbarRender={toolbarRender}
         {...dialogProps}
       />
     </Provider>
