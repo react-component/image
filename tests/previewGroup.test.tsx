@@ -216,4 +216,27 @@ describe('PreviewGroup', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
   });
+
+  it('pass img common props to previewed image', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" referrerPolicy='no-referrer' />
+        <Image src="src2" referrerPolicy='origin' />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('referrerPolicy', 'no-referrer');
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('referrerPolicy', 'origin');
+  });
 });

@@ -768,6 +768,48 @@ describe('Preview', () => {
     );
   });
 
+  it('pass img common props to previewed image', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        referrerPolicy="no-referrer"
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'referrerPolicy',
+      'no-referrer',
+    );
+  });
+
+  it('toolbarRender', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          toolbarRender: ({ icons }) => (
+            <>
+              {icons.flipYIcon}
+              {icons.flipXIcon}
+            </>
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
+  });
+
   it('onTransform should be triggered when transform change', () => {
     const onTransform = jest.fn();
     const { container } = render(
@@ -798,28 +840,5 @@ describe('Preview', () => {
       x: 0,
       y: 0,
     });
-  });
-
-  it('toolbarRender', () => {
-    const { container } = render(
-      <Image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        preview={{
-          toolbarRender: ({ icons }) => (
-            <>
-              {icons.flipYIcon}
-              {icons.flipXIcon}
-            </>
-          ),
-        }}
-      />,
-    );
-
-    fireEvent.click(container.querySelector('.rc-image'));
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
   });
 });
