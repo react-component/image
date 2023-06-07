@@ -1,9 +1,9 @@
-import * as React from 'react';
+import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
-import Portal from '@rc-component/portal';
-import { MIN_SCALE, MAX_SCALE } from './previewConfig';
+import * as React from 'react';
 import type { PreviewProps } from './Preview';
+import { context } from './PreviewGroup';
 
 interface OperationsProps
   extends Pick<
@@ -16,12 +16,12 @@ interface OperationsProps
     | 'icons'
     | 'countRender'
     | 'onClose'
+    | 'toolbarRender'
   > {
   showSwitch: boolean;
   showProgress: boolean;
   current: number;
   count: number;
-  scale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
   onZoomIn: () => void;
@@ -32,7 +32,7 @@ interface OperationsProps
   onFlipY: () => void;
 }
 
-const Operations: React.FC<OperationsProps> = (props) => {
+const Operations: React.FC<OperationsProps> = props => {
   const {
     visible,
     maskTransitionName,
@@ -45,7 +45,6 @@ const Operations: React.FC<OperationsProps> = (props) => {
     showProgress,
     current,
     count,
-    scale,
     onSwitchLeft,
     onSwitchRight,
     onClose,
@@ -54,38 +53,18 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onRotateRight,
     onRotateLeft,
     onFlipX,
-    onFlipY
+    onFlipY,
+    toolbarRender,
   } = props;
+  const { isPreviewGroup } = React.useContext(context);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
   const tools = [
     {
-      icon: close,
-      onClick: onClose,
-      type: 'close',
-    },
-    {
-      icon: zoomIn,
-      onClick: onZoomIn,
-      type: 'zoomIn',
-      disabled: scale === MAX_SCALE,
-    },
-    {
-      icon: zoomOut,
-      onClick: onZoomOut,
-      type: 'zoomOut',
-      disabled: scale === MIN_SCALE,
-    },
-    {
-      icon: rotateRight,
-      onClick: onRotateRight,
-      type: 'rotateRight',
-    },
-    {
-      icon: rotateLeft,
-      onClick: onRotateLeft,
-      type: 'rotateLeft',
+      icon: flipY,
+      onClick: onFlipY,
+      type: 'flipY',
     },
     {
       icon: flipX,
@@ -93,11 +72,56 @@ const Operations: React.FC<OperationsProps> = (props) => {
       type: 'flipX',
     },
     {
-      icon: flipY,
-      onClick: onFlipY,
-      type: 'flipY',
+      icon: rotateLeft,
+      onClick: onRotateLeft,
+      type: 'rotateLeft',
+    },
+    {
+      icon: rotateRight,
+      onClick: onRotateRight,
+      type: 'rotateRight',
+    },
+    {
+      icon: zoomOut,
+      onClick: onZoomOut,
+      type: 'zoomOut',
+    },
+    {
+      icon: zoomIn,
+      onClick: onZoomIn,
+      type: 'zoomIn',
+    },
+    {
+      icon: close,
+      onClick: onClose,
+      type: 'close',
     },
   ];
+
+  const toolsNode = tools.map(({ icon, onClick, type }) => (
+    <li
+      className={classnames(toolClassName, {
+        [`${prefixCls}-operations-operation-${type}`]: true,
+      })}
+      onClick={onClick}
+      key={type}
+    >
+      {React.isValidElement(icon)
+        ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
+        : icon}
+    </li>
+  ));
+
+  const toolbar = (
+    <ul className={`${prefixCls}-operations`}>
+      {showProgress && (
+        <li className={`${prefixCls}-operations-progress`}>
+          {countRender?.(current + 1, count) ?? `${current + 1} / ${count}`}
+        </li>
+      )}
+      {toolsNode}
+    </ul>
+  );
 
   const operations = (
     <>
@@ -121,28 +145,35 @@ const Operations: React.FC<OperationsProps> = (props) => {
           </div>
         </>
       )}
-      <ul className={`${prefixCls}-operations`}>
-        {showProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(current + 1, count) ??
-              `${current + 1} / ${count}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-${type}`]: true,
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
-          >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
+      {toolbarRender
+        ? toolbarRender({
+            originalNode: toolbar,
+            icons: {
+              flipYIcon: toolsNode[0],
+              flipXIcon: toolsNode[1],
+              rotateLeftIcon: toolsNode[2],
+              rotateRightIcon: toolsNode[3],
+              zoomOutIcon: toolsNode[4],
+              zoomInIcon: toolsNode[5],
+              closeIcon: toolsNode[6],
+            },
+            actions: {
+              flipY: onFlipY,
+              flipX: onFlipX,
+              rotateLeft: onRotateLeft,
+              rotateRight: onRotateRight,
+              zoomOut: onZoomOut,
+              zoomIn: onZoomIn,
+              close: onClose,
+            },
+            ...((isPreviewGroup
+              ? {
+                  current: current + 1,
+                  total: count,
+                }
+              : {}) as any),
+          })
+        : toolbar}
     </>
   );
 

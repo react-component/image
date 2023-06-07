@@ -5,7 +5,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useState } from 'react';
-import type { PreviewProps } from './Preview';
+import type { PreviewProps, toolbarRenderType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 
@@ -22,6 +22,7 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  toolbarRender?: (params: Omit<toolbarRenderType, 'current' | 'total'>) => React.ReactNode;
 }
 
 let uuid = 0;
@@ -101,6 +102,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
+    toolbarRender,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -292,6 +294,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           scaleStep={scaleStep}
           rootClassName={rootClassName}
           imgCommonProps={imgCommonProps}
+          toolbarRender={toolbarRender}
           {...dialogProps}
         />
       )}
