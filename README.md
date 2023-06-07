@@ -79,7 +79,10 @@ export default () => (
   visible?: boolean;
   scaleStep?: number;
   onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
-  onTransform: (transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean }) => void }
+  onTransform: (
+    transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean },
+    action: 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomIn' | 'zoomOut' | 'close' | 'switch' | 'wheel' | 'doubleClick' | 'move' | 'dragRebound'
+  ) => void;
   getContainer?: string | HTMLElement | (() => HTMLElement) | false;
   toolbarRender?: (params: {
     originalNode: React.ReactNode;
@@ -135,7 +138,10 @@ export default () => (
   visible?: boolean;
   scaleStep?: number;
   onVisibleChange?: (visible, prevVisible, current: number) => void;
-  onTransform: (transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean }) => void }
+  onTransform: (
+    transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean },
+    action: 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomIn' | 'zoomOut' | 'close' | 'switch' | 'wheel' | 'doubleClick' | 'move' | 'dragRebound'
+  ) => void;
   getContainer?: string | HTMLElement | (() => HTMLElement) | false;
   countRender?: (current: number, total: number) => string;
   current?: number;

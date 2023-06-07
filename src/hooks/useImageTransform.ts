@@ -13,6 +13,20 @@ export type TransformType = {
   flipY: boolean;
 };
 
+export type TransformAction =
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'close'
+  | 'switch'
+  | 'wheel'
+  | 'doubleClick'
+  | 'move'
+  | 'dragRebound';
+
 const initialTransform = {
   x: 0,
   y: 0,
@@ -24,21 +38,21 @@ const initialTransform = {
 
 export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
-  onTransform: (transform: TransformType) => void,
+  onTransform: (transform: TransformType, action: TransformAction) => void,
 ) {
   const frame = useRef(null);
   const queue = useRef<TransformType[]>([]);
   const [transform, setTransform] = useState(initialTransform);
 
-  const resetTransform = () => {
+  const resetTransform = (action: TransformAction) => {
     setTransform(initialTransform);
     if (onTransform && !isEqual(initialTransform, transform)) {
-      onTransform(initialTransform);
+      onTransform(initialTransform, action);
     }
   };
 
   /** Direct update transform */
-  const updateTransform = (newTransform: Partial<TransformType>) => {
+  const updateTransform = (newTransform: Partial<TransformType>, action: TransformAction) => {
     if (frame.current === null) {
       queue.current = [];
       frame.current = raf(() => {
@@ -49,7 +63,7 @@ export default function useImageTransform(
           });
           frame.current = null;
 
-          onTransform?.(memoState);
+          onTransform?.(memoState, action);
           return memoState;
         });
       });
@@ -61,7 +75,12 @@ export default function useImageTransform(
   };
 
   /** Scale according to the position of clientX and clientY */
-  const dispatchZoomChange = (ratio: number, clientX?: number, clientY?: number) => {
+  const dispatchZoomChange = (
+    ratio: number,
+    action: TransformAction,
+    clientX?: number,
+    clientY?: number,
+  ) => {
     const { width, height, offsetWidth, offsetHeight, offsetLeft, offsetTop } = imgRef.current;
 
     let newRatio = ratio;
@@ -103,11 +122,14 @@ export default function useImageTransform(
       }
     }
 
-    updateTransform({
-      x: newX,
-      y: newY,
-      scale: newScale,
-    });
+    updateTransform(
+      {
+        x: newX,
+        y: newY,
+        scale: newScale,
+      },
+      action,
+    );
   };
 
   return {
