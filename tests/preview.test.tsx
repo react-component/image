@@ -784,7 +784,7 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
     act(() => {
       jest.runAllTimers();
     });
