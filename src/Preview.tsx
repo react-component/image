@@ -12,7 +12,7 @@ import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 import { context } from './PreviewGroup';
 
-export type toolbarRenderType = {
+export type ToolbarRenderType = {
   originalNode: React.ReactNode;
   icons: {
     flipYIcon: React.ReactNode;
@@ -54,9 +54,14 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
-  onClose?: (e: React.SyntheticEvent<Element>) => void;
+  imageRender?: (params: {
+    originalNode: React.ReactNode;
+    transform: TransformType;
+    current?: number;
+  }) => React.ReactNode;
+  onClose?: () => void;
   onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
-  toolbarRender?: (params: toolbarRenderType) => React.ReactNode;
+  toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -73,6 +78,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
+    imageRender,
     imgCommonProps,
     toolbarRender,
     onTransform,
@@ -297,6 +303,27 @@ const Preview: React.FC<PreviewProps> = props => {
     };
   }, [visible, isMoving, onKeyDown]);
 
+  const imgNode = (
+    <img
+      {...imgCommonProps}
+      width={props.width}
+      height={props.height}
+      onWheel={onWheel}
+      onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
+      ref={imgRef}
+      className={`${prefixCls}-img`}
+      src={src}
+      alt={alt}
+      style={{
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
+          transform.flipX ? '-' : ''
+        }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+        transitionDuration: !enableTransition && '0s',
+      }}
+    />
+  );
+
   return (
     <>
       <Dialog
@@ -314,24 +341,13 @@ const Preview: React.FC<PreviewProps> = props => {
         afterClose={onAfterClose}
       >
         <div className={`${prefixCls}-img-wrapper`}>
-          <img
-            {...imgCommonProps}
-            width={props.width}
-            height={props.height}
-            onWheel={onWheel}
-            onMouseDown={onMouseDown}
-            onDoubleClick={onDoubleClick}
-            ref={imgRef}
-            className={`${prefixCls}-img`}
-            src={src}
-            alt={alt}
-            style={{
-              transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
-                transform.flipX ? '-' : ''
-              }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
-              transitionDuration: !enableTransition && '0s',
-            }}
-          />
+          {imageRender
+            ? imageRender({
+                originalNode: imgNode,
+                transform,
+                ...(isPreviewGroup ? { current: currentPreviewIndex } : {}),
+              })
+            : imgNode}
         </div>
       </Dialog>
       <Operations

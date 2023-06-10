@@ -74,39 +74,16 @@ export default () => (
 
 ### PreviewType
 
-```typescript
-{
-  visible?: boolean;
-  scaleStep?: number;
-  onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
-  onTransform: (params: {
-    transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean },
-    action: 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomIn' | 'zoomOut' | 'close' | 'switch' | 'wheel' | 'doubleClick' | 'move' | 'dragRebound'
-  )} => void;
-  getContainer?: string | HTMLElement | (() => HTMLElement) | false;
-  toolbarRender?: (params: {
-    originalNode: React.ReactNode;
-    icons: {
-      flipYIcon: React.ReactNode;
-      flipXIcon: React.ReactNode;
-      rotateLeftIcon: React.ReactNode;
-      rotateRightIcon: React.ReactNode;
-      zoomOutIcon: React.ReactNode;
-      zoomInIcon: React.ReactNode;
-      closeIcon: React.ReactNode;
-    };
-    actions: {
-      flipY: () => void;
-      flipX: () => void;
-      rotateLeft: () => void;
-      rotateRight: () => void;
-      zoomOut: () => void;
-      zoomIn: () => void;
-      close: () => void;
-    };
-  }) => React.ReactNode }
-}
-```
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| visible | boolean | - | Whether the preview is open or not |
+| scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
+| forceRender | boolean | - | Force render preview |
+| getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
+| imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType) } => React.ReactNode | - | Customize image |
+| toolbarRender | (params: Omit<[ToolbarRenderType](#ToolbarRenderType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
+| onVisibleChange | (visible: boolean, prevVisible: boolean) => void | - | Callback when visible is changed |
+| onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
 ## Image.PreviewGroup
 
@@ -133,41 +110,76 @@ export default () => (
 
 ### PreviewGroupType
 
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| visible | boolean | - | Whether the preview is open or not |
+| current | number | - | current index |
+| scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
+| forceRender | boolean | - | Force render preview |
+| getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
+| countRender | (current: number, total: number) => string | - | Customize count |
+| imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType), current: number } => React.ReactNode | - | Customize image |
+| toolbarRender | (params: [ToolbarRenderType](#ToolbarRenderType)) => React.ReactNode | - | Customize toolbar |
+| onVisibleChange | (visible: boolean, prevVisible: boolean, current: number) => void | - | Callback when visible is changed |
+| onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
+
+### TransformType
+
 ```typescript
 {
-  visible?: boolean;
-  scaleStep?: number;
-  onVisibleChange?: (visible, prevVisible, current: number) => void;
-  onTransform: (params: {
-    transform: { x: number, y: number, rotate: number, scale: number, flipX: boolean, flipY: boolean },
-    action: 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomIn' | 'zoomOut' | 'close' | 'switch' | 'wheel' | 'doubleClick' | 'move' | 'dragRebound'
-  )} => void;
-  getContainer?: string | HTMLElement | (() => HTMLElement) | false;
-  countRender?: (current: number, total: number) => string;
-  current?: number;
-  toolbarRender?: (params: {
-    originalNode: React.ReactNode;
-    icons: {
-      flipYIcon: React.ReactNode;
-      flipXIcon: React.ReactNode;
-      rotateLeftIcon: React.ReactNode;
-      rotateRightIcon: React.ReactNode;
-      zoomOutIcon: React.ReactNode;
-      zoomInIcon: React.ReactNode;
-      closeIcon: React.ReactNode;
-    };
-    actions: {
-      flipY: () => void;
-      flipX: () => void;
-      rotateLeft: () => void;
-      rotateRight: () => void;
-      zoomOut: () => void;
-      zoomIn: () => void;
-      close: () => void;
-    };
-    current: number;
-    total: number;
-  }) => React.ReactNode }
+  x: number;
+  y: number;
+  rotate: number;
+  scale: number;
+  flipX: boolean;
+  flipY: boolean;
+}
+```
+
+### TransformAction
+
+```typescript
+type TransformAction =
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'close'
+  | 'switch'
+  | 'wheel'
+  | 'doubleClick'
+  | 'move'
+  | 'dragRebound';
+```
+
+### ToolbarRenderType
+
+```typescript
+{
+  originalNode: React.ReactNode;
+  icons: {
+    flipYIcon: React.ReactNode;
+    flipXIcon: React.ReactNode;
+    rotateLeftIcon: React.ReactNode;
+    rotateRightIcon: React.ReactNode;
+    zoomOutIcon: React.ReactNode;
+    zoomInIcon: React.ReactNode;
+    closeIcon: React.ReactNode;
+  };
+  actions: {
+    flipY: () => void;
+    flipX: () => void;
+    rotateLeft: () => void;
+    rotateRight: () => void;
+    zoomOut: () => void;
+    zoomIn: () => void;
+    close: () => void;
+  };
+  current: number;
+  total: number;
+}
 ```
 
 ## Example
