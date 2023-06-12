@@ -2,7 +2,7 @@ import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
-import type { PreviewProps } from './Preview';
+import type { PreviewProps, ToolbarRenderType } from './Preview';
 import { context } from './PreviewGroup';
 
 interface OperationsProps
@@ -16,7 +16,6 @@ interface OperationsProps
     | 'icons'
     | 'countRender'
     | 'onClose'
-    | 'toolbarRender'
   > {
   showSwitch: boolean;
   showProgress: boolean;
@@ -30,6 +29,9 @@ interface OperationsProps
   onRotateLeft: () => void;
   onFlipX: () => void;
   onFlipY: () => void;
+  toolbarRender: (
+    params: ToolbarRenderType | Omit<ToolbarRenderType, 'current' | 'total'>,
+  ) => React.ReactNode;
 }
 
 const Operations: React.FC<OperationsProps> = props => {
@@ -166,12 +168,7 @@ const Operations: React.FC<OperationsProps> = props => {
               zoomIn: onZoomIn,
               close: onClose,
             },
-            ...((isPreviewGroup
-              ? {
-                  current: current + 1,
-                  total: count,
-                }
-              : {}) as any),
+            ...(isPreviewGroup ? { current, total: count } : {}),
           })
         : toolbar}
     </>

@@ -220,8 +220,8 @@ describe('PreviewGroup', () => {
   it('pass img common props to previewed image', () => {
     const { container } = render(
       <Image.PreviewGroup>
-        <Image src="src1" referrerPolicy='no-referrer' />
-        <Image src="src2" referrerPolicy='origin' />
+        <Image src="src1" referrerPolicy="no-referrer" />
+        <Image src="src2" referrerPolicy="origin" />
       </Image.PreviewGroup>,
     );
 
@@ -230,13 +230,19 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('referrerPolicy', 'no-referrer');
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'referrerPolicy',
+      'no-referrer',
+    );
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('referrerPolicy', 'origin');
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'referrerPolicy',
+      'origin',
+    );
   });
 });

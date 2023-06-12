@@ -67,6 +67,9 @@
     &-body {
       .box;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     &.zoom-enter,
@@ -101,14 +104,7 @@
       max-height: 100%;
       pointer-events: auto;
       &-wrapper {
-        .box;
-        &::before {
-          content: '';
-          display: inline-block;
-          height: 50%;
-          width: 1px;
-          margin-right: -1px;
-        }
+        pointer-events: auto;
       }
     }
 

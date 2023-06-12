@@ -5,7 +5,8 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useState } from 'react';
-import type { PreviewProps, toolbarRenderType } from './Preview';
+import type { TransformType } from './hooks/useImageTransform';
+import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
 
@@ -16,14 +17,18 @@ export interface ImagePreviewType
   > {
   src?: string;
   visible?: boolean;
-  onVisibleChange?: (value: boolean, prevValue: boolean, currentIndex?: number) => void;
+  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  imageRender?: (params: {
+    originalNode: React.ReactNode;
+    transform: TransformType;
+  }) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
-  toolbarRender?: (params: Omit<toolbarRenderType, 'current' | 'total'>) => React.ReactNode;
+  toolbarRender?: (params: Omit<ToolbarRenderType, 'current' | 'total'>) => React.ReactNode;
 }
 
 let uuid = 0;
@@ -103,6 +108,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
+    imageRender,
     toolbarRender,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
@@ -173,8 +179,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     onClick?.(e);
   };
 
-  const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
-    e.stopPropagation();
+  const onPreviewClose = () => {
     setShowPreview(false);
     if (!isControlled) {
       setMousePosition(null);
@@ -294,6 +299,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           icons={icons}
           scaleStep={scaleStep}
           rootClassName={rootClassName}
+          imageRender={imageRender}
           imgCommonProps={imgCommonProps}
           toolbarRender={toolbarRender}
           {...dialogProps}

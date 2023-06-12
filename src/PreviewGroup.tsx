@@ -1,20 +1,30 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
+import type { TransformType } from './hooks/useImageTransform';
 import type { ImagePreviewType } from './Image';
-import type { PreviewProps } from './Preview';
+import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 
 export interface PreviewGroupPreview
-  extends Omit<ImagePreviewType, 'icons' | 'mask' | 'maskClassName' | 'toolbarRender'> {
+  extends Omit<
+    ImagePreviewType,
+    'icons' | 'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
+  > {
   /**
    * If Preview the show img index
    * @default 0
    */
   current?: number;
   countRender?: (current: number, total: number) => string;
+  toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
+  imageRender?: (params: {
+    originalNode: React.ReactNode;
+    transform: TransformType;
+    current: number;
+  }) => React.ReactNode;
+  onVisibleChange?: (value: boolean, prevValue: boolean, currentIndex: number) => void;
   onChange?: (current: number, prevCurrent: number) => void;
-  toolbarRender?: PreviewProps['toolbarRender'];
 }
 
 export interface GroupConsumerProps {
@@ -78,6 +88,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     onChange = undefined,
     onTransform = undefined,
     toolbarRender = undefined,
+    imageRender = undefined,
     ...dialogProps
   } = typeof preview === 'object' ? preview : {};
   const [previewData, setPreviewData] = useState<Map<number, PreviewData>>(new Map());
@@ -123,8 +134,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     return unRegister;
   };
 
-  const onPreviewClose = (e: React.SyntheticEvent<Element>) => {
-    e.stopPropagation();
+  const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
   };
@@ -168,6 +178,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         countRender={countRender}
         onTransform={onTransform}
         toolbarRender={toolbarRender}
+        imageRender={imageRender}
         {...dialogProps}
       />
     </Provider>

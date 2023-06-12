@@ -844,4 +844,28 @@ describe('Preview', () => {
       action: 'flipY',
     });
   });
+
+  it('imageRender', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          imageRender: () => (
+            <video
+              width="100%"
+              controls
+              src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*uYT7SZwhJnUAAAAAAAAAAAAADgCCAQ"
+            />
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('video')).toBeTruthy();
+  });
 });
