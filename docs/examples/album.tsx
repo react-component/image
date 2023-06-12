@@ -7,8 +7,7 @@ export default function PreviewGroup() {
       <Image.PreviewGroup>
         <Image src={require('./images/1.jpeg')} />
         <Image preview={{ showOnlyInPreview: true }} src={require('./images/2.jpeg')} />
-        <Image preview={{ showOnlyInPreview: true }} src={require('./images/3.jpeg')} />
-        <Image preview={{ showOnlyInPreview: true }} src="error" alt="error" />
+        <Image src={require('./images/3.jpeg')} />
         <Image preview={{ showOnlyInPreview: true }} src={require('./images/1.jpeg')} />
       </Image.PreviewGroup>
     </div>
