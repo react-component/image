@@ -42,6 +42,7 @@ interface PreviewData {
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
+  showOnlyInPreview?: boolean;
   previewData: Map<number, PreviewData>;
   setPreviewData: React.Dispatch<React.SetStateAction<Map<number, PreviewData>>>;
   current: number;
@@ -82,6 +83,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   const {
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = undefined,
+    showOnlyInPreview = undefined,
     getContainer = undefined,
     current: currentIndex = 0,
     countRender = undefined,
@@ -155,6 +157,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     <Provider
       value={{
         isPreviewGroup: true,
+        showOnlyInPreview,
         previewData: canPreviewData,
         setPreviewData,
         current,

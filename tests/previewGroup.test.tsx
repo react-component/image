@@ -245,4 +245,28 @@ describe('PreviewGroup', () => {
       'origin',
     );
   });
+
+  it('album mode', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" />
+        <Image preview={{ showOnlyInPreview: true }} src="src2" />
+        <Image preview={{ showOnlyInPreview: true }} src="src3" />
+      </Image.PreviewGroup>,
+    );
+
+    expect(container.querySelectorAll('.rc-image')).toHaveLength(1);
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src1');
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
+  });
 });
