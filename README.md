@@ -79,6 +79,7 @@ export default () => (
 | visible | boolean | - | Whether the preview is open or not |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
 | forceRender | boolean | - | Force render preview |
+| showOnlyInPreview | boolean | - | only show image in preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType) } => React.ReactNode | - | Customize image |
 | toolbarRender | (params: Omit<[ToolbarRenderType](#ToolbarRenderType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
@@ -116,6 +117,7 @@ export default () => (
 | current | number | - | current index |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
 | forceRender | boolean | - | Force render preview |
+| showOnlyInPreview | boolean | - | only show image in preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | countRender | (current: number, total: number) => string | - | Customize count |
 | imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType), current: number } => React.ReactNode | - | Customize image |

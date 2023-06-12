@@ -92,6 +92,21 @@ describe('Preview', () => {
     onPreviewCloseMock.mockRestore();
   });
 
+  it('showOnlyInPreview', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          showOnlyInPreview: true,
+          visible: true,
+        }}
+      />,
+    );
+
+    expect(container.querySelector('.rc-image')).toBeFalsy();
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
   it('Unmount', () => {
     const { container, unmount } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,

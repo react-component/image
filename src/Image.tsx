@@ -19,6 +19,7 @@ export interface ImagePreviewType
   visible?: boolean;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
+  showOnlyInPreview?: boolean;
   mask?: React.ReactNode;
   maskClassName?: string;
   icons?: PreviewProps['icons'];
@@ -104,6 +105,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
+    showOnlyInPreview,
     mask: previewMask,
     maskClassName,
     icons,
@@ -123,6 +125,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const isError = status === 'error';
   const {
     isPreviewGroup,
+    showOnlyInPreview: previewGroupOnly,
     setCurrent,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
@@ -236,56 +239,61 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const mergedSrc = isError && fallback ? fallback : src;
 
+  const mergedOnly =
+    isPreviewGroup && showOnlyInPreview === undefined ? previewGroupOnly : showOnlyInPreview;
+
   return (
     <>
-      <div
-        {...otherProps}
-        className={wrapperClass}
-        onClick={canPreview ? onPreview : onClick}
-        style={{
-          width,
-          height,
-          ...wrapperStyle,
-        }}
-      >
-        <img
-          {...imgCommonProps}
-          className={cn(
-            `${prefixCls}-img`,
-            {
-              [`${prefixCls}-img-placeholder`]: placeholder === true,
-            },
-            className,
-          )}
+      {!mergedOnly && (
+        <div
+          {...otherProps}
+          className={wrapperClass}
+          onClick={canPreview ? onPreview : onClick}
           style={{
+            width,
             height,
-            ...style,
+            ...wrapperStyle,
           }}
-          ref={getImgRef}
-          {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
-          width={width}
-          height={height}
-          onError={onError}
-        />
-
-        {status === 'loading' && (
-          <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
-            {placeholder}
-          </div>
-        )}
-
-        {/* Preview Click Mask */}
-        {previewMask && canPreview && (
-          <div
-            className={cn(`${prefixCls}-mask`, maskClassName)}
+        >
+          <img
+            {...imgCommonProps}
+            className={cn(
+              `${prefixCls}-img`,
+              {
+                [`${prefixCls}-img-placeholder`]: placeholder === true,
+              },
+              className,
+            )}
             style={{
-              display: style?.display === 'none' ? 'none' : undefined,
+              height,
+              ...style,
             }}
-          >
-            {previewMask}
-          </div>
-        )}
-      </div>
+            ref={getImgRef}
+            {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
+            width={width}
+            height={height}
+            onError={onError}
+          />
+
+          {status === 'loading' && (
+            <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+              {placeholder}
+            </div>
+          )}
+
+          {/* Preview Click Mask */}
+          {previewMask && canPreview && (
+            <div
+              className={cn(`${prefixCls}-mask`, maskClassName)}
+              style={{
+                display: style?.display === 'none' ? 'none' : undefined,
+              }}
+            >
+              {previewMask}
+            </div>
+          )}
+        </div>
+      )}
       {!isPreviewGroup && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
