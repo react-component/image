@@ -37,9 +37,9 @@ const initialTransform = {
 
 export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
-  onTransform: (params: { transform: TransformType; action: TransformAction }) => void,
   minScale: number,
   maxScale: number,
+  onTransform: (params: { transform: TransformType; action: TransformAction }) => void,
 ) {
   const frame = useRef(null);
   const queue = useRef<TransformType[]>([]);

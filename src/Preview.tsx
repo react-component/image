@@ -105,9 +105,9 @@ const Preview: React.FC<PreviewProps> = props => {
   const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
     imgRef,
-    onTransform,
     minScale,
     maxScale,
+    onTransform,
   );
   const [enableTransition, setEnableTransition] = useState(true);
   const { rotate, scale } = transform;
