@@ -90,7 +90,7 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
       />
       <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut"
+        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
       />
       <li
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
