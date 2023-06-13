@@ -81,18 +81,20 @@ const Group: React.FC<GroupConsumerProps> = ({
   preview,
 }) => {
   const {
-    visible: previewVisible = undefined,
-    onVisibleChange: onPreviewVisibleChange = undefined,
-    showOnlyInPreview = undefined,
-    getContainer = undefined,
+    visible: previewVisible,
+    onVisibleChange: onPreviewVisibleChange,
+    showOnlyInPreview,
+    getContainer,
     current: currentIndex = 0,
-    countRender = undefined,
-    onChange = undefined,
-    onTransform = undefined,
-    toolbarRender = undefined,
-    imageRender = undefined,
+    minScale,
+    maxScale,
+    countRender,
+    onChange,
+    onTransform,
+    toolbarRender,
+    imageRender,
     ...dialogProps
-  } = typeof preview === 'object' ? preview : {};
+  } = typeof preview === 'object' ? preview : {} as PreviewGroupPreview;
   const [previewData, setPreviewData] = useState<Map<number, PreviewData>>(new Map());
   const previewDataKeys = Array.from(previewData.keys());
   const prevCurrent = React.useRef<number | undefined>();
@@ -177,6 +179,8 @@ const Group: React.FC<GroupConsumerProps> = ({
         imgCommonProps={canPreviewCurrentData?.imgCommonProps}
         src={canPreviewCurrentData?.src}
         icons={icons}
+        minScale={minScale}
+        maxScale={maxScale}
         getContainer={getContainer}
         countRender={countRender}
         onTransform={onTransform}

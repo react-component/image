@@ -2,7 +2,6 @@ import { getClientSize } from 'rc-util/lib/Dom/css';
 import isEqual from 'rc-util/lib/isEqual';
 import raf from 'rc-util/lib/raf';
 import { useRef, useState } from 'react';
-import { MAX_SCALE, MIN_SCALE } from '../previewConfig';
 
 export type TransformType = {
   x: number;
@@ -38,6 +37,8 @@ const initialTransform = {
 
 export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
+  minScale: number,
+  maxScale: number,
   onTransform: (params: { transform: TransformType; action: TransformAction }) => void,
 ) {
   const frame = useRef(null);
@@ -85,12 +86,12 @@ export default function useImageTransform(
 
     let newRatio = ratio;
     let newScale = transform.scale * ratio;
-    if (newScale > MAX_SCALE) {
-      newRatio = MAX_SCALE / transform.scale;
-      newScale = MAX_SCALE;
-    } else if (newScale < MIN_SCALE) {
-      newRatio = MIN_SCALE / transform.scale;
-      newScale = MIN_SCALE;
+    if (newScale > maxScale) {
+      newRatio = maxScale / transform.scale;
+      newScale = maxScale;
+    } else if (newScale < minScale) {
+      newRatio = minScale / transform.scale;
+      newScale = minScale;
     }
 
     /** Default center point scaling */
