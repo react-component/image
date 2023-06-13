@@ -54,6 +54,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
+  minScale?: number;
+  maxScale?: number;
   imageRender?: (params: {
     originalNode: React.ReactNode;
     transform: TransformType;
@@ -76,6 +78,8 @@ const Preview: React.FC<PreviewProps> = props => {
     getContainer,
     countRender,
     scaleStep = 0.5,
+    minScale = 1,
+    maxScale = 50,
     transitionName = 'zoom',
     maskTransitionName = 'fade',
     imageRender,
@@ -102,6 +106,8 @@ const Preview: React.FC<PreviewProps> = props => {
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
     imgRef,
     onTransform,
+    minScale,
+    maxScale,
   );
   const [enableTransition, setEnableTransition] = useState(true);
   const { rotate, scale } = transform;
@@ -362,6 +368,9 @@ const Preview: React.FC<PreviewProps> = props => {
         showProgress={showOperationsProgress}
         current={currentPreviewIndex}
         count={previewGroupCount}
+        scale={scale}
+        minScale={minScale}
+        maxScale={maxScale}
         toolbarRender={toolbarRender}
         onSwitchLeft={onSwitchLeft}
         onSwitchRight={onSwitchRight}

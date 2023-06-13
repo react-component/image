@@ -17,6 +17,8 @@ export interface ImagePreviewType
   > {
   src?: string;
   visible?: boolean;
+  minScale?: number;
+  maxScale?: number;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
   showOnlyInPreview?: boolean;
@@ -110,6 +112,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     maskClassName,
     icons,
     scaleStep,
+    minScale,
+    maxScale,
     imageRender,
     toolbarRender,
     ...dialogProps
@@ -306,6 +310,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
           getContainer={getPreviewContainer}
           icons={icons}
           scaleStep={scaleStep}
+          minScale={minScale}
+          maxScale={maxScale}
           rootClassName={rootClassName}
           imageRender={imageRender}
           imgCommonProps={imgCommonProps}

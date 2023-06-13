@@ -78,6 +78,8 @@ export default () => (
 | --- | --- | --- | --- |
 | visible | boolean | - | Whether the preview is open or not |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
+| minScale | number | 1 | min scale |
+| maxScale | number | 50 | max scale |
 | forceRender | boolean | - | Force render preview |
 | showOnlyInPreview | boolean | - | only show image in preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
@@ -116,6 +118,8 @@ export default () => (
 | visible | boolean | - | Whether the preview is open or not |
 | current | number | - | current index |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
+| minScale | number | 1 | min scale |
+| maxScale | number | 50 | max scale |
 | forceRender | boolean | - | Force render preview |
 | showOnlyInPreview | boolean | - | only show image in preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
 
@@ -15,6 +14,7 @@ export default function Base() {
           console.log('click');
         }}
         preview={{
+          minScale: 0.1,
           onVisibleChange: visible => {
             console.log('visible', visible);
           },

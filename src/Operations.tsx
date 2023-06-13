@@ -21,6 +21,9 @@ interface OperationsProps
   showProgress: boolean;
   current: number;
   count: number;
+  scale: number;
+  minScale: number;
+  maxScale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
   onZoomIn: () => void;
@@ -47,6 +50,9 @@ const Operations: React.FC<OperationsProps> = props => {
     showProgress,
     current,
     count,
+    scale,
+    minScale,
+    maxScale,
     onSwitchLeft,
     onSwitchRight,
     onClose,
@@ -87,11 +93,13 @@ const Operations: React.FC<OperationsProps> = props => {
       icon: zoomOut,
       onClick: onZoomOut,
       type: 'zoomOut',
+      disabled: scale === minScale,
     },
     {
       icon: zoomIn,
       onClick: onZoomIn,
       type: 'zoomIn',
+      disabled: scale === maxScale,
     },
     {
       icon: close,
@@ -100,10 +108,11 @@ const Operations: React.FC<OperationsProps> = props => {
     },
   ];
 
-  const toolsNode = tools.map(({ icon, onClick, type }) => (
+  const toolsNode = tools.map(({ icon, onClick, type, disabled }) => (
     <li
       className={classnames(toolClassName, {
         [`${prefixCls}-operations-operation-${type}`]: true,
+        [`${prefixCls}-operations-operation-disabled`]: !!disabled,
       })}
       onClick={onClick}
       key={type}
