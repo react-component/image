@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
 
