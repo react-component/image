@@ -14,7 +14,6 @@ export default function Base() {
           console.log('click');
         }}
         preview={{
-          minScale: 0.1,
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
