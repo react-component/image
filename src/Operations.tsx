@@ -2,6 +2,7 @@ import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
+import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import { context } from './PreviewGroup';
 
@@ -19,6 +20,7 @@ interface OperationsProps
   > {
   showSwitch: boolean;
   showProgress: boolean;
+  transform: TransformType;
   current: number;
   count: number;
   scale: number;
@@ -48,6 +50,7 @@ const Operations: React.FC<OperationsProps> = props => {
     countRender,
     showSwitch,
     showProgress,
+    transform,
     current,
     count,
     scale,
@@ -177,6 +180,7 @@ const Operations: React.FC<OperationsProps> = props => {
               zoomIn: onZoomIn,
               close: onClose,
             },
+            transform,
             ...(isPreviewGroup ? { current, total: count } : {}),
           })
         : toolbar}

@@ -183,6 +183,14 @@ type TransformAction =
     zoomIn: () => void;
     close: () => void;
   };
+  transform: {
+    x: number;
+    y: number;
+    rotate: number;
+    scale: number;
+    flipX: boolean;
+    flipY: boolean;
+  },
   current: number;
   total: number;
 }
