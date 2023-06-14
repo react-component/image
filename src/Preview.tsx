@@ -155,7 +155,7 @@ const Preview: React.FC<PreviewProps> = props => {
     event.stopPropagation();
     if (currentPreviewIndex > 0) {
       setEnableTransition(false);
-      resetTransform('switch');
+      resetTransform('prev');
       setCurrent(previewDataKeys[currentPreviewIndex - 1]);
     }
   };
@@ -165,7 +165,7 @@ const Preview: React.FC<PreviewProps> = props => {
     event.stopPropagation();
     if (currentPreviewIndex < previewGroupCount - 1) {
       setEnableTransition(false);
-      resetTransform('switch');
+      resetTransform('next');
       setCurrent(previewDataKeys[currentPreviewIndex + 1]);
     }
   };
