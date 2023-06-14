@@ -32,6 +32,7 @@ export type ToolbarRenderType = {
     zoomIn: () => void;
     close: () => void;
   };
+  transform: TransformType;
   current: number;
   total: number;
 };
@@ -358,6 +359,7 @@ const Preview: React.FC<PreviewProps> = props => {
       </Dialog>
       <Operations
         visible={visible}
+        transform={transform}
         maskTransitionName={maskTransitionName}
         getContainer={getContainer}
         prefixCls={prefixCls}
