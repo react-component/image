@@ -36,7 +36,8 @@ export default function usePreviewItems(
 
         return {
           ...itemObj,
-          id: index,
+          // From `items` should always `id` not same as context registered one
+          id: `items_${index}`,
         };
       });
     }
@@ -44,7 +45,7 @@ export default function usePreviewItems(
     return Object.keys(images)
       .map(id => ({
         ...images[id],
-        id: Number(id),
+        id,
       }))
       .filter(info => info.canPreview);
   }, [images]);

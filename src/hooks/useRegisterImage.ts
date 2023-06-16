@@ -7,7 +7,7 @@ let uid = 0;
 export default function useRegisterImage(canPreview: boolean, imgData: ImageElementProps) {
   const [id] = React.useState(() => {
     uid += 1;
-    return uid;
+    return String(uid);
   });
   const groupContext = React.useContext(PreviewGroupContext);
 

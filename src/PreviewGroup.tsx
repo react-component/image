@@ -116,9 +116,15 @@ const Group: React.FC<GroupConsumerProps> = ({
 
   const onPreviewFromImage = React.useCallback<OnGroupPreview>(
     (id, mouseX, mouseY) => {
+      const index = mergedItems.findIndex(item => item.id === id);
+
       setShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
-      setCurrentIndex(mergedItems.findIndex(item => item.id === id));
+      setCurrentIndex(
+        // `items` should always open the first one
+        // We easy replace `-1` to `0` here
+        index < 0 ? 0 : index,
+      );
     },
     [mergedItems],
   );
@@ -129,15 +135,6 @@ const Group: React.FC<GroupConsumerProps> = ({
     setShowPreview(false);
     setMousePosition(null);
   };
-
-  // const isControlledCurrent = current !== undefined;
-
-  // // is not controlled current and closed
-  // useEffect(() => {
-  //   if (!isControlledCurrent && !isShowPreview) {
-  //     setCurrentIndex(0);
-  //   }
-  // }, [isShowPreview, isControlledCurrent]);
 
   // ========================= Context ==========================
   const previewGroupContext = React.useMemo(
