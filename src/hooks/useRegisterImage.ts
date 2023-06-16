@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { ImageElementProps } from '../interface';
-import { PreviewGroupContext } from './context';
+import { PreviewGroupContext } from '../context';
 
 let uid = 0;
 

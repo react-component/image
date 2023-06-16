@@ -2,7 +2,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import omit from 'rc-util/lib/omit';
 import * as React from 'react';
 import { useState } from 'react';
-import { PreviewGroupContext } from './hooks/context';
+import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';

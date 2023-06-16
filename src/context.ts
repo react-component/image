@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { OnGroupPreview, RegisterImage } from '../interface';
+import type { OnGroupPreview, RegisterImage } from './interface';
 
 export interface PreviewGroupContextProps {
   register: RegisterImage;

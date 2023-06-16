@@ -5,7 +5,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { PreviewGroupContext } from './hooks/context';
+import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import type { ImageElementProps } from './interface';

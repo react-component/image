@@ -6,7 +6,7 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
-import { PreviewGroupContext } from './hooks/context';
+import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';

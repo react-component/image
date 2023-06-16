@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
 import { useContext } from 'react';
-import { PreviewGroupContext } from './hooks/context';
+import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 
