@@ -1,10 +1,8 @@
 import * as React from 'react';
-import type { PreviewImageElementProps, RegisterImage } from '../interface';
+import type { InternalItem, PreviewImageElementProps, RegisterImage } from '../interface';
 import type { GroupConsumerProps } from '../PreviewGroup';
 
-export type Items = (PreviewImageElementProps & {
-  id: number;
-})[];
+export type Items = InternalItem[];
 
 /**
  * Merge props provided `items` or context collected images
@@ -43,10 +41,12 @@ export default function usePreviewItems(
       });
     }
 
-    return Object.keys(images).map(id => ({
-      ...images[id],
-      id: Number(id),
-    }));
+    return Object.keys(images)
+      .map(id => ({
+        ...images[id],
+        id: Number(id),
+      }))
+      .filter(info => info.canPreview);
   }, [images]);
 
   return [mergedItems, registerImage];

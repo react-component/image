@@ -1,12 +1,12 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import omit from 'rc-util/lib/omit';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
-import usePreviewInfo from './hooks/usePreviewInfo';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';
-import { ImageElementProps, OnGroupPreview } from './interface';
+import { ImageElementProps, InternalItem, OnGroupPreview } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 
@@ -48,7 +48,6 @@ export interface PreviewData {
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
   currentIndex: number;
-  getStartPreviewIndex: (currentId: number) => number;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
@@ -58,7 +57,6 @@ export interface GroupConsumerValue extends GroupConsumerProps {
 /* istanbul ignore next */
 export const context = React.createContext<GroupConsumerValue>({
   currentIndex: null,
-  getStartPreviewIndex: () => null,
   setCurrentIndex: () => null,
   setShowPreview: () => null,
   setMousePosition: () => null,
@@ -97,7 +95,13 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [currentIndex, setCurrentIndex] = useMergedState(0, {
     value: current,
   });
-  const src = mergedItems[currentIndex]?.src;
+
+  // >>> Image
+  const imgCommonProps = omit(mergedItems[currentIndex] || ({} as InternalItem), [
+    'id',
+    'canPreview',
+  ]);
+  const src = imgCommonProps.src;
 
   // >>> Visible
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
@@ -121,24 +125,19 @@ const Group: React.FC<GroupConsumerProps> = ({
 
   // ========================== Legacy ==========================
 
-  const { imgCommonProps, registerImage, getStartPreviewIndex } = usePreviewInfo({
-    items,
-    currentIndex,
-  });
-
   const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
   };
 
-  const isControlledCurrent = current !== undefined;
+  // const isControlledCurrent = current !== undefined;
 
-  // is not controlled current and closed
-  useEffect(() => {
-    if (!isControlledCurrent && !isShowPreview) {
-      setCurrentIndex(0);
-    }
-  }, [isShowPreview, isControlledCurrent]);
+  // // is not controlled current and closed
+  // useEffect(() => {
+  //   if (!isControlledCurrent && !isShowPreview) {
+  //     setCurrentIndex(0);
+  //   }
+  // }, [isShowPreview, isControlledCurrent]);
 
   // ========================= Context ==========================
   const previewGroupContext = React.useMemo(
@@ -156,7 +155,6 @@ const Group: React.FC<GroupConsumerProps> = ({
           setShowPreview,
           setMousePosition,
           setCurrentIndex,
-          getStartPreviewIndex,
         }}
       >
         {children}

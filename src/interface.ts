@@ -21,6 +21,10 @@ export type PreviewImageElementProps = ImageElementProps & {
   canPreview: boolean;
 };
 
+export type InternalItem = (PreviewImageElementProps & {
+  id: number;
+})
+
 export type RegisterImage = (id: number, data: PreviewImageElementProps) => VoidFunction;
 
 export type OnGroupPreview = (id: number, mouseX: number, mouseY: number) => void;

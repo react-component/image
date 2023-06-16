@@ -136,8 +136,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     isPreviewGroup,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
-    setCurrentIndex,
-    getStartPreviewIndex,
   } = useContext(context);
 
   const groupContext = useContext(PreviewGroupContext);
