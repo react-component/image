@@ -53,6 +53,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     flipX?: React.ReactNode;
     flipY?: React.ReactNode;
   };
+  count?: number;
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
   minScale?: number;
@@ -78,6 +79,7 @@ const Preview: React.FC<PreviewProps> = props => {
     icons = {},
     rootClassName,
     getContainer,
+    count = 1,
     countRender,
     scaleStep = 0.5,
     minScale = 1,
@@ -100,7 +102,7 @@ const Preview: React.FC<PreviewProps> = props => {
     transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
-  const { count, currentIndex, isPreviewGroup, setCurrentIndex } = useContext(context);
+  const { currentIndex, isPreviewGroup, setCurrentIndex } = useContext(context);
   const showLeftOrRightSwitches = isPreviewGroup && count > 1;
   const showOperationsProgress = isPreviewGroup && count >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(

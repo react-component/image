@@ -5,7 +5,10 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
+import useRegisterImage from './hooks/useRegisterImage';
+import { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup, { context } from './PreviewGroup';
@@ -61,6 +64,18 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
+const COMMON_PROPS: (keyof ImageElementProps)[] = [
+  'crossOrigin',
+  'decoding',
+  'draggable',
+  'loading',
+  'referrerPolicy',
+  'sizes',
+  'srcSet',
+  'useMap',
+  'alt',
+];
+
 function isImageValid(src) {
   return new Promise(resolve => {
     const img = document.createElement('img');
@@ -70,36 +85,29 @@ function isImageValid(src) {
   });
 }
 
-const ImageInternal: CompoundedComponent<ImageProps> = ({
-  src: imgSrc,
-  alt,
-  onPreviewClose: onInitialPreviewClose,
-  prefixCls = 'rc-image',
-  previewPrefixCls = `${prefixCls}-preview`,
-  placeholder,
-  fallback,
-  width,
-  height,
-  style,
-  preview = true,
-  className,
-  onClick,
-  onError,
-  wrapperClassName,
-  wrapperStyle,
-  rootClassName,
+const ImageInternal: CompoundedComponent<ImageProps> = props => {
+  const {
+    src: imgSrc,
+    alt,
+    onPreviewClose: onInitialPreviewClose,
+    prefixCls = 'rc-image',
+    previewPrefixCls = `${prefixCls}-preview`,
+    placeholder,
+    fallback,
+    width,
+    height,
+    style,
+    preview = true,
+    className,
+    onClick,
+    onError,
+    wrapperClassName,
+    wrapperStyle,
+    rootClassName,
 
-  // Img
-  crossOrigin,
-  decoding,
-  loading,
-  referrerPolicy,
-  sizes,
-  srcSet,
-  useMap,
-  draggable,
-  ...otherProps
-}) => {
+    ...otherProps
+  } = props;
+
   const isCustomPlaceholder = placeholder && placeholder !== true;
   const {
     src: previewSrc,
@@ -128,10 +136,12 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     isPreviewGroup,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
-    registerImage,
     setCurrentIndex,
     getStartPreviewIndex,
   } = useContext(context);
+
+  const groupContext = useContext(PreviewGroupContext);
+
   const [currentId] = useState<number>(() => {
     uuid += 1;
     return uuid;
@@ -140,41 +150,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const isLoaded = useRef(false);
 
-  const imgCommonProps = {
-    crossOrigin,
-    decoding,
-    draggable,
-    loading,
-    referrerPolicy,
-    sizes,
-    srcSet,
-    useMap,
-    alt,
-  };
-
   const onLoad = () => {
     setStatus('normal');
-  };
-
-  const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target);
-    if (isPreviewGroup) {
-      setGroupMousePosition({
-        x: left,
-        y: top,
-      });
-
-      setCurrentIndex(getStartPreviewIndex(currentId));
-      setGroupShowPreview(true);
-    } else {
-      setMousePosition({
-        x: left,
-        y: top,
-      });
-      setShowPreview(true);
-    }
-
-    onClick?.(e);
   };
 
   const onPreviewClose = () => {
@@ -199,23 +176,23 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     });
   }, [src]);
 
-  // Keep order start
-  // Resolve https://github.com/ant-design/ant-design/issues/28881
-  // Only need unRegister when component unMount
-  useEffect(() => {
-    const unRegister = registerImage(currentId, {
-      src,
-      imgCommonProps,
-      canPreview,
-    });
+  // // Keep order start
+  // // Resolve https://github.com/ant-design/ant-design/issues/28881
+  // // Only need unRegister when component unMount
+  // useEffect(() => {
+  //   const unRegister = registerImage(currentId, {
+  //     src,
+  //     imgCommonProps,
+  //     canPreview,
+  //   });
 
-    return unRegister;
-  }, []);
+  //   return unRegister;
+  // }, []);
 
-  useEffect(() => {
-    registerImage(currentId, { src, imgCommonProps, canPreview });
-  }, [src, canPreview, JSON.stringify(imgCommonProps)]);
-  // Keep order end
+  // useEffect(() => {
+  //   registerImage(currentId, { src, imgCommonProps, canPreview });
+  // }, [src, canPreview, JSON.stringify(imgCommonProps)]);
+  // // Keep order end
 
   useEffect(() => {
     if (isError) {
@@ -232,6 +209,57 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const mergedSrc = isError && fallback ? fallback : src;
 
+  // ========================= ImageProps =========================
+  const imgCommonProps = React.useMemo(
+    () => {
+      const obj: ImageElementProps = {};
+      COMMON_PROPS.forEach((prop: any) => {
+        if (props[prop] !== undefined) {
+          obj[prop] = props[prop];
+        }
+      });
+
+      return obj;
+    },
+    COMMON_PROPS.map(prop => props[prop]),
+  );
+
+  // ========================== Register ==========================
+  const registerData: ImageElementProps = React.useMemo(
+    () => ({
+      ...imgCommonProps,
+      src,
+    }),
+    [src, imgCommonProps],
+  );
+
+  const imageId = useRegisterImage(canPreview, registerData);
+
+  // ========================== Preview ===========================
+  const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
+    const { left, top } = getOffset(e.target);
+    if (groupContext) {
+      // setGroupMousePosition({
+      //   x: left,
+      //   y: top,
+      // });
+
+      // setCurrentIndex(getStartPreviewIndex(currentId));
+      // setGroupShowPreview(true);
+
+      groupContext.onPreview(imageId, left, top);
+    } else {
+      setMousePosition({
+        x: left,
+        y: top,
+      });
+      setShowPreview(true);
+    }
+
+    onClick?.(e);
+  };
+
+  // =========================== Render ===========================
   return (
     <>
       <div

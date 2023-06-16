@@ -1,9 +1,12 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewInfo from './hooks/usePreviewInfo';
+import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';
+import { ImageElementProps, OnGroupPreview } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 
@@ -28,22 +31,10 @@ export interface PreviewGroupPreview
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
-type PickImgHTMLAttributes =
-  | 'src'
-  | 'crossOrigin'
-  | 'alt'
-  | 'decoding'
-  | 'draggable'
-  | 'loading'
-  | 'referrerPolicy'
-  | 'sizes'
-  | 'srcSet'
-  | 'useMap';
-
 export interface GroupConsumerProps {
   previewPrefixCls?: string;
   icons?: PreviewProps['icons'];
-  items?: (string | Pick<React.ImgHTMLAttributes<HTMLImageElement>, PickImgHTMLAttributes>)[];
+  items?: (string | ImageElementProps)[];
   preview?: boolean | PreviewGroupPreview;
   children?: React.ReactNode;
 }
@@ -56,13 +47,11 @@ export interface PreviewData {
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
-  count: number;
   currentIndex: number;
   getStartPreviewIndex: (currentId: number) => number;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  registerImage: (id: number, data: PreviewData) => () => void;
   rootClassName?: string;
 }
 
@@ -71,10 +60,8 @@ export const context = React.createContext<GroupConsumerValue>({
   currentIndex: null,
   getStartPreviewIndex: () => null,
   setCurrentIndex: () => null,
-  count: null,
   setShowPreview: () => null,
   setMousePosition: () => null,
-  registerImage: () => () => null,
   rootClassName: '',
 });
 
@@ -102,10 +89,17 @@ const Group: React.FC<GroupConsumerProps> = ({
     ...dialogProps
   } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
 
+  // ========================== Items ===========================
+  const [mergedItems, register] = usePreviewItems(items);
+
+  // ========================= Preview ==========================
+  // >>> Index
   const [currentIndex, setCurrentIndex] = useMergedState(0, {
     value: current,
   });
+  const src = mergedItems[currentIndex]?.src;
 
+  // >>> Visible
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
@@ -113,9 +107,21 @@ const Group: React.FC<GroupConsumerProps> = ({
     },
   });
 
+  // >>> Position
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
-  const { count, src, imgCommonProps, registerImage, getStartPreviewIndex } = usePreviewInfo({
+  const onPreviewFromImage = React.useCallback<OnGroupPreview>(
+    (id, mouseX, mouseY) => {
+      setShowPreview(true);
+      setMousePosition({ x: mouseX, y: mouseY });
+      setCurrentIndex(mergedItems.findIndex(item => item.id === id));
+    },
+    [mergedItems],
+  );
+
+  // ========================== Legacy ==========================
+
+  const { imgCommonProps, registerImage, getStartPreviewIndex } = usePreviewInfo({
     items,
     currentIndex,
   });
@@ -134,40 +140,48 @@ const Group: React.FC<GroupConsumerProps> = ({
     }
   }, [isShowPreview, isControlledCurrent]);
 
+  // ========================= Context ==========================
+  const previewGroupContext = React.useMemo(
+    () => ({ register, onPreview: onPreviewFromImage }),
+    [register, onPreviewFromImage],
+  );
+
+  // ========================== Render ==========================
   return (
-    <Provider
-      value={{
-        isPreviewGroup: true,
-        count,
-        currentIndex,
-        setShowPreview,
-        setMousePosition,
-        registerImage,
-        setCurrentIndex,
-        getStartPreviewIndex,
-      }}
-    >
-      {children}
-      <Preview
-        aria-hidden={!isShowPreview}
-        visible={isShowPreview}
-        prefixCls={previewPrefixCls}
-        onClose={onPreviewClose}
-        mousePosition={mousePosition}
-        imgCommonProps={imgCommonProps}
-        src={src}
-        icons={icons}
-        minScale={minScale}
-        maxScale={maxScale}
-        getContainer={getContainer}
-        countRender={countRender}
-        onTransform={onTransform}
-        toolbarRender={toolbarRender}
-        imageRender={imageRender}
-        onChange={onChange}
-        {...dialogProps}
-      />
-    </Provider>
+    <PreviewGroupContext.Provider value={previewGroupContext}>
+      <Provider
+        value={{
+          isPreviewGroup: true,
+          currentIndex,
+          setShowPreview,
+          setMousePosition,
+          setCurrentIndex,
+          getStartPreviewIndex,
+        }}
+      >
+        {children}
+        <Preview
+          aria-hidden={!isShowPreview}
+          visible={isShowPreview}
+          prefixCls={previewPrefixCls}
+          onClose={onPreviewClose}
+          mousePosition={mousePosition}
+          imgCommonProps={imgCommonProps}
+          src={src}
+          icons={icons}
+          minScale={minScale}
+          maxScale={maxScale}
+          getContainer={getContainer}
+          count={mergedItems.length}
+          countRender={countRender}
+          onTransform={onTransform}
+          toolbarRender={toolbarRender}
+          imageRender={imageRender}
+          onChange={onChange}
+          {...dialogProps}
+        />
+      </Provider>
+    </PreviewGroupContext.Provider>
   );
 };
 
