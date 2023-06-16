@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 /**
  * Used for PreviewGroup passed image data
  */
@@ -21,9 +19,9 @@ export type PreviewImageElementProps = ImageElementProps & {
   canPreview: boolean;
 };
 
-export type InternalItem = (PreviewImageElementProps & {
+export type InternalItem = PreviewImageElementProps & {
   id: string;
-})
+};
 
 export type RegisterImage = (id: string, data: PreviewImageElementProps) => VoidFunction;
 

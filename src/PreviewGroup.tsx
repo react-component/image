@@ -6,7 +6,8 @@ import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';
-import { ImageElementProps, InternalItem, OnGroupPreview } from './interface';
+import type { ImageElementProps } from './interface';
+import { InternalItem, OnGroupPreview } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 
@@ -124,8 +125,6 @@ const Group: React.FC<GroupConsumerProps> = ({
 
     onChange?.(next, prev);
   };
-
-  // ========================== Legacy ==========================
 
   const onPreviewClose = () => {
     setShowPreview(false);

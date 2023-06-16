@@ -48,7 +48,7 @@ export default function usePreviewItems(
         id,
       }))
       .filter(info => info.canPreview);
-  }, [images]);
+  }, [items, images]);
 
   return [mergedItems, registerImage];
 }

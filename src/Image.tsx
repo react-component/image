@@ -8,7 +8,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
-import { ImageElementProps } from './interface';
+import type { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
@@ -35,8 +35,6 @@ export interface ImagePreviewType
   onTransform?: PreviewProps['onTransform'];
   toolbarRender?: (params: Omit<ToolbarRenderType, 'current' | 'total'>) => React.ReactNode;
 }
-
-let uuid = 0;
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -135,10 +133,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   const groupContext = useContext(PreviewGroupContext);
 
-  const [currentId] = useState<number>(() => {
-    uuid += 1;
-    return uuid;
-  });
   const canPreview = !!preview;
 
   const isLoaded = useRef(false);
