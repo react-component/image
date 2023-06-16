@@ -3,9 +3,9 @@ import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
 import { useContext } from 'react';
+import { PreviewGroupContext } from './hooks/context';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
-import { context } from './PreviewGroup';
 
 interface OperationsProps
   extends Pick<
@@ -68,7 +68,7 @@ const Operations: React.FC<OperationsProps> = props => {
     onFlipY,
     toolbarRender,
   } = props;
-  const { isPreviewGroup } = useContext(context);
+  const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
@@ -182,7 +182,7 @@ const Operations: React.FC<OperationsProps> = props => {
               close: onClose,
             },
             transform,
-            ...(isPreviewGroup ? { current: currentIndex, total: count } : {}),
+            ...(groupContext ? { current: currentIndex, total: count } : {}),
           })
         : toolbar}
     </>

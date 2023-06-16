@@ -6,11 +6,11 @@ import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
+import { PreviewGroupContext } from './hooks/context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
-import { context } from './PreviewGroup';
 
 export type ToolbarRenderType = {
   originalNode: React.ReactNode;
@@ -53,6 +53,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     flipX?: React.ReactNode;
     flipY?: React.ReactNode;
   };
+  current?: number;
   count?: number;
   countRender?: (current: number, total: number) => string;
   scaleStep?: number;
@@ -79,6 +80,7 @@ const Preview: React.FC<PreviewProps> = props => {
     icons = {},
     rootClassName,
     getContainer,
+    current = 0,
     count = 1,
     countRender,
     scaleStep = 0.5,
@@ -102,9 +104,9 @@ const Preview: React.FC<PreviewProps> = props => {
     transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
-  const { currentIndex, isPreviewGroup, setCurrentIndex } = useContext(context);
-  const showLeftOrRightSwitches = isPreviewGroup && count > 1;
-  const showOperationsProgress = isPreviewGroup && count >= 1;
+  const groupContext = useContext(PreviewGroupContext);
+  const showLeftOrRightSwitches = groupContext && count > 1;
+  const showOperationsProgress = groupContext && count >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
     imgRef,
     minScale,
@@ -155,22 +157,20 @@ const Preview: React.FC<PreviewProps> = props => {
   const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event?.preventDefault();
     event?.stopPropagation();
-    if (currentIndex > 0) {
+    if (current > 0) {
       setEnableTransition(false);
       resetTransform('prev');
-      setCurrentIndex(currentIndex - 1);
-      onChange?.(currentIndex - 1, currentIndex);
+      onChange?.(current - 1, current);
     }
   };
 
   const onSwitchRight = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event?.preventDefault();
     event?.stopPropagation();
-    if (currentIndex < count - 1) {
+    if (current < count - 1) {
       setEnableTransition(false);
       resetTransform('next');
-      setCurrentIndex(currentIndex + 1);
-      onChange?.(currentIndex + 1, currentIndex);
+      onChange?.(current + 1, current);
     }
   };
 
@@ -303,7 +303,7 @@ const Preview: React.FC<PreviewProps> = props => {
     return () => {
       onKeyDownListener.remove();
     };
-  }, [visible, showLeftOrRightSwitches, currentIndex]);
+  }, [visible, showLeftOrRightSwitches, current]);
 
   const imgNode = (
     <img
@@ -347,7 +347,7 @@ const Preview: React.FC<PreviewProps> = props => {
             ? imageRender({
                 originalNode: imgNode,
                 transform,
-                ...(isPreviewGroup ? { current: currentIndex } : {}),
+                ...(groupContext ? { current } : {}),
               })
             : imgNode}
         </div>
@@ -363,7 +363,7 @@ const Preview: React.FC<PreviewProps> = props => {
         countRender={countRender}
         showSwitch={showLeftOrRightSwitches}
         showProgress={showOperationsProgress}
-        currentIndex={currentIndex}
+        currentIndex={current}
         count={count}
         scale={scale}
         minScale={minScale}

@@ -11,7 +11,7 @@ import useRegisterImage from './hooks/useRegisterImage';
 import { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
-import PreviewGroup, { context } from './PreviewGroup';
+import PreviewGroup from './PreviewGroup';
 
 export interface ImagePreviewType
   extends Omit<
@@ -132,11 +132,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
   const isError = status === 'error';
-  const {
-    isPreviewGroup,
-    setShowPreview: setGroupShowPreview,
-    setMousePosition: setGroupMousePosition,
-  } = useContext(context);
 
   const groupContext = useContext(PreviewGroupContext);
 
@@ -173,24 +168,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       }
     });
   }, [src]);
-
-  // // Keep order start
-  // // Resolve https://github.com/ant-design/ant-design/issues/28881
-  // // Only need unRegister when component unMount
-  // useEffect(() => {
-  //   const unRegister = registerImage(currentId, {
-  //     src,
-  //     imgCommonProps,
-  //     canPreview,
-  //   });
-
-  //   return unRegister;
-  // }, []);
-
-  // useEffect(() => {
-  //   registerImage(currentId, { src, imgCommonProps, canPreview });
-  // }, [src, canPreview, JSON.stringify(imgCommonProps)]);
-  // // Keep order end
 
   useEffect(() => {
     if (isError) {
@@ -237,14 +214,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
     if (groupContext) {
-      // setGroupMousePosition({
-      //   x: left,
-      //   y: top,
-      // });
-
-      // setCurrentIndex(getStartPreviewIndex(currentId));
-      // setGroupShowPreview(true);
-
       groupContext.onPreview(imageId, left, top);
     } else {
       setMousePosition({
@@ -308,7 +277,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           </div>
         )}
       </div>
-      {!isPreviewGroup && canPreview && (
+      {!groupContext && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
           visible={isShowPreview}

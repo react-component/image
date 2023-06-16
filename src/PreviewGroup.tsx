@@ -54,17 +54,6 @@ export interface GroupConsumerValue extends GroupConsumerProps {
   rootClassName?: string;
 }
 
-/* istanbul ignore next */
-export const context = React.createContext<GroupConsumerValue>({
-  currentIndex: null,
-  setCurrentIndex: () => null,
-  setShowPreview: () => null,
-  setMousePosition: () => null,
-  rootClassName: '',
-});
-
-const { Provider } = context;
-
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
@@ -129,6 +118,13 @@ const Group: React.FC<GroupConsumerProps> = ({
     [mergedItems],
   );
 
+  // ========================== Events ==========================
+  const onInternalChange: PreviewGroupPreview['onChange'] = (next, prev) => {
+    setCurrentIndex(next);
+
+    onChange?.(next, prev);
+  };
+
   // ========================== Legacy ==========================
 
   const onPreviewClose = () => {
@@ -145,37 +141,28 @@ const Group: React.FC<GroupConsumerProps> = ({
   // ========================== Render ==========================
   return (
     <PreviewGroupContext.Provider value={previewGroupContext}>
-      <Provider
-        value={{
-          isPreviewGroup: true,
-          currentIndex,
-          setShowPreview,
-          setMousePosition,
-          setCurrentIndex,
-        }}
-      >
-        {children}
-        <Preview
-          aria-hidden={!isShowPreview}
-          visible={isShowPreview}
-          prefixCls={previewPrefixCls}
-          onClose={onPreviewClose}
-          mousePosition={mousePosition}
-          imgCommonProps={imgCommonProps}
-          src={src}
-          icons={icons}
-          minScale={minScale}
-          maxScale={maxScale}
-          getContainer={getContainer}
-          count={mergedItems.length}
-          countRender={countRender}
-          onTransform={onTransform}
-          toolbarRender={toolbarRender}
-          imageRender={imageRender}
-          onChange={onChange}
-          {...dialogProps}
-        />
-      </Provider>
+      {children}
+      <Preview
+        aria-hidden={!isShowPreview}
+        visible={isShowPreview}
+        prefixCls={previewPrefixCls}
+        onClose={onPreviewClose}
+        mousePosition={mousePosition}
+        imgCommonProps={imgCommonProps}
+        src={src}
+        icons={icons}
+        minScale={minScale}
+        maxScale={maxScale}
+        getContainer={getContainer}
+        current={currentIndex}
+        count={mergedItems.length}
+        countRender={countRender}
+        onTransform={onTransform}
+        toolbarRender={toolbarRender}
+        imageRender={imageRender}
+        onChange={onInternalChange}
+        {...dialogProps}
+      />
     </PreviewGroupContext.Provider>
   );
 };
