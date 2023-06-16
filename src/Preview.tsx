@@ -4,7 +4,7 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
@@ -65,6 +65,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: () => void;
   onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
   toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
+  onChange?: (currentIndex, prevIndex) => void;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -87,6 +88,7 @@ const Preview: React.FC<PreviewProps> = props => {
     imgCommonProps,
     toolbarRender,
     onTransform,
+    onChange,
     ...restProps
   } = props;
 
@@ -98,12 +100,9 @@ const Preview: React.FC<PreviewProps> = props => {
     transformY: 0,
   });
   const [isMoving, setMoving] = useState(false);
-  const { previewData, current, isPreviewGroup, setCurrent } = useContext(context);
-  const previewGroupCount = previewData.size;
-  const previewDataKeys = Array.from(previewData.keys());
-  const currentPreviewIndex = previewDataKeys.indexOf(current);
-  const showLeftOrRightSwitches = isPreviewGroup && previewGroupCount > 1;
-  const showOperationsProgress = isPreviewGroup && previewGroupCount >= 1;
+  const { count, currentIndex, isPreviewGroup, setCurrentIndex } = useContext(context);
+  const showLeftOrRightSwitches = isPreviewGroup && count > 1;
+  const showOperationsProgress = isPreviewGroup && count >= 1;
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
     imgRef,
     minScale,
@@ -111,7 +110,7 @@ const Preview: React.FC<PreviewProps> = props => {
     onTransform,
   );
   const [enableTransition, setEnableTransition] = useState(true);
-  const { rotate, scale } = transform;
+  const { rotate, scale, x, y } = transform;
 
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
@@ -151,23 +150,25 @@ const Preview: React.FC<PreviewProps> = props => {
     updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
-  const onSwitchLeft: React.MouseEventHandler<HTMLDivElement> = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (currentPreviewIndex > 0) {
+  const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    if (currentIndex > 0) {
       setEnableTransition(false);
       resetTransform('prev');
-      setCurrent(previewDataKeys[currentPreviewIndex - 1]);
+      setCurrentIndex(currentIndex - 1);
+      onChange?.(currentIndex - 1, currentIndex);
     }
   };
 
-  const onSwitchRight: React.MouseEventHandler<HTMLDivElement> = event => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (currentPreviewIndex < previewGroupCount - 1) {
+  const onSwitchRight = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+    if (currentIndex < count - 1) {
       setEnableTransition(false);
       resetTransform('next');
-      setCurrent(previewDataKeys[currentPreviewIndex + 1]);
+      setCurrentIndex(currentIndex + 1);
+      onChange?.(currentIndex + 1, currentIndex);
     }
   };
 
@@ -176,7 +177,7 @@ const Preview: React.FC<PreviewProps> = props => {
       setMoving(false);
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
       const { transformX, transformY } = downPositionRef.current;
-      const hasChangedPosition = transform.x !== transformX && transform.y !== transformY;
+      const hasChangedPosition = x !== transformX && y !== transformY;
       if (!hasChangedPosition) {
         return;
       }
@@ -240,29 +241,15 @@ const Preview: React.FC<PreviewProps> = props => {
     dispatchZoomChange(ratio, 'wheel', event.clientX, event.clientY);
   };
 
-  const onKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!visible || !showLeftOrRightSwitches) return;
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (!visible || !showLeftOrRightSwitches) return;
 
-      if (event.keyCode === KeyCode.LEFT) {
-        if (currentPreviewIndex > 0) {
-          setCurrent(previewDataKeys[currentPreviewIndex - 1]);
-        }
-      } else if (event.keyCode === KeyCode.RIGHT) {
-        if (currentPreviewIndex < previewGroupCount - 1) {
-          setCurrent(previewDataKeys[currentPreviewIndex + 1]);
-        }
-      }
-    },
-    [
-      currentPreviewIndex,
-      previewGroupCount,
-      previewDataKeys,
-      setCurrent,
-      showLeftOrRightSwitches,
-      visible,
-    ],
-  );
+    if (event.keyCode === KeyCode.LEFT) {
+      onSwitchLeft();
+    } else if (event.keyCode === KeyCode.RIGHT) {
+      onSwitchRight();
+    }
+  };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (visible) {
@@ -285,7 +272,6 @@ const Preview: React.FC<PreviewProps> = props => {
 
     const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
     const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
-    const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
 
     try {
       // Resolve if in iframe lost event
@@ -302,13 +288,20 @@ const Preview: React.FC<PreviewProps> = props => {
     return () => {
       onMouseUpListener.remove();
       onMouseMoveListener.remove();
-      onKeyDownListener.remove();
       /* istanbul ignore next */
       onTopMouseUpListener?.remove();
       /* istanbul ignore next */
       onTopMouseMoveListener?.remove();
     };
-  }, [visible, isMoving, onKeyDown]);
+  }, [visible, isMoving, x, y, rotate]);
+
+  useEffect(() => {
+    const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
+
+    return () => {
+      onKeyDownListener.remove();
+    };
+  }, [visible, showLeftOrRightSwitches, currentIndex]);
 
   const imgNode = (
     <img
@@ -352,7 +345,7 @@ const Preview: React.FC<PreviewProps> = props => {
             ? imageRender({
                 originalNode: imgNode,
                 transform,
-                ...(isPreviewGroup ? { current: currentPreviewIndex } : {}),
+                ...(isPreviewGroup ? { current: currentIndex } : {}),
               })
             : imgNode}
         </div>
@@ -368,8 +361,8 @@ const Preview: React.FC<PreviewProps> = props => {
         countRender={countRender}
         showSwitch={showLeftOrRightSwitches}
         showProgress={showOperationsProgress}
-        current={currentPreviewIndex}
-        count={previewGroupCount}
+        currentIndex={currentIndex}
+        count={count}
         scale={scale}
         minScale={minScale}
         maxScale={maxScale}

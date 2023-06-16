@@ -34,13 +34,13 @@ describe('PreviewGroup', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(2, 0);
+    expect(onChange).toHaveBeenCalledWith(1, 0);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(3, 2);
+    expect(onChange).toHaveBeenCalledWith(2, 1);
   });
 
   it('Mount and UnMount', () => {
@@ -248,10 +248,8 @@ describe('PreviewGroup', () => {
 
   it('album mode', () => {
     const { container } = render(
-      <Image.PreviewGroup>
+      <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
         <Image src="src1" />
-        <Image preview={{ showOnlyInPreview: true }} src="src2" />
-        <Image preview={{ showOnlyInPreview: true }} src="src3" />
       </Image.PreviewGroup>,
     );
 

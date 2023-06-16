@@ -1,7 +1,8 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TransformType } from './hooks/useImageTransform';
+import usePreviewInfo from './hooks/usePreviewInfo';
 import type { ImagePreviewType } from './Image';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
@@ -27,26 +28,38 @@ export interface PreviewGroupPreview
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
+type PickImgHTMLAttributes =
+  | 'src'
+  | 'crossOrigin'
+  | 'alt'
+  | 'decoding'
+  | 'draggable'
+  | 'loading'
+  | 'referrerPolicy'
+  | 'sizes'
+  | 'srcSet'
+  | 'useMap';
+
 export interface GroupConsumerProps {
   previewPrefixCls?: string;
   icons?: PreviewProps['icons'];
+  items?: (string | Pick<React.ImgHTMLAttributes<HTMLImageElement>, PickImgHTMLAttributes>)[];
   preview?: boolean | PreviewGroupPreview;
   children?: React.ReactNode;
 }
 
-interface PreviewData {
+export interface PreviewData {
   src: string;
-  imgCommonProps: React.ImgHTMLAttributes<HTMLImageElement>;
-  canPreview: boolean;
+  imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+  canPreview?: boolean;
 }
 
 export interface GroupConsumerValue extends GroupConsumerProps {
   isPreviewGroup?: boolean;
-  showOnlyInPreview?: boolean;
-  previewData: Map<number, PreviewData>;
-  setPreviewData: React.Dispatch<React.SetStateAction<Map<number, PreviewData>>>;
-  current: number;
-  setCurrent: React.Dispatch<React.SetStateAction<number>>;
+  count: number;
+  currentIndex: number;
+  getStartPreviewIndex: (currentId: number) => number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
   setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
   registerImage: (id: number, data: PreviewData) => () => void;
@@ -55,10 +68,10 @@ export interface GroupConsumerValue extends GroupConsumerProps {
 
 /* istanbul ignore next */
 export const context = React.createContext<GroupConsumerValue>({
-  previewData: new Map(),
-  setPreviewData: () => null,
-  current: null,
-  setCurrent: () => null,
+  currentIndex: null,
+  getStartPreviewIndex: () => null,
+  setCurrentIndex: () => null,
+  count: null,
   setShowPreview: () => null,
   setMousePosition: () => null,
   registerImage: () => () => null,
@@ -67,25 +80,18 @@ export const context = React.createContext<GroupConsumerValue>({
 
 const { Provider } = context;
 
-function getSafeIndex(keys: number[], key: number) {
-  if (key === undefined) return undefined;
-  const index = keys.indexOf(key);
-  if (index === -1) return undefined;
-  return index;
-}
-
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
   icons = {},
+  items,
   preview,
 }) => {
   const {
     visible: previewVisible,
-    onVisibleChange: onPreviewVisibleChange,
-    showOnlyInPreview,
+    onVisibleChange,
     getContainer,
-    current: currentIndex = 0,
+    current,
     minScale,
     maxScale,
     countRender,
@@ -94,79 +100,51 @@ const Group: React.FC<GroupConsumerProps> = ({
     toolbarRender,
     imageRender,
     ...dialogProps
-  } = typeof preview === 'object' ? preview : {} as PreviewGroupPreview;
-  const [previewData, setPreviewData] = useState<Map<number, PreviewData>>(new Map());
-  const previewDataKeys = Array.from(previewData.keys());
-  const prevCurrent = React.useRef<number | undefined>();
-  const [current, setCurrent] = useMergedState<number>(undefined, {
-    onChange: (val, prev) => {
-      if (prevCurrent.current !== undefined) {
-        onChange?.(getSafeIndex(previewDataKeys, val), getSafeIndex(previewDataKeys, prev));
-      }
-      prevCurrent.current = prev;
-    },
+  } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
+
+  const [currentIndex, setCurrentIndex] = useMergedState(0, {
+    value: current,
   });
+
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
-      onPreviewVisibleChange?.(val, prevVal, getSafeIndex(previewDataKeys, current));
-      prevCurrent.current = val ? current : undefined;
+      onVisibleChange?.(val, prevVal, currentIndex);
     },
   });
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
-  const isControlled = previewVisible !== undefined;
 
-  const currentControlledKey = previewDataKeys[currentIndex];
-  const canPreviewData = new Map<number, PreviewData>(
-    Array.from(previewData).filter(([, { canPreview }]) => !!canPreview),
-  );
-
-  const registerImage = (id: number, data: PreviewData) => {
-    const unRegister = () => {
-      setPreviewData(oldPreviewData => {
-        const clonePreviewData = new Map(oldPreviewData);
-        const deleteResult = clonePreviewData.delete(id);
-        return deleteResult ? clonePreviewData : oldPreviewData;
-      });
-    };
-
-    setPreviewData(oldPreviewData => {
-      return new Map(oldPreviewData).set(id, data);
-    });
-
-    return unRegister;
-  };
+  const { count, src, imgCommonProps, registerImage, getStartPreviewIndex } = usePreviewInfo({
+    items,
+    currentIndex,
+  });
 
   const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
   };
 
-  React.useEffect(() => {
-    setCurrent(currentControlledKey);
-  }, [currentControlledKey]);
+  const isControlledCurrent = current !== undefined;
 
-  React.useEffect(() => {
-    if (!isShowPreview && isControlled) {
-      setCurrent(currentControlledKey);
+  // is not controlled current and closed
+  useEffect(() => {
+    if (!isControlledCurrent && !isShowPreview) {
+      setCurrentIndex(0);
     }
-  }, [currentControlledKey, isControlled, isShowPreview]);
-
-  const canPreviewCurrentData = canPreviewData.get(current);
+  }, [isShowPreview, isControlledCurrent]);
 
   return (
     <Provider
       value={{
         isPreviewGroup: true,
-        showOnlyInPreview,
-        previewData: canPreviewData,
-        setPreviewData,
-        current,
-        setCurrent,
+        count,
+        currentIndex,
         setShowPreview,
         setMousePosition,
         registerImage,
+        setCurrentIndex,
+        getStartPreviewIndex,
       }}
     >
       {children}
@@ -176,8 +154,8 @@ const Group: React.FC<GroupConsumerProps> = ({
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
-        imgCommonProps={canPreviewCurrentData?.imgCommonProps}
-        src={canPreviewCurrentData?.src}
+        imgCommonProps={imgCommonProps}
+        src={src}
         icons={icons}
         minScale={minScale}
         maxScale={maxScale}
@@ -186,6 +164,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         onTransform={onTransform}
         toolbarRender={toolbarRender}
         imageRender={imageRender}
+        onChange={onChange}
         {...dialogProps}
       />
     </Provider>

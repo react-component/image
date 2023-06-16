@@ -4,7 +4,7 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
-import { useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
@@ -21,7 +21,6 @@ export interface ImagePreviewType
   maxScale?: number;
   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
   getContainer?: GetContainer | false;
-  showOnlyInPreview?: boolean;
   mask?: React.ReactNode;
   maskClassName?: string;
   icons?: PreviewProps['icons'];
@@ -107,7 +106,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
     getContainer: getPreviewContainer = undefined,
-    showOnlyInPreview,
     mask: previewMask,
     maskClassName,
     icons,
@@ -119,7 +117,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
-  const isControlled = previewVisible !== undefined;
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: onPreviewVisibleChange,
@@ -129,19 +126,19 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   const isError = status === 'error';
   const {
     isPreviewGroup,
-    showOnlyInPreview: previewGroupOnly,
-    setCurrent,
     setShowPreview: setGroupShowPreview,
     setMousePosition: setGroupMousePosition,
     registerImage,
-  } = React.useContext(context);
-  const [currentId] = React.useState<number>(() => {
+    setCurrentIndex,
+    getStartPreviewIndex,
+  } = useContext(context);
+  const [currentId] = useState<number>(() => {
     uuid += 1;
     return uuid;
   });
   const canPreview = !!preview;
 
-  const isLoaded = React.useRef(false);
+  const isLoaded = useRef(false);
 
   const imgCommonProps = {
     crossOrigin,
@@ -160,26 +157,20 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   };
 
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    if (!isControlled) {
-      const { left, top } = getOffset(e.target);
-
-      if (isPreviewGroup) {
-        setCurrent(currentId);
-        setGroupMousePosition({
-          x: left,
-          y: top,
-        });
-      } else {
-        setMousePosition({
-          x: left,
-          y: top,
-        });
-      }
-    }
-
+    const { left, top } = getOffset(e.target);
     if (isPreviewGroup) {
+      setGroupMousePosition({
+        x: left,
+        y: top,
+      });
+
+      setCurrentIndex(getStartPreviewIndex(currentId));
       setGroupShowPreview(true);
     } else {
+      setMousePosition({
+        x: left,
+        y: top,
+      });
       setShowPreview(true);
     }
 
@@ -188,9 +179,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const onPreviewClose = () => {
     setShowPreview(false);
-    if (!isControlled) {
-      setMousePosition(null);
-    }
+    setMousePosition(null);
   };
 
   const getImgRef = (img?: HTMLImageElement) => {
@@ -202,7 +191,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     isImageValid(src).then(isValid => {
       if (!isValid) {
         setStatus('error');
@@ -213,7 +202,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
   // Keep order start
   // Resolve https://github.com/ant-design/ant-design/issues/28881
   // Only need unRegister when component unMount
-  React.useEffect(() => {
+  useEffect(() => {
     const unRegister = registerImage(currentId, {
       src,
       imgCommonProps,
@@ -223,12 +212,12 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
     return unRegister;
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     registerImage(currentId, { src, imgCommonProps, canPreview });
   }, [src, canPreview, JSON.stringify(imgCommonProps)]);
   // Keep order end
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) {
       setStatus('normal');
     }
@@ -243,61 +232,56 @@ const ImageInternal: CompoundedComponent<ImageProps> = ({
 
   const mergedSrc = isError && fallback ? fallback : src;
 
-  const mergedOnly =
-    isPreviewGroup && showOnlyInPreview === undefined ? previewGroupOnly : showOnlyInPreview;
-
   return (
     <>
-      {!mergedOnly && (
-        <div
-          {...otherProps}
-          className={wrapperClass}
-          onClick={canPreview ? onPreview : onClick}
+      <div
+        {...otherProps}
+        className={wrapperClass}
+        onClick={canPreview ? onPreview : onClick}
+        style={{
+          width,
+          height,
+          ...wrapperStyle,
+        }}
+      >
+        <img
+          {...imgCommonProps}
+          className={cn(
+            `${prefixCls}-img`,
+            {
+              [`${prefixCls}-img-placeholder`]: placeholder === true,
+            },
+            className,
+          )}
           style={{
-            width,
             height,
-            ...wrapperStyle,
+            ...style,
           }}
-        >
-          <img
-            {...imgCommonProps}
-            className={cn(
-              `${prefixCls}-img`,
-              {
-                [`${prefixCls}-img-placeholder`]: placeholder === true,
-              },
-              className,
-            )}
+          ref={getImgRef}
+          {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
+          width={width}
+          height={height}
+          onError={onError}
+        />
+
+        {status === 'loading' && (
+          <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
+            {placeholder}
+          </div>
+        )}
+
+        {/* Preview Click Mask */}
+        {previewMask && canPreview && (
+          <div
+            className={cn(`${prefixCls}-mask`, maskClassName)}
             style={{
-              height,
-              ...style,
+              display: style?.display === 'none' ? 'none' : undefined,
             }}
-            ref={getImgRef}
-            {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
-            width={width}
-            height={height}
-            onError={onError}
-          />
-
-          {status === 'loading' && (
-            <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
-              {placeholder}
-            </div>
-          )}
-
-          {/* Preview Click Mask */}
-          {previewMask && canPreview && (
-            <div
-              className={cn(`${prefixCls}-mask`, maskClassName)}
-              style={{
-                display: style?.display === 'none' ? 'none' : undefined,
-              }}
-            >
-              {previewMask}
-            </div>
-          )}
-        </div>
-      )}
+          >
+            {previewMask}
+          </div>
+        )}
+      </div>
       {!isPreviewGroup && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
