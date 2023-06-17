@@ -16,7 +16,7 @@ export type ImageElementProps = Pick<
 >;
 
 export type PreviewImageElementProps = {
-  imgData: ImageElementProps;
+  data: ImageElementProps;
   canPreview: boolean;
 };
 

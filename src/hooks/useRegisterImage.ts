@@ -4,7 +4,7 @@ import type { ImageElementProps } from '../interface';
 
 let uid = 0;
 
-export default function useRegisterImage(canPreview: boolean, imgData: ImageElementProps) {
+export default function useRegisterImage(canPreview: boolean, data: ImageElementProps) {
   const [id] = React.useState(() => {
     uid += 1;
     return String(uid);
@@ -12,7 +12,7 @@ export default function useRegisterImage(canPreview: boolean, imgData: ImageElem
   const groupContext = React.useContext(PreviewGroupContext);
 
   const registerData = {
-    imgData,
+    data,
     canPreview,
   };
 
@@ -29,7 +29,7 @@ export default function useRegisterImage(canPreview: boolean, imgData: ImageElem
     if (groupContext) {
       groupContext.register(id, registerData);
     }
-  }, [canPreview, imgData]);
+  }, [canPreview, data]);
 
   return id;
 }

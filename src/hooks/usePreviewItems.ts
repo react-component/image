@@ -32,14 +32,14 @@ export default function usePreviewItems(
   const mergedItems = React.useMemo<Items>(() => {
     if (items) {
       return items.map(item =>
-        typeof item === 'string' ? { imgData: { src: item } } : { imgData: item },
+        typeof item === 'string' ? { data: { src: item } } : { data: item },
       );
     }
 
     return Object.keys(images).reduce((total: Items, id) => {
-      const { canPreview, imgData } = images[id];
+      const { canPreview, data } = images[id];
       if (canPreview) {
-        total.push({ imgData, id });
+        total.push({ data, id });
       }
       return total;
     }, []);

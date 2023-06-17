@@ -70,7 +70,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   });
 
   // >>> Image
-  const { src, ...imgCommonProps } = mergedItems[current]?.imgData || {};
+  const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
@@ -91,7 +91,7 @@ const Group: React.FC<GroupConsumerProps> = ({
       setCurrent(
         // `items` should always open the first one
         // We easy replace `-1` to `0` here
-        Math.max(0, index),
+        index < 0 ? 0 : index,
       );
     },
     [mergedItems],
