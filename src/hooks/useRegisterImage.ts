@@ -19,15 +19,15 @@ export default function useRegisterImage(canPreview: boolean, data: ImageElement
   // Keep order start
   // Resolve https://github.com/ant-design/ant-design/issues/28881
   // Only need unRegister when component unMount
-  React.useEffect(() => {
-    if (groupContext) {
-      return groupContext.register(id, registerData);
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (groupContext) {
+  //     return groupContext.register(id, registerData);
+  //   }
+  // }, []);
 
   React.useEffect(() => {
     if (groupContext) {
-      groupContext.register(id, registerData);
+      return groupContext.register(id, registerData);
     }
   }, [canPreview, data]);
 
