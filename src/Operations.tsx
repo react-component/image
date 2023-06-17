@@ -2,9 +2,10 @@ import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
 import * as React from 'react';
+import { useContext } from 'react';
+import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
-import { context } from './PreviewGroup';
 
 interface OperationsProps
   extends Pick<
@@ -20,8 +21,8 @@ interface OperationsProps
   > {
   showSwitch: boolean;
   showProgress: boolean;
-  transform: TransformType;
   current: number;
+  transform: TransformType;
   count: number;
   scale: number;
   minScale: number;
@@ -50,8 +51,8 @@ const Operations: React.FC<OperationsProps> = props => {
     countRender,
     showSwitch,
     showProgress,
-    transform,
     current,
+    transform,
     count,
     scale,
     minScale,
@@ -67,7 +68,7 @@ const Operations: React.FC<OperationsProps> = props => {
     onFlipY,
     toolbarRender,
   } = props;
-  const { isPreviewGroup } = React.useContext(context);
+  const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
   const iconClassName = `${prefixCls}-operations-icon`;
@@ -181,7 +182,7 @@ const Operations: React.FC<OperationsProps> = props => {
               close: onClose,
             },
             transform,
-            ...(isPreviewGroup ? { current, total: count } : {}),
+            ...(groupContext ? { current, total: count } : {}),
           })
         : toolbar}
     </>

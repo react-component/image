@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from 'rc-util/lib/KeyCode';
+import React from 'react';
 import Image from '../src';
 
 describe('PreviewGroup', () => {
@@ -34,13 +35,13 @@ describe('PreviewGroup', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(2, 0);
+    expect(onChange).toHaveBeenCalledWith(1, 0);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(onChange).toHaveBeenCalledWith(3, 2);
+    expect(onChange).toHaveBeenCalledWith(2, 1);
   });
 
   it('Mount and UnMount', () => {
@@ -248,10 +249,8 @@ describe('PreviewGroup', () => {
 
   it('album mode', () => {
     const { container } = render(
-      <Image.PreviewGroup>
+      <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
         <Image src="src1" />
-        <Image preview={{ showOnlyInPreview: true }} src="src2" />
-        <Image preview={{ showOnlyInPreview: true }} src="src3" />
       </Image.PreviewGroup>,
     );
 
@@ -268,5 +267,36 @@ describe('PreviewGroup', () => {
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
+  });
+
+  it('should keep order', async () => {
+    const Demo = ({ firstUrl }: { firstUrl: string }) => {
+      return (
+        <Image.PreviewGroup preview={{ visible: true }}>
+          <Image src={firstUrl} />
+          <Image src="http://last/img.png" />
+        </Image.PreviewGroup>
+      );
+    };
+
+    const { rerender } = render(<Demo firstUrl="http://first/img.png" />);
+
+    // Open preview
+    expect(document.querySelector('.rc-image-preview-operations-progress').textContent).toEqual(
+      '1 / 2',
+    );
+    expect(
+      document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
+    ).toEqual('http://first/img.png');
+
+    // Modify URL should keep order
+    rerender(<Demo firstUrl="http://second/img.png" />);
+
+    expect(document.querySelector('.rc-image-preview-operations-progress').textContent).toEqual(
+      '1 / 2',
+    );
+    expect(
+      document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
+    ).toEqual('http://second/img.png');
   });
 });
