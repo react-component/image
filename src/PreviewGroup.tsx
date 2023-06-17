@@ -38,21 +38,6 @@ export interface GroupConsumerProps {
   children?: React.ReactNode;
 }
 
-export interface PreviewData {
-  src: string;
-  imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
-  canPreview?: boolean;
-}
-
-export interface GroupConsumerValue extends GroupConsumerProps {
-  isPreviewGroup?: boolean;
-  currentIndex: number;
-  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
-  setShowPreview: React.Dispatch<React.SetStateAction<boolean>>;
-  setMousePosition: React.Dispatch<React.SetStateAction<null | { x: number; y: number }>>;
-  rootClassName?: string;
-}
-
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
