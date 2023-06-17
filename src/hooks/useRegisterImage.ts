@@ -23,6 +23,12 @@ export default function useRegisterImage(canPreview: boolean, imgData: ImageElem
     if (groupContext) {
       return groupContext.register(id, registerData);
     }
+  }, []);
+
+  React.useEffect(() => {
+    if (groupContext) {
+      groupContext.register(id, registerData);
+    }
   }, [canPreview, imgData]);
 
   return id;
