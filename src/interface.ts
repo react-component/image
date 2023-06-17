@@ -15,12 +15,13 @@ export type ImageElementProps = Pick<
   | 'alt'
 >;
 
-export type PreviewImageElementProps = ImageElementProps & {
+export type PreviewImageElementProps = {
+  imgData: ImageElementProps;
   canPreview: boolean;
 };
 
 export type InternalItem = PreviewImageElementProps & {
-  id: string;
+  id?: string;
 };
 
 export type RegisterImage = (id: string, data: PreviewImageElementProps) => VoidFunction;

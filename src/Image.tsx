@@ -4,7 +4,7 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
@@ -179,7 +179,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const mergedSrc = isError && fallback ? fallback : src;
 
   // ========================= ImageProps =========================
-  const imgCommonProps = React.useMemo(
+  const imgCommonProps = useMemo(
     () => {
       const obj: ImageElementProps = {};
       COMMON_PROPS.forEach((prop: any) => {
@@ -194,7 +194,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   );
 
   // ========================== Register ==========================
-  const registerData: ImageElementProps = React.useMemo(
+  const registerData: ImageElementProps = useMemo(
     () => ({
       ...imgCommonProps,
       src,

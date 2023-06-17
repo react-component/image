@@ -5,8 +5,8 @@ import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import { warning } from 'rc-util/lib/warning';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import { PreviewGroupContext } from './context';
+import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
@@ -67,7 +67,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onClose?: () => void;
   onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
   toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
-  onChange?: (currentIndex, prevIndex) => void;
+  onChange?: (current, prev) => void;
 }
 
 const Preview: React.FC<PreviewProps> = props => {
@@ -93,6 +93,7 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
+    afterClose,
     ...restProps
   } = props;
 
@@ -128,6 +129,7 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onAfterClose = () => {
     resetTransform('close');
+    afterClose?.();
   };
 
   const onZoomIn = () => {
@@ -363,7 +365,7 @@ const Preview: React.FC<PreviewProps> = props => {
         countRender={countRender}
         showSwitch={showLeftOrRightSwitches}
         showProgress={showOperationsProgress}
-        currentIndex={current}
+        current={current}
         count={count}
         scale={scale}
         minScale={minScale}

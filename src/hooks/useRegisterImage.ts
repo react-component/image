@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type { ImageElementProps } from '../interface';
 import { PreviewGroupContext } from '../context';
+import type { ImageElementProps } from '../interface';
 
 let uid = 0;
 
@@ -12,7 +12,7 @@ export default function useRegisterImage(canPreview: boolean, imgData: ImageElem
   const groupContext = React.useContext(PreviewGroupContext);
 
   const registerData = {
-    ...imgData,
+    imgData,
     canPreview,
   };
 
@@ -23,13 +23,7 @@ export default function useRegisterImage(canPreview: boolean, imgData: ImageElem
     if (groupContext) {
       return groupContext.register(id, registerData);
     }
-  }, [canPreview]);
-
-  React.useEffect(() => {
-    if (groupContext) {
-      return groupContext.register(id, registerData);
-    }
-  }, [imgData]);
+  }, [canPreview, imgData]);
 
   return id;
 }

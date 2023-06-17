@@ -21,7 +21,7 @@ interface OperationsProps
   > {
   showSwitch: boolean;
   showProgress: boolean;
-  currentIndex: number;
+  current: number;
   transform: TransformType;
   count: number;
   scale: number;
@@ -51,7 +51,7 @@ const Operations: React.FC<OperationsProps> = props => {
     countRender,
     showSwitch,
     showProgress,
-    currentIndex,
+    current,
     transform,
     count,
     scale,
@@ -131,7 +131,7 @@ const Operations: React.FC<OperationsProps> = props => {
     <ul className={`${prefixCls}-operations`}>
       {showProgress && (
         <li className={`${prefixCls}-operations-progress`}>
-          {countRender?.(currentIndex + 1, count) ?? `${currentIndex + 1} / ${count}`}
+          {countRender?.(current + 1, count) ?? `${current + 1} / ${count}`}
         </li>
       )}
       {toolsNode}
@@ -144,7 +144,7 @@ const Operations: React.FC<OperationsProps> = props => {
         <>
           <div
             className={classnames(`${prefixCls}-switch-left`, {
-              [`${prefixCls}-switch-left-disabled`]: currentIndex === 0,
+              [`${prefixCls}-switch-left-disabled`]: current === 0,
             })}
             onClick={onSwitchLeft}
           >
@@ -152,7 +152,7 @@ const Operations: React.FC<OperationsProps> = props => {
           </div>
           <div
             className={classnames(`${prefixCls}-switch-right`, {
-              [`${prefixCls}-switch-right-disabled`]: currentIndex === count - 1,
+              [`${prefixCls}-switch-right-disabled`]: current === count - 1,
             })}
             onClick={onSwitchRight}
           >
@@ -182,7 +182,7 @@ const Operations: React.FC<OperationsProps> = props => {
               close: onClose,
             },
             transform,
-            ...(groupContext ? { current: currentIndex, total: count } : {}),
+            ...(groupContext ? { current, total: count } : {}),
           })
         : toolbar}
     </>

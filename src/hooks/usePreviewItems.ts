@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { InternalItem, PreviewImageElementProps, RegisterImage } from '../interface';
 import type { GroupConsumerProps } from '../PreviewGroup';
 
-export type Items = InternalItem[];
+export type Items = Omit<InternalItem, 'canPreview'>[];
 
 /**
  * Merge props provided `items` or context collected images
@@ -31,23 +31,18 @@ export default function usePreviewItems(
   // items
   const mergedItems = React.useMemo<Items>(() => {
     if (items) {
-      return items.map((item, index) => {
-        const itemObj = typeof item === 'string' ? { src: item } : item;
-
-        return {
-          ...itemObj,
-          // From `items` should always `id` not same as context registered one
-          id: `items_${index}`,
-        };
-      });
+      return items.map(item =>
+        typeof item === 'string' ? { imgData: { src: item } } : { imgData: item },
+      );
     }
 
-    return Object.keys(images)
-      .map(id => ({
-        ...images[id],
-        id,
-      }))
-      .filter(info => info.canPreview);
+    return Object.keys(images).reduce((total: Items, id) => {
+      const { canPreview, imgData } = images[id];
+      if (canPreview) {
+        total.push({ imgData, id });
+      }
+      return total;
+    }, []);
   }, [items, images]);
 
   return [mergedItems, registerImage];

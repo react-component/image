@@ -1,13 +1,11 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
-import omit from 'rc-util/lib/omit';
 import * as React from 'react';
 import { useState } from 'react';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';
-import type { ImageElementProps } from './interface';
-import { InternalItem, OnGroupPreview } from './interface';
+import type { ImageElementProps, OnGroupPreview } from './interface';
 import type { PreviewProps, ToolbarRenderType } from './Preview';
 import Preview from './Preview';
 
@@ -28,7 +26,7 @@ export interface PreviewGroupPreview
     transform: TransformType;
     current: number;
   }) => React.ReactNode;
-  onVisibleChange?: (value: boolean, prevValue: boolean, currentIndex: number) => void;
+  onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
@@ -66,7 +64,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     visible: previewVisible,
     onVisibleChange,
     getContainer,
-    current,
+    current: currentIndex,
     minScale,
     maxScale,
     countRender,
@@ -82,22 +80,17 @@ const Group: React.FC<GroupConsumerProps> = ({
 
   // ========================= Preview ==========================
   // >>> Index
-  const [currentIndex, setCurrentIndex] = useMergedState(0, {
-    value: current,
+  const [current, setCurrent] = useMergedState(0, {
+    value: currentIndex,
   });
 
   // >>> Image
-  const imgCommonProps = omit(mergedItems[currentIndex] || ({} as InternalItem), [
-    'id',
-    'canPreview',
-  ]);
-  const src = imgCommonProps.src;
-
+  const { src, ...imgCommonProps } = mergedItems[current]?.imgData || {};
   // >>> Visible
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: (val, prevVal) => {
-      onVisibleChange?.(val, prevVal, currentIndex);
+      onVisibleChange?.(val, prevVal, current);
     },
   });
 
@@ -110,10 +103,10 @@ const Group: React.FC<GroupConsumerProps> = ({
 
       setShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
-      setCurrentIndex(
+      setCurrent(
         // `items` should always open the first one
         // We easy replace `-1` to `0` here
-        index < 0 ? 0 : index,
+        Math.max(0, index),
       );
     },
     [mergedItems],
@@ -121,7 +114,7 @@ const Group: React.FC<GroupConsumerProps> = ({
 
   // ========================== Events ==========================
   const onInternalChange: PreviewGroupPreview['onChange'] = (next, prev) => {
-    setCurrentIndex(next);
+    setCurrent(next);
 
     onChange?.(next, prev);
   };
@@ -129,6 +122,13 @@ const Group: React.FC<GroupConsumerProps> = ({
   const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
+  };
+
+  // if not controlled current, reset to first image when closed
+  const afterClose = () => {
+    if (currentIndex === undefined) {
+      setCurrent(0);
+    }
   };
 
   // ========================= Context ==========================
@@ -153,13 +153,14 @@ const Group: React.FC<GroupConsumerProps> = ({
         minScale={minScale}
         maxScale={maxScale}
         getContainer={getContainer}
-        current={currentIndex}
+        current={current}
         count={mergedItems.length}
         countRender={countRender}
         onTransform={onTransform}
         toolbarRender={toolbarRender}
         imageRender={imageRender}
         onChange={onInternalChange}
+        afterClose={afterClose}
         {...dialogProps}
       />
     </PreviewGroupContext.Provider>
