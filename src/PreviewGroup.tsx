@@ -69,6 +69,8 @@ const Group: React.FC<GroupConsumerProps> = ({
     value: currentIndex,
   });
 
+  const [keepOpenIndex, setKeepOpenIndex] = useState(false);
+
   // >>> Image
   const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
@@ -88,14 +90,22 @@ const Group: React.FC<GroupConsumerProps> = ({
 
       setShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
-      setCurrent(
-        // `items` should always open the first one
-        // We easy replace `-1` to `0` here
-        index < 0 ? 0 : index,
-      );
+      setCurrent(index);
+      setKeepOpenIndex(index >= 0);
     },
     [mergedItems],
   );
+
+  // Reset current when reopen
+  React.useEffect(() => {
+    if (isShowPreview) {
+      if (!keepOpenIndex) {
+        setCurrent(0);
+      }
+    } else {
+      setKeepOpenIndex(false);
+    }
+  }, [isShowPreview]);
 
   // ========================== Events ==========================
   const onInternalChange: PreviewGroupPreview['onChange'] = (next, prev) => {
