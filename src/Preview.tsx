@@ -93,7 +93,6 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
-    afterClose,
     ...restProps
   } = props;
 
@@ -129,7 +128,6 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onAfterClose = () => {
     resetTransform('close');
-    afterClose?.();
   };
 
   const onZoomIn = () => {

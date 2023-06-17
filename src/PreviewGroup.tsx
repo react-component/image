@@ -119,12 +119,6 @@ const Group: React.FC<GroupConsumerProps> = ({
     setMousePosition(null);
   };
 
-  // if not controlled current, reset to first image when closed
-  const afterClose = () => {
-    if (currentIndex === undefined) {
-      setCurrent(0);
-    }
-  };
 
   // ========================= Context ==========================
   const previewGroupContext = React.useMemo(
@@ -155,7 +149,6 @@ const Group: React.FC<GroupConsumerProps> = ({
         toolbarRender={toolbarRender}
         imageRender={imageRender}
         onChange={onInternalChange}
-        afterClose={afterClose}
         {...dialogProps}
       />
     </PreviewGroupContext.Provider>
