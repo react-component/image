@@ -90,8 +90,8 @@ const Group: React.FC<GroupConsumerProps> = ({
 
       setShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
-      setCurrent(index);
-      setKeepOpenIndex(index >= 0);
+      setCurrent(index < 0 ? 0 : index);
+      setKeepOpenIndex(true);
     },
     [mergedItems],
   );
@@ -118,7 +118,6 @@ const Group: React.FC<GroupConsumerProps> = ({
     setShowPreview(false);
     setMousePosition(null);
   };
-
 
   // ========================= Context ==========================
   const previewGroupContext = React.useMemo(

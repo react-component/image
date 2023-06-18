@@ -1,5 +1,11 @@
 import * as React from 'react';
-import type { InternalItem, PreviewImageElementProps, RegisterImage } from '../interface';
+import { COMMON_PROPS } from '../Image';
+import type {
+  ImageElementProps,
+  InternalItem,
+  PreviewImageElementProps,
+  RegisterImage,
+} from '../interface';
 import type { GroupConsumerProps } from '../PreviewGroup';
 
 export type Items = Omit<InternalItem, 'canPreview'>[];
@@ -31,9 +37,18 @@ export default function usePreviewItems(
   // items
   const mergedItems = React.useMemo<Items>(() => {
     if (items) {
-      return items.map(item =>
-        typeof item === 'string' ? { data: { src: item } } : { data: item },
-      );
+      return items.map(item => {
+        if (typeof item === 'string') {
+          return { data: { src: item } };
+        }
+        const data: ImageElementProps = {};
+        Object.keys(item).forEach(key => {
+          if (['src', ...COMMON_PROPS].includes(key)) {
+            data[key] = item[key];
+          }
+        });
+        return { data };
+      });
     }
 
     return Object.keys(images).reduce((total: Items, id) => {

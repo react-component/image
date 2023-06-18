@@ -62,7 +62,7 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
-const COMMON_PROPS: (keyof ImageElementProps)[] = [
+export const COMMON_PROPS: (keyof Omit<ImageElementProps, 'src'>)[] = [
   'crossOrigin',
   'decoding',
   'draggable',
