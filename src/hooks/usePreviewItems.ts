@@ -42,9 +42,9 @@ export default function usePreviewItems(
           return { data: { src: item } };
         }
         const data: ImageElementProps = {};
-        Object.keys(items).forEach(key => {
+        Object.keys(item).forEach(key => {
           if (['src', ...COMMON_PROPS].includes(key)) {
-            data[key] = items[key];
+            data[key] = item[key];
           }
         });
         return { data };
