@@ -1,4 +1,5 @@
 import Image from 'rc-image';
+import React from 'react';
 import '../../assets/index.less';
 
 export default function imageRender() {
@@ -11,6 +12,8 @@ export default function imageRender() {
           toolbarRender: () => null,
           imageRender: () => (
             <video
+              muted
+              style={{ pointerEvents: 'auto' }}
               width="100%"
               controls
               src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*uYT7SZwhJnUAAAAAAAAAAAAADgCCAQ"
