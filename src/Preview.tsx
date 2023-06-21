@@ -12,8 +12,7 @@ import useImageTransform from './hooks/useImageTransform';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 
-export type ToolbarRenderType = {
-  originalNode: React.ReactNode;
+export type ToolbarRenderInfoType = {
   icons: {
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
@@ -24,13 +23,13 @@ export type ToolbarRenderType = {
     closeIcon: React.ReactNode;
   };
   actions: {
-    flipY: () => void;
-    flipX: () => void;
-    rotateLeft: () => void;
-    rotateRight: () => void;
-    zoomOut: () => void;
-    zoomIn: () => void;
-    close: () => void;
+    onFlipY: () => void;
+    onFlipX: () => void;
+    onRotateLeft: () => void;
+    onRotateRight: () => void;
+    onZoomOut: () => void;
+    onZoomIn: () => void;
+    onClose: () => void;
   };
   transform: TransformType;
   current: number;
@@ -59,14 +58,13 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   scaleStep?: number;
   minScale?: number;
   maxScale?: number;
-  imageRender?: (params: {
-    originalNode: React.ReactNode;
-    transform: TransformType;
-    current?: number;
-  }) => React.ReactNode;
+  imageRender?: (
+    originalNode: React.ReactNode,
+    info: { transform: TransformType; current?: number },
+  ) => React.ReactNode;
   onClose?: () => void;
-  onTransform?: (params: { transform: TransformType; action: TransformAction }) => void;
-  toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
+  onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
+  toolbarRender?: (originalNode: React.ReactNode, info: ToolbarRenderInfoType) => React.ReactNode;
   onChange?: (current, prev) => void;
 }
 
@@ -344,11 +342,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <div className={`${prefixCls}-img-wrapper`}>
           {imageRender
-            ? imageRender({
-                originalNode: imgNode,
-                transform,
-                ...(groupContext ? { current } : {}),
-              })
+            ? imageRender(imgNode, { transform, ...(groupContext ? { current } : {}) })
             : imgNode}
         </div>
       </Dialog>

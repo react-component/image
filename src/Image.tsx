@@ -9,7 +9,7 @@ import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import type { ImageElementProps } from './interface';
-import type { PreviewProps, ToolbarRenderType } from './Preview';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 
@@ -28,12 +28,15 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
-  imageRender?: (params: {
-    originalNode: React.ReactNode;
-    transform: TransformType;
-  }) => React.ReactNode;
+  imageRender?: (
+    originalNode: React.ReactNode,
+    info: { transform: TransformType },
+  ) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
-  toolbarRender?: (params: Omit<ToolbarRenderType, 'current' | 'total'>) => React.ReactNode;
+  toolbarRender?: (
+    originalNode: React.ReactNode,
+    info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
+  ) => React.ReactNode;
 }
 
 export interface ImageProps
