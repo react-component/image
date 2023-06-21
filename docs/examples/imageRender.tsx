@@ -1,5 +1,6 @@
 import Image from 'rc-image';
 import '../../assets/index.less';
+import React from 'react';
 
 export default function imageRender() {
   return (

@@ -40,7 +40,7 @@ export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   minScale: number,
   maxScale: number,
-  onTransform: (params: { transform: TransformType; action: TransformAction }) => void,
+  onTransform: (info: { transform: TransformType; action: TransformAction }) => void,
 ) {
   const frame = useRef(null);
   const queue = useRef<TransformType[]>([]);

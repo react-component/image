@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
-import type { PreviewProps, ToolbarRenderType } from './Preview';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 
 interface OperationsProps
   extends Pick<
@@ -36,7 +36,8 @@ interface OperationsProps
   onFlipX: () => void;
   onFlipY: () => void;
   toolbarRender: (
-    params: ToolbarRenderType | Omit<ToolbarRenderType, 'current' | 'total'>,
+    originalNode: React.ReactNode,
+    info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 }
 
@@ -127,7 +128,7 @@ const Operations: React.FC<OperationsProps> = props => {
     </li>
   ));
 
-  const toolbar = (
+  const toolbarNode = (
     <ul className={`${prefixCls}-operations`}>
       {showProgress && (
         <li className={`${prefixCls}-operations-progress`}>
@@ -161,8 +162,7 @@ const Operations: React.FC<OperationsProps> = props => {
         </>
       )}
       {toolbarRender
-        ? toolbarRender({
-            originalNode: toolbar,
+        ? toolbarRender(toolbarNode, {
             icons: {
               flipYIcon: toolsNode[0],
               flipXIcon: toolsNode[1],
@@ -173,18 +173,18 @@ const Operations: React.FC<OperationsProps> = props => {
               closeIcon: toolsNode[6],
             },
             actions: {
-              flipY: onFlipY,
-              flipX: onFlipX,
-              rotateLeft: onRotateLeft,
-              rotateRight: onRotateRight,
-              zoomOut: onZoomOut,
-              zoomIn: onZoomIn,
-              close: onClose,
+              onFlipY,
+              onFlipX,
+              onRotateLeft,
+              onRotateRight,
+              onZoomOut,
+              onZoomIn,
+              onClose,
             },
             transform,
             ...(groupContext ? { current, total: count } : {}),
           })
-        : toolbar}
+        : toolbarNode}
     </>
   );
 

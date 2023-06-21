@@ -2,12 +2,7 @@
 
 React Image.
 
-[![NPM version][npm-image]][npm-url]
-[![npm download][download-image]][download-url]
-[![build status][github-actions-image]][github-actions-url]
-[![Codecov][codecov-image]][codecov-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
-[![dumi][dumi-image]][dumi-url]
+[![NPM version][npm-image]][npm-url] [![npm download][download-image]][download-url] [![build status][github-actions-image]][github-actions-url] [![Codecov][codecov-image]][codecov-url] [![bundle size][bundlephobia-image]][bundlephobia-url] [![dumi][dumi-image]][dumi-url]
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
@@ -83,8 +78,8 @@ export default () => (
 | maxScale | number | 50 | max scale |
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
-| imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType) } => React.ReactNode | - | Customize image |
-| toolbarRender | (params: Omit<[ToolbarRenderType](#ToolbarRenderType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
+| imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
+| toolbarRender | (originalNode: React.ReactNode, info: Omit<[ToolbarRenderType](#ToolbarRenderType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean) => void | - | Callback when visible is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
@@ -124,8 +119,8 @@ export default () => (
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | items | (string \| { src: string, alt: string, crossOrigin: string, ... })[] | - | preview group |
 | countRender | (current: number, total: number) => string | - | Customize count |
-| imageRender | { originalNode: React.ReactNode, transform: [TransformType](#TransformType), current: number } => React.ReactNode | - | Customize image |
-| toolbarRender | (params: [ToolbarRenderType](#ToolbarRenderType)) => React.ReactNode | - | Customize toolbar |
+| imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
+| toolbarRender | (originalNode: React.ReactNode, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean, current: number) => void | - | Callback when visible is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
@@ -161,7 +156,7 @@ type TransformAction =
   | 'dragRebound';
 ```
 
-### ToolbarRenderType
+### ToolbarRenderInfoType
 
 ```typescript
 {
@@ -176,13 +171,13 @@ type TransformAction =
     closeIcon: React.ReactNode;
   };
   actions: {
-    flipY: () => void;
-    flipX: () => void;
-    rotateLeft: () => void;
-    rotateRight: () => void;
-    zoomOut: () => void;
-    zoomIn: () => void;
-    close: () => void;
+    onFlipY: () => void;
+    onFlipX: () => void;
+    onRotateLeft: () => void;
+    onRotateRight: () => void;
+    onZoomOut: () => void;
+    onZoomIn: () => void;
+    onClose: () => void;
   };
   transform: {
     x: number;

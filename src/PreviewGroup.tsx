@@ -6,7 +6,7 @@ import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImagePreviewType } from './Image';
 import type { ImageElementProps, OnGroupPreview } from './interface';
-import type { PreviewProps, ToolbarRenderType } from './Preview';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 
 export interface PreviewGroupPreview
@@ -20,12 +20,11 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => string;
-  toolbarRender?: (params: ToolbarRenderType) => React.ReactNode;
-  imageRender?: (params: {
-    originalNode: React.ReactNode;
-    transform: TransformType;
-    current: number;
-  }) => React.ReactNode;
+  toolbarRender?: (originalNode: React.ReactNode, info: ToolbarRenderInfoType) => React.ReactNode;
+  imageRender?: (
+    originalNode: React.ReactNode,
+    info: { transform: TransformType; current: number },
+  ) => React.ReactNode;
   onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
   onChange?: (current: number, prevCurrent: number) => void;
 }
