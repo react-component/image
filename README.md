@@ -84,7 +84,7 @@ export default () => (
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
-| toolbarRender | (originalNode: React.ReactNode, info: Omit<[ToolbarRenderType](#ToolbarRenderType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
+| toolbarRender | (originalNode: React.ReactNode, info: Omit<[ToolbarRenderInfoType](#ToolbarRenderInfoType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean) => void | - | Callback when visible is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
