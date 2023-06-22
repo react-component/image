@@ -12,6 +12,7 @@ import type { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
+import { COMMON_PROPS as CommonProps } from './common';
 
 export interface ImagePreviewType
   extends Omit<
@@ -65,17 +66,7 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
-export const COMMON_PROPS: (keyof Omit<ImageElementProps, 'src'>)[] = [
-  'crossOrigin',
-  'decoding',
-  'draggable',
-  'loading',
-  'referrerPolicy',
-  'sizes',
-  'srcSet',
-  'useMap',
-  'alt',
-];
+export const COMMON_PROPS = CommonProps;
 
 function isImageValid(src) {
   return new Promise(resolve => {
