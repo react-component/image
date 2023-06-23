@@ -58,6 +58,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   scaleStep?: number;
   minScale?: number;
   maxScale?: number;
+  onlyLoadSrcIfOpen?: boolean;
   imageRender?: (
     originalNode: React.ReactNode,
     info: { transform: TransformType; current?: number },
@@ -91,6 +92,7 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
+    onlyLoadSrcIfOpen,
     ...restProps
   } = props;
 
@@ -303,6 +305,14 @@ const Preview: React.FC<PreviewProps> = props => {
     };
   }, [visible, showLeftOrRightSwitches, current]);
 
+  const actualSrc = (() => {
+    if (onlyLoadSrcIfOpen && !visible) {
+      return undefined;
+    }
+
+    return src;
+  })();
+
   const imgNode = (
     <img
       {...imgCommonProps}
@@ -313,7 +323,7 @@ const Preview: React.FC<PreviewProps> = props => {
       onDoubleClick={onDoubleClick}
       ref={imgRef}
       className={`${prefixCls}-img`}
-      src={src}
+      src={actualSrc}
       alt={alt}
       style={{
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${

@@ -19,6 +19,7 @@ export interface ImagePreviewType
     'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
   > {
   src?: string;
+  lazy?: boolean;
   visible?: boolean;
   minScale?: number;
   maxScale?: number;
@@ -292,6 +293,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imageRender={imageRender}
           imgCommonProps={imgCommonProps}
           toolbarRender={toolbarRender}
+          onlyLoadSrcIfOpen={preview?.lazy}
           {...dialogProps}
         />
       )}
