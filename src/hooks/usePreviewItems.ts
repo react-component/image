@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { COMMON_PROPS } from '../Image';
+import { COMMON_PROPS } from '../common';
 import type {
   ImageElementProps,
   InternalItem,
