@@ -5,6 +5,7 @@ import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { COMMON_PROPS } from './common';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
@@ -12,7 +13,6 @@ import type { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
-import { COMMON_PROPS as CommonProps } from './common';
 
 export interface ImagePreviewType
   extends Omit<
@@ -65,8 +65,6 @@ interface CompoundedComponent<P> extends React.FC<P> {
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
-
-export const COMMON_PROPS = CommonProps;
 
 function isImageValid(src) {
   return new Promise(resolve => {
@@ -150,12 +148,12 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   };
 
   useEffect(() => {
-    isImageValid(src).then(isValid => {
+    isImageValid(imgSrc).then(isValid => {
       if (!isValid) {
         setStatus('error');
       }
     });
-  }, [src]);
+  }, [imgSrc]);
 
   useEffect(() => {
     if (isError) {
