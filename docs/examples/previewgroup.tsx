@@ -1,4 +1,5 @@
 import Image from 'rc-image';
+import React from 'react';
 import '../../assets/index.less';
 
 export default function PreviewGroup() {
