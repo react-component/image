@@ -99,9 +99,14 @@
       vertical-align: middle;
       max-width: 100%;
       max-height: 100%;
-      pointer-events: auto;
+
       &-wrapper {
         .box;
+
+        & > * {
+          pointer-events: auto;
+        }
+
         &::before {
           content: '';
           display: inline-block;

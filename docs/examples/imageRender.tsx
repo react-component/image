@@ -13,7 +13,6 @@ export default function imageRender() {
           imageRender: () => (
             <video
               muted
-              style={{ pointerEvents: 'auto' }}
               width="100%"
               controls
               src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*uYT7SZwhJnUAAAAAAAAAAAAADgCCAQ"
