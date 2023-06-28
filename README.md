@@ -2,6 +2,7 @@
 
 React Image.
 
+<!-- prettier-ignore -->
 [![NPM version][npm-image]][npm-url]
 [![npm download][download-image]][download-url]
 [![build status][github-actions-image]][github-actions-url]
@@ -77,10 +78,11 @@ export default () => (
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | visible | boolean | - | Whether the preview is open or not |
-| src | string | - | customize preview src |
+| closeIcon | React.ReactNode | - | Custom close icon |
+| src | string | - | Customize preview src |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
-| minScale | number | 1 | min scale |
-| maxScale | number | 50 | max scale |
+| minScale | number | 1 | Min scale |
+| maxScale | number | 50 | Max scale |
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
@@ -116,14 +118,15 @@ export default () => (
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | visible | boolean | - | Whether the preview is open or not |
-| current | number | - | current index |
+| current | number | - | Current index |
+| closeIcon | React.ReactNode | - | Custom close icon |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
-| minScale | number | 1 | min scale |
-| maxScale | number | 50 | max scale |
+| minScale | number | 1 | Min scale |
+| maxScale | number | 50 | Max scale |
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | items | (string \| { src: string, alt: string, crossOrigin: string, ... })[] | - | preview group |
-| countRender | (current: number, total: number) => string | - | Customize count |
+| countRender | (current: number, total: number) => React.ReactNode | - | Customize count |
 | imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
 | toolbarRender | (originalNode: React.ReactNode, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean, current: number) => void | - | Callback when visible is changed |
@@ -173,7 +176,6 @@ type TransformAction =
     rotateRightIcon: React.ReactNode;
     zoomOutIcon: React.ReactNode;
     zoomInIcon: React.ReactNode;
-    closeIcon: React.ReactNode;
   };
   actions: {
     onFlipY: () => void;
@@ -182,7 +184,6 @@ type TransformAction =
     onRotateRight: () => void;
     onZoomOut: () => void;
     onZoomIn: () => void;
-    onClose: () => void;
   };
   transform: {
     x: number;

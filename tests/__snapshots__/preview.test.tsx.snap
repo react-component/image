@@ -74,31 +74,31 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
   <div
     class="rc-image-preview-operations-wrapper custom-className"
   >
-    <ul
+    <button
+      class="rc-image-preview-close"
+    />
+    <div
       class="rc-image-preview-operations"
     >
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
       />
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
       />
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
       />
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
       />
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
       />
-      <li
+      <div
         class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
       />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-close"
-      />
-    </ul>
+    </div>
   </div>,
 ]
 `;

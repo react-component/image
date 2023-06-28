@@ -133,31 +133,47 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    &-close {
+      position: fixed;
+      top: 32px;
+      right: 32px;
+      display: flex;
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 15px;
+      outline: 0;
+      border: 0;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.3;
+      }
+    }
+
+    &-progress {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
     &-operations-wrapper {
       position: fixed;
       z-index: @zindex-preview-mask + 1;
     }
 
     &-operations {
-      .reset;
-      pointer-events: auto;
-      list-style: none;
       position: fixed;
       display: flex;
-      top: 0;
-      right: 0;
-      width: 100%;
-      align-items: center;
-      justify-content: flex-end;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: @zindex-preview-mask + 1;
       color: @text-color;
       background: fade(@preview-mask-bg, 45%);
-
-      &-progress {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-      }
+      border-radius: 100px;
+      padding: 0 20px;
 
       &-operation {
         padding: 10px;
@@ -189,7 +205,6 @@
       align-items: center;
       justify-content: center;
       z-index: @zindex-preview-mask + 1;
-      pointer-events: auto;
       cursor: pointer;
       color: @text-color;
       &-disabled {
@@ -218,7 +233,6 @@
       align-items: center;
       justify-content: center;
       z-index: @zindex-preview-mask + 1;
-      pointer-events: auto;
       cursor: pointer;
       color: @text-color;
       &-disabled {
