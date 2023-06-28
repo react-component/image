@@ -66,7 +66,6 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 type ImageStatus = 'normal' | 'error' | 'loading';
 
-// https://github.com/react-component/image/pull/187
 function isImageValid(src) {
   return new Promise(resolve => {
     const img = document.createElement('img');
@@ -148,6 +147,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     }
   };
 
+  // https://github.com/react-component/image/pull/187
   useEffect(() => {
     isImageValid(imgSrc).then(isValid => {
       if (!isValid) {
