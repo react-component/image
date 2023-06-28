@@ -13,6 +13,7 @@ import type { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
+import { isImageValid } from './util';
 
 export interface ImagePreviewType
   extends Omit<
@@ -65,15 +66,6 @@ interface CompoundedComponent<P> extends React.FC<P> {
 }
 
 type ImageStatus = 'normal' | 'error' | 'loading';
-
-function isImageValid(src) {
-  return new Promise(resolve => {
-    const img = document.createElement('img');
-    img.onerror = () => resolve(false);
-    img.onload = () => resolve(true);
-    img.src = src;
-  });
-}
 
 const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const {
