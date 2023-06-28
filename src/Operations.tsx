@@ -135,11 +135,9 @@ const Operations: React.FC<OperationsProps> = props => {
             className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
             style={style}
           >
-            {closeIcon !== undefined ? (
-              closeIcon
-            ) : (
+            {closeIcon === null ? null : (
               <button className={`${prefixCls}-close`} onClick={onClose}>
-                {close}
+                {closeIcon || close}
               </button>
             )}
 
