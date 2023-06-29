@@ -151,25 +151,28 @@
       }
     }
 
-    &-progress {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
     &-operations-wrapper {
       position: fixed;
       z-index: @zindex-preview-mask + 1;
     }
 
-    &-operations {
+    &-footer {
       position: fixed;
-      display: flex;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
       z-index: @zindex-preview-mask + 1;
+      bottom: 32px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &-progress {
+      margin-bottom: 20px;
+    }
+
+    &-operations {
+      display: flex;
       color: @text-color;
       background: fade(@preview-mask-bg, 45%);
       border-radius: 100px;

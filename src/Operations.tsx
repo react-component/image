@@ -162,34 +162,36 @@ const Operations: React.FC<OperationsProps> = props => {
               </>
             )}
 
-            {showProgress && (
-              <div className={`${prefixCls}-progress`}>
-                {countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}
-              </div>
-            )}
+            <div className={`${prefixCls}-footer`}>
+              {showProgress && (
+                <div className={`${prefixCls}-progress`}>
+                  {countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}
+                </div>
+              )}
 
-            {toolbarRender
-              ? toolbarRender(toolbarNode, {
-                  icons: {
-                    flipYIcon: toolsNode[0],
-                    flipXIcon: toolsNode[1],
-                    rotateLeftIcon: toolsNode[2],
-                    rotateRightIcon: toolsNode[3],
-                    zoomOutIcon: toolsNode[4],
-                    zoomInIcon: toolsNode[5],
-                  },
-                  actions: {
-                    onFlipY,
-                    onFlipX,
-                    onRotateLeft,
-                    onRotateRight,
-                    onZoomOut,
-                    onZoomIn,
-                  },
-                  transform,
-                  ...(groupContext ? { current, total: count } : {}),
-                })
-              : toolbarNode}
+              {toolbarRender
+                ? toolbarRender(toolbarNode, {
+                    icons: {
+                      flipYIcon: toolsNode[0],
+                      flipXIcon: toolsNode[1],
+                      rotateLeftIcon: toolsNode[2],
+                      rotateRightIcon: toolsNode[3],
+                      zoomOutIcon: toolsNode[4],
+                      zoomInIcon: toolsNode[5],
+                    },
+                    actions: {
+                      onFlipY,
+                      onFlipX,
+                      onRotateLeft,
+                      onRotateRight,
+                      onZoomOut,
+                      onZoomIn,
+                    },
+                    transform,
+                    ...(groupContext ? { current, total: count } : {}),
+                  })
+                : toolbarNode}
+            </div>
           </div>
         </Portal>
       )}
