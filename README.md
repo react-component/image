@@ -169,7 +169,6 @@ type TransformAction =
 
 ```typescript
 {
-  originalNode: React.ReactNode;
   icons: {
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
