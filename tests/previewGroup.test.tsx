@@ -59,7 +59,7 @@ describe('PreviewGroup', () => {
     });
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    const previewProgressElement = document.querySelector('.rc-image-preview-operations-progress');
+    const previewProgressElement = document.querySelector('.rc-image-preview-progress');
 
     expect(previewProgressElement).toBeTruthy();
     expect(previewProgressElement.textContent).toEqual('1 / 2');
@@ -102,14 +102,14 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    const previewProgressElement = document.querySelector('.rc-image-preview-operations-progress');
+    const previewProgressElement = document.querySelector('.rc-image-preview-progress');
 
     expect(previewProgressElement).toBeTruthy();
     expect(previewProgressElement.textContent).toEqual('current:1 / total:3');
   });
 
   it('Switch', () => {
-    const previewProgressElementPath = '.rc-image-preview-operations-progress';
+    const previewProgressElementPath = '.rc-image-preview-progress';
     const { container } = render(
       <Image.PreviewGroup>
         <Image src="src1" />
@@ -282,9 +282,7 @@ describe('PreviewGroup', () => {
     const { rerender } = render(<Demo firstUrl="http://first/img.png" />);
 
     // Open preview
-    expect(document.querySelector('.rc-image-preview-operations-progress').textContent).toEqual(
-      '1 / 2',
-    );
+    expect(document.querySelector('.rc-image-preview-progress').textContent).toEqual('1 / 2');
     expect(
       document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
     ).toEqual('http://first/img.png');
@@ -292,9 +290,7 @@ describe('PreviewGroup', () => {
     // Modify URL should keep order
     rerender(<Demo firstUrl="http://second/img.png" />);
 
-    expect(document.querySelector('.rc-image-preview-operations-progress').textContent).toEqual(
-      '1 / 2',
-    );
+    expect(document.querySelector('.rc-image-preview-progress').textContent).toEqual('1 / 2');
     expect(
       document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
     ).toEqual('http://second/img.png');
