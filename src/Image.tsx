@@ -4,16 +4,16 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import * as React from 'react';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { COMMON_PROPS } from './common';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
+import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
-import { isImageValid } from './util';
 
 export interface ImagePreviewType
   extends Omit<
@@ -65,8 +65,6 @@ interface CompoundedComponent<P> extends React.FC<P> {
   PreviewGroup: typeof PreviewGroup;
 }
 
-type ImageStatus = 'normal' | 'error' | 'loading';
-
 const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const {
     src: imgSrc,
@@ -111,57 +109,25 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     value: previewVisible,
     onChange: onPreviewVisibleChange,
   });
-  const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
+  const [getImgRef, srcAndOnload, status] = useStatus({
+    src: imgSrc,
+    isCustomPlaceholder,
+    fallback,
+  });
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
-  const isError = status === 'error';
 
   const groupContext = useContext(PreviewGroupContext);
 
   const canPreview = !!preview;
-
-  const isLoaded = useRef(false);
-
-  const onLoad = () => {
-    setStatus('normal');
-  };
 
   const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
   };
 
-  const getImgRef = (img?: HTMLImageElement) => {
-    isLoaded.current = false;
-    if (status !== 'loading') return;
-    if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
-      isLoaded.current = true;
-      onLoad();
-    }
-  };
-
-  // https://github.com/react-component/image/pull/187
-  useEffect(() => {
-    isImageValid(imgSrc).then(isValid => {
-      if (!isValid) {
-        setStatus('error');
-      }
-    });
-  }, [imgSrc]);
-
-  useEffect(() => {
-    if (isError) {
-      setStatus('normal');
-    }
-    if (isCustomPlaceholder && !isLoaded.current) {
-      setStatus('loading');
-    }
-  }, [imgSrc]);
-
   const wrapperClass = cn(prefixCls, wrapperClassName, rootClassName, {
-    [`${prefixCls}-error`]: isError,
+    [`${prefixCls}-error`]: status === 'error',
   });
-
-  const mergedSrc = isError && fallback ? fallback : src;
 
   // ========================= ImageProps =========================
   const imgCommonProps = useMemo(
@@ -232,7 +198,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
             ...style,
           }}
           ref={getImgRef}
-          {...(isError && fallback ? { src: fallback } : { onLoad, src: imgSrc })}
+          {...srcAndOnload}
           width={width}
           height={height}
           onError={onError}
@@ -263,8 +229,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}
-          src={mergedSrc}
+          src={src}
           alt={alt}
+          fallback={fallback}
           getContainer={getPreviewContainer}
           icons={icons}
           scaleStep={scaleStep}

@@ -110,6 +110,8 @@ export default () => (
 | preview | boolean \| [PreviewGroupType](#PreviewGroupType) | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
 | previewPrefixCls | string | rc-image-preview | Preview classname prefix |
 | icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
+| fallback | string | - | Load failed src |
+| items | (string \| { src: string, alt: string, crossOrigin: string, ... })[] | - | preview group |
 
 ### PreviewGroupType
 
@@ -122,7 +124,6 @@ export default () => (
 | maxScale | number | 50 | max scale |
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
-| items | (string \| { src: string, alt: string, crossOrigin: string, ... })[] | - | preview group |
 | countRender | (current: number, total: number) => string | - | Customize count |
 | imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
 | toolbarRender | (originalNode: React.ReactNode, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |

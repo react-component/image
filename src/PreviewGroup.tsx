@@ -33,6 +33,7 @@ export interface GroupConsumerProps {
   previewPrefixCls?: string;
   icons?: PreviewProps['icons'];
   items?: (string | ImageElementProps)[];
+  fallback?: string;
   preview?: boolean | PreviewGroupPreview;
   children?: React.ReactNode;
 }
@@ -43,6 +44,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   icons = {},
   items,
   preview,
+  fallback,
 }) => {
   const {
     visible: previewVisible,
@@ -136,6 +138,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         mousePosition={mousePosition}
         imgCommonProps={imgCommonProps}
         src={src}
+        fallback={fallback}
         icons={icons}
         minScale={minScale}
         maxScale={maxScale}

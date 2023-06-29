@@ -33,6 +33,23 @@ describe('Fallback', () => {
     expect(container.querySelector('img').src).toEqual(fallback);
   });
 
+  it('PreviewGroup Fallback correct', async () => {
+    const { container } = render(
+      <Image.PreviewGroup fallback={fallback}>
+        <Image src="abc" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image-img'));
+
+    await act(async () => {
+      jest.runAllTimers();
+      await Promise.resolve();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', fallback);
+  });
+
   it('should not show preview', () => {
     const { container } = render(<Image src="abc" fallback={fallback} />);
 

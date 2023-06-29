@@ -9,6 +9,7 @@ import { PreviewGroupContext } from './context';
 import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
+import useStatus from './hooks/useStatus';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 
@@ -40,6 +41,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
+  fallback?: string;
   rootClassName?: string;
   icons?: {
     rotateLeft?: React.ReactNode;
@@ -68,11 +70,35 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   onChange?: (current, prev) => void;
 }
 
+interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  fallback?: string;
+  imgRef: React.MutableRefObject<HTMLImageElement>;
+}
+
+const PreviewImage: React.FC<PreviewImageProps> = ({ fallback, src, imgRef, ...props }) => {
+  const [getImgRef, srcAndOnload] = useStatus({
+    src,
+    fallback,
+  });
+
+  return (
+    <img
+      ref={ref => {
+        imgRef.current = ref;
+        getImgRef(ref);
+      }}
+      {...props}
+      {...srcAndOnload}
+    />
+  );
+};
+
 const Preview: React.FC<PreviewProps> = props => {
   const {
     prefixCls,
     src,
     alt,
+    fallback,
     onClose,
     visible,
     icons = {},
@@ -304,16 +330,12 @@ const Preview: React.FC<PreviewProps> = props => {
   }, [visible, showLeftOrRightSwitches, current]);
 
   const imgNode = (
-    <img
+    <PreviewImage
       {...imgCommonProps}
       width={props.width}
       height={props.height}
-      onWheel={onWheel}
-      onMouseDown={onMouseDown}
-      onDoubleClick={onDoubleClick}
-      ref={imgRef}
+      imgRef={imgRef}
       className={`${prefixCls}-img`}
-      src={src}
       alt={alt}
       style={{
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
@@ -321,6 +343,11 @@ const Preview: React.FC<PreviewProps> = props => {
         }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
         transitionDuration: !enableTransition && '0s',
       }}
+      fallback={fallback}
+      src={src}
+      onWheel={onWheel}
+      onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
     />
   );
 
