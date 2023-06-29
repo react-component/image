@@ -1,11 +1,13 @@
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
-import LeftOutlined from '@ant-design/icons/LeftOutlined';
-import RightOutlined from '@ant-design/icons/RightOutlined';
-import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
-import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
-import SwapOutlined from '@ant-design/icons/SwapOutlined';
-import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
-import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
+import {
+  CloseOutlined,
+  LeftOutlined,
+  RightOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
+  SwapOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import Image from 'rc-image';
 import React from 'react';
 import '../../assets/index.less';
@@ -33,6 +35,10 @@ export default function PreviewGroup() {
             console.log(`当前第${current}张，上一次第${prev === undefined ? '-' : prev}张`),
         }}
       >
+        <Image
+          wrapperStyle={{ marginRight: 24, width: 200 }}
+          src={require('./images/placeholder.png')}
+        />
         <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
         <Image
           wrapperStyle={{ marginRight: 24, width: 200 }}
