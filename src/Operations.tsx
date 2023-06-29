@@ -74,7 +74,7 @@ const Operations: React.FC<OperationsProps> = props => {
   const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
-  const iconClassName = `${prefixCls}-operations-icon`;
+
   const tools = [
     {
       icon: flipY,
@@ -119,9 +119,7 @@ const Operations: React.FC<OperationsProps> = props => {
       onClick={onClick}
       key={type}
     >
-      {React.isValidElement(icon)
-        ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-        : icon}
+      {icon}
     </div>
   ));
 
