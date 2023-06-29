@@ -21,7 +21,6 @@ export type ToolbarRenderInfoType = {
     rotateRightIcon: React.ReactNode;
     zoomOutIcon: React.ReactNode;
     zoomInIcon: React.ReactNode;
-    closeIcon: React.ReactNode;
   };
   actions: {
     onFlipY: () => void;
@@ -30,7 +29,6 @@ export type ToolbarRenderInfoType = {
     onRotateRight: () => void;
     onZoomOut: () => void;
     onZoomIn: () => void;
-    onClose: () => void;
   };
   transform: TransformType;
   current: number;
@@ -56,7 +54,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   };
   current?: number;
   count?: number;
-  countRender?: (current: number, total: number) => string;
+  closeIcon?: React.ReactNode;
+  countRender?: (current: number, total: number) => React.ReactNode;
   scaleStep?: number;
   minScale?: number;
   maxScale?: number;
@@ -103,6 +102,7 @@ const Preview: React.FC<PreviewProps> = props => {
     visible,
     icons = {},
     rootClassName,
+    closeIcon,
     getContainer,
     current = 0,
     count = 1,
@@ -377,6 +377,7 @@ const Preview: React.FC<PreviewProps> = props => {
         visible={visible}
         transform={transform}
         maskTransitionName={maskTransitionName}
+        closeIcon={closeIcon}
         getContainer={getContainer}
         prefixCls={prefixCls}
         rootClassName={rootClassName}

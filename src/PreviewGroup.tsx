@@ -54,6 +54,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     minScale,
     maxScale,
     countRender,
+    closeIcon,
     onChange,
     onTransform,
     toolbarRender,
@@ -134,6 +135,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         aria-hidden={!isShowPreview}
         visible={isShowPreview}
         prefixCls={previewPrefixCls}
+        closeIcon={closeIcon}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
         imgCommonProps={imgCommonProps}
