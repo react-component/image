@@ -27,11 +27,10 @@ export default function useStatus({
   }, [src]);
 
   useEffect(() => {
-    if (isError) {
-      setStatus('normal');
-    }
     if (isCustomPlaceholder && !isLoaded.current) {
       setStatus('loading');
+    } else if (isError) {
+      setStatus('normal');
     }
   }, [src]);
 
@@ -41,7 +40,9 @@ export default function useStatus({
 
   const getImgRef = (img?: HTMLImageElement) => {
     isLoaded.current = false;
-    if (status !== 'loading') return;
+    if (status !== 'loading') {
+      return;
+    }
     if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
       isLoaded.current = true;
       onLoad();
