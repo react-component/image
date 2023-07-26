@@ -40,6 +40,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   src?: string;
   alt?: string;
   fallback?: string;
+  movable?: boolean;
   rootClassName?: string;
   icons?: {
     rotateLeft?: React.ReactNode;
@@ -98,6 +99,7 @@ const Preview: React.FC<PreviewProps> = props => {
     src,
     alt,
     fallback,
+    movable = true,
     onClose,
     visible,
     icons = {},
@@ -229,7 +231,7 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
     // Only allow main button
-    if (event.button !== 0) return;
+    if (!movable || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     downPositionRef.current = {
@@ -295,31 +297,35 @@ const Preview: React.FC<PreviewProps> = props => {
   useEffect(() => {
     let onTopMouseUpListener;
     let onTopMouseMoveListener;
+    let onMouseUpListener;
+    let onMouseMoveListener;
 
-    const onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
-    const onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
+    if (movable) {
+      onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
+      onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
 
-    try {
-      // Resolve if in iframe lost event
-      /* istanbul ignore next */
-      if (window.top !== window.self) {
-        onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
-        onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+      try {
+        // Resolve if in iframe lost event
+        /* istanbul ignore next */
+        if (window.top !== window.self) {
+          onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
+          onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+        }
+      } catch (error) {
+        /* istanbul ignore next */
+        warning(false, `[rc-image] ${error}`);
       }
-    } catch (error) {
-      /* istanbul ignore next */
-      warning(false, `[rc-image] ${error}`);
     }
 
     return () => {
-      onMouseUpListener.remove();
-      onMouseMoveListener.remove();
+      onMouseUpListener?.remove();
+      onMouseMoveListener?.remove();
       /* istanbul ignore next */
       onTopMouseUpListener?.remove();
       /* istanbul ignore next */
       onTopMouseMoveListener?.remove();
     };
-  }, [visible, isMoving, x, y, rotate]);
+  }, [visible, isMoving, x, y, rotate, movable]);
 
   useEffect(() => {
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);

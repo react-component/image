@@ -30,6 +30,7 @@ export interface ImagePreviewType
   maskClassName?: string;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
+  movable?: boolean;
   imageRender?: (
     originalNode: React.ReactNode,
     info: { transform: TransformType },
@@ -96,6 +97,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
     maskClassName,
+    movable,
     icons,
     scaleStep,
     minScale,
@@ -234,6 +236,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           fallback={fallback}
           getContainer={getPreviewContainer}
           icons={icons}
+          movable={movable}
           scaleStep={scaleStep}
           minScale={minScale}
           maxScale={maxScale}

@@ -51,6 +51,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     onVisibleChange,
     getContainer,
     current: currentIndex,
+    movable,
     minScale,
     maxScale,
     countRender,
@@ -133,6 +134,7 @@ const Group: React.FC<GroupConsumerProps> = ({
       {children}
       <Preview
         aria-hidden={!isShowPreview}
+        movable={movable}
         visible={isShowPreview}
         prefixCls={previewPrefixCls}
         closeIcon={closeIcon}
