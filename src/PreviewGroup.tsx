@@ -19,7 +19,7 @@ export interface PreviewGroupPreview
    * @default 0
    */
   current?: number;
-  countRender?: (current: number, total: number) => string;
+  countRender?: (current: number, total: number) => React.ReactNode;
   toolbarRender?: (originalNode: React.ReactNode, info: ToolbarRenderInfoType) => React.ReactNode;
   imageRender?: (
     originalNode: React.ReactNode,
