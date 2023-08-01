@@ -861,4 +861,33 @@ describe('Preview', () => {
 
     expect(document.querySelector('video')).toBeTruthy();
   });
+
+  it('should be closed when press esc after click portal', () => {
+    const onVisibleChange = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          onVisibleChange,
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    expect(onVisibleChange).toBeCalledWith(true, false);
+
+    fireEvent.click(document.querySelector('.rc-image-preview-operations'));
+
+    fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
+
+    expect(onVisibleChange).toBeCalledWith(false, true);
+
+    onVisibleChange.mockRestore();
+  });
 });
