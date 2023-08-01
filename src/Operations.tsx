@@ -1,6 +1,7 @@
 import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
+import KeyCode from 'rc-util/lib/KeyCode';
 import * as React from 'react';
 import { useContext } from 'react';
 import { PreviewGroupContext } from './context';
@@ -74,6 +75,22 @@ const Operations: React.FC<OperationsProps> = props => {
   const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
+
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.keyCode === KeyCode.ESC) {
+        onClose();
+      }
+    };
+
+    if (visible) {
+      window.addEventListener('keydown', onKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [visible]);
 
   const tools = [
     {
