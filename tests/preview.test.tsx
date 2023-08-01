@@ -887,6 +887,7 @@ describe('Preview', () => {
     fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
 
     expect(onVisibleChange).toBeCalledWith(false, true);
+    expect(onVisibleChange).toBeCalledTimes(2);
 
     onVisibleChange.mockRestore();
   });
