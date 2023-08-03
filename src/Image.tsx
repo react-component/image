@@ -32,12 +32,12 @@ export interface ImagePreviewType
   scaleStep?: number;
   movable?: boolean;
   imageRender?: (
-    originalNode: React.ReactNode,
+    originalNode: React.ReactElement,
     info: { transform: TransformType },
   ) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
   toolbarRender?: (
-    originalNode: React.ReactNode,
+    originalNode: React.ReactElement,
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 }

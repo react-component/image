@@ -38,7 +38,7 @@ interface OperationsProps
   onFlipX: () => void;
   onFlipY: () => void;
   toolbarRender: (
-    originalNode: React.ReactNode,
+    originalNode: React.ReactElement,
     info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 }
