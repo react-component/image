@@ -20,9 +20,12 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => React.ReactNode;
-  toolbarRender?: (originalNode: React.ReactNode, info: ToolbarRenderInfoType) => React.ReactNode;
+  toolbarRender?: (
+    originalNode: React.ReactElement,
+    info: ToolbarRenderInfoType,
+  ) => React.ReactNode;
   imageRender?: (
-    originalNode: React.ReactNode,
+    originalNode: React.ReactElement,
     info: { transform: TransformType; current: number },
   ) => React.ReactNode;
   onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;

@@ -61,12 +61,15 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   minScale?: number;
   maxScale?: number;
   imageRender?: (
-    originalNode: React.ReactNode,
+    originalNode: React.ReactElement,
     info: { transform: TransformType; current?: number },
   ) => React.ReactNode;
   onClose?: () => void;
   onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
-  toolbarRender?: (originalNode: React.ReactNode, info: ToolbarRenderInfoType) => React.ReactNode;
+  toolbarRender?: (
+    originalNode: React.ReactElement,
+    info: ToolbarRenderInfoType,
+  ) => React.ReactNode;
   onChange?: (current, prev) => void;
 }
 

@@ -86,8 +86,8 @@ export default () => (
 | maxScale | number | 50 | Max scale |
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
-| imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
-| toolbarRender | (originalNode: React.ReactNode, info: Omit<[ToolbarRenderInfoType](#ToolbarRenderInfoType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
+| imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
+| toolbarRender | (originalNode: React.ReactElement, info: Omit<[ToolbarRenderInfoType](#ToolbarRenderInfoType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean) => void | - | Callback when visible is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
@@ -130,8 +130,8 @@ export default () => (
 | forceRender | boolean | - | Force render preview |
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | countRender | (current: number, total: number) => ReactNode | - | Customize count |
-| imageRender | (originalNode: React.ReactNode, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
-| toolbarRender | (originalNode: React.ReactNode, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
+| imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
+| toolbarRender | (originalNode: React.ReactElement, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
 | onVisibleChange | (visible: boolean, prevVisible: boolean, current: number) => void | - | Callback when visible is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
