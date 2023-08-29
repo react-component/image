@@ -49,7 +49,7 @@ export default function useStatus({
     }
   };
 
-  const srcAndOnload = isError && fallback ? { src: fallback } : { onLoad, src };
+  const srcAndOnload = isError && fallback ? { onLoad, src: fallback } : { onLoad, src };
 
   return [getImgRef, srcAndOnload, status] as const;
 }
