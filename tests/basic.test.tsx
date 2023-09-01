@@ -1,5 +1,5 @@
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
 import Image from '../src';
 
 describe('Basic', () => {
@@ -86,5 +86,32 @@ describe('Basic', () => {
     );
     const maskElement = container.querySelector('.rc-image-mask');
     expect(maskElement).toHaveStyle({ display: 'none' });
+  });
+
+  it('Valid image after few switching of src', async () => {
+    const valid1 = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    const valid2 =
+      'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ';
+    const fallback =
+      'https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp';
+
+    const images = ['error', valid1, 'error', valid2];
+
+    const TestCase = () => {
+      const [idx, setIdx] = React.useState(0);
+
+      React.useEffect(() => {
+        if (idx < images.length - 1) {
+          setIdx(idx + 1);
+        }
+      }, [idx]);
+
+      return <Image src={images[idx]} fallback={fallback} />;
+    };
+
+    const { container } = render(<TestCase />);
+    const maskElement = container.querySelector('.rc-image-img');
+
+    expect(maskElement).toHaveAttribute('src', valid2);
   });
 });
