@@ -10,6 +10,7 @@ import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import useStatus from './hooks/useStatus';
+import useTouchZoom from './hooks/useTouchZoom';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
 
@@ -149,6 +150,9 @@ const Preview: React.FC<PreviewProps> = props => {
     [`${prefixCls}-moving`]: isMoving,
   });
 
+  // touch
+  const { touchPoints, rest, setMoveVal } = useTouchZoom();
+
   useEffect(() => {
     if (!enableTransition) {
       setEnableTransition(true);
@@ -233,6 +237,8 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
+    if (touchPoints.touchdown) return;
+
     // Only allow main button
     if (!movable || event.button !== 0) return;
     event.preventDefault();
@@ -283,6 +289,8 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
+    if (touchPoints.touchdown) return;
+
     if (visible) {
       if (scale !== 1) {
         updateTransform({ x: 0, y: 0, scale: 1 }, 'doubleClick');
@@ -357,6 +365,48 @@ const Preview: React.FC<PreviewProps> = props => {
       onWheel={onWheel}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
+      onTouchStart={evn => {
+        const { touches = [] } = evn;
+        if (touches.length > 1) {
+          setMoveVal(touches[0].pageY, touches[1].pageY);
+        }
+      }}
+      onTouchMove={evn => {
+        const { touches = [] } = evn;
+
+        if (touchPoints.touchdown) {
+          let needChange = false;
+
+          if (Math.abs(touchPoints.y_1 - touches[0].pageX) > 15) {
+            console.log('needChange_1 ===>', touchPoints.y_1, touches[0].pageY);
+
+            needChange = true;
+          }
+          if (Math.abs(touchPoints.y_2 - touches[1].pageX) > 15) {
+            console.log('needChange_2 ===>', touchPoints.y_1, touches[0].pageY);
+
+            needChange = true;
+          }
+
+          if (needChange) {
+            console.log('needChange ===>', touchPoints.y_1, touches[0].pageY);
+
+            if (touchPoints.y_1 > touches[0].pageY) {
+              console.log('updateTransform ===> ---');
+              updateTransform({ x: 0, y: 0, scale: scale - 0.3 }, 'doubleClick');
+            } else {
+              console.log('updateTransform ===> +++');
+              updateTransform({ x: 0, y: 0, scale: scale + 0.1 }, 'doubleClick');
+            }
+
+            setMoveVal(touches[0].pageY, touches[1].pageY);
+          }
+        }
+      }}
+      onTouchEnd={() => {
+        rest();
+        console.log('touchPoints ===>', touchPoints);
+      }}
     />
   );
 
