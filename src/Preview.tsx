@@ -151,7 +151,7 @@ const Preview: React.FC<PreviewProps> = props => {
   });
 
   // touch
-  const { touchPoints, rest, setMoveVal } = useTouchZoom();
+  const { touchPointInfo, restTouchPoint, setTouchPoint } = useTouchZoom();
 
   useEffect(() => {
     if (!enableTransition) {
@@ -237,7 +237,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
-    if (touchPoints.touchdown) return;
+    if (touchPointInfo.touchdown) return;
 
     // Only allow main button
     if (!movable || event.button !== 0) return;
@@ -289,7 +289,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-    if (touchPoints.touchdown) return;
+    if (touchPointInfo.touchdown) return;
 
     if (visible) {
       if (scale !== 1) {
@@ -303,6 +303,43 @@ const Preview: React.FC<PreviewProps> = props => {
         );
       }
     }
+  };
+
+  const onTouchStart = (event: React.TouchEvent<HTMLImageElement>) => {
+    const { touches = [] } = event;
+    if (touches.length > 1) {
+      setTouchPoint(touches[0].pageY, touches[1].pageY);
+    }
+  };
+
+  const onTouchMove = (event: React.TouchEvent<HTMLImageElement>) => {
+    const { touches = [] } = event;
+    const { touchOne, touchTwo, touchdown } = touchPointInfo;
+
+    if (touchdown) {
+      const pageY_1 = touches[0]?.pageY;
+      const pageY_2 = touches[1]?.pageY;
+      let needChange = false;
+
+      if (Math.abs(touchOne - pageY_1) > 10 || Math.abs(touchTwo - pageY_2) > 10) {
+        needChange = true;
+      }
+
+      if (needChange) {
+        if (Math.abs(touchOne - touchTwo) > Math.abs(pageY_1 - pageY_2)) {
+          if (scale <= 1) return;
+          updateTransform({ x: 0, y: 0, scale: scale - 0.3 < 1 ? 1 : scale - 0.3 }, 'doubleClick');
+        } else {
+          updateTransform({ x: 0, y: 0, scale: scale + 0.2 }, 'doubleClick');
+        }
+
+        setTouchPoint(pageY_1, pageY_2);
+      }
+    }
+  };
+
+  const onTouchRest = () => {
+    restTouchPoint();
   };
 
   useEffect(() => {
@@ -365,48 +402,10 @@ const Preview: React.FC<PreviewProps> = props => {
       onWheel={onWheel}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
-      onTouchStart={evn => {
-        const { touches = [] } = evn;
-        if (touches.length > 1) {
-          setMoveVal(touches[0].pageY, touches[1].pageY);
-        }
-      }}
-      onTouchMove={evn => {
-        const { touches = [] } = evn;
-
-        if (touchPoints.touchdown) {
-          let needChange = false;
-
-          if (Math.abs(touchPoints.y_1 - touches[0].pageX) > 15) {
-            console.log('needChange_1 ===>', touchPoints.y_1, touches[0].pageY);
-
-            needChange = true;
-          }
-          if (Math.abs(touchPoints.y_2 - touches[1].pageX) > 15) {
-            console.log('needChange_2 ===>', touchPoints.y_1, touches[0].pageY);
-
-            needChange = true;
-          }
-
-          if (needChange) {
-            console.log('needChange ===>', touchPoints.y_1, touches[0].pageY);
-
-            if (touchPoints.y_1 > touches[0].pageY) {
-              console.log('updateTransform ===> ---');
-              updateTransform({ x: 0, y: 0, scale: scale - 0.3 }, 'doubleClick');
-            } else {
-              console.log('updateTransform ===> +++');
-              updateTransform({ x: 0, y: 0, scale: scale + 0.1 }, 'doubleClick');
-            }
-
-            setMoveVal(touches[0].pageY, touches[1].pageY);
-          }
-        }
-      }}
-      onTouchEnd={() => {
-        rest();
-        console.log('touchPoints ===>', touchPoints);
-      }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchRest}
+      onTouchCancel={onTouchRest}
     />
   );
 
