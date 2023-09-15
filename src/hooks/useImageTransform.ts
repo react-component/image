@@ -25,7 +25,8 @@ export type TransformAction =
   | 'wheel'
   | 'doubleClick'
   | 'move'
-  | 'dragRebound';
+  | 'dragRebound'
+  | 'touchZoom';
 
 const initialTransform = {
   x: 0,

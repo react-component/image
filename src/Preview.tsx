@@ -328,9 +328,9 @@ const Preview: React.FC<PreviewProps> = props => {
       if (needChange) {
         if (Math.abs(touchOne - touchTwo) > Math.abs(pageY_1 - pageY_2)) {
           if (scale <= 1) return;
-          updateTransform({ x: 0, y: 0, scale: scale - 0.3 < 1 ? 1 : scale - 0.3 }, 'doubleClick');
+          updateTransform({ x: 0, y: 0, scale: scale - 0.3 < 1 ? 1 : scale - 0.3 }, 'touchZoom');
         } else {
-          updateTransform({ x: 0, y: 0, scale: scale + 0.2 }, 'doubleClick');
+          updateTransform({ x: 0, y: 0, scale: scale + 0.2 }, 'touchZoom');
         }
 
         setTouchPoint(pageY_1, pageY_2);
