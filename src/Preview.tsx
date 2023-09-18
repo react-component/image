@@ -153,7 +153,8 @@ const Preview: React.FC<PreviewProps> = props => {
   // touch
   const { touchPointInfo, onTouchStart, onTouchMove, onTouchRest } = useTouchZoom(
     updateTransform,
-    scale,
+    dispatchZoomChange,
+    transform
   );
 
   useEffect(() => {
@@ -240,7 +241,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
-    if (touchPointInfo.touchdown) return;
+    if (touchPointInfo.noZoom) return;
 
     // Only allow main button
     if (!movable || event.button !== 0) return;
@@ -292,7 +293,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-    if (touchPointInfo.touchdown) return;
+    if (touchPointInfo.noZoom) return;
 
     if (visible) {
       if (scale !== 1) {
