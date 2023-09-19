@@ -66,8 +66,8 @@ export default function useTouchZoom(
         // touch move
         setTouchPoint(
           {
-            x: touches[0].screenX - transform.x,
-            y: touches[0].screenY - transform.y,
+            x: touches[0].pageX - transform.x,
+            y: touches[0].pageY - transform.y,
           },
           { ...initPoint },
           false,
@@ -104,8 +104,8 @@ export default function useTouchZoom(
     } else if (transform.scale > 1 && !noZoom) {
       updateTransform(
         {
-          x: touches[0].screenX - touchOne.x,
-          y: touches[0].screenY - touchOne.y,
+          x: touches[0].pageX - touchOne.x,
+          y: touches[0].pageY - touchOne.y,
         },
         'move',
       );
