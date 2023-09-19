@@ -154,7 +154,8 @@ const Preview: React.FC<PreviewProps> = props => {
   const { touchPointInfo, onTouchStart, onTouchMove, onTouchRest } = useTouchZoom(
     updateTransform,
     dispatchZoomChange,
-    transform
+    transform,
+    visible
   );
 
   useEffect(() => {

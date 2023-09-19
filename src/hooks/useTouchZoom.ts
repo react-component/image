@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import type { Transform, TransformAction, TransformType } from './useImageTransform';
 
 type Point = {
@@ -6,6 +6,7 @@ type Point = {
   y: number;
 };
 
+let lastTouchEnd = 0;
 const initPoint = { x: 0, y: 0 };
 
 function getDistance(a: Point, b: Point) {
@@ -20,6 +21,47 @@ function getCenter(a: Point, b: Point) {
   return [x, y];
 }
 
+function touchstart(event: TouchEvent) {
+  if (event.touches.length > 1) {
+    event.preventDefault();
+  }
+}
+
+function touchend(event: TouchEvent) {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    event.preventDefault();
+  }
+  lastTouchEnd = now;
+}
+
+/** Prohibit WeChat sliding & Prohibit browser scaling  */
+function slidingControl(stop: boolean) {
+  const body = document.getElementsByTagName('body')[0];
+
+  if (stop) {
+    body.style.position = 'fixed';
+    body.style.top = '0';
+    body.style.bottom = '0';
+    body.style.overflow = 'hidden';
+
+    document.addEventListener('touchstart', touchstart, {
+      passive: false,
+    });
+    document.addEventListener('touchend', touchend, {
+      passive: false,
+    });
+  } else {
+    body.style.position = null;
+    body.style.top = null;
+    body.style.bottom = null;
+    body.style.overflow = null;
+
+    document.removeEventListener('touchstart', touchstart);
+    document.removeEventListener('touchend', touchend);
+  }
+}
+
 /** Pinch-to-zoom & Move image after zooming in */
 export default function useTouchZoom(
   updateTransform: (newTransform: Partial<TransformType>, action: TransformAction) => void,
@@ -30,6 +72,7 @@ export default function useTouchZoom(
     clientY?: number,
   ) => void,
   transform: Transform,
+  visible: boolean,
 ) {
   const touchPointInfo = useRef({
     touchOne: { ...initPoint },
@@ -111,6 +154,14 @@ export default function useTouchZoom(
       );
     }
   };
+
+  useEffect(() => {
+    if (visible) {
+      slidingControl(true);
+    } else {
+      slidingControl(false);
+    }
+  }, [visible]);
 
   return {
     touchPointInfo: touchPointInfo.current,
