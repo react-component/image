@@ -12,6 +12,15 @@ export type TransformType = {
   flipY: boolean;
 };
 
+export type Transform = {
+  x: number;
+  y: number;
+  rotate: number;
+  scale: number;
+  flipX: boolean;
+  flipY: boolean;
+}
+
 export type TransformAction =
   | 'flipY'
   | 'flipX'
@@ -28,7 +37,7 @@ export type TransformAction =
   | 'dragRebound'
   | 'touchZoom';
 
-const initialTransform = {
+const initialTransform: Transform = {
   x: 0,
   y: 0,
   rotate: 0,

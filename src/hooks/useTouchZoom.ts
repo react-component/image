@@ -1,10 +1,10 @@
 import { useCallback, useRef } from 'react';
-import type { TransformAction, TransformType } from './useImageTransform';
+import type { Transform, TransformAction, TransformType } from './useImageTransform';
 
-interface Point {
+type Point = {
   x: number;
   y: number;
-}
+};
 
 const initPoint = { x: 0, y: 0 };
 
@@ -20,6 +20,7 @@ function getCenter(a: Point, b: Point) {
   return [x, y];
 }
 
+/** Pinch-to-zoom & Move image after zooming in */
 export default function useTouchZoom(
   updateTransform: (newTransform: Partial<TransformType>, action: TransformAction) => void,
   dispatchZoomChange: (
@@ -28,7 +29,7 @@ export default function useTouchZoom(
     clientX?: number,
     clientY?: number,
   ) => void,
-  transform: any,
+  transform: Transform,
 ) {
   const touchPointInfo = useRef({
     touchOne: { ...initPoint },
@@ -43,7 +44,7 @@ export default function useTouchZoom(
   }, []);
 
   const restTouchPoint = useCallback(
-    event => {
+    (event: React.TouchEvent<HTMLImageElement>) => {
       const { touches = [] } = event;
       if (touches.length) return;
 
@@ -56,11 +57,13 @@ export default function useTouchZoom(
     (event: React.TouchEvent<HTMLImageElement>) => {
       const { touches = [] } = event;
       if (touches.length > 1) {
+        // touch zoom
         setTouchPoint(
           { x: touches[0].pageX, y: touches[0].pageY },
           { x: touches[1].pageX, y: touches[1].pageY },
         );
       } else {
+        // touch move
         setTouchPoint(
           {
             x: touches[0].screenX - transform.x,
