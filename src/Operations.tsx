@@ -1,9 +1,12 @@
-import * as React from 'react';
+import Portal from '@rc-component/portal';
 import classnames from 'classnames';
 import CSSMotion from 'rc-motion';
-import Portal from '@rc-component/portal';
-import { MIN_SCALE, MAX_SCALE } from './previewConfig';
-import type { PreviewProps } from './Preview';
+import KeyCode from 'rc-util/lib/KeyCode';
+import * as React from 'react';
+import { useContext } from 'react';
+import { PreviewGroupContext } from './context';
+import type { TransformType } from './hooks/useImageTransform';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 
 interface OperationsProps
   extends Pick<
@@ -15,13 +18,17 @@ interface OperationsProps
     | 'rootClassName'
     | 'icons'
     | 'countRender'
+    | 'closeIcon'
     | 'onClose'
   > {
   showSwitch: boolean;
   showProgress: boolean;
   current: number;
+  transform: TransformType;
   count: number;
   scale: number;
+  minScale: number;
+  maxScale: number;
   onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
   onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
   onZoomIn: () => void;
@@ -30,9 +37,13 @@ interface OperationsProps
   onRotateLeft: () => void;
   onFlipX: () => void;
   onFlipY: () => void;
+  toolbarRender: (
+    originalNode: React.ReactElement,
+    info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
+  ) => React.ReactNode;
 }
 
-const Operations: React.FC<OperationsProps> = (props) => {
+const Operations: React.FC<OperationsProps> = props => {
   const {
     visible,
     maskTransitionName,
@@ -44,8 +55,12 @@ const Operations: React.FC<OperationsProps> = (props) => {
     showSwitch,
     showProgress,
     current,
+    transform,
     count,
     scale,
+    minScale,
+    maxScale,
+    closeIcon,
     onSwitchLeft,
     onSwitchRight,
     onClose,
@@ -54,38 +69,34 @@ const Operations: React.FC<OperationsProps> = (props) => {
     onRotateRight,
     onRotateLeft,
     onFlipX,
-    onFlipY
+    onFlipY,
+    toolbarRender,
   } = props;
+  const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
   const toolClassName = `${prefixCls}-operations-operation`;
-  const iconClassName = `${prefixCls}-operations-icon`;
+
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.keyCode === KeyCode.ESC) {
+        onClose();
+      }
+    };
+
+    if (visible) {
+      window.addEventListener('keydown', onKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [visible]);
+
   const tools = [
     {
-      icon: close,
-      onClick: onClose,
-      type: 'close',
-    },
-    {
-      icon: zoomIn,
-      onClick: onZoomIn,
-      type: 'zoomIn',
-      disabled: scale === MAX_SCALE,
-    },
-    {
-      icon: zoomOut,
-      onClick: onZoomOut,
-      type: 'zoomOut',
-      disabled: scale === MIN_SCALE,
-    },
-    {
-      icon: rotateRight,
-      onClick: onRotateRight,
-      type: 'rotateRight',
-    },
-    {
-      icon: rotateLeft,
-      onClick: onRotateLeft,
-      type: 'rotateLeft',
+      icon: flipY,
+      onClick: onFlipY,
+      type: 'flipY',
     },
     {
       icon: flipX,
@@ -93,58 +104,43 @@ const Operations: React.FC<OperationsProps> = (props) => {
       type: 'flipX',
     },
     {
-      icon: flipY,
-      onClick: onFlipY,
-      type: 'flipY',
+      icon: rotateLeft,
+      onClick: onRotateLeft,
+      type: 'rotateLeft',
+    },
+    {
+      icon: rotateRight,
+      onClick: onRotateRight,
+      type: 'rotateRight',
+    },
+    {
+      icon: zoomOut,
+      onClick: onZoomOut,
+      type: 'zoomOut',
+      disabled: scale === minScale,
+    },
+    {
+      icon: zoomIn,
+      onClick: onZoomIn,
+      type: 'zoomIn',
+      disabled: scale === maxScale,
     },
   ];
 
-  const operations = (
-    <>
-      {showSwitch && (
-        <>
-          <div
-            className={classnames(`${prefixCls}-switch-left`, {
-              [`${prefixCls}-switch-left-disabled`]: current === 0,
-            })}
-            onClick={onSwitchLeft}
-          >
-            {left}
-          </div>
-          <div
-            className={classnames(`${prefixCls}-switch-right`, {
-              [`${prefixCls}-switch-right-disabled`]: current === count - 1,
-            })}
-            onClick={onSwitchRight}
-          >
-            {right}
-          </div>
-        </>
-      )}
-      <ul className={`${prefixCls}-operations`}>
-        {showProgress && (
-          <li className={`${prefixCls}-operations-progress`}>
-            {countRender?.(current + 1, count) ??
-              `${current + 1} / ${count}`}
-          </li>
-        )}
-        {tools.map(({ icon, onClick, type, disabled }) => (
-          <li
-            className={classnames(toolClassName, {
-              [`${prefixCls}-operations-operation-${type}`]: true,
-              [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-            })}
-            onClick={onClick}
-            key={type}
-          >
-            {React.isValidElement(icon)
-              ? React.cloneElement<{ className?: string }>(icon, { className: iconClassName })
-              : icon}
-          </li>
-        ))}
-      </ul>
-    </>
-  );
+  const toolsNode = tools.map(({ icon, onClick, type, disabled }) => (
+    <div
+      className={classnames(toolClassName, {
+        [`${prefixCls}-operations-operation-${type}`]: true,
+        [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+      })}
+      onClick={onClick}
+      key={type}
+    >
+      {icon}
+    </div>
+  ));
+
+  const toolbarNode = <div className={`${prefixCls}-operations`}>{toolsNode}</div>;
 
   return (
     <CSSMotion visible={visible} motionName={maskTransitionName}>
@@ -154,7 +150,63 @@ const Operations: React.FC<OperationsProps> = (props) => {
             className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
             style={style}
           >
-            {operations}
+            {closeIcon === null ? null : (
+              <button className={`${prefixCls}-close`} onClick={onClose}>
+                {closeIcon || close}
+              </button>
+            )}
+
+            {showSwitch && (
+              <>
+                <div
+                  className={classnames(`${prefixCls}-switch-left`, {
+                    [`${prefixCls}-switch-left-disabled`]: current === 0,
+                  })}
+                  onClick={onSwitchLeft}
+                >
+                  {left}
+                </div>
+                <div
+                  className={classnames(`${prefixCls}-switch-right`, {
+                    [`${prefixCls}-switch-right-disabled`]: current === count - 1,
+                  })}
+                  onClick={onSwitchRight}
+                >
+                  {right}
+                </div>
+              </>
+            )}
+
+            <div className={`${prefixCls}-footer`}>
+              {showProgress && (
+                <div className={`${prefixCls}-progress`}>
+                  {countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}
+                </div>
+              )}
+
+              {toolbarRender
+                ? toolbarRender(toolbarNode, {
+                    icons: {
+                      flipYIcon: toolsNode[0],
+                      flipXIcon: toolsNode[1],
+                      rotateLeftIcon: toolsNode[2],
+                      rotateRightIcon: toolsNode[3],
+                      zoomOutIcon: toolsNode[4],
+                      zoomInIcon: toolsNode[5],
+                    },
+                    actions: {
+                      onFlipY,
+                      onFlipX,
+                      onRotateLeft,
+                      onRotateRight,
+                      onZoomOut,
+                      onZoomIn,
+                    },
+                    transform,
+                    ...(groupContext ? { current, total: count } : {}),
+                  })
+                : toolbarNode}
+            </div>
           </div>
         </Portal>
       )}

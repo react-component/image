@@ -36,8 +36,9 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
       >
         <div
           aria-modal="true"
-          class="rc-image-preview"
+          class="rc-image-preview zoom-appear zoom-appear-prepare zoom"
           role="dialog"
+          style="transform-origin: 0px 0px;"
         >
           <div
             aria-hidden="true"
@@ -73,31 +74,35 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
   <div
     class="rc-image-preview-operations-wrapper custom-className"
   >
-    <ul
-      class="rc-image-preview-operations"
+    <button
+      class="rc-image-preview-close"
+    />
+    <div
+      class="rc-image-preview-footer"
     >
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-close"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
-      />
-      <li
-        class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
-      />
-    </ul>
+      <div
+        class="rc-image-preview-operations"
+      >
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
+        />
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
+        />
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
+        />
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
+        />
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
+        />
+        <div
+          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
+        />
+      </div>
+    </div>
   </div>,
 ]
 `;

@@ -98,16 +98,16 @@
       user-select: none;
       vertical-align: middle;
       max-width: 100%;
-      max-height: 100%;
-      pointer-events: auto;
+      max-height: 70%;
+
       &-wrapper {
         .box;
-        &::before {
-          content: '';
-          display: inline-block;
-          height: 50%;
-          width: 1px;
-          margin-right: -1px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & > * {
+          pointer-events: auto;
         }
       }
     }
@@ -133,46 +133,63 @@
       -webkit-overflow-scrolling: touch;
     }
 
+    &-close {
+      position: fixed;
+      top: 32px;
+      right: 32px;
+      display: flex;
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      padding: 15px;
+      outline: 0;
+      border: 0;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.3;
+      }
+    }
+
     &-operations-wrapper {
       position: fixed;
       z-index: @zindex-preview-mask + 1;
     }
 
-    &-operations {
-      .reset;
-      pointer-events: auto;
-      list-style: none;
+    &-footer {
       position: fixed;
-      display: flex;
-      top: 0;
-      right: 0;
-      width: 100%;
-      align-items: center;
-      flex-direction: row-reverse;
       z-index: @zindex-preview-mask + 1;
+      bottom: 32px;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &-progress {
+      margin-bottom: 20px;
+    }
+
+    &-operations {
+      display: flex;
       color: @text-color;
       background: fade(@preview-mask-bg, 45%);
-
-      &-progress {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-      }
+      border-radius: 100px;
+      padding: 0 20px;
 
       &-operation {
         padding: 10px;
         cursor: pointer;
         margin-left: 10px;
+        font-size: 18px;
         &-disabled {
           pointer-events: none;
           color: @text-color-disabled;
         }
-        &:last-of-type {
+        &:first-of-type {
           margin-left: 0;
         }
-      }
-      &-icon {
-        font-size: 18px;
       }
     }
 
@@ -189,7 +206,6 @@
       align-items: center;
       justify-content: center;
       z-index: @zindex-preview-mask + 1;
-      pointer-events: auto;
       cursor: pointer;
       color: @text-color;
       &-disabled {
@@ -218,7 +234,6 @@
       align-items: center;
       justify-content: center;
       z-index: @zindex-preview-mask + 1;
-      pointer-events: auto;
       cursor: pointer;
       color: @text-color;
       &-disabled {

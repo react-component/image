@@ -1,6 +1,15 @@
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
 import Image from '../src';
+
+jest.mock('../src/util', () => {
+  const { isImageValid, ...rest } = jest.requireActual('../src/util');
+
+  return {
+    ...rest,
+    isImageValid: () => Promise.resolve(false),
+  };
+});
 
 describe('Fallback', () => {
   beforeEach(() => {
@@ -13,19 +22,32 @@ describe('Fallback', () => {
 
   const fallback = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
 
-  it('Fallback correct', () => {
+  it('Fallback correct', async () => {
     const { container } = render(<Image src="abc" fallback={fallback} />);
 
-    act(() => {
+    await act(async () => {
       jest.runAllTimers();
+      await Promise.resolve();
     });
 
-    fireEvent.click(container.querySelector('.rc-image'));
-    act(() => {
+    expect(container.querySelector('img').src).toEqual(fallback);
+  });
+
+  it('PreviewGroup Fallback correct', async () => {
+    const { container } = render(
+      <Image.PreviewGroup fallback={fallback}>
+        <Image src="abc" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image-img'));
+
+    await act(async () => {
       jest.runAllTimers();
+      await Promise.resolve();
     });
 
-    expect(container.querySelector('.rc-image-preview')).toBeFalsy();
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', fallback);
   });
 
   it('should not show preview', () => {

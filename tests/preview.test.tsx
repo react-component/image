@@ -1,13 +1,13 @@
-import React from 'react';
-import { render, fireEvent, act, createEvent } from '@testing-library/react';
-import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
+import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import LeftOutlined from '@ant-design/icons/LeftOutlined';
+import RightOutlined from '@ant-design/icons/RightOutlined';
 import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
-import LeftOutlined from '@ant-design/icons/LeftOutlined';
-import RightOutlined from '@ant-design/icons/RightOutlined';
+import { act, createEvent, fireEvent, render } from '@testing-library/react';
+import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
+import React from 'react';
 
 jest.mock('../src/Preview', () => {
   const MockPreview = (props: any) => {
@@ -126,7 +126,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
     act(() => {
       jest.runAllTimers();
     });
@@ -145,7 +145,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -153,7 +153,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -161,7 +161,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -169,7 +169,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[6]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -188,15 +188,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -204,7 +196,23 @@ describe('Preview', () => {
       transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -215,7 +223,7 @@ describe('Preview', () => {
     fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: -50,
     });
-    
+
     act(() => {
       jest.runAllTimers();
     });
@@ -261,7 +269,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -269,7 +277,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -277,7 +285,7 @@ describe('Preview', () => {
       transform: 'translate3d(-512px, -384px, 0) scale3d(2, 2, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -288,7 +296,7 @@ describe('Preview', () => {
     fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
       deltaY: -50,
     });
-    
+
     act(() => {
       jest.runAllTimers();
     });
@@ -317,7 +325,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -751,5 +759,136 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview-switch-left')).toHaveClass(
       'rc-image-preview-switch-left-disabled',
     );
+  });
+
+  it('pass img common props to previewed image', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        referrerPolicy="no-referrer"
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'referrerPolicy',
+      'no-referrer',
+    );
+  });
+
+  it('toolbarRender', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          toolbarRender: (_, { icons }) => (
+            <>
+              {icons.flipYIcon}
+              {icons.flipXIcon}
+            </>
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
+  });
+
+  it('onTransform should be triggered when transform change', () => {
+    const onTransform = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ onTransform }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(onTransform).toBeCalledTimes(1);
+    expect(onTransform).toBeCalledWith({
+      transform: {
+        flipY: true,
+        flipX: false,
+        rotate: 0,
+        scale: 1,
+        x: 0,
+        y: 0,
+      },
+      action: 'flipY',
+    });
+  });
+
+  it('imageRender', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          imageRender: () => (
+            <video
+              width="100%"
+              controls
+              src="https://mdn.alipayobjects.com/huamei_iwk9zp/afts/file/A*uYT7SZwhJnUAAAAAAAAAAAAADgCCAQ"
+            />
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('video')).toBeTruthy();
+  });
+
+  it('should be closed when press esc after click portal', () => {
+    const onVisibleChange = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          onVisibleChange,
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    expect(onVisibleChange).toBeCalledWith(true, false);
+
+    fireEvent.click(document.querySelector('.rc-image-preview-operations'));
+
+    fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
+
+    expect(onVisibleChange).toBeCalledWith(false, true);
+    expect(onVisibleChange).toBeCalledTimes(2);
+
+    onVisibleChange.mockRestore();
   });
 });
