@@ -14,16 +14,21 @@ export default function useStatus({
 }) {
   const [status, setStatus] = useState<ImageStatus>(isCustomPlaceholder ? 'loading' : 'normal');
   const isLoaded = useRef(false);
-
   const isError = status === 'error';
 
   // https://github.com/react-component/image/pull/187
   useEffect(() => {
+    let isCurrentSrc = true;
     isImageValid(src).then(isValid => {
-      if (!isValid) {
+      // https://github.com/ant-design/ant-design/issues/44948
+      // If src changes, the previous setStatus should not be triggered
+      if (!isValid && isCurrentSrc) {
         setStatus('error');
       }
     });
+    return () => {
+      isCurrentSrc = false;
+    };
   }, [src]);
 
   useEffect(() => {
@@ -40,10 +45,7 @@ export default function useStatus({
 
   const getImgRef = (img?: HTMLImageElement) => {
     isLoaded.current = false;
-    if (status !== 'loading') {
-      return;
-    }
-    if (img?.complete && (img.naturalWidth || img.naturalHeight)) {
+    if (status === 'loading' && img?.complete && (img.naturalWidth || img.naturalHeight)) {
       isLoaded.current = true;
       onLoad();
     }
