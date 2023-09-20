@@ -5,6 +5,7 @@ type Point = {
   x: number;
   y: number;
 };
+type EventType = 'init' | 'zoom' | 'move';
 
 let lastTouchEnd = 0;
 const initPoint = { x: 0, y: 0 };
@@ -73,28 +74,25 @@ export default function useTouchZoom(
   ) => void,
   transform: Transform,
   visible: boolean,
+  imgRef: React.MutableRefObject<HTMLImageElement>,
 ) {
-  const touchPointInfo = useRef({
+  const touchPointInfo = useRef<{ touchOne: Point; touchTwo: Point; eventType: EventType }>({
     touchOne: { ...initPoint },
     touchTwo: { ...initPoint },
-    noZoom: false,
+    eventType: 'init',
   });
 
-  const setTouchPoint = useCallback((a: Point, b: Point, noZoom: boolean = true) => {
+  const setTouchPoint = useCallback((a: Point, b: Point, eventType: EventType) => {
     touchPointInfo.current.touchOne = a;
     touchPointInfo.current.touchTwo = b;
-    touchPointInfo.current.noZoom = noZoom;
+    touchPointInfo.current.eventType = eventType;
   }, []);
 
-  const restTouchPoint = useCallback(
-    (event: React.TouchEvent<HTMLImageElement>) => {
-      const { touches = [] } = event;
-      if (touches.length) return;
-
-      setTouchPoint({ ...initPoint }, { ...initPoint }, false);
-    },
-    [setTouchPoint],
-  );
+  const restTouchPoint = (event: React.TouchEvent<HTMLImageElement>) => {
+    const { touches = [] } = event;
+    if (touches.length) return;
+    setTouchPoint({ ...initPoint }, { ...initPoint }, 'init');
+  };
 
   const onTouchStart = useCallback(
     (event: React.TouchEvent<HTMLImageElement>) => {
@@ -104,6 +102,7 @@ export default function useTouchZoom(
         setTouchPoint(
           { x: touches[0].pageX, y: touches[0].pageY },
           { x: touches[1].pageX, y: touches[1].pageY },
+          'zoom',
         );
       } else {
         // touch move
@@ -113,7 +112,7 @@ export default function useTouchZoom(
             y: touches[0].pageY - transform.y,
           },
           { ...initPoint },
-          false,
+          'move',
         );
       }
     },
@@ -122,37 +121,79 @@ export default function useTouchZoom(
 
   const onTouchMove = (event: React.TouchEvent<HTMLImageElement>) => {
     const { touches = [] } = event;
-    const { touchOne, touchTwo, noZoom } = touchPointInfo.current;
+    const { touchOne, touchTwo, eventType } = touchPointInfo.current;
 
-    if (touches.length > 1) {
-      const { pageX: pageX_1, pageY: pageY_1 } = touches?.[0];
-      const { pageX: pageX_2, pageY: pageY_2 } = touches?.[1];
+    const oldPoint = {
+      a: { x: touchOne.x, y: touchOne.y },
+      b: { x: touchTwo.x, y: touchTwo.y },
+    };
+    const newPoint = {
+      a: { x: touches[0]?.pageX, y: touches[0]?.pageY },
+      b: { x: touches[1]?.pageX, y: touches[1]?.pageY },
+    };
 
-      const oldPoint = {
-        a: { x: touchOne.x, y: touchOne.y },
-        b: { x: touchTwo.x, y: touchTwo.y },
-      };
-      const newPoint = {
-        a: { x: pageX_1, y: pageY_1 },
-        b: { x: pageX_2, y: pageY_2 },
-      };
-
+    if (eventType === 'zoom') {
       const [x, y] = getCenter(newPoint.a, newPoint.b);
       const ratio = getDistance(newPoint.a, newPoint.b) / getDistance(oldPoint.a, oldPoint.b);
 
       if (ratio > 0.2) {
         dispatchZoomChange(ratio, 'touchZoom', x, y);
-        setTouchPoint(newPoint.a, newPoint.b, true);
+        setTouchPoint(newPoint.a, newPoint.b, 'zoom');
       }
-    } else if (transform.scale > 1 && !noZoom) {
+    } else if (eventType === 'move' && transform.scale > 1) {
+      const { width, height } = imgRef.current;
+      const { x, y, scale } = transform;
+
+      let newX = x;
+      let newY = y;
+
+      if (width * scale > document.documentElement.clientWidth) {
+        newX = newPoint.a.x - oldPoint.a.x;
+      }
+
+      if (height * scale > document.documentElement.clientHeight) {
+        newY = newPoint.a.y - oldPoint.a.y;
+      }
+
       updateTransform(
         {
-          x: touches[0].pageX - touchOne.x,
-          y: touches[0].pageY - touchOne.y,
+          x: newX,
+          y: newY,
         },
         'move',
       );
     }
+  };
+
+  const onTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
+    const { x, y, scale } = transform;
+    const { width, height } = imgRef.current;
+    
+    let newX = x;
+    let newY = y;
+
+    if (width * scale > document.documentElement.clientWidth) {
+      const offset = (width * (scale - 1)) / 2;
+
+      if (x > offset) {
+        newX = offset;
+      } else if (x < -offset) {
+        newX = -offset;
+      }
+    }
+
+    if (height * scale > document.documentElement.clientHeight) {
+      const offset = (height * scale - document.documentElement.clientHeight) / 2;
+
+      if (y > offset) {
+        newY = offset;
+      } else if (y < -offset) {
+        newY = -offset;
+      }
+    }
+
+    updateTransform({ x: newX, y: newY }, 'move');
+    restTouchPoint(event);
   };
 
   useEffect(() => {
@@ -165,8 +206,9 @@ export default function useTouchZoom(
 
   return {
     touchPointInfo: touchPointInfo.current,
-    onTouchRest: restTouchPoint,
     onTouchStart,
     onTouchMove,
+    onTouchEnd,
+    onTouchCancel: restTouchPoint,
   };
 }

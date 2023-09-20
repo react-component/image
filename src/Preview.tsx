@@ -151,11 +151,12 @@ const Preview: React.FC<PreviewProps> = props => {
   });
 
   // touch
-  const { touchPointInfo, onTouchStart, onTouchMove, onTouchRest } = useTouchZoom(
+  const { touchPointInfo, onTouchStart, onTouchMove, onTouchEnd, onTouchCancel } = useTouchZoom(
     updateTransform,
     dispatchZoomChange,
     transform,
-    visible
+    visible,
+    imgRef,
   );
 
   useEffect(() => {
@@ -242,7 +243,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
-    if (touchPointInfo.noZoom) return;
+    if (touchPointInfo.eventType !== 'init') return;
 
     // Only allow main button
     if (!movable || event.button !== 0) return;
@@ -294,7 +295,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-    if (touchPointInfo.noZoom) return;
+    if (touchPointInfo.eventType !== 'init') return;
 
     if (visible) {
       if (scale !== 1) {
@@ -363,7 +364,12 @@ const Preview: React.FC<PreviewProps> = props => {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
           transform.flipX ? '-' : ''
         }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
-        transitionDuration: !enableTransition && '0s',
+        transitionDuration:
+          !enableTransition || touchPointInfo.eventType !== 'init'
+            ? !enableTransition
+              ? '0'
+              : '0.1s'
+            : undefined,
       }}
       fallback={fallback}
       src={src}
@@ -373,8 +379,8 @@ const Preview: React.FC<PreviewProps> = props => {
       // touch
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
-      onTouchEnd={onTouchRest}
-      onTouchCancel={onTouchRest}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchCancel}
     />
   );
 
