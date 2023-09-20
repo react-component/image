@@ -45,9 +45,6 @@ export default function useStatus({
 
   const getImgRef = (img?: HTMLImageElement) => {
     isLoaded.current = false;
-    if (status !== 'loading') {
-      return;
-    }
     if (status === 'loading' && img?.complete && (img.naturalWidth || img.naturalHeight)) {
       isLoaded.current = true;
       onLoad();
