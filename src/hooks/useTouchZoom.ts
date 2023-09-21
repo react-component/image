@@ -9,7 +9,7 @@ type EventType = 'init' | 'zoom' | 'move';
 
 let lastTouchEnd = 0;
 const initPoint = { x: 0, y: 0 };
-const originalStyle = { position: '', top: '', left: '', width: '', overflow: '' };
+const oldBodyStyle = { position: '', overflow: '' };
 
 function getDistance(a: Point, b: Point) {
   const x = a.x - b.x;
@@ -22,6 +22,7 @@ function getCenter(a: Point, b: Point) {
   return [x, y];
 }
 
+/** Prohibit WeChat sliding & Prohibit browser scaling  */
 function touchstart(event: TouchEvent) {
   if (event.touches.length > 1) {
     event.preventDefault();
@@ -34,16 +35,11 @@ function touchend(event: TouchEvent) {
   }
   lastTouchEnd = now;
 }
-
-/** Prohibit WeChat sliding & Prohibit browser scaling  */
 function slidingControl(stop: boolean) {
   const body = document.getElementsByTagName('body')[0];
 
   if (stop) {
-    body.style.position = 'fixed';
-    body.style.top = '0';
-    body.style.left = '0';
-    body.style.width = '100vw';
+    body.style.position = 'relative';
     body.style.overflow = 'hidden';
 
     document.addEventListener('touchstart', touchstart, {
@@ -53,12 +49,8 @@ function slidingControl(stop: boolean) {
       passive: false,
     });
   } else {
-    const { position, top, left, width, overflow } = originalStyle;
-    body.style.position = position;
-    body.style.top = top;
-    body.style.left = left;
-    body.style.width = width;
-    body.style.overflow = overflow;
+    body.style.position = oldBodyStyle.position;
+    body.style.overflow = oldBodyStyle.overflow;
 
     document.removeEventListener('touchstart', touchstart);
     document.removeEventListener('touchend', touchend);
@@ -67,12 +59,9 @@ function slidingControl(stop: boolean) {
 /** save original body style */
 function getOriginalStyle() {
   const body = document.getElementsByTagName('body')[0];
-  const { position, top, left, width, overflow } = body.style;
-  originalStyle.position = position;
-  originalStyle.top = top;
-  originalStyle.left = left;
-  originalStyle.width = width;
-  originalStyle.overflow = overflow;
+
+  oldBodyStyle.position = body.style.position;
+  oldBodyStyle.overflow = body.style.overflow;
 }
 getOriginalStyle();
 
@@ -89,6 +78,22 @@ export default function useTouchZoom(
   visible: boolean,
   imgRef: React.MutableRefObject<HTMLImageElement>,
 ) {
+  const { x: translateX, y: translateY, scale } = transform;
+  const { width: imgWidth, height: imgHeight } = imgRef.current || { width: 0, height: 0 };
+
+  const getTranslateLimit = () => {
+    const offsetX = (imgWidth * scale - document.documentElement.clientWidth) / 2;
+    const offsetY = (imgHeight * scale - document.documentElement.clientHeight) / 2;
+    return [offsetX, offsetY];
+  };
+
+  const getOverflow = () => {
+    return [
+      imgWidth * scale > document.documentElement.clientWidth,
+      imgHeight * scale > document.documentElement.clientHeight,
+    ];
+  };
+
   const touchPointInfo = useRef<{ touchOne: Point; touchTwo: Point; eventType: EventType }>({
     touchOne: { ...initPoint },
     touchTwo: { ...initPoint },
@@ -113,16 +118,16 @@ export default function useTouchZoom(
       if (touches.length > 1) {
         // touch zoom
         setTouchPoint(
-          { x: touches[0].pageX, y: touches[0].pageY },
-          { x: touches[1].pageX, y: touches[1].pageY },
+          { x: touches[0].clientX, y: touches[0].clientY },
+          { x: touches[1].clientX, y: touches[1].clientY },
           'zoom',
         );
       } else {
         // touch move
         setTouchPoint(
           {
-            x: touches[0].pageX - transform.x,
-            y: touches[0].pageY - transform.y,
+            x: touches[0].clientX - transform.x,
+            y: touches[0].clientY - transform.y,
           },
           { ...initPoint },
           'move',
@@ -141,8 +146,8 @@ export default function useTouchZoom(
       b: { x: touchTwo.x, y: touchTwo.y },
     };
     const newPoint = {
-      a: { x: touches[0]?.pageX, y: touches[0]?.pageY },
-      b: { x: touches[1]?.pageX, y: touches[1]?.pageY },
+      a: { x: touches[0]?.clientX, y: touches[0]?.clientY },
+      b: { x: touches[1]?.clientX, y: touches[1]?.clientY },
     };
 
     if (eventType === 'zoom') {
@@ -153,25 +158,11 @@ export default function useTouchZoom(
         dispatchZoomChange(ratio, 'touchZoom', x, y);
         setTouchPoint(newPoint.a, newPoint.b, 'zoom');
       }
-    } else if (eventType === 'move' && transform.scale > 1) {
-      const { width, height } = imgRef.current;
-      const { x, y, scale } = transform;
-
-      let newX = x;
-      let newY = y;
-
-      if (width * scale > document.documentElement.clientWidth) {
-        newX = newPoint.a.x - oldPoint.a.x;
-      }
-
-      if (height * scale > document.documentElement.clientHeight) {
-        newY = newPoint.a.y - oldPoint.a.y;
-      }
-
+    } else if (eventType === 'move') {
       updateTransform(
         {
-          x: newX,
-          y: newY,
+          x: newPoint.a.x - oldPoint.a.x,
+          y: newPoint.a.y - oldPoint.a.y,
         },
         'move',
       );
@@ -179,30 +170,30 @@ export default function useTouchZoom(
   };
 
   const onTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
-    const { x, y, scale } = transform;
-    const { width, height } = imgRef.current;
+    const [offsetX, offsetY] = getTranslateLimit();
+    const [xOverflow, yOverflow] = getOverflow();
 
-    let newX = x;
-    let newY = y;
+    let newX = translateX;
+    let newY = translateY;
 
-    if (width * scale > document.documentElement.clientWidth) {
-      const offset = (width * (scale - 1)) / 2;
-
-      if (x > offset) {
-        newX = offset;
-      } else if (x < -offset) {
-        newX = -offset;
+    if (xOverflow) {
+      if (translateX > offsetX) {
+        newX = offsetX;
+      } else if (translateX < -offsetX) {
+        newX = -offsetX;
       }
+    } else {
+      newX = 0;
     }
 
-    if (height * scale > document.documentElement.clientHeight) {
-      const offset = (height * scale - document.documentElement.clientHeight) / 2;
-
-      if (y > offset) {
-        newY = offset;
-      } else if (y < -offset) {
-        newY = -offset;
+    if (yOverflow) {
+      if (translateY > offsetY) {
+        newY = offsetY;
+      } else if (translateY < -offsetY) {
+        newY = -offsetY;
       }
+    } else {
+      newY = 0;
     }
 
     updateTransform({ x: newX, y: newY }, 'move');

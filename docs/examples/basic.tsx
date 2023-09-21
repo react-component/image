@@ -27,6 +27,9 @@ const icons = {
 export default function Base() {
   return (
     <div>
+      {/* eslint-disable-next-line global-require */}
+      <Image src={`${require('./images/min.png')}`} />
+
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
