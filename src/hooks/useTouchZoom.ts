@@ -9,13 +9,13 @@ type EventType = 'init' | 'zoom' | 'move';
 
 let lastTouchEnd = 0;
 const initPoint = { x: 0, y: 0 };
+const originalStyle = { position: '', top: '', left: '', width: '', overflow: '' };
 
 function getDistance(a: Point, b: Point) {
   const x = a.x - b.x;
   const y = a.y - b.y;
   return Math.hypot(x, y);
 }
-
 function getCenter(a: Point, b: Point) {
   const x = (a.x + b.x) / 2;
   const y = (a.y + b.y) / 2;
@@ -27,7 +27,6 @@ function touchstart(event: TouchEvent) {
     event.preventDefault();
   }
 }
-
 function touchend(event: TouchEvent) {
   const now = Date.now();
   if (now - lastTouchEnd <= 300) {
@@ -43,7 +42,8 @@ function slidingControl(stop: boolean) {
   if (stop) {
     body.style.position = 'fixed';
     body.style.top = '0';
-    body.style.bottom = '0';
+    body.style.left = '0';
+    body.style.width = '100vw';
     body.style.overflow = 'hidden';
 
     document.addEventListener('touchstart', touchstart, {
@@ -53,15 +53,28 @@ function slidingControl(stop: boolean) {
       passive: false,
     });
   } else {
-    body.style.position = null;
-    body.style.top = null;
-    body.style.bottom = null;
-    body.style.overflow = null;
+    const { position, top, left, width, overflow } = originalStyle;
+    body.style.position = position;
+    body.style.top = top;
+    body.style.left = left;
+    body.style.width = width;
+    body.style.overflow = overflow;
 
     document.removeEventListener('touchstart', touchstart);
     document.removeEventListener('touchend', touchend);
   }
 }
+/** save original body style */
+function getOriginalStyle() {
+  const body = document.getElementsByTagName('body')[0];
+  const { position, top, left, width, overflow } = body.style;
+  originalStyle.position = position;
+  originalStyle.top = top;
+  originalStyle.left = left;
+  originalStyle.width = width;
+  originalStyle.overflow = overflow;
+}
+getOriginalStyle();
 
 /** Pinch-to-zoom & Move image after zooming in */
 export default function useTouchZoom(
@@ -168,7 +181,7 @@ export default function useTouchZoom(
   const onTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
     const { x, y, scale } = transform;
     const { width, height } = imgRef.current;
-    
+
     let newX = x;
     let newY = y;
 
