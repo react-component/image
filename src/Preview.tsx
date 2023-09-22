@@ -157,6 +157,7 @@ const Preview: React.FC<PreviewProps> = props => {
     transform,
     visible,
     imgRef,
+    prefixCls,
   );
 
   useEffect(() => {
@@ -368,7 +369,7 @@ const Preview: React.FC<PreviewProps> = props => {
           !enableTransition || touchPointInfo.eventType !== 'init'
             ? !enableTransition
               ? '0'
-              : '0.1s'
+              : '60ms'
             : undefined,
       }}
       fallback={fallback}

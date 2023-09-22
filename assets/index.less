@@ -64,8 +64,13 @@
     height: 100%;
     pointer-events: none;
 
+    &-content {
+      height: 100%;
+    }
+
     &-body {
       .box;
+      height: 100%;
       overflow: hidden;
     }
 
@@ -85,6 +90,8 @@
       z-index: @zindex-preview-mask;
       height: 100%;
       background-color: fade(@preview-mask-bg, 45%);
+      touch-action: none;
+      user-select: none;
 
       &-hidden {
         display: none;
@@ -130,6 +137,9 @@
       z-index: @zindex-preview-mask;
       overflow: auto;
       outline: 0;
+      touch-action: none;
+      user-select: none;
+      height: 100%;
       -webkit-overflow-scrolling: touch;
     }
 

@@ -9,7 +9,6 @@ type EventType = 'init' | 'zoom' | 'move';
 
 let lastTouchEnd = 0;
 const initPoint = { x: 0, y: 0 };
-const oldBodyStyle = { position: '', overflow: '' };
 
 function getDistance(a: Point, b: Point) {
   const x = a.x - b.x;
@@ -28,6 +27,9 @@ function touchstart(event: TouchEvent) {
     event.preventDefault();
   }
 }
+function touchmove(event: TouchEvent) {
+  event.preventDefault();
+}
 function touchend(event: TouchEvent) {
   const now = Date.now();
   if (now - lastTouchEnd <= 300) {
@@ -35,12 +37,18 @@ function touchend(event: TouchEvent) {
   }
   lastTouchEnd = now;
 }
-function slidingControl(stop: boolean) {
-  const body = document.getElementsByTagName('body')[0];
+function slidingControl(stop: boolean, className: string) {
+  const containerEle = document.getElementsByClassName(className)?.[0] as HTMLElement;
 
   if (stop) {
-    body.style.position = 'relative';
-    body.style.overflow = 'hidden';
+    if (containerEle) {
+      containerEle.parentElement.addEventListener('touchmove', touchmove, {
+        passive: false,
+      });
+      containerEle.addEventListener('touchmove', touchmove, {
+        passive: false,
+      });
+    }
 
     document.addEventListener('touchstart', touchstart, {
       passive: false,
@@ -49,21 +57,15 @@ function slidingControl(stop: boolean) {
       passive: false,
     });
   } else {
-    body.style.position = oldBodyStyle.position;
-    body.style.overflow = oldBodyStyle.overflow;
+    if (containerEle) {
+      containerEle.parentElement.removeEventListener('touchmove', touchmove);
+      containerEle.removeEventListener('touchmove', touchmove);
+    }
 
     document.removeEventListener('touchstart', touchstart);
     document.removeEventListener('touchend', touchend);
   }
 }
-/** save original body style */
-function getOriginalStyle() {
-  const body = document.getElementsByTagName('body')[0];
-
-  oldBodyStyle.position = body.style.position;
-  oldBodyStyle.overflow = body.style.overflow;
-}
-getOriginalStyle();
 
 /** Pinch-to-zoom & Move image after zooming in */
 export default function useTouchZoom(
@@ -77,6 +79,7 @@ export default function useTouchZoom(
   transform: Transform,
   visible: boolean,
   imgRef: React.MutableRefObject<HTMLImageElement>,
+  prefixCls: string,
 ) {
   const { x: translateX, y: translateY, scale } = transform;
   const { width: imgWidth, height: imgHeight } = imgRef.current || { width: 0, height: 0 };
@@ -202,11 +205,11 @@ export default function useTouchZoom(
 
   useEffect(() => {
     if (visible) {
-      slidingControl(true);
+      slidingControl(true, prefixCls + '-mask');
     } else {
-      slidingControl(false);
+      slidingControl(false, prefixCls + '-mask');
     }
-  }, [visible]);
+  }, [visible, prefixCls]);
 
   return {
     touchPointInfo: touchPointInfo.current,
