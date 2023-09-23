@@ -153,14 +153,12 @@ export default function useTouchZoom(
       b: { x: touches[1]?.clientX, y: touches[1]?.clientY },
     };
 
-    if (eventType === 'zoom') {
+    if (eventType === 'zoom' && touches.length > 1) {
       const [x, y] = getCenter(newPoint.a, newPoint.b);
       const ratio = getDistance(newPoint.a, newPoint.b) / getDistance(oldPoint.a, oldPoint.b);
-
-      if (ratio > 0.2) {
-        dispatchZoomChange(ratio, 'touchZoom', x, y);
-        setTouchPoint(newPoint.a, newPoint.b, 'zoom');
-      }
+      
+      dispatchZoomChange(ratio, 'touchZoom', x, y);
+      setTouchPoint(newPoint.a, newPoint.b, 'zoom');
     } else if (eventType === 'move') {
       updateTransform(
         {
