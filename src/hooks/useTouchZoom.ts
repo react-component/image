@@ -112,6 +112,37 @@ export default function useTouchZoom(
   const restTouchPoint = (event: React.TouchEvent<HTMLImageElement>) => {
     const { touches = [] } = event;
     if (touches.length) return;
+
+    const [offsetX, offsetY] = getTranslateLimit();
+    const [xOverflow, yOverflow] = getOverflow();
+
+    let newX = translateX;
+    let newY = translateY;
+
+    if (xOverflow) {
+      if (translateX > offsetX) {
+        newX = offsetX;
+      } else if (translateX < -offsetX) {
+        newX = -offsetX;
+      }
+    } else {
+      newX = 0;
+    }
+
+    if (yOverflow) {
+      if (translateY > offsetY) {
+        newY = offsetY;
+      } else if (translateY < -offsetY) {
+        newY = -offsetY;
+      }
+    } else {
+      newY = 0;
+    }
+
+    setTimeout(() => {
+      updateTransform({ x: newX, y: newY }, 'move');
+    }, 100);
+
     setTouchPoint({ ...initPoint }, { ...initPoint }, 'init');
   };
 
@@ -156,7 +187,7 @@ export default function useTouchZoom(
     if (eventType === 'zoom' && touches.length > 1) {
       const [x, y] = getCenter(newPoint.a, newPoint.b);
       const ratio = getDistance(newPoint.a, newPoint.b) / getDistance(oldPoint.a, oldPoint.b);
-      
+
       dispatchZoomChange(ratio, 'touchZoom', x, y);
       setTouchPoint(newPoint.a, newPoint.b, 'zoom');
     } else if (eventType === 'move') {
@@ -168,37 +199,6 @@ export default function useTouchZoom(
         'move',
       );
     }
-  };
-
-  const onTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
-    const [offsetX, offsetY] = getTranslateLimit();
-    const [xOverflow, yOverflow] = getOverflow();
-
-    let newX = translateX;
-    let newY = translateY;
-
-    if (xOverflow) {
-      if (translateX > offsetX) {
-        newX = offsetX;
-      } else if (translateX < -offsetX) {
-        newX = -offsetX;
-      }
-    } else {
-      newX = 0;
-    }
-
-    if (yOverflow) {
-      if (translateY > offsetY) {
-        newY = offsetY;
-      } else if (translateY < -offsetY) {
-        newY = -offsetY;
-      }
-    } else {
-      newY = 0;
-    }
-
-    updateTransform({ x: newX, y: newY }, 'move');
-    restTouchPoint(event);
   };
 
   useEffect(() => {
@@ -213,7 +213,7 @@ export default function useTouchZoom(
     touchPointInfo: touchPointInfo.current,
     onTouchStart,
     onTouchMove,
-    onTouchEnd,
+    onTouchEnd: restTouchPoint,
     onTouchCancel: restTouchPoint,
   };
 }
