@@ -21,9 +21,19 @@ function getDistance(a: Point, b: Point) {
   const y = a.y - b.y;
   return Math.hypot(x, y);
 }
-function getCenter(a: Point, b: Point) {
-  const x = (a.x + b.x) / 2;
-  const y = (a.y + b.y) / 2;
+
+function getCenter(oldPoint1: Point, oldPoint2: Point, newPoint1: Point, newPoint2: Point) {
+  // Calculate the distance each point has moved
+  const distance1 = getDistance(oldPoint1, newPoint1);
+  const distance2 = getDistance(oldPoint2, newPoint2);
+
+  // Calculate the ratio of the distances
+  const ratio = distance1 / (distance1 + distance2);
+
+  // Calculate the new center point based on the ratio
+  const x = oldPoint1.x + ratio * (oldPoint2.x - oldPoint1.x);
+  const y = oldPoint1.y + ratio * (oldPoint2.y - oldPoint1.y);
+
   return [x, y];
 }
 
@@ -93,7 +103,7 @@ export default function useTouchEvent(
         x: touches[1].clientX,
         y: touches[1].clientY
       };
-      const [centerX, centerY] = getCenter(newPoint1, newPoint2);
+      const [centerX, centerY] = getCenter(point1, point2, newPoint1, newPoint2);
       const ratio = getDistance(newPoint1, newPoint2) / getDistance(point1, point2);
 
       dispatchZoomChange(ratio, 'touchZoom', centerX, centerY, true);
