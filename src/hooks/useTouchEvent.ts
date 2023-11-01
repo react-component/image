@@ -27,6 +27,11 @@ function getCenter(oldPoint1: Point, oldPoint2: Point, newPoint1: Point, newPoin
   const distance1 = getDistance(oldPoint1, newPoint1);
   const distance2 = getDistance(oldPoint2, newPoint2);
 
+  // If both distances are 0, return the original points
+  if (distance1 === 0 && distance2 === 0) {
+    return [oldPoint1.x, oldPoint1.y];
+  }
+
   // Calculate the ratio of the distances
   const ratio = distance1 / (distance1 + distance2);
 
@@ -116,8 +121,8 @@ export default function useTouchEvent(
       // touch move
       updateTransform(
         {
-          x: touches[0].pageX - point1.x,
-          y: touches[0].pageY - point1.y,
+          x: touches[0].clientX - point1.x,
+          y: touches[0].clientY - point1.y,
         },
         'move',
       );
@@ -137,30 +142,29 @@ export default function useTouchEvent(
       return updateTransform({ x: 0, y: 0, scale: minScale }, 'touchZoom');
     } 
 
-    const { eventType, startTransform } = touchPointInfo.current;
-    if (eventType === 'move') {
-      updateTouchPointInfo({ eventType: 'none' });
+    const { startTransform } = touchPointInfo.current;
 
-      /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
-      const hasChangedPosition = x !== startTransform.x && y !== startTransform.y;
-      if (!hasChangedPosition) return;
+    updateTouchPointInfo({ eventType: 'none' });
 
-      const width = imgRef.current.offsetWidth * scale;
-      const height = imgRef.current.offsetHeight * scale;
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { left, top } = imgRef.current.getBoundingClientRect();
-      const isRotate = rotate % 180 !== 0;
+    /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
+    const hasChangedPosition = x !== startTransform.x && y !== startTransform.y;
+    if (!hasChangedPosition) return;
 
-      const fixState = getFixScaleEleTransPosition(
-        isRotate ? height : width,
-        isRotate ? width : height,
-        left,
-        top,
-      );
+    const width = imgRef.current.offsetWidth * scale;
+    const height = imgRef.current.offsetHeight * scale;
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const { left, top } = imgRef.current.getBoundingClientRect();
+    const isRotate = rotate % 180 !== 0;
 
-      if (fixState) {
-        updateTransform({ ...fixState }, 'dragRebound');
-      }
+    const fixState = getFixScaleEleTransPosition(
+      isRotate ? height : width,
+      isRotate ? width : height,
+      left,
+      top,
+    );
+
+    if (fixState) {
+      updateTransform({ ...fixState }, 'dragRebound');
     }
   };
 
