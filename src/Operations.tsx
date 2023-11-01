@@ -117,7 +117,7 @@ const Operations: React.FC<OperationsProps> = props => {
       icon: zoomOut,
       onClick: onZoomOut,
       type: 'zoomOut',
-      disabled: scale === minScale,
+      disabled: scale <= minScale,
     },
     {
       icon: zoomIn,

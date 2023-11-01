@@ -25,7 +25,21 @@ export type TransformAction =
   | 'wheel'
   | 'doubleClick'
   | 'move'
-  | 'dragRebound';
+  | 'dragRebound'
+  | 'touchZoom';
+
+export type UpdateTransformFunc = (
+  newTransform: Partial<TransformType>,
+  action: TransformAction,
+) => void;
+
+export type DispatchZoomChangeFunc = (
+  ratio: number,
+  action: TransformAction,
+  clientX?: number,
+  clientY?: number,
+  isTouch?: boolean,
+) => void;
 
 const initialTransform = {
   x: 0,
@@ -54,7 +68,7 @@ export default function useImageTransform(
   };
 
   /** Direct update transform */
-  const updateTransform = (newTransform: Partial<TransformType>, action: TransformAction) => {
+  const updateTransform: UpdateTransformFunc = (newTransform, action) => {
     if (frame.current === null) {
       queue.current = [];
       frame.current = raf(() => {
@@ -77,22 +91,18 @@ export default function useImageTransform(
   };
 
   /** Scale according to the position of clientX and clientY */
-  const dispatchZoomChange = (
-    ratio: number,
-    action: TransformAction,
-    clientX?: number,
-    clientY?: number,
-  ) => {
+  const dispatchZoomChange: DispatchZoomChangeFunc = (ratio, action, clientX?, clientY?, isTouch?) => {
     const { width, height, offsetWidth, offsetHeight, offsetLeft, offsetTop } = imgRef.current;
 
     let newRatio = ratio;
     let newScale = transform.scale * ratio;
     if (newScale > maxScale) {
-      newRatio = maxScale / transform.scale;
       newScale = maxScale;
+      newRatio = maxScale / transform.scale;
     } else if (newScale < minScale) {
-      newRatio = minScale / transform.scale;
-      newScale = minScale;
+      // For mobile interactions, allow scaling down to the minimum scale.
+      newScale = isTouch ? newScale : minScale;
+      newRatio = newScale / transform.scale;
     }
 
     /** Default center point scaling */

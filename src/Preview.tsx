@@ -3,15 +3,15 @@ import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
 import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
-import { warning } from 'rc-util/lib/warning';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from './context';
-import getFixScaleEleTransPosition from './getFixScaleEleTransPosition';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
+import useMouseEvent from './hooks/useMouseEvent';
+import useTouchEvent from './hooks/useTouchEvent';
 import useStatus from './hooks/useStatus';
 import Operations from './Operations';
-import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from './previewConfig';
+import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
   icons: {
@@ -126,24 +126,35 @@ const Preview: React.FC<PreviewProps> = props => {
   } = props;
 
   const imgRef = useRef<HTMLImageElement>();
-  const downPositionRef = useRef({
-    deltaX: 0,
-    deltaY: 0,
-    transformX: 0,
-    transformY: 0,
-  });
-  const [isMoving, setMoving] = useState(false);
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;
+  const [enableTransition, setEnableTransition] = useState(true);
   const { transform, resetTransform, updateTransform, dispatchZoomChange } = useImageTransform(
     imgRef,
     minScale,
     maxScale,
     onTransform,
   );
-  const [enableTransition, setEnableTransition] = useState(true);
-  const { rotate, scale, x, y } = transform;
+  const { isMoving, onMouseDown, onWheel } = useMouseEvent(
+    imgRef,
+    movable,
+    visible,
+    scaleStep,
+    transform,
+    updateTransform,
+    dispatchZoomChange,
+  );
+  const { isTouching, onTouchStart, onTouchMove, onTouchEnd } = useTouchEvent(
+    imgRef,
+    movable,
+    visible,
+    minScale,
+    transform,
+    updateTransform,
+    dispatchZoomChange,
+  );
+  const { rotate, scale } = transform;
 
   const wrapClassName = classnames({
     [`${prefixCls}-moving`]: isMoving,
@@ -203,75 +214,6 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
-  const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
-    if (visible && isMoving) {
-      setMoving(false);
-      /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
-      const { transformX, transformY } = downPositionRef.current;
-      const hasChangedPosition = x !== transformX && y !== transformY;
-      if (!hasChangedPosition) {
-        return;
-      }
-
-      const width = imgRef.current.offsetWidth * scale;
-      const height = imgRef.current.offsetHeight * scale;
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { left, top } = imgRef.current.getBoundingClientRect();
-      const isRotate = rotate % 180 !== 0;
-
-      const fixState = getFixScaleEleTransPosition(
-        isRotate ? height : width,
-        isRotate ? width : height,
-        left,
-        top,
-      );
-
-      if (fixState) {
-        updateTransform({ ...fixState }, 'dragRebound');
-      }
-    }
-  };
-
-  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
-    // Only allow main button
-    if (!movable || event.button !== 0) return;
-    event.preventDefault();
-    event.stopPropagation();
-    downPositionRef.current = {
-      deltaX: event.pageX - transform.x,
-      deltaY: event.pageY - transform.y,
-      transformX: transform.x,
-      transformY: transform.y,
-    };
-    setMoving(true);
-  };
-
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
-    if (visible && isMoving) {
-      updateTransform(
-        {
-          x: event.pageX - downPositionRef.current.deltaX,
-          y: event.pageY - downPositionRef.current.deltaY,
-        },
-        'move',
-      );
-    }
-  };
-
-  const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
-    if (!visible || event.deltaY == 0) return;
-    // Scale ratio depends on the deltaY size
-    const scaleRatio = Math.abs(event.deltaY / 100);
-    // Limit the maximum scale ratio
-    const mergedScaleRatio = Math.min(scaleRatio, WHEEL_MAX_SCALE_RATIO);
-    // Scale the ratio each time
-    let ratio = BASE_SCALE_RATIO + mergedScaleRatio * scaleStep;
-    if (event.deltaY > 0) {
-      ratio = BASE_SCALE_RATIO / ratio;
-    }
-    dispatchZoomChange(ratio, 'wheel', event.clientX, event.clientY);
-  };
-
   const onKeyDown = (event: KeyboardEvent) => {
     if (!visible || !showLeftOrRightSwitches) return;
 
@@ -298,39 +240,6 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   useEffect(() => {
-    let onTopMouseUpListener;
-    let onTopMouseMoveListener;
-    let onMouseUpListener;
-    let onMouseMoveListener;
-
-    if (movable) {
-      onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
-      onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
-
-      try {
-        // Resolve if in iframe lost event
-        /* istanbul ignore next */
-        if (window.top !== window.self) {
-          onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
-          onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
-        }
-      } catch (error) {
-        /* istanbul ignore next */
-        warning(false, `[rc-image] ${error}`);
-      }
-    }
-
-    return () => {
-      onMouseUpListener?.remove();
-      onMouseMoveListener?.remove();
-      /* istanbul ignore next */
-      onTopMouseUpListener?.remove();
-      /* istanbul ignore next */
-      onTopMouseMoveListener?.remove();
-    };
-  }, [visible, isMoving, x, y, rotate, movable]);
-
-  useEffect(() => {
     const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
 
     return () => {
@@ -350,13 +259,17 @@ const Preview: React.FC<PreviewProps> = props => {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
           transform.flipX ? '-' : ''
         }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
-        transitionDuration: !enableTransition && '0s',
+        transitionDuration: (!enableTransition || isTouching) && '0s',
       }}
       fallback={fallback}
       src={src}
       onWheel={onWheel}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
     />
   );
 
