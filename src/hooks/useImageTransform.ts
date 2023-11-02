@@ -36,8 +36,8 @@ export type UpdateTransformFunc = (
 export type DispatchZoomChangeFunc = (
   ratio: number,
   action: TransformAction,
-  clientX?: number,
-  clientY?: number,
+  centerX?: number,
+  centerY?: number,
   isTouch?: boolean,
 ) => void;
 
@@ -90,8 +90,8 @@ export default function useImageTransform(
     });
   };
 
-  /** Scale according to the position of clientX and clientY */
-  const dispatchZoomChange: DispatchZoomChangeFunc = (ratio, action, clientX?, clientY?, isTouch?) => {
+  /** Scale according to the position of centerX and centerY */
+  const dispatchZoomChange: DispatchZoomChangeFunc = (ratio, action, centerX?, centerY?, isTouch?) => {
     const { width, height, offsetWidth, offsetHeight, offsetLeft, offsetTop } = imgRef.current;
 
     let newRatio = ratio;
@@ -106,16 +106,16 @@ export default function useImageTransform(
     }
 
     /** Default center point scaling */
-    const mergedClientX = clientX ?? innerWidth / 2;
-    const mergedClientY = clientY ?? innerHeight / 2;
+    const mergedCenterX = centerX ?? innerWidth / 2;
+    const mergedCenterY = centerY ?? innerHeight / 2;
 
     const diffRatio = newRatio - 1;
     /** Deviation calculated from image size */
     const diffImgX = diffRatio * width * 0.5;
     const diffImgY = diffRatio * height * 0.5;
     /** The difference between the click position and the edge of the document */
-    const diffOffsetLeft = diffRatio * (mergedClientX - transform.x - offsetLeft);
-    const diffOffsetTop = diffRatio * (mergedClientY - transform.y - offsetTop);
+    const diffOffsetLeft = diffRatio * (mergedCenterX - transform.x - offsetLeft);
+    const diffOffsetTop = diffRatio * (mergedCenterY - transform.y - offsetTop);
     /** Final positioning */
     let newX = transform.x - (diffOffsetLeft - diffImgX);
     let newY = transform.y - (diffOffsetTop - diffImgY);
