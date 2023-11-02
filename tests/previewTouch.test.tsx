@@ -28,20 +28,14 @@ describe('Touch Events', () => {
       touches: [{ clientX: 50, clientY: 50 }]
     });
 
-    // Disable transition during image movement
-    expect(previewImgDom).toHaveStyle({
-      transitionDuration: '0s',
-    });
-
-    fireEvent.touchEnd(previewImgDom);
-
     act(() => {
       jest.runAllTimers();
     });
 
     expect(previewImgDom).toHaveStyle({
       transform: 'translate3d(50px, 50px, 0) scale3d(1, 1, 1) rotate(0deg)',
-      transitionDuration: undefined
+      // Disable transition during image movement
+      transitionDuration: '0s',
     });
 
     fireEvent.touchEnd(previewImgDom);

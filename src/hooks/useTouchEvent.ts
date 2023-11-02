@@ -12,7 +12,6 @@ type Point = {
 type TouchPointInfoType = {
   point1: Point;
   point2: Point;
-  startTransform: Point;
   eventType: string;
 };
 
@@ -57,7 +56,6 @@ export default function useTouchEvent(
   const touchPointInfo = useRef<TouchPointInfoType>({
     point1: { x: 0, y: 0 },
     point2: { x: 0, y: 0 },
-    startTransform: { x: 0, y: 0 },
     eventType: 'none',
   });
 
@@ -88,7 +86,6 @@ export default function useTouchEvent(
           x: touches[0].clientX - x,
           y: touches[0].clientY - y
         },
-        startTransform: { x, y },
         eventType: 'move'
       })
     }
@@ -137,18 +134,12 @@ export default function useTouchEvent(
       setIsTouching(false);
     }
 
+    updateTouchPointInfo({ eventType: 'none' });
+
     if (minScale > scale) {
       /** When the scaling ratio is less than the minimum scaling ratio, reset the scaling ratio */
       return updateTransform({ x: 0, y: 0, scale: minScale }, 'touchZoom');
     } 
-
-    const { startTransform } = touchPointInfo.current;
-
-    updateTouchPointInfo({ eventType: 'none' });
-
-    /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
-    const hasChangedPosition = x !== startTransform.x && y !== startTransform.y;
-    if (!hasChangedPosition) return;
 
     const width = imgRef.current.offsetWidth * scale;
     const height = imgRef.current.offsetHeight * scale;
