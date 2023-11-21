@@ -41,6 +41,7 @@ interface OperationsProps
     originalNode: React.ReactElement,
     info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
+  zIndex?: number;
 }
 
 const Operations: React.FC<OperationsProps> = props => {
@@ -71,6 +72,7 @@ const Operations: React.FC<OperationsProps> = props => {
     onFlipX,
     onFlipY,
     toolbarRender,
+    zIndex,
   } = props;
   const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
@@ -148,7 +150,10 @@ const Operations: React.FC<OperationsProps> = props => {
         <Portal open getContainer={getContainer ?? document.body}>
           <div
             className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
-            style={style}
+            style={{
+              ...style,
+              zIndex,
+            }}
           >
             {closeIcon === null ? null : (
               <button className={`${prefixCls}-close`} onClick={onClose}>

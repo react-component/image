@@ -411,6 +411,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipX={onFlipX}
         onFlipY={onFlipY}
         onClose={onClose}
+        zIndex={restProps.zIndex}
       />
     </>
   );
