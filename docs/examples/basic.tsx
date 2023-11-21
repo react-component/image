@@ -41,6 +41,7 @@ export default function Base() {
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
+          zIndex: 9999
         }}
       />
 

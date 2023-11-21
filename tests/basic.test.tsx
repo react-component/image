@@ -87,4 +87,14 @@ describe('Basic', () => {
     const maskElement = container.querySelector('.rc-image-mask');
     expect(maskElement).toHaveStyle({ display: 'none' });
   });
+  it('preview zIndex should pass into operations', () => {
+    const { baseElement } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ zIndex: 9999, visible: true }}
+      />,
+    );
+    const operationsElement = baseElement.querySelector('.rc-image-preview-operations-wrapper');
+    expect(operationsElement).toHaveStyle({ zIndex: 9999 });
+  });
 });
