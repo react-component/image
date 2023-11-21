@@ -25,7 +25,21 @@ export type TransformAction =
   | 'wheel'
   | 'doubleClick'
   | 'move'
-  | 'dragRebound';
+  | 'dragRebound'
+  | 'touchZoom';
+
+export type UpdateTransformFunc = (
+  newTransform: Partial<TransformType>,
+  action: TransformAction,
+) => void;
+
+export type DispatchZoomChangeFunc = (
+  ratio: number,
+  action: TransformAction,
+  centerX?: number,
+  centerY?: number,
+  isTouch?: boolean,
+) => void;
 
 const initialTransform = {
   x: 0,
@@ -54,7 +68,7 @@ export default function useImageTransform(
   };
 
   /** Direct update transform */
-  const updateTransform = (newTransform: Partial<TransformType>, action: TransformAction) => {
+  const updateTransform: UpdateTransformFunc = (newTransform, action) => {
     if (frame.current === null) {
       queue.current = [];
       frame.current = raf(() => {
@@ -76,36 +90,32 @@ export default function useImageTransform(
     });
   };
 
-  /** Scale according to the position of clientX and clientY */
-  const dispatchZoomChange = (
-    ratio: number,
-    action: TransformAction,
-    clientX?: number,
-    clientY?: number,
-  ) => {
+  /** Scale according to the position of centerX and centerY */
+  const dispatchZoomChange: DispatchZoomChangeFunc = (ratio, action, centerX?, centerY?, isTouch?) => {
     const { width, height, offsetWidth, offsetHeight, offsetLeft, offsetTop } = imgRef.current;
 
     let newRatio = ratio;
     let newScale = transform.scale * ratio;
     if (newScale > maxScale) {
-      newRatio = maxScale / transform.scale;
       newScale = maxScale;
+      newRatio = maxScale / transform.scale;
     } else if (newScale < minScale) {
-      newRatio = minScale / transform.scale;
-      newScale = minScale;
+      // For mobile interactions, allow scaling down to the minimum scale.
+      newScale = isTouch ? newScale : minScale;
+      newRatio = newScale / transform.scale;
     }
 
     /** Default center point scaling */
-    const mergedClientX = clientX ?? innerWidth / 2;
-    const mergedClientY = clientY ?? innerHeight / 2;
+    const mergedCenterX = centerX ?? innerWidth / 2;
+    const mergedCenterY = centerY ?? innerHeight / 2;
 
     const diffRatio = newRatio - 1;
     /** Deviation calculated from image size */
     const diffImgX = diffRatio * width * 0.5;
     const diffImgY = diffRatio * height * 0.5;
     /** The difference between the click position and the edge of the document */
-    const diffOffsetLeft = diffRatio * (mergedClientX - transform.x - offsetLeft);
-    const diffOffsetTop = diffRatio * (mergedClientY - transform.y - offsetTop);
+    const diffOffsetLeft = diffRatio * (mergedCenterX - transform.x - offsetLeft);
+    const diffOffsetTop = diffRatio * (mergedCenterY - transform.y - offsetTop);
     /** Final positioning */
     let newX = transform.x - (diffOffsetLeft - diffImgX);
     let newY = transform.y - (diffOffsetTop - diffImgY);
