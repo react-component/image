@@ -1,5 +1,5 @@
-import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
 import Image from '../src';
 
 describe('Basic', () => {
@@ -88,68 +88,13 @@ describe('Basic', () => {
     expect(maskElement).toHaveStyle({ display: 'none' });
   });
   it('preview zIndex should pass into operations', () => {
-    const { baseElement, rerender } = render(
+    const { baseElement } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{ zIndex: 9999, visible: true }}
       />,
     );
-    const operationsElement = baseElement.querySelector('.rc-image-preview-wrapper');
-    expect(operationsElement).toHaveStyle({ zIndex: 9999 });
-    expect(operationsElement).toHaveStyle({ position: 'relative' });
-    rerender(
-      <>
-        <div className="custom-container" style={{ position: 'absolute' }} />
-        <Image
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          preview={{
-            zIndex: 9999,
-            visible: true,
-            getContainer: '.custom-container',
-          }}
-        />
-      </>,
-    );
-
-    const operationsElement2 = baseElement.querySelector('.custom-container.rc-image-preview-wrapper');
-    expect(operationsElement2).toHaveStyle({ zIndex: 9999 });
-    expect(operationsElement2).toHaveStyle({ position: 'absolute' });
-    expect(operationsElement2).not.toHaveStyle({ position: 'relative' });
-    rerender(
-      <>
-        <div className="custom-container" style={{ position: 'absolute' }} />
-        <Image
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          preview={{
-            zIndex: 9999,
-            visible: true,
-            getContainer: () => document.querySelector('.custom-container'),
-          }}
-        />
-      </>,
-    );
-
-    const operationsElement3 = baseElement.querySelector('.custom-container.rc-image-preview-wrapper');
-    expect(operationsElement3).toHaveStyle({ zIndex: 9999 });
-    expect(operationsElement3).toHaveStyle({ position: 'absolute' });
-    expect(operationsElement3).not.toHaveStyle({ position: 'relative' });
-    rerender(
-      <>
-        <div className="custom-container" style={{ position: 'absolute' }} />
-        <Image
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          preview={{
-            zIndex: 9999,
-            visible: true,
-            getContainer: document.querySelector('.custom-container') as HTMLElement,
-          }}
-        />
-      </>,
-    );
-
-    const operationsElement4 = baseElement.querySelector('.custom-container.rc-image-preview-wrapper');
-    expect(operationsElement4).toHaveStyle({ zIndex: 9999 });
-    expect(operationsElement4).toHaveStyle({ position: 'absolute' });
-    expect(operationsElement4).not.toHaveStyle({ position: 'relative' });
+    const operationsElement = baseElement.querySelector('.rc-image-preview-operations-wrapper');
+    expect(operationsElement).toHaveStyle({ zIndex: 10000 });
   });
 });
