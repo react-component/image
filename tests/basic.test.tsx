@@ -95,6 +95,6 @@ describe('Basic', () => {
       />,
     );
     const operationsElement = baseElement.querySelector('.rc-image-preview-operations-wrapper');
-    expect(operationsElement).toHaveStyle({ zIndex: 9999 });
+    expect(operationsElement).toHaveStyle({ zIndex: 10000 });
   });
 });
