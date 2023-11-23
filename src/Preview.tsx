@@ -122,6 +122,7 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
+    zIndex,
     ...restProps
   } = props;
 
@@ -273,8 +274,33 @@ const Preview: React.FC<PreviewProps> = props => {
     />
   );
 
+  const containerRef = useRef<HTMLDivElement>();
+
+  const container = () => {
+    let con: HTMLElement;
+    if (getContainer) {
+      if (typeof getContainer === 'function') {
+        con = getContainer();
+      } else if (typeof getContainer === "string") {
+        con = document.querySelector(getContainer);
+      } else {
+        con = getContainer;
+      }
+    } else {
+      con = containerRef.current;
+    }
+    if (!con) return con;
+    con.classList.add(`${prefixCls}-wrapper`);
+    con.style.zIndex = `${zIndex}`;
+    const pos = window.getComputedStyle(con).position;
+    if (!pos || pos === 'static') {
+      con.style.position = 'relative';
+    }
+    return con;
+  }
+
   return (
-    <>
+    <div className={`${prefixCls}-wrapper`} ref={containerRef}>
       <Dialog
         transitionName={transitionName}
         maskTransitionName={maskTransitionName}
@@ -287,7 +313,7 @@ const Preview: React.FC<PreviewProps> = props => {
           wrapper: wrapClassName,
         }}
         rootClassName={rootClassName}
-        getContainer={getContainer}
+        getContainer={container}
         {...restProps}
         afterClose={onAfterClose}
       >
@@ -302,7 +328,7 @@ const Preview: React.FC<PreviewProps> = props => {
         transform={transform}
         maskTransitionName={maskTransitionName}
         closeIcon={closeIcon}
-        getContainer={getContainer}
+        getContainer={container}
         prefixCls={prefixCls}
         rootClassName={rootClassName}
         icons={icons}
@@ -324,9 +350,8 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipX={onFlipX}
         onFlipY={onFlipY}
         onClose={onClose}
-        zIndex={restProps.zIndex}
       />
-    </>
+    </div>
   );
 };
 

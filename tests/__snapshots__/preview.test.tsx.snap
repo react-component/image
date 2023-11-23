@@ -22,85 +22,88 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       />
     </div>
-  </div>,
-  <div>
     <div
-      class="rc-image-preview-root custom-className"
+      class="rc-image-preview-wrapper"
+      style="z-index: undefined; position: relative;"
     >
       <div
-        class="rc-image-preview-mask"
-      />
-      <div
-        class="rc-image-preview-wrap"
-        tabindex="-1"
+        class="rc-image-preview-root custom-className"
       >
         <div
-          aria-modal="true"
-          class="rc-image-preview zoom-appear zoom-appear-prepare zoom"
-          role="dialog"
-          style="transform-origin: 0px 0px;"
+          class="rc-image-preview-mask"
+        />
+        <div
+          class="rc-image-preview-wrap"
+          tabindex="-1"
         >
           <div
-            aria-hidden="true"
-            style="width: 0px; height: 0px; overflow: hidden; outline: none;"
-            tabindex="0"
-          />
-          <div
-            class="rc-image-preview-content"
+            aria-modal="true"
+            class="rc-image-preview zoom-appear zoom-appear-prepare zoom"
+            role="dialog"
+            style="transform-origin: 0px 0px;"
           >
             <div
-              class="rc-image-preview-body"
+              aria-hidden="true"
+              style="width: 0px; height: 0px; overflow: hidden; outline: none;"
+              tabindex="0"
+            />
+            <div
+              class="rc-image-preview-content"
             >
               <div
-                class="rc-image-preview-img-wrapper"
+                class="rc-image-preview-body"
               >
-                <img
-                  class="rc-image-preview-img"
-                  src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                  style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
-                />
+                <div
+                  class="rc-image-preview-img-wrapper"
+                >
+                  <img
+                    class="rc-image-preview-img"
+                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                    style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
+                  />
+                </div>
               </div>
             </div>
+            <div
+              aria-hidden="true"
+              style="width: 0px; height: 0px; overflow: hidden; outline: none;"
+              tabindex="0"
+            />
           </div>
-          <div
-            aria-hidden="true"
-            style="width: 0px; height: 0px; overflow: hidden; outline: none;"
-            tabindex="0"
-          />
         </div>
       </div>
-    </div>
-  </div>,
-  <div
-    class="rc-image-preview-operations-wrapper custom-className"
-  >
-    <button
-      class="rc-image-preview-close"
-    />
-    <div
-      class="rc-image-preview-footer"
-    >
       <div
-        class="rc-image-preview-operations"
+        class="rc-image-preview-operations-wrapper custom-className"
       >
-        <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
+        <button
+          class="rc-image-preview-close"
         />
         <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
-        />
-        <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
-        />
-        <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
-        />
-        <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
-        />
-        <div
-          class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
-        />
+          class="rc-image-preview-footer"
+        >
+          <div
+            class="rc-image-preview-operations"
+          >
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipY"
+            />
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-flipX"
+            />
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateLeft"
+            />
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-rotateRight"
+            />
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomOut rc-image-preview-operations-operation-disabled"
+            />
+            <div
+              class="rc-image-preview-operations-operation rc-image-preview-operations-operation-zoomIn"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>,
