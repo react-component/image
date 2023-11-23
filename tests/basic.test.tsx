@@ -115,5 +115,41 @@ describe('Basic', () => {
     expect(operationsElement2).toHaveStyle({ zIndex: 9999 });
     expect(operationsElement2).toHaveStyle({ position: 'absolute' });
     expect(operationsElement2).not.toHaveStyle({ position: 'relative' });
+    rerender(
+      <>
+        <div className="custom-container" style={{ position: 'absolute' }} />
+        <Image
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          preview={{
+            zIndex: 9999,
+            visible: true,
+            getContainer: () => document.querySelector('.custom-container'),
+          }}
+        />
+      </>,
+    );
+
+    const operationsElement3 = baseElement.querySelector('.custom-container.rc-image-preview-wrapper');
+    expect(operationsElement3).toHaveStyle({ zIndex: 9999 });
+    expect(operationsElement3).toHaveStyle({ position: 'absolute' });
+    expect(operationsElement3).not.toHaveStyle({ position: 'relative' });
+    rerender(
+      <>
+        <div className="custom-container" style={{ position: 'absolute' }} />
+        <Image
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          preview={{
+            zIndex: 9999,
+            visible: true,
+            getContainer: document.querySelector('.custom-container') as HTMLElement,
+          }}
+        />
+      </>,
+    );
+
+    const operationsElement4 = baseElement.querySelector('.custom-container.rc-image-preview-wrapper');
+    expect(operationsElement4).toHaveStyle({ zIndex: 9999 });
+    expect(operationsElement4).toHaveStyle({ position: 'absolute' });
+    expect(operationsElement4).not.toHaveStyle({ position: 'relative' });
   });
 });
