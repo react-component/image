@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
+import { defaultIcons } from './common';
 
 export default function Base() {
   const [random, setRandom] = React.useState(Date.now());
@@ -21,6 +22,7 @@ export default function Base() {
           src={`${require('./images/placeholder.png')}?random=${random}`}
           width={400}
           placeholder
+          preview={{icons: defaultIcons}}
         />
       </div>
 
@@ -30,6 +32,7 @@ export default function Base() {
         // eslint-disable-next-line global-require
         src={`${require('./images/placeholder.png')}?random=${random + 1}`}
         width={400}
+        preview={{icons: defaultIcons}}
         placeholder={
           <Image
             width="100%"

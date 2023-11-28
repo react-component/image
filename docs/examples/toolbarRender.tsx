@@ -1,6 +1,7 @@
 import Image from 'rc-image';
 import React from 'react';
 import '../../assets/index.less';
+import { defaultIcons } from './common';
 
 export default function ToolbarRender() {
   return (
@@ -9,6 +10,7 @@ export default function ToolbarRender() {
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
         preview={{
+          icons: defaultIcons,
           toolbarRender: (
             _,
             {

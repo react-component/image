@@ -1,6 +1,7 @@
 import Image from 'rc-image';
 import React from 'react';
 import '../../assets/index.less';
+import { defaultIcons } from './common';
 
 export default function imageRender() {
   return (
@@ -9,6 +10,7 @@ export default function imageRender() {
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
         preview={{
+          icons: defaultIcons,
           toolbarRender: () => null,
           imageRender: () => (
             <video

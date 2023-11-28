@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
+import { defaultIcons } from './common';
 
 export default function Base() {
   const [visible, setVisible] = React.useState(false);
@@ -19,6 +20,7 @@ export default function Base() {
       </div>
       <Image.PreviewGroup
         preview={{
+          icons: defaultIcons,
           visible,
           onVisibleChange: value => {
             setVisible(value);
