@@ -12,7 +12,6 @@ import useTouchEvent from './hooks/useTouchEvent';
 import useStatus from './hooks/useStatus';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO } from './previewConfig';
-import { defaultIcons } from './Image';
 
 export type ToolbarRenderInfoType = {
   icons: {
