@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'rc-image';
 import '../../assets/index.less';
+import { defaultIcons } from './common';
 
 export default function Thumbnail() {
   return (
@@ -8,6 +9,7 @@ export default function Thumbnail() {
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/auto-orient,1/resize,p_10/quality,q_10"
         preview={{
+          icons: defaultIcons,
           src: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         }}
         width={200}
@@ -15,7 +17,7 @@ export default function Thumbnail() {
 
       <br />
       <h1>PreviewGroup</h1>
-      <Image.PreviewGroup>
+      <Image.PreviewGroup preview={{icons: defaultIcons}}>
         <Image
           key={1}
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?x-oss-process=image/auto-orient,1/resize,p_10/quality,q_10"

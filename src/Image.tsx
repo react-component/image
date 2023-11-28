@@ -15,29 +15,6 @@ import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 
-import {
-  CloseOutlined,
-  LeftOutlined,
-  RightOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  SwapOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-} from '@ant-design/icons';
-
-export const defaultIcons: PreviewProps['icons'] = {
-  rotateLeft: <RotateLeftOutlined />,
-  rotateRight: <RotateRightOutlined />,
-  zoomIn: <ZoomInOutlined />,
-  zoomOut: <ZoomOutOutlined />,
-  close: <CloseOutlined />,
-  left: <LeftOutlined />,
-  right: <RightOutlined />,
-  flipX: <SwapOutlined />,
-  flipY: <SwapOutlined rotate={90} />,
-};
-
 export interface ImagePreviewType
   extends Omit<
     IDialogPropTypes,
@@ -121,7 +98,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     mask: previewMask,
     maskClassName,
     movable,
-    icons = defaultIcons,
+    icons,
     scaleStep,
     minScale,
     maxScale,

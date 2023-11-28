@@ -105,7 +105,7 @@ const Preview: React.FC<PreviewProps> = props => {
     movable = true,
     onClose,
     visible,
-    icons,
+    icons = {},
     rootClassName,
     closeIcon,
     getContainer,

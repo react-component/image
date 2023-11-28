@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
-import { defaultIcons, type ImagePreviewType } from './Image';
+import { type ImagePreviewType } from './Image';
 import type { ImageElementProps, OnGroupPreview } from './interface';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
@@ -12,7 +12,7 @@ import Preview from './Preview';
 export interface PreviewGroupPreview
   extends Omit<
     ImagePreviewType,
-    'icons' | 'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
+    | 'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
   > {
   /**
    * If Preview the show img index
@@ -44,7 +44,7 @@ export interface GroupConsumerProps {
 const Group: React.FC<GroupConsumerProps> = ({
   previewPrefixCls = 'rc-image-preview',
   children,
-  icons = defaultIcons,
+  icons = {},
   items,
   preview,
   fallback,
