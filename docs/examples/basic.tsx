@@ -1,28 +1,7 @@
-import {
-  CloseOutlined,
-  LeftOutlined,
-  RightOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  SwapOutlined,
-  ZoomInOutlined,
-  ZoomOutOutlined,
-} from '@ant-design/icons';
 import Image from 'rc-image';
 import * as React from 'react';
 import '../../assets/index.less';
 
-const icons = {
-  rotateLeft: <RotateLeftOutlined />,
-  rotateRight: <RotateRightOutlined />,
-  zoomIn: <ZoomInOutlined />,
-  zoomOut: <ZoomOutOutlined />,
-  close: <CloseOutlined />,
-  left: <LeftOutlined />,
-  right: <RightOutlined />,
-  flipX: <SwapOutlined />,
-  flipY: <SwapOutlined rotate={90} />,
-};
 
 export default function Base() {
   return (
@@ -37,7 +16,6 @@ export default function Base() {
           console.log('click');
         }}
         preview={{
-          icons,
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
