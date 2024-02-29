@@ -13,19 +13,24 @@ exports[`Controlled With previewVisible 1`] = `
     tabindex="0"
   />
   <div
-    class="rc-image-preview-content"
+    style="outline: none;"
+    tabindex="-1"
   >
     <div
-      class="rc-image-preview-body"
+      class="rc-image-preview-content"
     >
       <div
-        class="rc-image-preview-img-wrapper"
+        class="rc-image-preview-body"
       >
-        <img
-          class="rc-image-preview-img"
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
-        />
+        <div
+          class="rc-image-preview-img-wrapper"
+        >
+          <img
+            class="rc-image-preview-img"
+            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+            style="transform: translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg);"
+          />
+        </div>
       </div>
     </div>
   </div>
