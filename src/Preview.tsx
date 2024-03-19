@@ -16,6 +16,8 @@ import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
   icons: {
+    switchLeftIcon?: React.ReactNode;
+    switchRightIcon?: React.ReactNode;
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
     rotateLeftIcon: React.ReactNode;
@@ -24,6 +26,8 @@ export type ToolbarRenderInfoType = {
     zoomInIcon: React.ReactNode;
   };
   actions: {
+    onSwitchLeft?: () => void;
+    onSwitchRight?: () => void;
     onFlipY: () => void;
     onFlipX: () => void;
     onRotateLeft: () => void;
