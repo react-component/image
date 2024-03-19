@@ -8,6 +8,15 @@ import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 
+type ToolType = 'switchLeft' | 'switchRight' | 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomOut' | 'zoomIn';
+
+interface ToolItem {
+  icon: React.ReactNode;
+  type: ToolType;
+  disabled?: boolean;
+  onClick: () => void;
+}
+
 interface OperationsProps
   extends Pick<
     PreviewProps,
@@ -29,8 +38,8 @@ interface OperationsProps
   scale: number;
   minScale: number;
   maxScale: number;
-  onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
-  onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
+  onSwitchLeft: () => void;
+  onSwitchRight: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onRotateRight: () => void;
@@ -94,7 +103,7 @@ const Operations: React.FC<OperationsProps> = props => {
     };
   }, [visible]);
 
-  const tools = [
+  const basicTools: ToolItem[] = [
     {
       icon: flipY,
       onClick: onFlipY,
@@ -127,20 +136,45 @@ const Operations: React.FC<OperationsProps> = props => {
       type: 'zoomIn',
       disabled: scale === maxScale,
     },
+  ]
+
+  const groupTools: ToolItem[] = [
+    {
+      icon: left,
+      onClick: onSwitchLeft,
+      type: 'switchLeft',
+      disabled: current === 0,
+    },
+    {
+      icon: right,
+      onClick: onSwitchRight,
+      type: 'switchRight',
+      disabled: current === count - 1,
+    },
   ];
 
-  const toolsNode = tools.map(({ icon, onClick, type, disabled }) => (
-    <div
-      className={classnames(toolClassName, {
-        [`${prefixCls}-operations-operation-${type}`]: true,
-        [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-      })}
-      onClick={onClick}
-      key={type}
-    >
-      {icon}
-    </div>
-  ));
+  const tools = showSwitch ? [...groupTools, ...basicTools] : basicTools;
+
+  const toolsNodeMap = new Map<ToolType, React.ReactNode>()
+
+  const toolsNode = tools.map(({ icon, onClick, type, disabled }) => {
+    const element = (
+      <div
+        className={classnames(toolClassName, {
+          [`${prefixCls}-operations-operation-${type}`]: true,
+          [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+        })}
+        onClick={onClick}
+        key={type}
+      >
+        {icon}
+      </div>
+    );
+
+    toolsNodeMap.set(type, element)
+
+    return element;
+  });
 
   const toolbarNode = <div className={`${prefixCls}-operations`}>{toolsNode}</div>;
 
@@ -191,25 +225,29 @@ const Operations: React.FC<OperationsProps> = props => {
 
               {toolbarRender
                 ? toolbarRender(toolbarNode, {
-                    icons: {
-                      flipYIcon: toolsNode[0],
-                      flipXIcon: toolsNode[1],
-                      rotateLeftIcon: toolsNode[2],
-                      rotateRightIcon: toolsNode[3],
-                      zoomOutIcon: toolsNode[4],
-                      zoomInIcon: toolsNode[5],
-                    },
-                    actions: {
-                      onFlipY,
-                      onFlipX,
-                      onRotateLeft,
-                      onRotateRight,
-                      onZoomOut,
-                      onZoomIn,
-                    },
-                    transform,
-                    ...(groupContext ? { current, total: count } : {}),
-                  })
+                  icons: {
+                    switchLeftIcon: toolsNodeMap.get('switchLeft'),
+                    switchRightIcon: toolsNodeMap.get('switchRight'),
+                    flipYIcon: toolsNodeMap.get('flipY'),
+                    flipXIcon: toolsNodeMap.get('flipX'),
+                    rotateLeftIcon: toolsNodeMap.get('rotateLeft'),
+                    rotateRightIcon: toolsNodeMap.get('rotateRight'),
+                    zoomOutIcon: toolsNodeMap.get('zoomOut'),
+                    zoomInIcon: toolsNodeMap.get('zoomIn'),
+                  },
+                  actions: {
+                    onSwitchLeft,
+                    onSwitchRight,
+                    onFlipY,
+                    onFlipX,
+                    onRotateLeft,
+                    onRotateRight,
+                    onZoomOut,
+                    onZoomIn,
+                  },
+                  transform,
+                  ...(groupContext ? { current, total: count } : {}),
+                })
                 : toolbarNode}
             </div>
           </div>
