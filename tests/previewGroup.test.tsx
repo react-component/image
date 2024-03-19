@@ -221,7 +221,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
     act(() => {
       jest.runAllTimers();
     });
