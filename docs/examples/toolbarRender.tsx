@@ -15,6 +15,8 @@ export default function ToolbarRender() {
             _,
             {
               actions: {
+                onSwitchLeft,
+                onSwitchRight,
                 onFlipY,
                 onFlipX,
                 onRotateLeft,
@@ -29,6 +31,8 @@ export default function ToolbarRender() {
               <div
                 style={{ position: 'fixed', display: 'flex', bottom: 0, width: '100%', gap: 10 }}
               >
+                <div onClick={onSwitchLeft}>switchLeft</div>
+                <div onClick={onSwitchRight}>switchRight</div>
                 <div onClick={onFlipY}>flipY</div>
                 <div onClick={onFlipX}>flipX</div>
                 <div onClick={onRotateLeft}>rotateLeft</div>
