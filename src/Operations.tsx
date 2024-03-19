@@ -8,7 +8,7 @@ import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 
-type ToolType = 'switchLeft' | 'switchRight' | 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomOut' | 'zoomIn';
+type ToolType = 'switchPrev' | 'switchNext' | 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomOut' | 'zoomIn';
 
 interface ToolItem {
   icon: React.ReactNode;
@@ -38,8 +38,8 @@ interface OperationsProps
   scale: number;
   minScale: number;
   maxScale: number;
-  onSwitchLeft: () => void;
-  onSwitchRight: () => void;
+  onSwitchPrev: () => void;
+  onSwitchNext: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onRotateRight: () => void;
@@ -71,8 +71,8 @@ const Operations: React.FC<OperationsProps> = props => {
     minScale,
     maxScale,
     closeIcon,
-    onSwitchLeft,
-    onSwitchRight,
+    onSwitchPrev,
+    onSwitchNext,
     onClose,
     onZoomIn,
     onZoomOut,
@@ -141,14 +141,14 @@ const Operations: React.FC<OperationsProps> = props => {
   const groupTools: ToolItem[] = [
     {
       icon: left,
-      onClick: onSwitchLeft,
-      type: 'switchLeft',
+      onClick: onSwitchPrev,
+      type: 'switchPrev',
       disabled: current === 0,
     },
     {
       icon: right,
-      onClick: onSwitchRight,
-      type: 'switchRight',
+      onClick: onSwitchNext,
+      type: 'switchNext',
       disabled: current === count - 1,
     },
   ];
@@ -201,7 +201,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-left`, {
                     [`${prefixCls}-switch-left-disabled`]: current === 0,
                   })}
-                  onClick={onSwitchLeft}
+                  onClick={onSwitchPrev}
                 >
                   {left}
                 </div>
@@ -209,7 +209,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-right`, {
                     [`${prefixCls}-switch-right-disabled`]: current === count - 1,
                   })}
-                  onClick={onSwitchRight}
+                  onClick={onSwitchNext}
                 >
                   {right}
                 </div>
@@ -226,8 +226,8 @@ const Operations: React.FC<OperationsProps> = props => {
               {toolbarRender
                 ? toolbarRender(toolbarNode, {
                   icons: {
-                    switchLeftIcon: toolsNodeMap.get('switchLeft'),
-                    switchRightIcon: toolsNodeMap.get('switchRight'),
+                    switchPrevIcon: toolsNodeMap.get('switchPrev'),
+                    switchNextIcon: toolsNodeMap.get('switchNext'),
                     flipYIcon: toolsNodeMap.get('flipY'),
                     flipXIcon: toolsNodeMap.get('flipX'),
                     rotateLeftIcon: toolsNodeMap.get('rotateLeft'),
@@ -236,8 +236,8 @@ const Operations: React.FC<OperationsProps> = props => {
                     zoomInIcon: toolsNodeMap.get('zoomIn'),
                   },
                   actions: {
-                    onSwitchLeft,
-                    onSwitchRight,
+                    onSwitchPrev,
+                    onSwitchNext,
                     onFlipY,
                     onFlipX,
                     onRotateLeft,

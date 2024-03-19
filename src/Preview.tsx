@@ -15,8 +15,8 @@ import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
   icons: {
-    switchLeftIcon?: React.ReactNode;
-    switchRightIcon?: React.ReactNode;
+    switchPrevIcon?: React.ReactNode;
+    switchNextIcon?: React.ReactNode;
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
     rotateLeftIcon: React.ReactNode;
@@ -25,8 +25,8 @@ export type ToolbarRenderInfoType = {
     zoomInIcon: React.ReactNode;
   };
   actions: {
-    onSwitchLeft?: () => void;
-    onSwitchRight?: () => void;
+    onSwitchPrev?: () => void;
+    onSwitchNext?: () => void;
     onFlipY: () => void;
     onFlipX: () => void;
     onRotateLeft: () => void;
@@ -198,7 +198,7 @@ const Preview: React.FC<PreviewProps> = props => {
     updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
-  const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onSwitchPrev = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event?.preventDefault();
     event?.stopPropagation();
     if (current > 0) {
@@ -208,7 +208,7 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
-  const onSwitchRight = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const onSwitchNext = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event?.preventDefault();
     event?.stopPropagation();
     if (current < count - 1) {
@@ -222,9 +222,9 @@ const Preview: React.FC<PreviewProps> = props => {
     if (!visible || !showLeftOrRightSwitches) return;
 
     if (event.keyCode === KeyCode.LEFT) {
-      onSwitchLeft();
+      onSwitchPrev();
     } else if (event.keyCode === KeyCode.RIGHT) {
-      onSwitchRight();
+      onSwitchNext();
     }
   };
 
@@ -319,8 +319,8 @@ const Preview: React.FC<PreviewProps> = props => {
         minScale={minScale}
         maxScale={maxScale}
         toolbarRender={toolbarRender}
-        onSwitchLeft={onSwitchLeft}
-        onSwitchRight={onSwitchRight}
+        onSwitchPrev={onSwitchPrev}
+        onSwitchNext={onSwitchNext}
         onZoomIn={onZoomIn}
         onZoomOut={onZoomOut}
         onRotateRight={onRotateRight}
