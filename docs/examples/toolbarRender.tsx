@@ -41,6 +41,22 @@ export default function ToolbarRender() {
           },
         }}
       />
+
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width="200px"
+        height="200px"
+        alt="test"
+        preview={{
+          icons: defaultIcons,
+          imageRender(_, { imgInfo }) {
+            return <div>{JSON.stringify(imgInfo)}</div>;
+          },
+          toolbarRender(_, { imgInfo }) {
+            return <div>{JSON.stringify(imgInfo)}</div>;
+          },
+        }}
+      />
     </div>
   );
 }

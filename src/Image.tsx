@@ -15,6 +15,13 @@ import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 
+export interface ImgInfo {
+  url: string;
+  alt: string;
+  width: string | number;
+  height: string | number;
+}
+
 export interface ImagePreviewType
   extends Omit<
     IDialogPropTypes,
@@ -33,7 +40,7 @@ export interface ImagePreviewType
   movable?: boolean;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType },
+    info: { transform: TransformType; imgInfo: ImgInfo },
   ) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
   toolbarRender?: (
@@ -233,6 +240,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           mousePosition={mousePosition}
           src={src}
           alt={alt}
+          width={width}
+          height={height}
           fallback={fallback}
           getContainer={getPreviewContainer}
           icons={icons}
