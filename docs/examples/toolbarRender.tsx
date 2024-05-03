@@ -49,11 +49,11 @@ export default function ToolbarRender() {
         alt="test"
         preview={{
           icons: defaultIcons,
-          imageRender(_, { imgInfo }) {
-            return <div>{JSON.stringify(imgInfo)}</div>;
+          imageRender(_, { image }) {
+            return <div>{JSON.stringify(image)}</div>;
           },
-          toolbarRender(_, { imgInfo }) {
-            return <div>{JSON.stringify(imgInfo)}</div>;
+          toolbarRender(_, { image }) {
+            return <div>{JSON.stringify(image)}</div>;
           },
         }}
       />

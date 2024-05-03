@@ -43,7 +43,7 @@ interface OperationsProps
     info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
   zIndex?: number;
-  imgInfo?: ImgInfo;
+  image?: ImgInfo;
 }
 
 const Operations: React.FC<OperationsProps> = props => {
@@ -75,7 +75,7 @@ const Operations: React.FC<OperationsProps> = props => {
     onFlipY,
     toolbarRender,
     zIndex,
-    imgInfo,
+    image,
   } = props;
   const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
@@ -212,7 +212,7 @@ const Operations: React.FC<OperationsProps> = props => {
                     },
                     transform,
                     ...(groupContext ? { current, total: count } : {}),
-                    imgInfo,
+                    image,
                   })
                 : toolbarNode}
             </div>

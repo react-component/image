@@ -34,7 +34,7 @@ export type ToolbarRenderInfoType = {
   transform: TransformType;
   current: number;
   total: number;
-  imgInfo: ImgInfo;
+  image: ImgInfo;
 };
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
@@ -66,7 +66,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   maxScale?: number;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType; current?: number; imgInfo?: ImgInfo },
+    info: { transform: TransformType; current?: number; image?: ImgInfo },
   ) => React.ReactNode;
   onClose?: () => void;
   onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
@@ -279,7 +279,7 @@ const Preview: React.FC<PreviewProps> = props => {
     />
   );
 
-  const imgInfo = {
+  const image = {
     url: src,
     alt,
     width,
@@ -306,7 +306,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <div className={`${prefixCls}-img-wrapper`}>
           {imageRender
-            ? imageRender(imgNode, { transform, imgInfo, ...(groupContext ? { current } : {}) })
+            ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
             : imgNode}
         </div>
       </Dialog>
@@ -338,7 +338,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipY={onFlipY}
         onClose={onClose}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
-        imgInfo={imgInfo}
+        image={image}
       />
     </>
   );
