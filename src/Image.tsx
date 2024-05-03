@@ -40,7 +40,7 @@ export interface ImagePreviewType
   movable?: boolean;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType; imgInfo: ImgInfo },
+    info: { transform: TransformType; image: ImgInfo },
   ) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
   toolbarRender?: (
