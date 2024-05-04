@@ -656,13 +656,14 @@ describe('Preview', () => {
 
   it('Customize preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    render(
+    const { container } = render(
       <Image
         src={src}
         preview={{
           visible: true,
           transitionName: 'abc',
           maskTransitionName: 'def',
+          closeIcon: null,
         }}
       />,
     );
@@ -673,6 +674,8 @@ describe('Preview', () => {
         maskTransitionName: 'def',
       }),
     );
+
+    expect(container.querySelector('.rc-image-close')).toBeFalsy();
   });
 
   it('Customize Group preview props', () => {
@@ -781,16 +784,23 @@ describe('Preview', () => {
   });
 
   it('toolbarRender', () => {
+    const printImage = jest.fn();
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        alt="alt"
+        width={200}
+        height={200}
         preview={{
-          toolbarRender: (_, { icons }) => (
-            <>
-              {icons.flipYIcon}
-              {icons.flipXIcon}
-            </>
-          ),
+          toolbarRender: (_, { icons, image }) => {
+            printImage(image);
+            return (
+              <>
+                {icons.flipYIcon}
+                {icons.flipXIcon}
+              </>
+            );
+          },
         }}
       />,
     );
@@ -801,6 +811,7 @@ describe('Preview', () => {
     });
 
     expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
+    expect(printImage).toHaveBeenCalledWith({ "alt": "alt", "height": 200, "url": "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png", "width": 200 });
   });
 
   it('onTransform should be triggered when transform change', () => {
@@ -819,13 +830,13 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(onTransform).toBeCalledTimes(1);
-    expect(onTransform).toBeCalledWith({
+    expect(onTransform).toHaveBeenCalledTimes(1);
+    expect(onTransform).toHaveBeenCalledWith({
       transform: {
         flipY: true,
         flipX: false,

@@ -269,6 +269,34 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
   });
 
+  it('album mode: object item', () => {
+    const { container } = render(
+      <Image.PreviewGroup items={[{
+        src: 'src1',
+      }, {
+        src: 'src2',
+      }, {
+        src: 'src3',
+      }]}>
+        <Image src="src1" />
+      </Image.PreviewGroup>,
+    );
+
+    expect(container.querySelectorAll('.rc-image')).toHaveLength(1);
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src1');
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
+  });
+
   it('should keep order', async () => {
     const Demo = ({ firstUrl }: { firstUrl: string }) => {
       return (
@@ -294,5 +322,50 @@ describe('PreviewGroup', () => {
     expect(
       document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
     ).toEqual('http://second/img.png');
+  });
+
+  it('onTransform should be triggered when switch', () => {
+    const onTransform = jest.fn();
+    render(
+      <Image.PreviewGroup preview={{ visible: true, onTransform }} items={[{
+        src: 'src1',
+      }, {
+        src: 'src2',
+      }, {
+        src: 'src3',
+      }]} />,
+    );
+    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(onTransform).toHaveBeenCalledTimes(1);
+    expect(onTransform).toHaveBeenLastCalledWith({
+      transform: {
+        flipY: true,
+        flipX: false,
+        rotate: 0,
+        scale: 1,
+        x: 0,
+        y: 0,
+      },
+      action: 'flipY',
+    });
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(onTransform).toHaveBeenCalledTimes(2);
+    expect(onTransform).toHaveBeenLastCalledWith({
+      transform: {
+        flipY: false,
+        flipX: false,
+        rotate: 0,
+        scale: 1,
+        x: 0,
+        y: 0,
+      },
+      action: 'next',
+    });
   });
 });

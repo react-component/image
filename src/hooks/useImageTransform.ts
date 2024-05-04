@@ -62,8 +62,9 @@ export default function useImageTransform(
 
   const resetTransform = (action: TransformAction) => {
     setTransform(initialTransform);
-    if (onTransform && !isEqual(initialTransform, transform)) {
-      onTransform({ transform: initialTransform, action });
+    console.log('resetTransform', initialTransform, transform);
+    if (!isEqual(initialTransform, transform)) {
+      onTransform?.({ transform: initialTransform, action });
     }
   };
 
