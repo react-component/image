@@ -1,8 +1,12 @@
-import type React from 'react';
-import { useState, useRef, useEffect } from 'react';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
-import type { TransformType, UpdateTransformFunc, DispatchZoomChangeFunc } from './useImageTransform';
+import type {
+  DispatchZoomChangeFunc,
+  TransformType,
+  UpdateTransformFunc,
+} from './useImageTransform';
 
 type Point = {
   x: number;
@@ -77,17 +81,17 @@ export default function useTouchEvent(
       updateTouchPointInfo({
         point1: { x: touches[0].clientX, y: touches[0].clientY },
         point2: { x: touches[1].clientX, y: touches[1].clientY },
-        eventType: 'touchZoom'
-      })
+        eventType: 'touchZoom',
+      });
     } else {
       // touch move
       updateTouchPointInfo({
         point1: {
           x: touches[0].clientX - x,
-          y: touches[0].clientY - y
+          y: touches[0].clientY - y,
         },
-        eventType: 'move'
-      })
+        eventType: 'move',
+      });
     }
   };
 
@@ -99,11 +103,11 @@ export default function useTouchEvent(
       // touch zoom
       const newPoint1 = {
         x: touches[0].clientX,
-        y: touches[0].clientY
+        y: touches[0].clientY,
       };
       const newPoint2 = {
         x: touches[1].clientX,
-        y: touches[1].clientY
+        y: touches[1].clientY,
       };
       const [centerX, centerY] = getCenter(point1, point2, newPoint1, newPoint2);
       const ratio = getDistance(newPoint1, newPoint2) / getDistance(point1, point2);
@@ -112,7 +116,7 @@ export default function useTouchEvent(
       updateTouchPointInfo({
         point1: newPoint1,
         point2: newPoint2,
-        eventType: 'touchZoom'
+        eventType: 'touchZoom',
       });
     } else if (eventType === 'move') {
       // touch move
@@ -129,7 +133,7 @@ export default function useTouchEvent(
 
   const onTouchEnd = () => {
     if (!visible) return;
-    
+
     if (isTouching) {
       setIsTouching(false);
     }
@@ -139,7 +143,7 @@ export default function useTouchEvent(
     if (minScale > scale) {
       /** When the scaling ratio is less than the minimum scaling ratio, reset the scaling ratio */
       return updateTransform({ x: 0, y: 0, scale: minScale }, 'touchZoom');
-    } 
+    }
 
     const width = imgRef.current.offsetWidth * scale;
     const height = imgRef.current.offsetHeight * scale;
@@ -162,17 +166,19 @@ export default function useTouchEvent(
   useEffect(() => {
     let onTouchMoveListener;
     if (visible && movable) {
-      onTouchMoveListener = addEventListener(window, 'touchmove', (e) => e.preventDefault(), { passive: false });
+      onTouchMoveListener = addEventListener(window, 'touchmove', e => e.preventDefault(), {
+        passive: false,
+      });
     }
     return () => {
       onTouchMoveListener?.remove();
-    }
+    };
   }, [visible, movable]);
-  
+
   return {
     isTouching,
     onTouchStart,
     onTouchMove,
     onTouchEnd,
-  }
-};
+  };
+}

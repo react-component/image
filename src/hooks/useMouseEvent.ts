@@ -1,10 +1,14 @@
-import type React from 'react';
-import { useState, useRef, useEffect } from 'react';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import { warning } from 'rc-util/lib/warning';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
 import { BASE_SCALE_RATIO, WHEEL_MAX_SCALE_RATIO } from '../previewConfig';
-import type { TransformType, UpdateTransformFunc, DispatchZoomChangeFunc } from './useImageTransform';
+import type {
+  DispatchZoomChangeFunc,
+  TransformType,
+  UpdateTransformFunc,
+} from './useImageTransform';
 
 export default function useMouseEvent(
   imgRef: React.MutableRefObject<HTMLImageElement>,
@@ -25,7 +29,7 @@ export default function useMouseEvent(
     transformY: 0,
   });
 
-  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {
+  const onMouseDown: React.MouseEventHandler<HTMLDivElement> = event => {
     // Only allow main button
     if (!movable || event.button !== 0) return;
     event.preventDefault();
@@ -39,7 +43,7 @@ export default function useMouseEvent(
     setMoving(true);
   };
 
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = (event) => {
+  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
     if (visible && isMoving) {
       updateTransform(
         {
@@ -132,5 +136,5 @@ export default function useMouseEvent(
     onMouseMove,
     onMouseUp,
     onWheel,
-  }
-};
+  };
+}

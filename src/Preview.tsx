@@ -4,15 +4,15 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import type { ImgInfo } from './Image';
+import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import useMouseEvent from './hooks/useMouseEvent';
-import useTouchEvent from './hooks/useTouchEvent';
 import useStatus from './hooks/useStatus';
-import Operations from './Operations';
+import useTouchEvent from './hooks/useTouchEvent';
 import { BASE_SCALE_RATIO } from './previewConfig';
-import type { ImgInfo } from './Image';
 
 export type ToolbarRenderInfoType = {
   icons: {

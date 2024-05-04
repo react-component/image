@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
-import * as React from 'react';
 import Image from 'rc-image';
+import * as React from 'react';
 import '../../assets/index.less';
 import { defaultIcons } from './common';
 

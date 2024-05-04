@@ -1,6 +1,6 @@
-import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
+import React from 'react';
 import Image from '../src';
 
 describe('Touch Events', () => {
@@ -22,10 +22,10 @@ describe('Touch Events', () => {
     const previewImgDom = document.querySelector('.rc-image-preview-img');
 
     fireEvent.touchStart(previewImgDom, {
-      touches: [{ clientX: 0, clientY: 0 }]
+      touches: [{ clientX: 0, clientY: 0 }],
     });
     fireEvent.touchMove(previewImgDom, {
-      touches: [{ clientX: 50, clientY: 50 }]
+      touches: [{ clientX: 50, clientY: 50 }],
     });
 
     act(() => {
@@ -47,7 +47,7 @@ describe('Touch Events', () => {
     // Correct the position when the image moves out of the current window
     expect(previewImgDom).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-      transitionDuration: undefined
+      transitionDuration: undefined,
     });
   });
 
@@ -64,13 +64,13 @@ describe('Touch Events', () => {
       touches: [
         { clientX: 40, clientY: 40 },
         { clientX: 60, clientY: 60 },
-      ]
+      ],
     });
     fireEvent.touchMove(previewImgDom, {
       touches: [
         { clientX: 30, clientY: 30 },
         { clientX: 70, clientY: 70 },
-      ]
+      ],
     });
 
     act(() => {
@@ -82,12 +82,12 @@ describe('Touch Events', () => {
       // Disable transition during image zooming
       transitionDuration: '0s',
     });
-    
+
     fireEvent.touchEnd(previewImgDom);
 
     expect(previewImgDom).toHaveStyle({
       transform: 'translate3d(-50px, -50px, 0) scale3d(2, 2, 1) rotate(0deg)',
-      transitionDuration: undefined
+      transitionDuration: undefined,
     });
   });
 
@@ -108,18 +108,18 @@ describe('Touch Events', () => {
     fireEvent.click(container.querySelector('.rc-image'));
 
     const previewImgDom = document.querySelector('.rc-image-preview-img');
-      
+
     fireEvent.touchStart(previewImgDom, {
       touches: [
         { clientX: 40, clientY: 40 },
         { clientX: 60, clientY: 60 },
-      ]
+      ],
     });
     fireEvent.touchMove(previewImgDom, {
       touches: [
         { clientX: 10, clientY: 10 },
         { clientX: 70, clientY: 70 },
-      ]
+      ],
     });
 
     act(() => {
@@ -135,7 +135,7 @@ describe('Touch Events', () => {
       touches: [
         { clientX: 10, clientY: 10 },
         { clientX: 70, clientY: 70 },
-      ]
+      ],
     });
 
     imgEleMock.mockRestore();
@@ -155,19 +155,19 @@ describe('Touch Events', () => {
       touches: [
         { clientX: 20, clientY: 40 },
         { clientX: 20, clientY: 60 },
-      ]
+      ],
     });
     fireEvent.touchMove(previewImgDom, {
       touches: [
         { clientX: 20, clientY: 45 },
         { clientX: 20, clientY: 55 },
-      ]
+      ],
     });
 
     act(() => {
       jest.runAllTimers();
     });
-    
+
     fireEvent.touchEnd(previewImgDom);
 
     act(() => {

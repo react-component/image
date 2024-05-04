@@ -1,18 +1,18 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
+import { type ImagePreviewType } from './Image';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
+import Preview from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
-import { type ImagePreviewType } from './Image';
 import type { ImageElementProps, OnGroupPreview } from './interface';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
-import Preview from './Preview';
 
 export interface PreviewGroupPreview
   extends Omit<
     ImagePreviewType,
-    | 'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
+    'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
   > {
   /**
    * If Preview the show img index

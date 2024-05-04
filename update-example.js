@@ -20,12 +20,12 @@ paths.forEach(path => {
 <code src="../examples/${name}${suffix}">
 `,
     'utf8',
-    function(error) {
-      if(error){
+    function (error) {
+      if (error) {
         console.log(error);
         return false;
       }
       console.log(`${name} 更新成功~`);
-    }
-  )
+    },
+  );
 });

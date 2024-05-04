@@ -811,7 +811,12 @@ describe('Preview', () => {
     });
 
     expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
-    expect(printImage).toHaveBeenCalledWith({ "alt": "alt", "height": 200, "url": "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png", "width": 200 });
+    expect(printImage).toHaveBeenCalledWith({
+      alt: 'alt',
+      height: 200,
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+      width: 200,
+    });
   });
 
   it('onTransform should be triggered when transform change', () => {

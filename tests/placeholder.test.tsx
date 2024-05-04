@@ -1,6 +1,6 @@
-import React from 'react';
-import { render, fireEvent, act } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { spyElementPrototypes } from 'rc-util/lib/test/domHook';
+import React from 'react';
 import Image from '../src';
 
 describe('Placeholder', () => {

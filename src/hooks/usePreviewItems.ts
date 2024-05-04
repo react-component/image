@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GroupConsumerProps } from '../PreviewGroup';
 import { COMMON_PROPS } from '../common';
 import type {
   ImageElementProps,
@@ -6,7 +7,6 @@ import type {
   PreviewImageElementProps,
   RegisterImage,
 } from '../interface';
-import type { GroupConsumerProps } from '../PreviewGroup';
 
 export type Items = Omit<InternalItem, 'canPreview'>[];
 

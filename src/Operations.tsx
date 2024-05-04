@@ -4,10 +4,10 @@ import CSSMotion from 'rc-motion';
 import KeyCode from 'rc-util/lib/KeyCode';
 import * as React from 'react';
 import { useContext } from 'react';
+import type { ImgInfo } from './Image';
+import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
-import type { ImgInfo } from './Image';
 
 interface OperationsProps
   extends Pick<

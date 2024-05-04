@@ -3,7 +3,6 @@ import * as React from 'react';
 import '../../assets/index.less';
 import { defaultIcons } from './common';
 
-
 export default function Base() {
   return (
     <div>
@@ -21,7 +20,7 @@ export default function Base() {
           onVisibleChange: visible => {
             console.log('visible', visible);
           },
-          zIndex: 9999
+          zIndex: 9999,
         }}
       />
 
@@ -39,19 +38,19 @@ export default function Base() {
         style={{
           marginRight: 24,
         }}
-        preview={{icons: defaultIcons}}
+        preview={{ icons: defaultIcons }}
       />
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*NZuwQp_vcIQAAAAAAAAAAABkARQnAQ"
         width={200}
-        preview={{icons: defaultIcons}}
+        preview={{ icons: defaultIcons }}
       />
 
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         width={200}
         height={100}
-        preview={{icons: defaultIcons}}
+        preview={{ icons: defaultIcons }}
       />
     </div>
   );

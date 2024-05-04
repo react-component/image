@@ -271,13 +271,19 @@ describe('PreviewGroup', () => {
 
   it('album mode: object item', () => {
     const { container } = render(
-      <Image.PreviewGroup items={[{
-        src: 'src1',
-      }, {
-        src: 'src2',
-      }, {
-        src: 'src3',
-      }]}>
+      <Image.PreviewGroup
+        items={[
+          {
+            src: 'src1',
+          },
+          {
+            src: 'src2',
+          },
+          {
+            src: 'src3',
+          },
+        ]}
+      >
         <Image src="src1" />
       </Image.PreviewGroup>,
     );
@@ -327,13 +333,20 @@ describe('PreviewGroup', () => {
   it('onTransform should be triggered when switch', () => {
     const onTransform = jest.fn();
     render(
-      <Image.PreviewGroup preview={{ visible: true, onTransform }} items={[{
-        src: 'src1',
-      }, {
-        src: 'src2',
-      }, {
-        src: 'src3',
-      }]} />,
+      <Image.PreviewGroup
+        preview={{ visible: true, onTransform }}
+        items={[
+          {
+            src: 'src1',
+          },
+          {
+            src: 'src2',
+          },
+          {
+            src: 'src3',
+          },
+        ]}
+      />,
     );
     fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
     act(() => {

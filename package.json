@@ -8,6 +8,15 @@
     "react-image",
     "image"
   ],
+  "homepage": "http://github.com/react-component/image",
+  "bugs": {
+    "url": "http://github.com/react-component/image/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:react-component/image.git"
+  },
+  "license": "MIT",
   "main": "./lib/index",
   "module": "./es/index",
   "types": "./lib/index.d.ts",
@@ -16,30 +25,17 @@
     "es",
     "lib"
   ],
-  "homepage": "http://github.com/react-component/image",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:react-component/image.git"
-  },
-  "bugs": {
-    "url": "http://github.com/react-component/image/issues"
-  },
-  "license": "MIT",
   "scripts": {
-    "start": "dumi dev",
+    "compile": "father build && lessc assets/index.less assets/index.css",
+    "coverage": "rc-test --coverage",
     "docs:build": "dumi build",
     "docs:deploy": "gh-pages -d docs-dist",
-    "compile": "father build && lessc assets/index.less assets/index.css",
-    "prepublishOnly": "npm run compile && np --yolo --no-publish --any-branch",
     "lint": "eslint src/ --ext .ts,.tsx,.jsx,.js,.md",
+    "now-build": "npm run docs:build",
+    "prepublishOnly": "npm run compile && np --yolo --no-publish --any-branch",
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "test": "rc-test",
-    "coverage": "rc-test --coverage",
-    "now-build": "npm run docs:build"
-  },
-  "peerDependencies": {
-    "react": ">=16.9.0",
-    "react-dom": ">=16.9.0"
+    "start": "dumi dev",
+    "test": "rc-test"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
@@ -69,5 +65,9 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
   }
 }
