@@ -656,13 +656,14 @@ describe('Preview', () => {
 
   it('Customize preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    render(
+    const { container } = render(
       <Image
         src={src}
         preview={{
           visible: true,
           transitionName: 'abc',
           maskTransitionName: 'def',
+          closeIcon: null,
         }}
       />,
     );
@@ -673,6 +674,8 @@ describe('Preview', () => {
         maskTransitionName: 'def',
       }),
     );
+
+    expect(container.querySelector('.rc-image-close')).toBeFalsy();
   });
 
   it('Customize Group preview props', () => {
