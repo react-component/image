@@ -830,13 +830,13 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(onTransform).toBeCalledTimes(1);
-    expect(onTransform).toBeCalledWith({
+    expect(onTransform).toHaveBeenCalledTimes(1);
+    expect(onTransform).toHaveBeenCalledWith({
       transform: {
         flipY: true,
         flipX: false,
