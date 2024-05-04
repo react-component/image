@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@rc-component/father-plugin": "^1.0.2",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^15.0.6",
     "@types/classnames": "^2.2.10",

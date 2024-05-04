@@ -262,6 +262,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
 ImageInternal.PreviewGroup = PreviewGroup;
 
-ImageInternal.displayName = 'Image';
+if (process.env.NODE_ENV !== 'production') {
+  ImageInternal.displayName = 'Image';
+}
 
 export default ImageInternal;
