@@ -12,6 +12,7 @@ import useTouchEvent from './hooks/useTouchEvent';
 import useStatus from './hooks/useStatus';
 import Operations from './Operations';
 import { BASE_SCALE_RATIO } from './previewConfig';
+import type { ImgInfo } from './Image';
 
 export type ToolbarRenderInfoType = {
   icons: {
@@ -33,12 +34,15 @@ export type ToolbarRenderInfoType = {
   transform: TransformType;
   current: number;
   total: number;
+  image: ImgInfo;
 };
 
 export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
+  width?: number | string;
+  height?: number | string;
   fallback?: string;
   movable?: boolean;
   rootClassName?: string;
@@ -62,7 +66,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   maxScale?: number;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType; current?: number },
+    info: { transform: TransformType; current?: number; image?: ImgInfo },
   ) => React.ReactNode;
   onClose?: () => void;
   onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
@@ -101,6 +105,8 @@ const Preview: React.FC<PreviewProps> = props => {
     prefixCls,
     src,
     alt,
+    width,
+    height,
     fallback,
     movable = true,
     onClose,
@@ -273,6 +279,13 @@ const Preview: React.FC<PreviewProps> = props => {
     />
   );
 
+  const image = {
+    url: src,
+    alt,
+    width,
+    height,
+  };
+
   return (
     <>
       <Dialog
@@ -293,7 +306,7 @@ const Preview: React.FC<PreviewProps> = props => {
       >
         <div className={`${prefixCls}-img-wrapper`}>
           {imageRender
-            ? imageRender(imgNode, { transform, ...(groupContext ? { current } : {}) })
+            ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
             : imgNode}
         </div>
       </Dialog>
@@ -325,6 +338,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipY={onFlipY}
         onClose={onClose}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
+        image={image}
       />
     </>
   );
