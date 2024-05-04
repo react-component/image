@@ -784,16 +784,23 @@ describe('Preview', () => {
   });
 
   it('toolbarRender', () => {
+    const printImage = jest.fn();
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        alt="alt"
+        width={200}
+        height={200}
         preview={{
-          toolbarRender: (_, { icons }) => (
-            <>
-              {icons.flipYIcon}
-              {icons.flipXIcon}
-            </>
-          ),
+          toolbarRender: (_, { icons, image }) => {
+            printImage(image);
+            return (
+              <>
+                {icons.flipYIcon}
+                {icons.flipXIcon}
+              </>
+            );
+          },
         }}
       />,
     );
@@ -804,6 +811,7 @@ describe('Preview', () => {
     });
 
     expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
+    expect(printImage).toHaveBeenCalledWith({ "alt": "alt", "height": 200, "url": "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png", "width": 200 });
   });
 
   it('onTransform should be triggered when transform change', () => {
