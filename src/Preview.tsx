@@ -4,14 +4,14 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo } from './Image';
-import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import useMouseEvent from './hooks/useMouseEvent';
 import useStatus from './hooks/useStatus';
 import useTouchEvent from './hooks/useTouchEvent';
+import type { ImgInfo } from './Image';
+import Operations from './Operations';
 import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
@@ -30,6 +30,8 @@ export type ToolbarRenderInfoType = {
     onRotateRight: () => void;
     onZoomOut: () => void;
     onZoomIn: () => void;
+    onClose: () => void;
+    onReset: (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => void;
   };
   transform: TransformType;
   current: number;
@@ -184,6 +186,8 @@ const Preview: React.FC<PreviewProps> = props => {
     dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep), 'zoomOut');
   };
 
+  // const onReset =
+
   const onRotateRight = () => {
     updateTransform({ rotate: rotate + 90 }, 'rotateRight');
   };
@@ -198,6 +202,23 @@ const Preview: React.FC<PreviewProps> = props => {
 
   const onFlipY = () => {
     updateTransform({ flipY: !transform.flipY }, 'flipY');
+  };
+
+  const onReset = (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => {
+    switch (type) {
+      case 'flipX':
+        updateTransform({ flipX: false }, 'flipX');
+        break;
+      case 'flipY':
+        updateTransform({ flipY: false }, 'flipY');
+        break;
+      case 'rotate':
+        updateTransform({ rotate: 0 }, 'rotateLeft');
+        break;
+      case 'zoom':
+        updateTransform({ scale: 1 }, 'zoomIn');
+        break;
+    }
   };
 
   const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -337,6 +358,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipX={onFlipX}
         onFlipY={onFlipY}
         onClose={onClose}
+        onReset={onReset}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
         image={image}
       />
