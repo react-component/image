@@ -16,8 +16,8 @@ import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
   icons: {
-    switchLeftIcon?: React.ReactNode;
-    switchRightIcon?: React.ReactNode;
+    activePrevIcon?: React.ReactNode;
+    activeNextIcon?: React.ReactNode;
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
     rotateLeftIcon: React.ReactNode;
@@ -26,8 +26,7 @@ export type ToolbarRenderInfoType = {
     zoomInIcon: React.ReactNode;
   };
   actions: {
-    onSwitchLeft?: () => void;
-    onSwitchRight?: () => void;
+    onActive?: (offset: number) => void;
     onFlipY: () => void;
     onFlipX: () => void;
     onRotateLeft: () => void;
@@ -210,33 +209,25 @@ const Preview: React.FC<PreviewProps> = props => {
     resetTransform("reset");
   };
 
-  const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event?.preventDefault();
-    event?.stopPropagation();
-    if (current > 0) {
-      setEnableTransition(false);
-      resetTransform('prev');
-      onChange?.(current - 1, current);
-    }
-  };
+  const onActive = (offset: number) => {
+    const position = current + offset;
 
-  const onSwitchRight = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event?.preventDefault();
-    event?.stopPropagation();
-    if (current < count - 1) {
-      setEnableTransition(false);
-      resetTransform('next');
-      onChange?.(current + 1, current);
+    if (!Number.isInteger(position) || position < 0 || position > count - 1) {
+      return;
     }
-  };
+
+    setEnableTransition(false);
+    resetTransform(offset < 0 ? 'prev' : 'next');
+    onChange?.(position, current);
+  }
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (!visible || !showLeftOrRightSwitches) return;
 
     if (event.keyCode === KeyCode.LEFT) {
-      onSwitchLeft();
+      onActive(-1);
     } else if (event.keyCode === KeyCode.RIGHT) {
-      onSwitchRight();
+      onActive(1);
     }
   };
 
@@ -272,9 +263,8 @@ const Preview: React.FC<PreviewProps> = props => {
       className={`${prefixCls}-img`}
       alt={alt}
       style={{
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
-          transform.flipX ? '-' : ''
-        }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''
+          }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
         transitionDuration: (!enableTransition || isTouching) && '0s',
       }}
       fallback={fallback}
@@ -338,8 +328,7 @@ const Preview: React.FC<PreviewProps> = props => {
         minScale={minScale}
         maxScale={maxScale}
         toolbarRender={toolbarRender}
-        onSwitchLeft={onSwitchLeft}
-        onSwitchRight={onSwitchRight}
+        onActive={onActive}
         onZoomIn={onZoomIn}
         onZoomOut={onZoomOut}
         onRotateRight={onRotateRight}

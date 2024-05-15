@@ -403,4 +403,54 @@ describe('PreviewGroup', () => {
       action: 'next',
     });
   });
+
+  it('switch in toolbar', () => {
+    const prevSelector = '.rc-image-preview-operations-operation-switchPrev';
+    const nextSelector = '.rc-image-preview-operations-operation-switchNext';
+    const progressSelector = '.rc-image-preview-progress';
+    const disabledClass = 'rc-image-preview-operations-operation-disabled';
+
+    render(
+      <Image.PreviewGroup
+        preview={{ visible: true }}
+        items={[
+          {
+            src: "src1",
+          },
+          {
+            src: "src2",
+          },
+          {
+            src: "src3",
+          },
+        ]}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(document.querySelector(prevSelector).classList.contains(disabledClass)).toBeTruthy();
+
+    fireEvent.click(document.querySelector(nextSelector));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector(progressSelector).textContent).toEqual("2 / 3");
+
+    fireEvent.click(document.querySelector(nextSelector));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector(progressSelector).textContent).toEqual("3 / 3");
+    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
+    expect(document.querySelector(nextSelector).classList.contains(disabledClass)).toBeTruthy();
+
+    fireEvent.click(document.querySelector(prevSelector));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector(progressSelector).textContent).toEqual("2 / 3");
+  });
 });
