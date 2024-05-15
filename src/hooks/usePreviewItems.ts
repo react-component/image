@@ -15,7 +15,7 @@ export type Items = Omit<InternalItem, 'canPreview'>[];
  */
 export default function usePreviewItems(
   items?: GroupConsumerProps['items'],
-): [items: Items, registerImage: RegisterImage] {
+): [items: Items, registerImage: RegisterImage, fromItems: boolean] {
   // Context collection image data
   const [images, setImages] = React.useState<Record<number, PreviewImageElementProps>>({});
 
@@ -36,6 +36,7 @@ export default function usePreviewItems(
 
   // items
   const mergedItems = React.useMemo<Items>(() => {
+    // use `items` first
     if (items) {
       return items.map(item => {
         if (typeof item === 'string') {
@@ -51,6 +52,7 @@ export default function usePreviewItems(
       });
     }
 
+    // use registered images secondly
     return Object.keys(images).reduce((total: Items, id) => {
       const { canPreview, data } = images[id];
       if (canPreview) {
@@ -60,5 +62,5 @@ export default function usePreviewItems(
     }, []);
   }, [items, images]);
 
-  return [mergedItems, registerImage];
+  return [mergedItems, registerImage, !!items];
 }

@@ -44,6 +44,28 @@ describe('PreviewGroup', () => {
     expect(onChange).toHaveBeenCalledWith(2, 1);
   });
 
+  it('items should works', () => {
+    const { rerender } = render(
+      <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
+        <Image src="src2" className="first-img" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(document.querySelector('.first-img'));
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
+
+    rerender(
+      <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
+        <Image src="src3" className="first-img" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(document.querySelector('.first-img'));
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
+  });
+
   it('Mount and UnMount', () => {
     const { container, unmount } = render(
       <Image.PreviewGroup>

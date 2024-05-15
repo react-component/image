@@ -168,7 +168,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
     const { left, top } = getOffset(e.target);
     if (groupContext) {
-      groupContext.onPreview(imageId, left, top);
+      groupContext.onPreview(imageId, src, left, top);
     } else {
       setMousePosition({
         x: left,

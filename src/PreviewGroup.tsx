@@ -67,7 +67,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
 
   // ========================== Items ===========================
-  const [mergedItems, register] = usePreviewItems(items);
+  const [mergedItems, register, fromItems] = usePreviewItems(items);
 
   // ========================= Preview ==========================
   // >>> Index
@@ -91,15 +91,19 @@ const Group: React.FC<GroupConsumerProps> = ({
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
   const onPreviewFromImage = React.useCallback<OnGroupPreview>(
-    (id, mouseX, mouseY) => {
-      const index = mergedItems.findIndex(item => item.id === id);
+    (id, imageSrc, mouseX, mouseY) => {
+      const index = fromItems
+        ? mergedItems.findIndex(item => item.data.src === imageSrc)
+        : mergedItems.findIndex(item => item.id === id);
+
+      setCurrent(index < 0 ? 0 : index);
 
       setShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
-      setCurrent(index < 0 ? 0 : index);
+
       setKeepOpenIndex(true);
     },
-    [mergedItems],
+    [mergedItems, fromItems],
   );
 
   // Reset current when reopen
