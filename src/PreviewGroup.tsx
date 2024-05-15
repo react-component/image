@@ -93,7 +93,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   const onPreviewFromImage = React.useCallback<OnGroupPreview>(
     (id, imageSrc, mouseX, mouseY) => {
       const index = fromItems
-        ? mergedItems.findIndex(item => typeof item === 'string' ? item === imageSrc : item.data.src === imageSrc)
+        ? mergedItems.findIndex(item => item.data.src === imageSrc)
         : mergedItems.findIndex(item => item.id === id);
 
       setCurrent(index < 0 ? 0 : index);
