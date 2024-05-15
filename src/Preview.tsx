@@ -205,10 +205,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const onReset = (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => {
     switch (type) {
       case 'flipX':
-        resetTransform("flipX");
+        updateTransform({ flipX: false }, 'flipX');
         break;
       case 'flipY':
-        resetTransform("flipY");
+        updateTransform({ flipY: false }, 'flipY');
         break;
       case 'rotate':
         resetTransform("rotateLeft");
