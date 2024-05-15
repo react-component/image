@@ -22,20 +22,23 @@ export default function ToolbarRender() {
                 onZoomIn,
                 onZoomOut,
                 onClose,
+                onReset,
               },
             },
           ) => {
             return (
               <div
-                style={{ position: 'fixed', display: 'flex', bottom: 0, width: '100%', gap: 10 }}
+                style={{ position: 'fixed', display: 'flex', bottom: 100, width: '100%', gap: 10, justifyContent: 'center' }}
               >
-                <div onClick={onFlipY}>flipY</div>
-                <div onClick={onFlipX}>flipX</div>
-                <div onClick={onRotateLeft}>rotateLeft</div>
-                <div onClick={onRotateRight}>rotateRight</div>
-                <div onClick={onZoomIn}>zoomIn</div>
-                <div onClick={onZoomOut}>zoomOut</div>
-                <div onClick={onClose}>close</div>
+                <button onClick={onFlipY}>flipY</button>
+                <button onClick={onFlipX}>flipX</button>
+                <button onClick={onRotateLeft}>rotateLeft</button>
+                <button onClick={onRotateRight}>rotateRight</button>
+                <button onClick={onZoomIn}>zoomIn</button>
+                <button onClick={onZoomOut}>zoomOut</button>
+                <button onClick={() => onReset()}>reset</button>
+                <button onClick={onClose}>close</button>
+                
               </div>
             );
           },

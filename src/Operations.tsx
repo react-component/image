@@ -38,6 +38,7 @@ interface OperationsProps
   onRotateLeft: () => void;
   onFlipX: () => void;
   onFlipY: () => void;
+  onReset: () => void;
   toolbarRender: (
     originalNode: React.ReactElement,
     info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
@@ -73,6 +74,7 @@ const Operations: React.FC<OperationsProps> = props => {
     onRotateLeft,
     onFlipX,
     onFlipY,
+    onReset,
     toolbarRender,
     zIndex,
     image,
@@ -209,6 +211,8 @@ const Operations: React.FC<OperationsProps> = props => {
                       onRotateRight,
                       onZoomOut,
                       onZoomIn,
+                      onReset,
+                      onClose
                     },
                     transform,
                     ...(groupContext ? { current, total: count } : {}),

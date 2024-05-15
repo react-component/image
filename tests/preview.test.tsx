@@ -792,12 +792,17 @@ describe('Preview', () => {
         width={200}
         height={200}
         preview={{
-          toolbarRender: (_, { icons, image }) => {
+          toolbarRender: (_, { icons, image, actions }) => {
             printImage(image);
             return (
               <>
-                {icons.flipYIcon}
-                {icons.flipXIcon}
+                <div id="flipY" onClick={() => actions.onFlipY()}>{icons.flipYIcon}</div>
+                <div id="flipX" onClick={() => actions.onFlipX()}>{icons.flipXIcon}</div>
+                <div id="zoomIn" onClick={() => actions.onZoomIn()}>{icons.zoomInIcon}</div>
+                <div id="zoomOut" onClick={() => actions.onZoomOut()}>{icons.zoomOutIcon}</div>
+                <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>{icons.rotateLeftIcon}</div>
+                <div id="rotateRight" onClick={() => actions.onRotateRight()}>{icons.rotateRightIcon}</div>
+                <div id="reset" onClick={() => actions.onReset()}>reset</div>
               </>
             );
           },
@@ -810,12 +815,40 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelectorAll('.rc-image-preview-operations-operation')).toHaveLength(2);
     expect(printImage).toHaveBeenCalledWith({
       alt: 'alt',
       height: 200,
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
       width: 200,
+    });
+    // flipY
+    fireEvent.click(document.getElementById('flipY'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    fireEvent.click(document.getElementById('flipX'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    fireEvent.click(document.getElementById('zoomIn'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    fireEvent.click(document.getElementById('rotateLeft'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-206px, -142px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
+    });
+    
+    // reset
+    fireEvent.click(document.getElementById('reset'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
   });
 

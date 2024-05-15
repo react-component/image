@@ -4,14 +4,14 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo } from './Image';
-import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import useMouseEvent from './hooks/useMouseEvent';
 import useStatus from './hooks/useStatus';
 import useTouchEvent from './hooks/useTouchEvent';
+import type { ImgInfo } from './Image';
+import Operations from './Operations';
 import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
@@ -30,6 +30,8 @@ export type ToolbarRenderInfoType = {
     onRotateRight: () => void;
     onZoomOut: () => void;
     onZoomIn: () => void;
+    onClose: () => void;
+    onReset: () => void;
   };
   transform: TransformType;
   current: number;
@@ -200,6 +202,10 @@ const Preview: React.FC<PreviewProps> = props => {
     updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
+  const onReset = () => {
+    resetTransform("reset");
+  };
+
   const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event?.preventDefault();
     event?.stopPropagation();
@@ -337,6 +343,7 @@ const Preview: React.FC<PreviewProps> = props => {
         onFlipX={onFlipX}
         onFlipY={onFlipY}
         onClose={onClose}
+        onReset={onReset}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
         image={image}
       />
