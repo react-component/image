@@ -207,16 +207,16 @@ const Preview: React.FC<PreviewProps> = props => {
   const onReset = (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => {
     switch (type) {
       case 'flipX':
-        updateTransform({ flipX: false }, 'flipX');
+        resetTransform("flipX");
         break;
       case 'flipY':
-        updateTransform({ flipY: false }, 'flipY');
+        resetTransform("flipY");
         break;
       case 'rotate':
-        updateTransform({ rotate: 0 }, 'rotateLeft');
+        resetTransform("rotateLeft");
         break;
       case 'zoom':
-        updateTransform({ scale: 1 }, 'zoomIn');
+        resetTransform("zoomIn");
         break;
     }
   };
