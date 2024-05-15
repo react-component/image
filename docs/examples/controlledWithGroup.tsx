@@ -6,6 +6,7 @@ import { defaultIcons } from './common';
 
 export default function Base() {
   const [visible, setVisible] = React.useState(false);
+  const [current, setCurrent] = React.useState(1);
   return (
     <div>
       <div>
@@ -25,7 +26,8 @@ export default function Base() {
           onVisibleChange: value => {
             setVisible(value);
           },
-          current: 1,
+          current,
+          onChange: c => setCurrent(c),
         }}
       >
         <Image
