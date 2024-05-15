@@ -187,7 +187,7 @@ type TransformAction =
     onZoomOut: () => void;
     onZoomIn: () => void;
     onClose: () => void;
-    onReset: (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => void;
+    onReset: () => void;
   };
   transform: {
     x: number;

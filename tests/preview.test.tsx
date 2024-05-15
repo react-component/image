@@ -797,15 +797,12 @@ describe('Preview', () => {
             return (
               <>
                 <div id="flipY" onClick={() => actions.onFlipY()}>{icons.flipYIcon}</div>
-                <div id="resetFlipY" onClick={() => actions.onReset("flipY")}>reset FlipY</div>
                 <div id="flipX" onClick={() => actions.onFlipX()}>{icons.flipXIcon}</div>
-                <div id="resetFlipX" onClick={() => actions.onReset("flipX")}>reset FlipX</div>
                 <div id="zoomIn" onClick={() => actions.onZoomIn()}>{icons.zoomInIcon}</div>
                 <div id="zoomOut" onClick={() => actions.onZoomOut()}>{icons.zoomOutIcon}</div>
-                <div id="resetZoom" onClick={() => actions.onReset("zoom")}>reset zoom</div>
                 <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>{icons.rotateLeftIcon}</div>
                 <div id="rotateRight" onClick={() => actions.onRotateRight()}>{icons.rotateRightIcon}</div>
-                <div id="resetRotate" onClick={() => actions.onReset("rotate")}>reset rotate</div>
+                <div id="reset" onClick={() => actions.onReset()}>reset</div>
               </>
             );
           },
@@ -829,84 +826,29 @@ describe('Preview', () => {
     act(() => {
       jest.runAllTimers();
     });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, -1, 1) rotate(0deg)',
-    });
-    // reset flipY
-    fireEvent.click(document.getElementById('resetFlipY'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-    // flipX
     fireEvent.click(document.getElementById('flipX'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(-1, 1, 1) rotate(0deg)',
-    });
-    // reset flipX
-    fireEvent.click(document.getElementById('resetFlipX'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-    // zoomIn
     fireEvent.click(document.getElementById('zoomIn'));
     act(() => {
       jest.runAllTimers();
     });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(-206px, -142px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
-    });
-    // zoomOut
-    fireEvent.click(document.getElementById('zoomOut'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-    // reset zoom
-    fireEvent.click(document.getElementById('zoomIn'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    fireEvent.click(document.getElementById('resetZoom'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-    // rotateLeft
     fireEvent.click(document.getElementById('rotateLeft'));
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(-90deg)',
+      transform: 'translate3d(-206px, -142px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
     });
-    // reset rotate
-    fireEvent.click(document.getElementById('resetRotate'));
+    
+    // reset
+    fireEvent.click(document.getElementById('reset'));
     act(() => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
-    });
-    // rotateRight
-    fireEvent.click(document.getElementById('rotateRight'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
   });
 

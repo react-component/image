@@ -31,7 +31,7 @@ export type ToolbarRenderInfoType = {
     onZoomOut: () => void;
     onZoomIn: () => void;
     onClose: () => void;
-    onReset: (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => void;
+    onReset: () => void;
   };
   transform: TransformType;
   current: number;
@@ -202,21 +202,8 @@ const Preview: React.FC<PreviewProps> = props => {
     updateTransform({ flipY: !transform.flipY }, 'flipY');
   };
 
-  const onReset = (type: 'flipX' | 'flipY' | 'rotate' | 'zoom') => {
-    switch (type) {
-      case 'flipX':
-        updateTransform({ flipX: false }, 'flipX');
-        break;
-      case 'flipY':
-        updateTransform({ flipY: false }, 'flipY');
-        break;
-      case 'rotate':
-        resetTransform("rotateLeft");
-        break;
-      case 'zoom':
-        resetTransform("zoomIn");
-        break;
-    }
+  const onReset = () => {
+    resetTransform("reset");
   };
 
   const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

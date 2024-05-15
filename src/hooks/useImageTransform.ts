@@ -26,7 +26,8 @@ export type TransformAction =
   | 'doubleClick'
   | 'move'
   | 'dragRebound'
-  | 'touchZoom';
+  | 'touchZoom'
+  | 'reset';
 
 export type UpdateTransformFunc = (
   newTransform: Partial<TransformType>,
@@ -62,7 +63,6 @@ export default function useImageTransform(
 
   const resetTransform = (action: TransformAction) => {
     setTransform(initialTransform);
-    console.log('resetTransform', initialTransform, transform);
     if (!isEqual(initialTransform, transform)) {
       onTransform?.({ transform: initialTransform, action });
     }

@@ -38,7 +38,7 @@ interface OperationsProps
   onRotateLeft: () => void;
   onFlipX: () => void;
   onFlipY: () => void;
-  onReset: (type: "flipX" | "flipY" | "rotate" | "zoom") => void;
+  onReset: () => void;
   toolbarRender: (
     originalNode: React.ReactElement,
     info: ToolbarRenderInfoType | Omit<ToolbarRenderInfoType, 'current' | 'total'>,
