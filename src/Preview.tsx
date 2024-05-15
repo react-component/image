@@ -186,8 +186,6 @@ const Preview: React.FC<PreviewProps> = props => {
     dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep), 'zoomOut');
   };
 
-  // const onReset =
-
   const onRotateRight = () => {
     updateTransform({ rotate: rotate + 90 }, 'rotateRight');
   };
