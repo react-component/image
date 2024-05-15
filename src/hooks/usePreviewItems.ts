@@ -62,5 +62,5 @@ export default function usePreviewItems(
     }, []);
   }, [items, images]);
 
-  return [mergedItems, registerImage, Boolean(items)];
+  return [mergedItems, registerImage, !!items];
 }
