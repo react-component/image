@@ -5,7 +5,6 @@ import type {
   ImageElementProps,
   InternalItem,
   PreviewImageElementProps,
-  PreviewItemsFrom,
   RegisterImage,
 } from '../interface';
 
@@ -16,7 +15,7 @@ export type Items = Omit<InternalItem, 'canPreview'>[];
  */
 export default function usePreviewItems(
   items?: GroupConsumerProps['items'],
-): [items: Items, registerImage: RegisterImage, from: PreviewItemsFrom] {
+): [items: Items, registerImage: RegisterImage, fromItems: boolean] {
   // Context collection image data
   const [images, setImages] = React.useState<Record<number, PreviewImageElementProps>>({});
 
@@ -63,10 +62,5 @@ export default function usePreviewItems(
     }, []);
   }, [items, images]);
 
-  // from
-  const from = React.useMemo<PreviewItemsFrom>(() => {
-    return items ? 'items' : 'context';
-  }, [items]);
-
-  return [mergedItems, registerImage, from];
+  return [mergedItems, registerImage, Boolean(items)];
 }

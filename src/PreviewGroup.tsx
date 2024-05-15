@@ -67,7 +67,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
 
   // ========================== Items ===========================
-  const [mergedItems, register, from] = usePreviewItems(items);
+  const [mergedItems, register, fromItems] = usePreviewItems(items);
 
   // ========================= Preview ==========================
   // >>> Index
@@ -92,9 +92,9 @@ const Group: React.FC<GroupConsumerProps> = ({
 
   const onPreviewFromImage = React.useCallback<OnGroupPreview>(
     (id, imageSrc, mouseX, mouseY) => {
-      const index = from === 'context'
-        ? mergedItems.findIndex(item => item.id === id)
-        : mergedItems.findIndex(item => typeof item === 'string' ? item === imageSrc : item.data.src === imageSrc);
+      const index = fromItems
+        ? mergedItems.findIndex(item => typeof item === 'string' ? item === imageSrc : item.data.src === imageSrc)
+        : mergedItems.findIndex(item => item.id === id);
 
       setCurrent(index < 0 ? 0 : index);
 

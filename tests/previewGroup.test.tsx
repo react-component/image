@@ -44,7 +44,7 @@ describe('PreviewGroup', () => {
     expect(onChange).toHaveBeenCalledWith(2, 1);
   });
 
-  it('default current should works', () => {
+  it('items should works', () => {
     const { rerender } = render(
       <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
         <Image src="src2" className="first-img" />
