@@ -103,7 +103,7 @@ const Group: React.FC<GroupConsumerProps> = ({
 
       setKeepOpenIndex(true);
     },
-    [mergedItems, items?.length],
+    [mergedItems, fromItems],
   );
 
   // Reset current when reopen
