@@ -31,15 +31,12 @@ export default function ToolbarRender() {
                 style={{ position: 'fixed', display: 'flex', bottom: 100, width: '100%', gap: 10, justifyContent: 'center' }}
               >
                 <button onClick={onFlipY}>flipY</button>
-                <button onClick={() => onReset("flipY")}>reset flipY</button>
                 <button onClick={onFlipX}>flipX</button>
-                <button onClick={() => onReset("flipX")}>reset flipX</button>
                 <button onClick={onRotateLeft}>rotateLeft</button>
                 <button onClick={onRotateRight}>rotateRight</button>
-                <button onClick={() => onReset("rotate")}>reset rotate</button>
                 <button onClick={onZoomIn}>zoomIn</button>
                 <button onClick={onZoomOut}>zoomOut</button>
-                <button onClick={() => onReset("zoom")}>reset zoom</button>
+                <button onClick={() => onReset()}>reset</button>
                 <button onClick={onClose}>close</button>
                 
               </div>
