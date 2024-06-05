@@ -796,13 +796,27 @@ describe('Preview', () => {
             printImage(image);
             return (
               <>
-                <div id="flipY" onClick={() => actions.onFlipY()}>{icons.flipYIcon}</div>
-                <div id="flipX" onClick={() => actions.onFlipX()}>{icons.flipXIcon}</div>
-                <div id="zoomIn" onClick={() => actions.onZoomIn()}>{icons.zoomInIcon}</div>
-                <div id="zoomOut" onClick={() => actions.onZoomOut()}>{icons.zoomOutIcon}</div>
-                <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>{icons.rotateLeftIcon}</div>
-                <div id="rotateRight" onClick={() => actions.onRotateRight()}>{icons.rotateRightIcon}</div>
-                <div id="reset" onClick={() => actions.onReset()}>reset</div>
+                <div id="flipY" onClick={() => actions.onFlipY()}>
+                  {icons.flipYIcon}
+                </div>
+                <div id="flipX" onClick={() => actions.onFlipX()}>
+                  {icons.flipXIcon}
+                </div>
+                <div id="zoomIn" onClick={() => actions.onZoomIn()}>
+                  {icons.zoomInIcon}
+                </div>
+                <div id="zoomOut" onClick={() => actions.onZoomOut()}>
+                  {icons.zoomOutIcon}
+                </div>
+                <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>
+                  {icons.rotateLeftIcon}
+                </div>
+                <div id="rotateRight" onClick={() => actions.onRotateRight()}>
+                  {icons.rotateRightIcon}
+                </div>
+                <div id="reset" onClick={() => actions.onReset()}>
+                  reset
+                </div>
               </>
             );
           },
@@ -839,9 +853,9 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(-206px, -142px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
+      transform: 'translate3d(-256px, -192px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
     });
-    
+
     // reset
     fireEvent.click(document.getElementById('reset'));
     act(() => {
@@ -939,5 +953,26 @@ describe('Preview', () => {
     expect(onVisibleChange).toBeCalledTimes(2);
 
     onVisibleChange.mockRestore();
+  });
+
+  it('not modify preview image size', () => {
+    render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width={20}
+        height={20}
+        preview={{
+          visible: true,
+        }}
+      />,
+    );
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const previewImg = document.querySelector('.rc-image-preview-img-wrapper img');
+    expect(previewImg).not.toHaveAttribute('width');
+    expect(previewImg).not.toHaveAttribute('height');
   });
 });
