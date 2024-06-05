@@ -4,14 +4,14 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import type { ImgInfo } from './Image';
+import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
 import useMouseEvent from './hooks/useMouseEvent';
 import useStatus from './hooks/useStatus';
 import useTouchEvent from './hooks/useTouchEvent';
-import type { ImgInfo } from './Image';
-import Operations from './Operations';
 import { BASE_SCALE_RATIO } from './previewConfig';
 
 export type ToolbarRenderInfoType = {
@@ -43,8 +43,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
-  width?: number | string;
-  height?: number | string;
+  widthInfo?: number | string;
+  heightInfo?: number | string;
   fallback?: string;
   movable?: boolean;
   rootClassName?: string;
@@ -107,8 +107,8 @@ const Preview: React.FC<PreviewProps> = props => {
     prefixCls,
     src,
     alt,
-    width,
-    height,
+    widthInfo,
+    heightInfo,
     fallback,
     movable = true,
     onClose,
@@ -203,7 +203,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onReset = () => {
-    resetTransform("reset");
+    resetTransform('reset');
   };
 
   const onSwitchLeft = (event?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -288,8 +288,8 @@ const Preview: React.FC<PreviewProps> = props => {
   const image = {
     url: src,
     alt,
-    width,
-    height,
+    widthInfo,
+    heightInfo,
   };
 
   return (

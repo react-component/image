@@ -240,8 +240,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           mousePosition={mousePosition}
           src={src}
           alt={alt}
-          width={width}
-          height={height}
+          widthInfo={width}
+          heightInfo={height}
           fallback={fallback}
           getContainer={getPreviewContainer}
           icons={icons}
