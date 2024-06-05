@@ -289,8 +289,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const image = {
     url: src,
     alt,
-    width: imageInfo?.width,
-    height: imageInfo?.height,
+    ...imageInfo,
   };
 
   return (

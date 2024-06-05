@@ -954,4 +954,25 @@ describe('Preview', () => {
 
     onVisibleChange.mockRestore();
   });
+
+  it('not modify preview image size', () => {
+    render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        width={20}
+        height={20}
+        preview={{
+          visible: true,
+        }}
+      />,
+    );
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const previewImg = document.querySelector('.rc-image-preview-img-wrapper img');
+    expect(previewImg).not.toHaveAttribute('width');
+    expect(previewImg).not.toHaveAttribute('height');
+  });
 });
