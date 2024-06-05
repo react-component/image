@@ -43,8 +43,10 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
-  widthInfo?: number | string;
-  heightInfo?: number | string;
+  imageInfo?: {
+    width: number | string;
+    height: number | string;
+  };
   fallback?: string;
   movable?: boolean;
   rootClassName?: string;
@@ -107,8 +109,7 @@ const Preview: React.FC<PreviewProps> = props => {
     prefixCls,
     src,
     alt,
-    widthInfo,
-    heightInfo,
+    imageInfo,
     fallback,
     movable = true,
     onClose,
@@ -288,8 +289,8 @@ const Preview: React.FC<PreviewProps> = props => {
   const image = {
     url: src,
     alt,
-    width: widthInfo,
-    height: heightInfo,
+    width: imageInfo.width,
+    height: imageInfo.height,
   };
 
   return (
