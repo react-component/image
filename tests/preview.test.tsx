@@ -853,7 +853,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(256px, -192px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
+      transform: 'translate3d(-256px, -192px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
     });
 
     // reset
