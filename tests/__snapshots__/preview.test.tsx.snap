@@ -38,7 +38,6 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
           aria-modal="true"
           class="rc-image-preview zoom-appear zoom-appear-prepare zoom"
           role="dialog"
-          style="transform-origin: 0px 0px;"
         >
           <div
             aria-hidden="true"
