@@ -10,8 +10,8 @@ import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 
 type OperationType =
-  | 'switchPrev'
-  | 'switchNext'
+  | 'prev'
+  | 'next'
   | 'flipY'
   | 'flipX'
   | 'rotateLeft'
@@ -126,8 +126,7 @@ const Operations: React.FC<OperationsProps> = props => {
       return (
         <div
           key={type}
-          className={classnames(toolClassName, {
-            [`${prefixCls}-operations-operation-${type}`]: true,
+          className={classnames(toolClassName, `${prefixCls}-operations-operation-${type}`, {
             [`${prefixCls}-operations-operation-disabled`]: !!disabled,
           })}
           onClick={onClick}
@@ -143,7 +142,7 @@ const Operations: React.FC<OperationsProps> = props => {
     ? renderOperation({
         icon: left,
         onClick: e => handleActive(e, -1),
-        type: 'switchPrev',
+        type: 'prev',
         disabled: current === 0,
       })
     : undefined;
@@ -152,7 +151,7 @@ const Operations: React.FC<OperationsProps> = props => {
     ? renderOperation({
         icon: right,
         onClick: e => handleActive(e, 1),
-        type: 'switchNext',
+        type: 'next',
         disabled: current === count - 1,
       })
     : undefined;

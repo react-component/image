@@ -888,11 +888,13 @@ describe('Preview', () => {
             toolbarRender: (_, { icons, actions }) => {
               return (
                 <>
+                  {icons.prevIcon}
+                  {icons.nextIcon}
                   <div id="left" onClick={() => actions.onActive(-1)}>
-                    {icons.prevIcon}
+                    Prev
                   </div>
                   <div id="right" onClick={() => actions.onActive(1)}>
-                    {icons.nextIcon}
+                    Next
                   </div>
                 </>
               );
@@ -902,6 +904,15 @@ describe('Preview', () => {
         />,
       );
 
+      // Origin Node
+      fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-prev'));
+      expect(onChange).toHaveBeenCalledWith(0, 1);
+
+      fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-next'));
+      expect(onChange).toHaveBeenCalledWith(2, 1);
+
+      // Customize
+      onChange.mockReset();
       fireEvent.click(document.getElementById('left'));
       expect(onChange).toHaveBeenCalledWith(0, 1);
 
