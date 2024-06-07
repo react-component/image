@@ -903,10 +903,10 @@ describe('Preview', () => {
       );
 
       fireEvent.click(document.getElementById('left'));
-      expect(onChange).toHaveBeenCalledWith(0);
+      expect(onChange).toHaveBeenCalledWith(0, 1);
 
       fireEvent.click(document.getElementById('right'));
-      expect(onChange).toHaveBeenCalledWith(2);
+      expect(onChange).toHaveBeenCalledWith(2, 1);
     });
   });
 
