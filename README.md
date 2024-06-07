@@ -172,8 +172,8 @@ type TransformAction =
 ```typescript
 {
   icons: {
-    activePrevIcon?: React.ReactNode;
-    activeNextIcon?: React.ReactNode;
+    prevIcon?: React.ReactNode;
+    nextIcon?: React.ReactNode;
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
     rotateLeftIcon: React.ReactNode;

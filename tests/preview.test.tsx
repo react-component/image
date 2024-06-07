@@ -783,86 +783,130 @@ describe('Preview', () => {
     );
   });
 
-  it('toolbarRender', () => {
-    const printImage = jest.fn();
-    const { container } = render(
-      <Image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        alt="alt"
-        width={200}
-        height={200}
-        preview={{
-          toolbarRender: (_, { icons, image, actions }) => {
-            printImage(image);
-            return (
-              <>
-                <div id="flipY" onClick={() => actions.onFlipY()}>
-                  {icons.flipYIcon}
-                </div>
-                <div id="flipX" onClick={() => actions.onFlipX()}>
-                  {icons.flipXIcon}
-                </div>
-                <div id="zoomIn" onClick={() => actions.onZoomIn()}>
-                  {icons.zoomInIcon}
-                </div>
-                <div id="zoomOut" onClick={() => actions.onZoomOut()}>
-                  {icons.zoomOutIcon}
-                </div>
-                <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>
-                  {icons.rotateLeftIcon}
-                </div>
-                <div id="rotateRight" onClick={() => actions.onRotateRight()}>
-                  {icons.rotateRightIcon}
-                </div>
-                <div id="reset" onClick={() => actions.onReset()}>
-                  reset
-                </div>
-              </>
-            );
-          },
-        }}
-      />,
-    );
+  describe('toolbarRender', () => {
+    it('single', () => {
+      const printImage = jest.fn();
+      const { container } = render(
+        <Image
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+          alt="alt"
+          width={200}
+          height={200}
+          preview={{
+            toolbarRender: (_, { icons, image, actions }) => {
+              printImage(image);
+              return (
+                <>
+                  <div id="flipY" onClick={() => actions.onFlipY()}>
+                    {icons.flipYIcon}
+                  </div>
+                  <div id="flipX" onClick={() => actions.onFlipX()}>
+                    {icons.flipXIcon}
+                  </div>
+                  <div id="zoomIn" onClick={() => actions.onZoomIn()}>
+                    {icons.zoomInIcon}
+                  </div>
+                  <div id="zoomOut" onClick={() => actions.onZoomOut()}>
+                    {icons.zoomOutIcon}
+                  </div>
+                  <div id="rotateLeft" onClick={() => actions.onRotateLeft()}>
+                    {icons.rotateLeftIcon}
+                  </div>
+                  <div id="rotateRight" onClick={() => actions.onRotateRight()}>
+                    {icons.rotateRightIcon}
+                  </div>
+                  <div id="reset" onClick={() => actions.onReset()}>
+                    reset
+                  </div>
+                </>
+              );
+            },
+          }}
+        />,
+      );
 
-    fireEvent.click(container.querySelector('.rc-image'));
-    act(() => {
-      jest.runAllTimers();
+      fireEvent.click(container.querySelector('.rc-image'));
+      act(() => {
+        jest.runAllTimers();
+      });
+
+      expect(printImage).toHaveBeenCalledWith({
+        alt: 'alt',
+        height: 200,
+        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+        width: 200,
+      });
+      // flipY
+      fireEvent.click(document.getElementById('flipY'));
+      act(() => {
+        jest.runAllTimers();
+      });
+      fireEvent.click(document.getElementById('flipX'));
+      act(() => {
+        jest.runAllTimers();
+      });
+      fireEvent.click(document.getElementById('zoomIn'));
+      act(() => {
+        jest.runAllTimers();
+      });
+      fireEvent.click(document.getElementById('rotateLeft'));
+      act(() => {
+        jest.runAllTimers();
+      });
+      expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+        transform: 'translate3d(-256px, -192px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
+      });
+
+      // reset
+      fireEvent.click(document.getElementById('reset'));
+      act(() => {
+        jest.runAllTimers();
+      });
+      expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+        transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+      });
     });
 
-    expect(printImage).toHaveBeenCalledWith({
-      alt: 'alt',
-      height: 200,
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      width: 200,
-    });
-    // flipY
-    fireEvent.click(document.getElementById('flipY'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    fireEvent.click(document.getElementById('flipX'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    fireEvent.click(document.getElementById('zoomIn'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    fireEvent.click(document.getElementById('rotateLeft'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(-256px, -192px, 0) scale3d(-1.5, -1.5, 1) rotate(-90deg)',
-    });
+    it('switch', () => {
+      const onChange = jest.fn();
+      render(
+        <Image.PreviewGroup
+          items={[
+            {
+              src: 'src1',
+            },
+            {
+              src: 'src2',
+            },
+            {
+              src: 'src3',
+            },
+          ]}
+          preview={{
+            visible: true,
+            current: 1,
+            toolbarRender: (_, { icons, actions }) => {
+              return (
+                <>
+                  <div id="left" onClick={() => actions.onActive(-1)}>
+                    {icons.prevIcon}
+                  </div>
+                  <div id="right" onClick={() => actions.onActive(1)}>
+                    {icons.nextIcon}
+                  </div>
+                </>
+              );
+            },
+            onChange,
+          }}
+        />,
+      );
 
-    // reset
-    fireEvent.click(document.getElementById('reset'));
-    act(() => {
-      jest.runAllTimers();
-    });
-    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
-      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+      fireEvent.click(document.getElementById('left'));
+      expect(onChange).toHaveBeenCalledWith(0);
+
+      fireEvent.click(document.getElementById('right'));
+      expect(onChange).toHaveBeenCalledWith(2);
     });
   });
 

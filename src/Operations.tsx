@@ -9,7 +9,15 @@ import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 
-type OperationType = 'switchPrev' | 'switchNext' | 'flipY' | 'flipX' | 'rotateLeft' | 'rotateRight' | 'zoomOut' | 'zoomIn';
+type OperationType =
+  | 'switchPrev'
+  | 'switchNext'
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomOut'
+  | 'zoomIn';
 
 interface RenderOperationParams {
   icon: React.ReactNode;
@@ -110,40 +118,44 @@ const Operations: React.FC<OperationsProps> = props => {
     e.preventDefault();
     e.stopPropagation();
 
-    onActive(offset)
-  }
+    onActive(offset);
+  };
 
-  const renderOperation = React.useCallback(({ type, disabled, onClick, icon }: RenderOperationParams) => {
-    return (
-      <div
-        key={type}
-        className={classnames(toolClassName, {
-          [`${prefixCls}-operations-operation-${type}`]: true,
-          [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-        })}
-        onClick={onClick}
-      >
-        {icon}
-      </div>
-    )
-  }, [toolClassName, prefixCls])
+  const renderOperation = React.useCallback(
+    ({ type, disabled, onClick, icon }: RenderOperationParams) => {
+      return (
+        <div
+          key={type}
+          className={classnames(toolClassName, {
+            [`${prefixCls}-operations-operation-${type}`]: true,
+            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+          })}
+          onClick={onClick}
+        >
+          {icon}
+        </div>
+      );
+    },
+    [toolClassName, prefixCls],
+  );
 
   const switchPrevNode = showSwitch
     ? renderOperation({
-      icon: left,
-      onClick: (e) => handleActive(e, -1),
-      type: "switchPrev",
-      disabled: current === 0,
-    })
+        icon: left,
+        onClick: e => handleActive(e, -1),
+        type: 'switchPrev',
+        disabled: current === 0,
+      })
     : undefined;
 
   const switchNextNode = showSwitch
     ? renderOperation({
-      icon: right,
-      onClick: (e) => handleActive(e, 1),
-      type: 'switchNext',
-      disabled: current === count - 1,
-    }) : undefined
+        icon: right,
+        onClick: e => handleActive(e, 1),
+        type: 'switchNext',
+        disabled: current === count - 1,
+      })
+    : undefined;
 
   const flipYNode = renderOperation({
     icon: flipY,
@@ -185,8 +197,6 @@ const Operations: React.FC<OperationsProps> = props => {
 
   const toolbarNode = (
     <div className={`${prefixCls}-operations`}>
-      {switchPrevNode}
-      {switchNextNode}
       {flipYNode}
       {flipXNode}
       {rotateLeftNode}
@@ -219,7 +229,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-left`, {
                     [`${prefixCls}-switch-left-disabled`]: current === 0,
                   })}
-                  onClick={(e) => handleActive(e, -1)}
+                  onClick={e => handleActive(e, -1)}
                 >
                   {left}
                 </div>
@@ -227,7 +237,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-right`, {
                     [`${prefixCls}-switch-right-disabled`]: current === count - 1,
                   })}
-                  onClick={(e) => handleActive(e, 1)}
+                  onClick={e => handleActive(e, 1)}
                 >
                   {right}
                 </div>
@@ -243,31 +253,31 @@ const Operations: React.FC<OperationsProps> = props => {
 
               {toolbarRender
                 ? toolbarRender(toolbarNode, {
-                  icons: {
-                    activePrevIcon: switchPrevNode,
-                    activeNextIcon: switchNextNode,
-                    flipYIcon: flipYNode,
-                    flipXIcon: flipXNode,
-                    rotateLeftIcon: rotateLeftNode,
-                    rotateRightIcon: rotateRightNode,
-                    zoomOutIcon: zoomOutNode,
-                    zoomInIcon: zoomInNode,
-                  },
-                  actions: {
-                    onActive,
-                    onFlipY,
-                    onFlipX,
-                    onRotateLeft,
-                    onRotateRight,
-                    onZoomOut,
-                    onZoomIn,
-                    onReset,
-                    onClose
-                  },
-                  transform,
-                  ...(groupContext ? { current, total: count } : {}),
-                  image,
-                })
+                    icons: {
+                      prevIcon: switchPrevNode,
+                      nextIcon: switchNextNode,
+                      flipYIcon: flipYNode,
+                      flipXIcon: flipXNode,
+                      rotateLeftIcon: rotateLeftNode,
+                      rotateRightIcon: rotateRightNode,
+                      zoomOutIcon: zoomOutNode,
+                      zoomInIcon: zoomInNode,
+                    },
+                    actions: {
+                      onActive,
+                      onFlipY,
+                      onFlipX,
+                      onRotateLeft,
+                      onRotateRight,
+                      onZoomOut,
+                      onZoomIn,
+                      onReset,
+                      onClose,
+                    },
+                    transform,
+                    ...(groupContext ? { current, total: count } : {}),
+                    image,
+                  })
                 : toolbarNode}
             </div>
           </div>
