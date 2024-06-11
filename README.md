@@ -172,6 +172,8 @@ type TransformAction =
 ```typescript
 {
   icons: {
+    prevIcon?: React.ReactNode;
+    nextIcon?: React.ReactNode;
     flipYIcon: React.ReactNode;
     flipXIcon: React.ReactNode;
     rotateLeftIcon: React.ReactNode;
@@ -180,6 +182,7 @@ type TransformAction =
     zoomInIcon: React.ReactNode;
   };
   actions: {
+    onActive?: (offset: number) => void;
     onFlipY: () => void;
     onFlipX: () => void;
     onRotateLeft: () => void;

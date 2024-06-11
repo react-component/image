@@ -9,6 +9,23 @@ import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 
+type OperationType =
+  | 'prev'
+  | 'next'
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomOut'
+  | 'zoomIn';
+
+interface RenderOperationParams {
+  icon: React.ReactNode;
+  type: OperationType;
+  disabled?: boolean;
+  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+}
+
 interface OperationsProps
   extends Pick<
     PreviewProps,
@@ -30,8 +47,7 @@ interface OperationsProps
   scale: number;
   minScale: number;
   maxScale: number;
-  onSwitchLeft: React.MouseEventHandler<HTMLDivElement>;
-  onSwitchRight: React.MouseEventHandler<HTMLDivElement>;
+  onActive: (offset: number) => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onRotateRight: () => void;
@@ -65,8 +81,7 @@ const Operations: React.FC<OperationsProps> = props => {
     minScale,
     maxScale,
     closeIcon,
-    onSwitchLeft,
-    onSwitchRight,
+    onActive,
     onClose,
     onZoomIn,
     onZoomOut,
@@ -99,55 +114,96 @@ const Operations: React.FC<OperationsProps> = props => {
     };
   }, [visible]);
 
-  const tools = [
-    {
-      icon: flipY,
-      onClick: onFlipY,
-      type: 'flipY',
-    },
-    {
-      icon: flipX,
-      onClick: onFlipX,
-      type: 'flipX',
-    },
-    {
-      icon: rotateLeft,
-      onClick: onRotateLeft,
-      type: 'rotateLeft',
-    },
-    {
-      icon: rotateRight,
-      onClick: onRotateRight,
-      type: 'rotateRight',
-    },
-    {
-      icon: zoomOut,
-      onClick: onZoomOut,
-      type: 'zoomOut',
-      disabled: scale <= minScale,
-    },
-    {
-      icon: zoomIn,
-      onClick: onZoomIn,
-      type: 'zoomIn',
-      disabled: scale === maxScale,
-    },
-  ];
+  const handleActive = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, offset: number) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const toolsNode = tools.map(({ icon, onClick, type, disabled }) => (
-    <div
-      className={classnames(toolClassName, {
-        [`${prefixCls}-operations-operation-${type}`]: true,
-        [`${prefixCls}-operations-operation-disabled`]: !!disabled,
-      })}
-      onClick={onClick}
-      key={type}
-    >
-      {icon}
+    onActive(offset);
+  };
+
+  const renderOperation = React.useCallback(
+    ({ type, disabled, onClick, icon }: RenderOperationParams) => {
+      return (
+        <div
+          key={type}
+          className={classnames(toolClassName, `${prefixCls}-operations-operation-${type}`, {
+            [`${prefixCls}-operations-operation-disabled`]: !!disabled,
+          })}
+          onClick={onClick}
+        >
+          {icon}
+        </div>
+      );
+    },
+    [toolClassName, prefixCls],
+  );
+
+  const switchPrevNode = showSwitch
+    ? renderOperation({
+        icon: left,
+        onClick: e => handleActive(e, -1),
+        type: 'prev',
+        disabled: current === 0,
+      })
+    : undefined;
+
+  const switchNextNode = showSwitch
+    ? renderOperation({
+        icon: right,
+        onClick: e => handleActive(e, 1),
+        type: 'next',
+        disabled: current === count - 1,
+      })
+    : undefined;
+
+  const flipYNode = renderOperation({
+    icon: flipY,
+    onClick: onFlipY,
+    type: 'flipY',
+  });
+
+  const flipXNode = renderOperation({
+    icon: flipX,
+    onClick: onFlipX,
+    type: 'flipX',
+  });
+
+  const rotateLeftNode = renderOperation({
+    icon: rotateLeft,
+    onClick: onRotateLeft,
+    type: 'rotateLeft',
+  });
+
+  const rotateRightNode = renderOperation({
+    icon: rotateRight,
+    onClick: onRotateRight,
+    type: 'rotateRight',
+  });
+
+  const zoomOutNode = renderOperation({
+    icon: zoomOut,
+    onClick: onZoomOut,
+    type: 'zoomOut',
+    disabled: scale <= minScale,
+  });
+
+  const zoomInNode = renderOperation({
+    icon: zoomIn,
+    onClick: onZoomIn,
+    type: 'zoomIn',
+    disabled: scale === maxScale,
+  });
+
+  const toolbarNode = (
+    <div className={`${prefixCls}-operations`}>
+      {flipYNode}
+      {flipXNode}
+      {rotateLeftNode}
+      {rotateRightNode}
+      {zoomOutNode}
+      {zoomInNode}
     </div>
-  ));
-
-  const toolbarNode = <div className={`${prefixCls}-operations`}>{toolsNode}</div>;
+  );
 
   return (
     <CSSMotion visible={visible} motionName={maskTransitionName}>
@@ -172,7 +228,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-left`, {
                     [`${prefixCls}-switch-left-disabled`]: current === 0,
                   })}
-                  onClick={onSwitchLeft}
+                  onClick={e => handleActive(e, -1)}
                 >
                   {left}
                 </div>
@@ -180,7 +236,7 @@ const Operations: React.FC<OperationsProps> = props => {
                   className={classnames(`${prefixCls}-switch-right`, {
                     [`${prefixCls}-switch-right-disabled`]: current === count - 1,
                   })}
-                  onClick={onSwitchRight}
+                  onClick={e => handleActive(e, 1)}
                 >
                   {right}
                 </div>
@@ -197,14 +253,17 @@ const Operations: React.FC<OperationsProps> = props => {
               {toolbarRender
                 ? toolbarRender(toolbarNode, {
                     icons: {
-                      flipYIcon: toolsNode[0],
-                      flipXIcon: toolsNode[1],
-                      rotateLeftIcon: toolsNode[2],
-                      rotateRightIcon: toolsNode[3],
-                      zoomOutIcon: toolsNode[4],
-                      zoomInIcon: toolsNode[5],
+                      prevIcon: switchPrevNode,
+                      nextIcon: switchNextNode,
+                      flipYIcon: flipYNode,
+                      flipXIcon: flipXNode,
+                      rotateLeftIcon: rotateLeftNode,
+                      rotateRightIcon: rotateRightNode,
+                      zoomOutIcon: zoomOutNode,
+                      zoomInIcon: zoomInNode,
                     },
                     actions: {
+                      onActive,
                       onFlipY,
                       onFlipX,
                       onRotateLeft,
@@ -212,7 +271,7 @@ const Operations: React.FC<OperationsProps> = props => {
                       onZoomOut,
                       onZoomIn,
                       onReset,
-                      onClose
+                      onClose,
                     },
                     transform,
                     ...(groupContext ? { current, total: count } : {}),
