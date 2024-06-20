@@ -1,7 +1,7 @@
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
-import { type ImagePreviewType } from './Image';
+import type { ImgInfo, ImagePreviewType } from './Image';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import { PreviewGroupContext } from './context';
@@ -26,7 +26,7 @@ export interface PreviewGroupPreview
   ) => React.ReactNode;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType; current: number },
+    info: { transform: TransformType; current: number; image: ImgInfo },
   ) => React.ReactNode;
   onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
   onChange?: (current: number, prevCurrent: number) => void;
