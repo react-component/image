@@ -1,5 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import Image from '../src';
+import React from 'react';
 
 describe('Controlled', () => {
   beforeEach(() => {
