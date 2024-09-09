@@ -40,13 +40,8 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
           role="dialog"
         >
           <div
-            aria-hidden="true"
-            style="width: 0px; height: 0px; overflow: hidden; outline: none;"
-            tabindex="0"
-          />
-          <div
             style="outline: none;"
-            tabindex="-1"
+            tabindex="0"
           >
             <div
               class="rc-image-preview-content"
@@ -67,7 +62,6 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
             </div>
           </div>
           <div
-            aria-hidden="true"
             style="width: 0px; height: 0px; overflow: hidden; outline: none;"
             tabindex="0"
           />
