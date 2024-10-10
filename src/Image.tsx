@@ -4,7 +4,7 @@ import { getOffset } from 'rc-util/lib/Dom/css';
 import type { GetContainer } from 'rc-util/lib/PortalWrapper';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 import * as React from 'react';
-import { useContext, useMemo, useState } from 'react';
+import { forwardRef, useContext, useMemo, useState } from 'react';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
@@ -69,11 +69,14 @@ export interface ImageProps
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-interface CompoundedComponent<P> extends React.FC<P> {
+interface CompoundedComponent<P, T> extends React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<T>> {
   PreviewGroup: typeof PreviewGroup;
 }
 
-const ImageInternal: CompoundedComponent<ImageProps> = props => {
+const ImageInternal = forwardRef<
+HTMLImageElement,
+ImageProps
+>((props, ref: React.Ref<HTMLImageElement>) => {
   const {
     src: imgSrc,
     alt,
@@ -206,7 +209,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
             height,
             ...style,
           }}
-          ref={getImgRef}
+          ref={(img) => {
+            getImgRef(img);
+
+            if (typeof ref === 'function') {
+              ref(img);
+            } else if (ref) {
+              (ref as React.MutableRefObject<HTMLImageElement>).current = img;
+            }
+          }}
           {...srcAndOnload}
           width={width}
           height={height}
@@ -257,7 +268,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       )}
     </>
   );
-};
+}) as CompoundedComponent<ImageProps, HTMLImageElement>;
 
 ImageInternal.PreviewGroup = PreviewGroup;
 
