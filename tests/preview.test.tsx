@@ -1030,4 +1030,24 @@ describe('Preview', () => {
     expect(previewImg).not.toHaveAttribute('width');
     expect(previewImg).not.toHaveAttribute('height');
   });
+  it('support classnames and styles', () => {
+    const customClassnames = {
+      mask: 'custom-mask',
+    };
+    const customStyles = {
+      mask: { color: 'red' },
+    };
+    render(
+      <Image
+        styles={customStyles}
+        classNames={customClassnames}
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          mask: 'Bamboo Is Light',
+        }}
+      />,
+    );
+    expect(document.querySelector('.rc-image-mask')).toHaveClass('custom-mask');
+    expect(document.querySelector('.rc-image-mask')).toHaveStyle({ color: 'red' });
+  });
 });

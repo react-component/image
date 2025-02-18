@@ -134,6 +134,8 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
+    classNames: imageClassNames,
+    styles,
     ...restProps
   } = props;
 
@@ -339,6 +341,8 @@ const Preview: React.FC<PreviewProps> = props => {
         onReset={onReset}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
         image={image}
+        classNames={imageClassNames}
+        styles={styles}
       />
     </>
   );

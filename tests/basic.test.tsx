@@ -97,4 +97,23 @@ describe('Basic', () => {
     const operationsElement = baseElement.querySelector('.rc-image-preview-operations-wrapper');
     expect(operationsElement).toHaveStyle({ zIndex: 10000 });
   });
+  it('support classnames and styles', () => {
+    const customClassnames = {
+      actions: 'custom-actions',
+    };
+    const customStyles = {
+      actions: { backgroundColor: 'blue' },
+    };
+    const { baseElement } = render(
+      <Image
+        styles={customStyles}
+        classNames={customClassnames}
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ zIndex: 9999, visible: true }}
+      />,
+    );
+    const actionsElement = baseElement.querySelector('.rc-image-preview-operations');
+    expect(actionsElement).toHaveClass('custom-actions');
+    expect(actionsElement).toHaveStyle({ backgroundColor: 'blue' });
+  });
 });

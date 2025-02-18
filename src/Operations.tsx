@@ -4,10 +4,11 @@ import CSSMotion from 'rc-motion';
 import KeyCode from 'rc-util/lib/KeyCode';
 import * as React from 'react';
 import { useContext } from 'react';
-import type { ImgInfo } from './Image';
+import type { ImgInfo, SemanticName } from './Image';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
+import classNames from 'classnames';
 
 type OperationType =
   | 'prev'
@@ -61,6 +62,8 @@ interface OperationsProps
   ) => React.ReactNode;
   zIndex?: number;
   image?: ImgInfo;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
 }
 
 const Operations: React.FC<OperationsProps> = props => {
@@ -93,6 +96,8 @@ const Operations: React.FC<OperationsProps> = props => {
     toolbarRender,
     zIndex,
     image,
+    classNames: imageClassNames,
+    styles,
   } = props;
   const groupContext = useContext(PreviewGroupContext);
   const { rotateLeft, rotateRight, zoomIn, zoomOut, close, left, right, flipX, flipY } = icons;
@@ -195,7 +200,10 @@ const Operations: React.FC<OperationsProps> = props => {
   });
 
   const toolbarNode = (
-    <div className={`${prefixCls}-operations`}>
+    <div
+      className={classNames(`${prefixCls}-operations`, imageClassNames?.actions)}
+      style={styles?.actions}
+    >
       {flipYNode}
       {flipXNode}
       {rotateLeftNode}
