@@ -1,8 +1,7 @@
+import type { DialogProps as IDialogPropTypes } from '@rc-component/dialog';
+import Dialog from '@rc-component/dialog';
+import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
-import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
-import Dialog from 'rc-dialog';
-import addEventListener from 'rc-util/lib/Dom/addEventListener';
-import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { ImgInfo } from './Image';
 import Operations from './Operations';
@@ -220,7 +219,7 @@ const Preview: React.FC<PreviewProps> = props => {
     setEnableTransition(false);
     resetTransform(offset < 0 ? 'prev' : 'next');
     onChange?.(position, current);
-  }
+  };
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (!visible || !showLeftOrRightSwitches) return;
@@ -248,10 +247,10 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   useEffect(() => {
-    const onKeyDownListener = addEventListener(window, 'keydown', onKeyDown, false);
+    window.addEventListener('keydown', onKeyDown, false);
 
     return () => {
-      onKeyDownListener.remove();
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, [visible, showLeftOrRightSwitches, current]);
 
@@ -264,8 +263,9 @@ const Preview: React.FC<PreviewProps> = props => {
       className={`${prefixCls}-img`}
       alt={alt}
       style={{
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''
-          }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
+          transform.flipX ? '-' : ''
+        }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
         transitionDuration: (!enableTransition || isTouching) && '0s',
       }}
       fallback={fallback}

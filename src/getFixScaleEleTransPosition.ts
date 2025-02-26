@@ -1,4 +1,4 @@
-import { getClientSize } from 'rc-util/lib/Dom/css';
+import { getClientSize } from "./util";
 
 function fixPoint(key: 'x' | 'y', start: number, width: number, clientWidth: number) {
   const startAddWidth = start + width;

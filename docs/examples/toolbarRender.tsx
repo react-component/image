@@ -1,4 +1,4 @@
-import Image from 'rc-image';
+import Image from '@rc-component/image';
 import React from 'react';
 import '../../assets/index.less';
 import { defaultIcons } from './common';
@@ -38,7 +38,7 @@ export default function ToolbarRender() {
                 <button onClick={onZoomOut}>zoomOut</button>
                 <button onClick={() => onReset()}>reset</button>
                 <button onClick={onClose}>close</button>
-                
+
               </div>
             );
           },

@@ -1,6 +1,6 @@
-import { getClientSize } from 'rc-util/lib/Dom/css';
-import isEqual from 'rc-util/lib/isEqual';
-import raf from 'rc-util/lib/raf';
+import { getClientSize } from '../util';
+import isEqual from '@rc-component/util/lib/isEqual';
+import raf from '@rc-component/util/lib/raf';
 import { useRef, useState } from 'react';
 
 export type TransformType = {

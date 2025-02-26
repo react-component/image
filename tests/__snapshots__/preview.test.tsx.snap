@@ -44,7 +44,7 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
             tabindex="0"
           >
             <div
-              class="rc-image-preview-content"
+              class="rc-image-preview-section"
             >
               <div
                 class="rc-image-preview-body"

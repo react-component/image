@@ -8,7 +8,7 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
-import Image from 'rc-image';
+import Image from '@rc-component/image';
 import React from 'react';
 import '../../assets/index.less';
 
