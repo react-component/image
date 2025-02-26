@@ -42,12 +42,12 @@
     "@rc-component/portal": "^2.0.0",
     "@rc-component/motion": "^1.0.0",
     "@rc-component/util": "^1.0.0",
-    "@rc-component/dialog": "^1.1.0",
+    "@rc-component/dialog": "~1.2.0",
     "classnames": "^2.2.6"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.0.1",
-    "@rc-component/father-plugin": "^1.0.2",
+    "@rc-component/father-plugin": "^2.0.2",
     "@rc-component/np": "^1.0.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^15.0.6",
