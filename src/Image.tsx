@@ -1,8 +1,7 @@
-import cn from 'classnames';
 import type { IDialogPropTypes } from '@rc-component/dialog/lib/IDialogPropTypes';
-import { getOffset } from '@rc-component/util/lib/Dom/css';
 import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
+import cn from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
@@ -14,6 +13,7 @@ import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
+import { getOffset } from './util';
 
 export interface ImgInfo {
   url: string;
@@ -166,7 +166,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   // ========================== Preview ===========================
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target);
+    const { left, top } = getOffset(e.target as HTMLDivElement);
     if (groupContext) {
       groupContext.onPreview(imageId, src, left, top);
     } else {

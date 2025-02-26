@@ -1,4 +1,4 @@
-import { getClientSize } from '@rc-component/util/lib/Dom/css';
+import { getClientSize } from '../util';
 import isEqual from '@rc-component/util/lib/isEqual';
 import raf from '@rc-component/util/lib/raf';
 import { useRef, useState } from 'react';

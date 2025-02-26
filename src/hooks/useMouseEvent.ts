@@ -1,4 +1,3 @@
-import addEventListener from '@rc-component/util/lib/Dom/addEventListener';
 import { warning } from '@rc-component/util/lib/warning';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
@@ -43,7 +42,7 @@ export default function useMouseEvent(
     setMoving(true);
   };
 
-  const onMouseMove: React.MouseEventHandler<HTMLBodyElement> = event => {
+  const onMouseMove = (event: MouseEvent) => {
     if (visible && isMoving) {
       updateTransform(
         {
@@ -55,7 +54,7 @@ export default function useMouseEvent(
     }
   };
 
-  const onMouseUp: React.MouseEventHandler<HTMLBodyElement> = () => {
+  const onMouseUp = () => {
     if (visible && isMoving) {
       setMoving(false);
 
@@ -98,21 +97,16 @@ export default function useMouseEvent(
   };
 
   useEffect(() => {
-    let onTopMouseUpListener;
-    let onTopMouseMoveListener;
-    let onMouseUpListener;
-    let onMouseMoveListener;
-
     if (movable) {
-      onMouseUpListener = addEventListener(window, 'mouseup', onMouseUp, false);
-      onMouseMoveListener = addEventListener(window, 'mousemove', onMouseMove, false);
+      window.addEventListener('mouseup', onMouseUp, false);
+      window.addEventListener('mousemove', onMouseMove, false);
 
       try {
         // Resolve if in iframe lost event
         /* istanbul ignore next */
         if (window.top !== window.self) {
-          onTopMouseUpListener = addEventListener(window.top, 'mouseup', onMouseUp, false);
-          onTopMouseMoveListener = addEventListener(window.top, 'mousemove', onMouseMove, false);
+          window.top.addEventListener('mouseup', onMouseUp, false);
+          window.top.addEventListener('mousemove', onMouseMove, false);
         }
       } catch (error) {
         /* istanbul ignore next */
@@ -121,12 +115,12 @@ export default function useMouseEvent(
     }
 
     return () => {
-      onMouseUpListener?.remove();
-      onMouseMoveListener?.remove();
-      /* istanbul ignore next */
-      onTopMouseUpListener?.remove();
-      /* istanbul ignore next */
-      onTopMouseMoveListener?.remove();
+      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('mousemove', onMouseMove);
+      // /* istanbul ignore next */
+      window.top?.removeEventListener('mouseup', onMouseUp);
+      // /* istanbul ignore next */
+      window.top?.removeEventListener('mousemove', onMouseMove);
     };
   }, [visible, isMoving, x, y, rotate, movable]);
 

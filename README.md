@@ -55,7 +55,7 @@ npm start
 ```
 
 ```js
-import Image from 'rc-image';
+import Image from '@rc-component/image';
 
 export default () => (
   <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
@@ -96,7 +96,7 @@ export default () => (
 preview the merged src
 
 ```js
-import Image from 'rc-image';
+import Image from '@rc-component/image';
 
 export default () => (
   <Image.PreviewGroup>

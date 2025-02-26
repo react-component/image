@@ -1,4 +1,3 @@
-import addEventListener from '@rc-component/util/lib/Dom/addEventListener';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
@@ -164,14 +163,17 @@ export default function useTouchEvent(
   };
 
   useEffect(() => {
-    let onTouchMoveListener;
+    const preventDefault = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
     if (visible && movable) {
-      onTouchMoveListener = addEventListener(window, 'touchmove', e => e.preventDefault(), {
+      window.addEventListener('touchmove', preventDefault, {
         passive: false,
       });
     }
     return () => {
-      onTouchMoveListener?.remove();
+      window.removeEventListener('touchmove', preventDefault);
     };
   }, [visible, movable]);
 
