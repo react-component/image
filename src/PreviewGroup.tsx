@@ -1,4 +1,4 @@
-import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
 import type { ImgInfo, ImagePreviewType } from './Image';

@@ -1,8 +1,8 @@
 import cn from 'classnames';
-import type { IDialogPropTypes } from 'rc-dialog/lib/IDialogPropTypes';
-import { getOffset } from 'rc-util/lib/Dom/css';
-import type { GetContainer } from 'rc-util/lib/PortalWrapper';
-import useMergedState from 'rc-util/lib/hooks/useMergedState';
+import type { IDialogPropTypes } from '@rc-component/dialog/lib/IDialogPropTypes';
+import { getOffset } from '@rc-component/util/lib/Dom/css';
+import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
+import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';

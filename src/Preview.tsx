@@ -1,8 +1,8 @@
 import classnames from 'classnames';
-import type { DialogProps as IDialogPropTypes } from 'rc-dialog';
-import Dialog from 'rc-dialog';
-import addEventListener from 'rc-util/lib/Dom/addEventListener';
-import KeyCode from 'rc-util/lib/KeyCode';
+import type { DialogProps as IDialogPropTypes } from '@rc-component/dialog';
+import Dialog from '@rc-component/dialog';
+import addEventListener from '@rc-component/util/lib/Dom/addEventListener';
+import KeyCode from '@rc-component/util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { ImgInfo } from './Image';
 import Operations from './Operations';

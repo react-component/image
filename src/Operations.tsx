@@ -1,7 +1,7 @@
 import Portal from '@rc-component/portal';
 import classnames from 'classnames';
-import CSSMotion from 'rc-motion';
-import KeyCode from 'rc-util/lib/KeyCode';
+import CSSMotion from '@rc-component/motion';
+import KeyCode from '@rc-component/util/lib/KeyCode';
 import * as React from 'react';
 import { useContext } from 'react';
 import type { ImgInfo } from './Image';
@@ -140,20 +140,20 @@ const Operations: React.FC<OperationsProps> = props => {
 
   const switchPrevNode = showSwitch
     ? renderOperation({
-        icon: left,
-        onClick: e => handleActive(e, -1),
-        type: 'prev',
-        disabled: current === 0,
-      })
+      icon: left,
+      onClick: e => handleActive(e, -1),
+      type: 'prev',
+      disabled: current === 0,
+    })
     : undefined;
 
   const switchNextNode = showSwitch
     ? renderOperation({
-        icon: right,
-        onClick: e => handleActive(e, 1),
-        type: 'next',
-        disabled: current === count - 1,
-      })
+      icon: right,
+      onClick: e => handleActive(e, 1),
+      type: 'next',
+      disabled: current === count - 1,
+    })
     : undefined;
 
   const flipYNode = renderOperation({
@@ -252,31 +252,31 @@ const Operations: React.FC<OperationsProps> = props => {
 
               {toolbarRender
                 ? toolbarRender(toolbarNode, {
-                    icons: {
-                      prevIcon: switchPrevNode,
-                      nextIcon: switchNextNode,
-                      flipYIcon: flipYNode,
-                      flipXIcon: flipXNode,
-                      rotateLeftIcon: rotateLeftNode,
-                      rotateRightIcon: rotateRightNode,
-                      zoomOutIcon: zoomOutNode,
-                      zoomInIcon: zoomInNode,
-                    },
-                    actions: {
-                      onActive,
-                      onFlipY,
-                      onFlipX,
-                      onRotateLeft,
-                      onRotateRight,
-                      onZoomOut,
-                      onZoomIn,
-                      onReset,
-                      onClose,
-                    },
-                    transform,
-                    ...(groupContext ? { current, total: count } : {}),
-                    image,
-                  })
+                  icons: {
+                    prevIcon: switchPrevNode,
+                    nextIcon: switchNextNode,
+                    flipYIcon: flipYNode,
+                    flipXIcon: flipXNode,
+                    rotateLeftIcon: rotateLeftNode,
+                    rotateRightIcon: rotateRightNode,
+                    zoomOutIcon: zoomOutNode,
+                    zoomInIcon: zoomInNode,
+                  },
+                  actions: {
+                    onActive,
+                    onFlipY,
+                    onFlipX,
+                    onRotateLeft,
+                    onRotateRight,
+                    onZoomOut,
+                    onZoomIn,
+                    onReset,
+                    onClose,
+                  },
+                  transform,
+                  ...(groupContext ? { current, total: count } : {}),
+                  image,
+                })
                 : toolbarNode}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import addEventListener from 'rc-util/lib/Dom/addEventListener';
+import addEventListener from '@rc-component/util/lib/Dom/addEventListener';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
