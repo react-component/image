@@ -1033,21 +1033,33 @@ describe('Preview', () => {
   it('support classnames and styles', () => {
     const customClassnames = {
       mask: 'custom-mask',
+      actions: 'custom-actions',
+      root: 'custom-root',
     };
     const customStyles = {
       mask: { color: 'red' },
+      actions: { backgroundColor: 'blue' },
+      root: { border: '1px solid green' },
     };
-    render(
+    const { baseElement } = render(
       <Image
-        styles={customStyles}
-        classNames={customClassnames}
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
+          styles: customStyles,
+          classNames: customClassnames,
           mask: 'Bamboo Is Light',
+          zIndex: 9999,
+          visible: true,
         }}
       />,
     );
-    expect(document.querySelector('.rc-image-mask')).toHaveClass('custom-mask');
-    expect(document.querySelector('.rc-image-mask')).toHaveStyle({ color: 'red' });
+    const mask = document.querySelector('.rc-image-mask');
+    const actions = baseElement.querySelector('.rc-image-preview-operations');
+    expect(mask).toHaveClass(customClassnames.mask);
+    expect(mask).toHaveStyle(customStyles.mask);
+    expect(actions).toHaveClass(customClassnames.actions);
+    expect(actions).toHaveStyle(customStyles.actions);
+    expect(baseElement.querySelector('.rc-image-preview-root')).toHaveClass(customClassnames.root);
+    expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.root);
   });
 });

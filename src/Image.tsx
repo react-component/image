@@ -35,6 +35,8 @@ export interface ImagePreviewType
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
   maskClassName?: string;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
   movable?: boolean;
@@ -49,7 +51,7 @@ export interface ImagePreviewType
   ) => React.ReactNode;
 }
 
-export type SemanticName = 'actions' | 'mask';
+export type SemanticName = 'root' | 'actions' | 'mask' | 'wrapper';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -69,8 +71,6 @@ export interface ImageProps
   onPreviewClose?: (value: boolean, prevValue: boolean) => void;
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
@@ -96,8 +96,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     wrapperClassName,
     wrapperStyle,
     rootClassName,
-    classNames: imageClassNames,
-    styles,
     ...otherProps
   } = props;
 
@@ -109,6 +107,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
     maskClassName,
+    classNames: imageClassNames,
+    styles,
     movable,
     icons,
     scaleStep,

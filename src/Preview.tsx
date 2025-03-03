@@ -4,7 +4,7 @@ import Dialog from 'rc-dialog';
 import addEventListener from 'rc-util/lib/Dom/addEventListener';
 import KeyCode from 'rc-util/lib/KeyCode';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo } from './Image';
+import type { ImgInfo, SemanticName } from './Image';
 import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
@@ -42,7 +42,7 @@ export type ToolbarRenderInfoType = {
   image: ImgInfo;
 };
 
-export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles' | 'classNames'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
@@ -82,6 +82,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     info: ToolbarRenderInfoType,
   ) => React.ReactNode;
   onChange?: (current, prev) => void;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
 }
 
 interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -222,7 +224,7 @@ const Preview: React.FC<PreviewProps> = props => {
     setEnableTransition(false);
     resetTransform(offset < 0 ? 'prev' : 'next');
     onChange?.(position, current);
-  }
+  };
 
   const onKeyDown = (event: KeyboardEvent) => {
     if (!visible || !showLeftOrRightSwitches) return;
@@ -266,8 +268,9 @@ const Preview: React.FC<PreviewProps> = props => {
       className={`${prefixCls}-img`}
       alt={alt}
       style={{
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${transform.flipX ? '-' : ''
-          }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale3d(${
+          transform.flipX ? '-' : ''
+        }${scale}, ${transform.flipY ? '-' : ''}${scale}, 1) rotate(${rotate}deg)`,
         transitionDuration: (!enableTransition || isTouching) && '0s',
       }}
       fallback={fallback}
@@ -300,8 +303,14 @@ const Preview: React.FC<PreviewProps> = props => {
         visible={visible}
         classNames={{
           wrapper: wrapClassName,
+          mask: imageClassNames?.mask,
         }}
-        rootClassName={rootClassName}
+        styles={{
+          mask: styles?.mask,
+          wrapper: styles?.wrapper,
+        }}
+        style={styles?.root}
+        rootClassName={classnames(rootClassName, imageClassNames?.root)}
         getContainer={getContainer}
         {...restProps}
         afterClose={onAfterClose}
