@@ -3,7 +3,7 @@ import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import cn from 'classnames';
 import * as React from 'react';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState, forwardRef } from 'react';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
@@ -69,11 +69,11 @@ export interface ImageProps
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-interface CompoundedComponent<P> extends React.FC<P> {
+interface CompoundedComponent<P> extends React.ForwardRefExoticComponent<P & React.RefAttributes<HTMLImageElement>> {
   PreviewGroup: typeof PreviewGroup;
 }
 
-const ImageInternal: CompoundedComponent<ImageProps> = props => {
+const ImageInternal = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
   const {
     src: imgSrc,
     alt,
@@ -180,6 +180,22 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     onClick?.(e);
   };
 
+  // ========================== Combined Ref ==========================
+  const handleRef = (img: HTMLImageElement | null) => {
+    if (img) {
+      getImgRef(img);
+      
+      // 处理外部传入的 ref
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(img);
+        } else {
+          ref.current = img;
+        }
+      }
+    }
+  };
+
   // =========================== Render ===========================
   return (
     <>
@@ -206,7 +222,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
             height,
             ...style,
           }}
-          ref={getImgRef}
+          ref={handleRef}
           {...srcAndOnload}
           width={width}
           height={height}
@@ -257,8 +273,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       )}
     </>
   );
-};
-
+}) as CompoundedComponent<ImageProps>;
 ImageInternal.PreviewGroup = PreviewGroup;
 
 if (process.env.NODE_ENV !== 'production') {
