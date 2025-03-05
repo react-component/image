@@ -35,6 +35,8 @@ export interface ImagePreviewType
   getContainer?: GetContainer | false;
   mask?: React.ReactNode;
   maskClassName?: string;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
   icons?: PreviewProps['icons'];
   scaleStep?: number;
   movable?: boolean;
@@ -48,6 +50,8 @@ export interface ImagePreviewType
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 }
+
+export type SemanticName = 'root' | 'actions' | 'mask';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -92,7 +96,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     wrapperClassName,
     wrapperStyle,
     rootClassName,
-
     ...otherProps
   } = props;
 
@@ -104,6 +107,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     getContainer: getPreviewContainer = undefined,
     mask: previewMask,
     maskClassName,
+    classNames: imageClassNames,
+    styles,
     movable,
     icons,
     scaleStep,
@@ -222,9 +227,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {previewMask && canPreview && (
           <div
-            className={cn(`${prefixCls}-mask`, maskClassName)}
+            className={cn(`${prefixCls}-mask`, maskClassName, imageClassNames?.mask)}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
+              ...styles?.mask,
             }}
           >
             {previewMask}
@@ -252,6 +258,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imageRender={imageRender}
           imgCommonProps={imgCommonProps}
           toolbarRender={toolbarRender}
+          classNames={imageClassNames}
+          styles={styles}
           {...dialogProps}
         />
       )}

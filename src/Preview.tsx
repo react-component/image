@@ -3,7 +3,7 @@ import Dialog from '@rc-component/dialog';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo } from './Image';
+import type { ImgInfo, SemanticName } from './Image';
 import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
@@ -41,7 +41,7 @@ export type ToolbarRenderInfoType = {
   image: ImgInfo;
 };
 
-export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
+export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles' | 'classNames'> {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
@@ -81,6 +81,11 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose'> {
     info: ToolbarRenderInfoType,
   ) => React.ReactNode;
   onChange?: (current, prev) => void;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>> & {
+    /** Temporarily used in PurePanel, not used externally by antd */
+    wrapper?: React.CSSProperties;
+  };
 }
 
 interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -133,6 +138,8 @@ const Preview: React.FC<PreviewProps> = props => {
     toolbarRender,
     onTransform,
     onChange,
+    classNames: imageClassNames,
+    styles,
     ...restProps
   } = props;
 
@@ -298,8 +305,14 @@ const Preview: React.FC<PreviewProps> = props => {
         visible={visible}
         classNames={{
           wrapper: wrapClassName,
+          mask: imageClassNames?.mask,
         }}
-        rootClassName={rootClassName}
+        styles={{
+          mask: styles?.mask,
+          wrapper: styles?.wrapper,
+        }}
+        style={styles?.root}
+        rootClassName={classnames(rootClassName, imageClassNames?.root)}
         getContainer={getContainer}
         {...restProps}
         afterClose={onAfterClose}
@@ -339,6 +352,8 @@ const Preview: React.FC<PreviewProps> = props => {
         onReset={onReset}
         zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
         image={image}
+        classNames={imageClassNames}
+        styles={styles}
       />
     </>
   );
