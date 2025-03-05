@@ -51,7 +51,7 @@ export interface ImagePreviewType
   ) => React.ReactNode;
 }
 
-export type SemanticName = 'root' | 'actions' | 'mask' | 'wrapper';
+export type SemanticName = 'root' | 'actions' | 'mask';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {

@@ -83,7 +83,10 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
   ) => React.ReactNode;
   onChange?: (current, prev) => void;
   classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>> & {
+    /** Temporarily used in PurePanel, not used externally by antd */
+    wrapper?: React.CSSProperties;
+  };
 }
 
 interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
