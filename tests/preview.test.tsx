@@ -700,7 +700,7 @@ describe('Preview', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     const { container, asFragment } = render(<Image src={src} rootClassName="custom-className" />);
 
-    expect(container.querySelectorAll('.custom-className')).toHaveLength(1);
+    expect(container.querySelectorAll('.custom-className')).toHaveLength(2);
     expect(asFragment().firstChild).toMatchSnapshot();
   });
 
@@ -1034,12 +1034,10 @@ describe('Preview', () => {
     const customClassnames = {
       mask: 'custom-mask',
       actions: 'custom-actions',
-      root: 'custom-root',
     };
     const customStyles = {
       mask: { color: 'red' },
       actions: { backgroundColor: 'blue' },
-      root: { border: '1px solid green' },
     };
     const { baseElement } = render(
       <Image
@@ -1053,13 +1051,11 @@ describe('Preview', () => {
         }}
       />,
     );
-    const mask = document.querySelector('.rc-image-mask');
+    const mask = document.querySelector('.rc-image-preview-mask');
     const actions = baseElement.querySelector('.rc-image-preview-operations');
     expect(mask).toHaveClass(customClassnames.mask);
     expect(mask).toHaveStyle(customStyles.mask);
     expect(actions).toHaveClass(customClassnames.actions);
     expect(actions).toHaveStyle(customStyles.actions);
-    expect(baseElement.querySelector('.rc-image-preview-root')).toHaveClass(customClassnames.root);
-    expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.root);
   });
 });

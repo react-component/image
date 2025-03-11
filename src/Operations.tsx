@@ -4,7 +4,7 @@ import CSSMotion from '@rc-component/motion';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import * as React from 'react';
 import { useContext } from 'react';
-import type { ImgInfo, SemanticName } from './Image';
+import type { ImgInfo, PreviewSemanticName } from './Image';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
@@ -62,8 +62,8 @@ interface OperationsProps
   ) => React.ReactNode;
   zIndex?: number;
   image?: ImgInfo;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+  classNames?: Partial<Record<PreviewSemanticName, string>>;
+  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
 }
 
 const Operations: React.FC<OperationsProps> = props => {

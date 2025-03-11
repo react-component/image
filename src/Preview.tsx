@@ -3,7 +3,7 @@ import Dialog from '@rc-component/dialog';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo, SemanticName } from './Image';
+import type { ImgInfo, PreviewSemanticName } from './Image';
 import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
@@ -51,6 +51,9 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
   };
   fallback?: string;
   movable?: boolean;
+  /**
+   * @deprecated please use `Image.rootClassName` instead
+   */
   rootClassName?: string;
   icons?: {
     rotateLeft?: React.ReactNode;
@@ -81,8 +84,8 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
     info: ToolbarRenderInfoType,
   ) => React.ReactNode;
   onChange?: (current, prev) => void;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>> & {
+  classNames?: Partial<Record<PreviewSemanticName, string>>;
+  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>> & {
     /** Temporarily used in PurePanel, not used externally by antd */
     wrapper?: React.CSSProperties;
   };

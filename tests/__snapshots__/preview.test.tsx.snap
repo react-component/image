@@ -2,12 +2,16 @@
 
 exports[`Preview add rootClassName should be correct 1`] = `
 <div
-  class="rc-image custom-className"
+  class="custom-className"
 >
-  <img
-    class="rc-image-img"
-    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-  />
+  <div
+    class="rc-image custom-className"
+  >
+    <img
+      class="rc-image-img"
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    />
+  </div>
 </div>
 `;
 
@@ -15,12 +19,16 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
 [
   <div>
     <div
-      class="rc-image custom-className"
+      class="custom-className"
     >
-      <img
-        class="rc-image-img"
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-      />
+      <div
+        class="rc-image custom-className"
+      >
+        <img
+          class="rc-image-img"
+          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        />
+      </div>
     </div>
   </div>,
   <div>

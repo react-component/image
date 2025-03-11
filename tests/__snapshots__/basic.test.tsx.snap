@@ -1,14 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Basic snapshot 1`] = `
-<div
-  class="rc-image"
-  style="width: 200px;"
->
-  <img
-    class="rc-image-img"
-    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-    width="200"
-  />
+<div>
+  <div
+    class="rc-image"
+    style="width: 200px;"
+  >
+    <img
+      class="rc-image-img"
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+      width="200"
+    />
+  </div>
 </div>
 `;
