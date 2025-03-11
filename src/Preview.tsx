@@ -314,8 +314,7 @@ const Preview: React.FC<PreviewProps> = props => {
           mask: styles?.mask,
           wrapper: styles?.wrapper,
         }}
-        style={styles?.root}
-        rootClassName={classnames(rootClassName, imageClassNames?.root)}
+        rootClassName={classnames(rootClassName)}
         getContainer={getContainer}
         {...restProps}
         afterClose={onAfterClose}
