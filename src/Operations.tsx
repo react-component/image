@@ -220,6 +220,7 @@ const Operations: React.FC<OperationsProps> = props => {
           <div
             className={classnames(`${prefixCls}-operations-wrapper`, className, rootClassName)}
             style={{
+              ...styles?.root,
               ...style,
               zIndex,
             }}

@@ -311,6 +311,7 @@ const Preview: React.FC<PreviewProps> = props => {
           mask: styles?.mask,
           wrapper: styles?.wrapper,
         }}
+        rootStyle={styles?.root}
         rootClassName={rootClassName}
         getContainer={getContainer}
         {...restProps}
