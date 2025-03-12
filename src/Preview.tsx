@@ -51,9 +51,6 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
   };
   fallback?: string;
   movable?: boolean;
-  /**
-   * @deprecated please use `Image.rootClassName` instead
-   */
   rootClassName?: string;
   icons?: {
     rotateLeft?: React.ReactNode;
@@ -314,7 +311,7 @@ const Preview: React.FC<PreviewProps> = props => {
           mask: styles?.mask,
           wrapper: styles?.wrapper,
         }}
-        rootClassName={classnames(rootClassName)}
+        rootClassName={rootClassName}
         getContainer={getContainer}
         {...restProps}
         afterClose={onAfterClose}
