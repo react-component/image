@@ -1,5 +1,5 @@
 import type { DialogProps as IDialogPropTypes } from '@rc-component/dialog';
-import Dialog from '@rc-component/dialog';
+import Portal from '@rc-component/portal';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -131,7 +131,6 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     minScale = 1,
     maxScale = 50,
-    transitionName = 'zoom',
     maskTransitionName = 'fade',
     imageRender,
     imgCommonProps,
@@ -184,9 +183,11 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [enableTransition]);
 
-  const onAfterClose = () => {
-    resetTransform('close');
-  };
+  useEffect(() => {
+    if (!visible) {
+      resetTransform('close');
+    }
+  }, [visible]);
 
   const onZoomIn = () => {
     dispatchZoomChange(BASE_SCALE_RATIO + scaleStep, 'zoomIn');
@@ -228,15 +229,29 @@ const Preview: React.FC<PreviewProps> = props => {
     onChange?.(position, current);
   };
 
-  const onKeyDown = (event: KeyboardEvent) => {
-    if (!visible || !showLeftOrRightSwitches) return;
+  useEffect(() => {
+    const onGlobalKeyDown = (event: KeyboardEvent) => {
+      if (!visible) return;
 
-    if (event.keyCode === KeyCode.LEFT) {
-      onActive(-1);
-    } else if (event.keyCode === KeyCode.RIGHT) {
-      onActive(1);
-    }
-  };
+      if (event.keyCode === KeyCode.ESC) {
+        onClose?.();
+      }
+
+      if (showLeftOrRightSwitches) {
+        if (event.keyCode === KeyCode.LEFT) {
+          onActive(-1);
+        } else if (event.keyCode === KeyCode.RIGHT) {
+          onActive(1);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onGlobalKeyDown, false);
+
+    return () => {
+      window.removeEventListener('keydown', onGlobalKeyDown);
+    };
+  }, [visible, showLeftOrRightSwitches, current]);
 
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (visible) {
@@ -252,14 +267,6 @@ const Preview: React.FC<PreviewProps> = props => {
       }
     }
   };
-
-  useEffect(() => {
-    window.addEventListener('keydown', onKeyDown, false);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown);
-    };
-  }, [visible, showLeftOrRightSwitches, current]);
 
   const imgNode = (
     <PreviewImage
@@ -295,34 +302,35 @@ const Preview: React.FC<PreviewProps> = props => {
 
   return (
     <>
-      <Dialog
-        transitionName={transitionName}
-        maskTransitionName={maskTransitionName}
-        closable={false}
-        keyboard
-        prefixCls={prefixCls}
-        onClose={onClose}
-        visible={visible}
-        classNames={{
-          wrapper: wrapClassName,
-          mask: imageClassNames?.mask,
-        }}
-        styles={{
-          mask: styles?.mask,
-          wrapper: styles?.wrapper,
-        }}
-        style={styles?.root}
-        rootClassName={classnames(rootClassName, imageClassNames?.root)}
-        getContainer={getContainer}
-        {...restProps}
-        afterClose={onAfterClose}
-      >
-        <div className={`${prefixCls}-img-wrapper`}>
-          {imageRender
-            ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
-            : imgNode}
-        </div>
-      </Dialog>
+      {visible && (
+        <Portal open getContainer={getContainer ?? document.body}>
+          <div
+            className={classnames(prefixCls, rootClassName, imageClassNames?.root)}
+            style={{
+              ...styles?.root,
+              zIndex: restProps.zIndex,
+            }}
+          >
+            <div 
+              className={classnames(`${prefixCls}-mask`, imageClassNames?.mask)} 
+              style={styles?.mask}
+              onClick={onClose}
+            />
+            <div 
+              className={classnames(`${prefixCls}-wrap`, wrapClassName)}
+              style={styles?.wrapper}
+            >
+              <div className={`${prefixCls}-body`}>
+                <div className={`${prefixCls}-img-wrapper`}>
+                  {imageRender
+                    ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
+                    : imgNode}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      )}
       <Operations
         visible={visible}
         transform={transform}
