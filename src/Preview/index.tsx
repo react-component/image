@@ -4,14 +4,44 @@ import Portal from '@rc-component/portal';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo, SemanticName } from './Image';
-import { PreviewGroupContext } from './context';
-import type { TransformAction, TransformType } from './hooks/useImageTransform';
-import useImageTransform from './hooks/useImageTransform';
-import useMouseEvent from './hooks/useMouseEvent';
-import useStatus from './hooks/useStatus';
-import useTouchEvent from './hooks/useTouchEvent';
-import { BASE_SCALE_RATIO } from './previewConfig';
+import type { ImgInfo, SemanticName } from '../Image';
+import { PreviewGroupContext } from '../context';
+import type { TransformAction, TransformType } from '../hooks/useImageTransform';
+import useImageTransform from '../hooks/useImageTransform';
+import useMouseEvent from '../hooks/useMouseEvent';
+import useStatus from '../hooks/useStatus';
+import useTouchEvent from '../hooks/useTouchEvent';
+import { BASE_SCALE_RATIO } from '../previewConfig';
+import Footer from './Footer';
+import PrevNext from './PrevNext';
+
+export interface OperationIcons {
+  rotateLeft?: React.ReactNode;
+  rotateRight?: React.ReactNode;
+  zoomIn?: React.ReactNode;
+  zoomOut?: React.ReactNode;
+  close?: React.ReactNode;
+  prev?: React.ReactNode;
+  next?: React.ReactNode;
+  /** @deprecated Please use `prev` instead */
+  left?: React.ReactNode;
+  /** @deprecated Please use `next` instead */
+  right?: React.ReactNode;
+  flipX?: React.ReactNode;
+  flipY?: React.ReactNode;
+}
+
+export interface Actions {
+  onActive: (offset: number) => void;
+  onFlipY: () => void;
+  onFlipX: () => void;
+  onRotateLeft: () => void;
+  onRotateRight: () => void;
+  onZoomOut: () => void;
+  onZoomIn: () => void;
+  onClose: () => void;
+  onReset: () => void;
+}
 
 export type ToolbarRenderInfoType = {
   icons: {
@@ -24,17 +54,7 @@ export type ToolbarRenderInfoType = {
     zoomOutIcon: React.ReactNode;
     zoomInIcon: React.ReactNode;
   };
-  actions: {
-    onActive?: (offset: number) => void;
-    onFlipY: () => void;
-    onFlipX: () => void;
-    onRotateLeft: () => void;
-    onRotateRight: () => void;
-    onZoomOut: () => void;
-    onZoomIn: () => void;
-    onClose: () => void;
-    onReset: () => void;
-  };
+  actions: Actions;
   transform: TransformType;
   current: number;
   total: number;
@@ -52,17 +72,7 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
   fallback?: string;
   movable?: boolean;
   rootClassName?: string;
-  icons?: {
-    rotateLeft?: React.ReactNode;
-    rotateRight?: React.ReactNode;
-    zoomIn?: React.ReactNode;
-    zoomOut?: React.ReactNode;
-    close?: React.ReactNode;
-    left?: React.ReactNode;
-    right?: React.ReactNode;
-    flipX?: React.ReactNode;
-    flipY?: React.ReactNode;
-  };
+  icons?: OperationIcons;
   current?: number;
   count?: number;
   closeIcon?: React.ReactNode;
@@ -76,11 +86,11 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
   ) => React.ReactNode;
   onClose?: () => void;
   onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
-  toolbarRender?: (
+  actionsRender?: (
     originalNode: React.ReactElement,
     info: ToolbarRenderInfoType,
   ) => React.ReactNode;
-  onChange?: (current, prev) => void;
+  onChange?: (current: number, prev: number) => void;
   classNames?: Partial<Record<SemanticName, string>>;
   styles?: Partial<Record<SemanticName, React.CSSProperties>> & {
     /** Temporarily used in PurePanel, not used externally by antd */
@@ -135,7 +145,7 @@ const Preview: React.FC<PreviewProps> = props => {
     maskTransitionName = 'fade',
     imageRender,
     imgCommonProps,
-    toolbarRender,
+    actionsRender,
     onTransform,
     onChange,
     classNames: imageClassNames,
@@ -328,6 +338,7 @@ const Preview: React.FC<PreviewProps> = props => {
                     className={classnames(`${prefixCls}-body`, bodyMotionClassName)}
                     style={bodyMotionStyle}
                   >
+                    {/* Preview Image */}
                     {imageRender
                       ? imageRender(imgNode, {
                           transform,
@@ -335,6 +346,17 @@ const Preview: React.FC<PreviewProps> = props => {
                           ...(groupContext ? { current } : {}),
                         })
                       : imgNode}
+
+                    {/* Switch prev or next */}
+                    {showLeftOrRightSwitches && (
+                      <PrevNext
+                        prefixCls={prefixCls}
+                        current={current}
+                        count={count}
+                        icons={icons}
+                        onActive={onActive}
+                      />
+                    )}
                   </div>
                 );
 
@@ -363,6 +385,16 @@ const Preview: React.FC<PreviewProps> = props => {
                 // );
               }}
             </CSSMotion>
+            <Footer
+              prefixCls={prefixCls}
+              showProgress={showOperationsProgress}
+              countRender={countRender}
+              actionsRender={actionsRender}
+              current={current}
+              count={count}
+              showSwitch={showLeftOrRightSwitches}
+              onActive={onActive}
+            />
           </div>
         </Portal>
       )}
