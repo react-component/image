@@ -1,10 +1,10 @@
 import type { DialogProps as IDialogPropTypes } from '@rc-component/dialog';
+import CSSMotion from '@rc-component/motion';
 import Portal from '@rc-component/portal';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { ImgInfo, SemanticName } from './Image';
-import Operations from './Operations';
 import { PreviewGroupContext } from './context';
 import type { TransformAction, TransformType } from './hooks/useImageTransform';
 import useImageTransform from './hooks/useImageTransform';
@@ -131,6 +131,7 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     minScale = 1,
     maxScale = 50,
+    transitionName = 'zoom',
     maskTransitionName = 'fade',
     imageRender,
     imgCommonProps,
@@ -304,34 +305,68 @@ const Preview: React.FC<PreviewProps> = props => {
     <>
       {visible && (
         <Portal open getContainer={getContainer ?? document.body}>
-          <div
-            className={classnames(prefixCls, rootClassName, imageClassNames?.root)}
-            style={{
-              ...styles?.root,
-              zIndex: restProps.zIndex,
-            }}
-          >
-            <div 
-              className={classnames(`${prefixCls}-mask`, imageClassNames?.mask)} 
-              style={styles?.mask}
-              onClick={onClose}
-            />
-            <div 
-              className={classnames(`${prefixCls}-wrap`, wrapClassName)}
-              style={styles?.wrapper}
-            >
-              <div className={`${prefixCls}-body`}>
-                <div className={`${prefixCls}-img-wrapper`}>
-                  {imageRender
-                    ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
-                    : imgNode}
-                </div>
-              </div>
-            </div>
+          <div className={classnames(prefixCls, rootClassName, imageClassNames?.root)}>
+            <CSSMotion visible={visible} motionName={maskTransitionName}>
+              {({ className: maskMotionClassName, style: maskMotionStyle }) => {
+                return (
+                  <div
+                    className={classnames(
+                      `${prefixCls}-mask`,
+                      maskMotionClassName,
+                      imageClassNames?.mask,
+                    )}
+                    style={{ ...maskMotionStyle, ...styles?.mask }}
+                    onClick={onClose}
+                  />
+                );
+              }}
+            </CSSMotion>
+            <CSSMotion visible={visible} motionName={transitionName}>
+              {({ className: bodyMotionClassName, style: bodyMotionStyle }) => {
+                return (
+                  <div
+                    className={classnames(`${prefixCls}-body`, bodyMotionClassName)}
+                    style={bodyMotionStyle}
+                  >
+                    {imageRender
+                      ? imageRender(imgNode, {
+                          transform,
+                          image,
+                          ...(groupContext ? { current } : {}),
+                        })
+                      : imgNode}
+                  </div>
+                );
+
+                // return (
+                //   <div
+                //     className={classnames(prefixCls, prefixMotionClassName)}
+                //     style={{ ...styles?.root, zIndex: restProps.zIndex, ...prefixMotionStyle }}
+                //   >
+                //     <div
+                //       className={classnames(`${prefixCls}-wrap`, wrapClassName)}
+                //       style={styles?.wrapper}
+                //     >
+                //       <div className={`${prefixCls}-body`}>
+                //         <div className={`${prefixCls}-img-wrapper`}>
+                //           {imageRender
+                //             ? imageRender(imgNode, {
+                //                 transform,
+                //                 image,
+                //                 ...(groupContext ? { current } : {}),
+                //               })
+                //             : imgNode}
+                //         </div>
+                //       </div>
+                //     </div>
+                //   </div>
+                // );
+              }}
+            </CSSMotion>
           </div>
         </Portal>
       )}
-      <Operations
+      {/* <Operations
         visible={visible}
         transform={transform}
         maskTransitionName={maskTransitionName}
@@ -362,7 +397,7 @@ const Preview: React.FC<PreviewProps> = props => {
         image={image}
         classNames={imageClassNames}
         styles={styles}
-      />
+      /> */}
     </>
   );
 };

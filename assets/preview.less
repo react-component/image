@@ -1,0 +1,35 @@
+@import (reference) 'index.less';
+
+.zoom {
+  transition: opacity 0.3s;
+}
+
+.@{prefixCls}-preview {
+  position: fixed;
+  overflow: hidden;
+  inset: 0;
+
+  &-mask {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.3);
+    inset: 0;
+  }
+
+  &-body {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    inset: 0;
+
+    > * {
+      pointer-events: auto;
+    }
+  }
+
+  &-img {
+    max-width: 100%;
+    max-height: 70%;
+  }
+}
