@@ -1,6 +1,6 @@
-import type { DialogProps as IDialogPropTypes } from '@rc-component/dialog';
 import CSSMotion from '@rc-component/motion';
-import Portal from '@rc-component/portal';
+import Portal, { type PortalProps } from '@rc-component/portal';
+import { useEvent } from '@rc-component/util';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -12,6 +12,7 @@ import useMouseEvent from '../hooks/useMouseEvent';
 import useStatus from '../hooks/useStatus';
 import useTouchEvent from '../hooks/useTouchEvent';
 import { BASE_SCALE_RATIO } from '../previewConfig';
+import CloseBtn from './CloseBtn';
 import Footer from './Footer';
 import PrevNext from './PrevNext';
 
@@ -61,7 +62,7 @@ export type ToolbarRenderInfoType = {
   image: ImgInfo;
 };
 
-export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles' | 'classNames'> {
+export interface PreviewProps {
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   src?: string;
   alt?: string;
@@ -96,6 +97,20 @@ export interface PreviewProps extends Omit<IDialogPropTypes, 'onClose' | 'styles
     /** Temporarily used in PurePanel, not used externally by antd */
     wrapper?: React.CSSProperties;
   };
+
+  // Misc
+  prefixCls: string;
+
+  // Portal
+  visible: boolean;
+  getContainer?: PortalProps['getContainer'];
+
+  // Motion
+  motionName: string;
+
+  // Image
+  width?: string | number;
+  height?: string | number;
 }
 
 interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -141,14 +156,13 @@ const Preview: React.FC<PreviewProps> = props => {
     scaleStep = 0.5,
     minScale = 1,
     maxScale = 50,
-    transitionName = 'zoom',
-    maskTransitionName = 'fade',
+    motionName = 'fade',
     imageRender,
     imgCommonProps,
     actionsRender,
     onTransform,
     onChange,
-    classNames: imageClassNames,
+    classNames: classNames,
     styles,
     ...restProps
   } = props;
@@ -200,70 +214,6 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [visible]);
 
-  const onZoomIn = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO + scaleStep, 'zoomIn');
-  };
-
-  const onZoomOut = () => {
-    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep), 'zoomOut');
-  };
-
-  const onRotateRight = () => {
-    updateTransform({ rotate: rotate + 90 }, 'rotateRight');
-  };
-
-  const onRotateLeft = () => {
-    updateTransform({ rotate: rotate - 90 }, 'rotateLeft');
-  };
-
-  const onFlipX = () => {
-    updateTransform({ flipX: !transform.flipX }, 'flipX');
-  };
-
-  const onFlipY = () => {
-    updateTransform({ flipY: !transform.flipY }, 'flipY');
-  };
-
-  const onReset = () => {
-    resetTransform('reset');
-  };
-
-  const onActive = (offset: number) => {
-    const position = current + offset;
-
-    if (!Number.isInteger(position) || position < 0 || position > count - 1) {
-      return;
-    }
-
-    setEnableTransition(false);
-    resetTransform(offset < 0 ? 'prev' : 'next');
-    onChange?.(position, current);
-  };
-
-  useEffect(() => {
-    const onGlobalKeyDown = (event: KeyboardEvent) => {
-      if (!visible) return;
-
-      if (event.keyCode === KeyCode.ESC) {
-        onClose?.();
-      }
-
-      if (showLeftOrRightSwitches) {
-        if (event.keyCode === KeyCode.LEFT) {
-          onActive(-1);
-        } else if (event.keyCode === KeyCode.RIGHT) {
-          onActive(1);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', onGlobalKeyDown, false);
-
-    return () => {
-      window.removeEventListener('keydown', onGlobalKeyDown);
-    };
-  }, [visible, showLeftOrRightSwitches, current]);
-
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (visible) {
       if (scale !== 1) {
@@ -311,33 +261,105 @@ const Preview: React.FC<PreviewProps> = props => {
     ...imageInfo,
   };
 
+  // ======================== Transform =========================
+  // >>>>> Actions
+  const onZoomIn = () => {
+    dispatchZoomChange(BASE_SCALE_RATIO + scaleStep, 'zoomIn');
+  };
+
+  const onZoomOut = () => {
+    dispatchZoomChange(BASE_SCALE_RATIO / (BASE_SCALE_RATIO + scaleStep), 'zoomOut');
+  };
+
+  const onRotateRight = () => {
+    updateTransform({ rotate: rotate + 90 }, 'rotateRight');
+  };
+
+  const onRotateLeft = () => {
+    updateTransform({ rotate: rotate - 90 }, 'rotateLeft');
+  };
+
+  const onFlipX = () => {
+    updateTransform({ flipX: !transform.flipX }, 'flipX');
+  };
+
+  const onFlipY = () => {
+    updateTransform({ flipY: !transform.flipY }, 'flipY');
+  };
+
+  const onReset = () => {
+    resetTransform('reset');
+  };
+
+  const onActive = (offset: number) => {
+    const position = current + offset;
+
+    if (!Number.isInteger(position) || position < 0 || position > count - 1) {
+      return;
+    }
+
+    setEnableTransition(false);
+    resetTransform(offset < 0 ? 'prev' : 'next');
+    onChange?.(position, current);
+  };
+
+  // >>>>> Effect: Keyboard
+  const onKeyDown = useEvent((event: KeyboardEvent) => {
+    if (visible) {
+      const { keyCode } = event;
+
+      if (keyCode === KeyCode.ESC) {
+        onClose?.();
+      }
+
+      if (showLeftOrRightSwitches) {
+        if (keyCode === KeyCode.LEFT) {
+          onActive(-1);
+        } else if (keyCode === KeyCode.RIGHT) {
+          onActive(1);
+        }
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (visible) {
+      window.addEventListener('keydown', onKeyDown);
+
+      return () => {
+        window.removeEventListener('keydown', onKeyDown);
+      };
+    }
+  }, [visible]);
+
+  // ========================== Render ==========================
   return (
     <>
       {visible && (
         <Portal open getContainer={getContainer ?? document.body}>
-          <div className={classnames(prefixCls, rootClassName, imageClassNames?.root)}>
-            <CSSMotion visible={visible} motionName={maskTransitionName}>
-              {({ className: maskMotionClassName, style: maskMotionStyle }) => {
-                return (
+          <CSSMotion motionName={motionName} visible={visible} motionAppear motionEnter motionLeave>
+            {({ className: motionClassName, style: motionStyle }) => {
+              return (
+                <div
+                  className={classnames(
+                    prefixCls,
+                    rootClassName,
+                    classNames?.root,
+                    motionClassName,
+                  )}
+                  style={{
+                    ...motionStyle,
+                  }}
+                >
+                  {/* Mask */}
                   <div
-                    className={classnames(
-                      `${prefixCls}-mask`,
-                      maskMotionClassName,
-                      imageClassNames?.mask,
-                    )}
-                    style={{ ...maskMotionStyle, ...styles?.mask }}
+                    className={classnames(`${prefixCls}-mask`, classNames?.mask)}
+                    style={styles?.mask}
                     onClick={onClose}
                   />
-                );
-              }}
-            </CSSMotion>
-            <CSSMotion visible={visible} motionName={transitionName}>
-              {({ className: bodyMotionClassName, style: bodyMotionStyle }) => {
-                return (
-                  <div
-                    className={classnames(`${prefixCls}-body`, bodyMotionClassName)}
-                    style={bodyMotionStyle}
-                  >
+
+                  {/* Body */}
+                  <div className={`${prefixCls}-body`}>
                     {/* Preview Image */}
                     {imageRender
                       ? imageRender(imgNode, {
@@ -346,107 +368,60 @@ const Preview: React.FC<PreviewProps> = props => {
                           ...(groupContext ? { current } : {}),
                         })
                       : imgNode}
-
-                    {/* Switch prev or next */}
-                    {showLeftOrRightSwitches && (
-                      <PrevNext
-                        prefixCls={prefixCls}
-                        current={current}
-                        count={count}
-                        icons={icons}
-                        onActive={onActive}
-                      />
-                    )}
                   </div>
-                );
 
-                // return (
-                //   <div
-                //     className={classnames(prefixCls, prefixMotionClassName)}
-                //     style={{ ...styles?.root, zIndex: restProps.zIndex, ...prefixMotionStyle }}
-                //   >
-                //     <div
-                //       className={classnames(`${prefixCls}-wrap`, wrapClassName)}
-                //       style={styles?.wrapper}
-                //     >
-                //       <div className={`${prefixCls}-body`}>
-                //         <div className={`${prefixCls}-img-wrapper`}>
-                //           {imageRender
-                //             ? imageRender(imgNode, {
-                //                 transform,
-                //                 image,
-                //                 ...(groupContext ? { current } : {}),
-                //               })
-                //             : imgNode}
-                //         </div>
-                //       </div>
-                //     </div>
-                //   </div>
-                // );
-              }}
-            </CSSMotion>
-            <Footer
-              prefixCls={prefixCls}
-              showProgress={showOperationsProgress}
-              current={current}
-              count={count}
-              showSwitch={showLeftOrRightSwitches}
-              // Render
-              image={image}
-              transform={transform}
-              icons={icons}
-              countRender={countRender}
-              actionsRender={actionsRender}
-              // Scale
-              scale={scale}
-              minScale={minScale}
-              maxScale={maxScale}
-              // Actions
-              onActive={onActive}
-              onFlipY={onFlipY}
-              onFlipX={onFlipX}
-              onRotateLeft={onRotateLeft}
-              onRotateRight={onRotateRight}
-              onZoomOut={onZoomOut}
-              onZoomIn={onZoomIn}
-              onClose={onClose}
-              onReset={onReset}
-            />
-          </div>
+                  {/* Close Button */}
+                  <CloseBtn
+                    prefixCls={prefixCls}
+                    icon={closeIcon === false ? closeIcon : closeIcon || icons.close}
+                    onClick={onClose}
+                  />
+
+                  {/* Switch prev or next */}
+                  {showLeftOrRightSwitches && (
+                    <PrevNext
+                      prefixCls={prefixCls}
+                      current={current}
+                      count={count}
+                      icons={icons}
+                      onActive={onActive}
+                    />
+                  )}
+
+                  {/* Footer */}
+                  <Footer
+                    prefixCls={prefixCls}
+                    showProgress={showOperationsProgress}
+                    current={current}
+                    count={count}
+                    showSwitch={showLeftOrRightSwitches}
+                    // Render
+                    image={image}
+                    transform={transform}
+                    icons={icons}
+                    countRender={countRender}
+                    actionsRender={actionsRender}
+                    // Scale
+                    scale={scale}
+                    minScale={minScale}
+                    maxScale={maxScale}
+                    // Actions
+                    onActive={onActive}
+                    onFlipY={onFlipY}
+                    onFlipX={onFlipX}
+                    onRotateLeft={onRotateLeft}
+                    onRotateRight={onRotateRight}
+                    onZoomOut={onZoomOut}
+                    onZoomIn={onZoomIn}
+                    onClose={onClose}
+                    onReset={onReset}
+                  />
+                </div>
+              );
+            }}
+          </CSSMotion>
         </Portal>
       )}
-      {/* <Operations
-        visible={visible}
-        transform={transform}
-        maskTransitionName={maskTransitionName}
-        closeIcon={closeIcon}
-        getContainer={getContainer}
-        prefixCls={prefixCls}
-        rootClassName={rootClassName}
-        icons={icons}
-        countRender={countRender}
-        showSwitch={showLeftOrRightSwitches}
-        showProgress={showOperationsProgress}
-        current={current}
-        count={count}
-        scale={scale}
-        minScale={minScale}
-        maxScale={maxScale}
-        toolbarRender={toolbarRender}
-        onActive={onActive}
-        onZoomIn={onZoomIn}
-        onZoomOut={onZoomOut}
-        onRotateRight={onRotateRight}
-        onRotateLeft={onRotateLeft}
-        onFlipX={onFlipX}
-        onFlipY={onFlipY}
-        onClose={onClose}
-        onReset={onReset}
-        zIndex={restProps.zIndex !== undefined ? restProps.zIndex + 1 : undefined}
-        image={image}
-        classNames={imageClassNames}
-        styles={styles}
-      /> */}
     </>
   );
 };
