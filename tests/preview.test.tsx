@@ -700,7 +700,7 @@ describe('Preview', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     const { container, asFragment } = render(<Image src={src} rootClassName="custom-className" />);
 
-    expect(container.querySelectorAll('.custom-className')).toHaveLength(2);
+    expect(container.querySelectorAll('.custom-className')).toHaveLength(1);
     expect(asFragment().firstChild).toMatchSnapshot();
   });
 

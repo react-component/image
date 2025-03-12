@@ -14,6 +14,7 @@ import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
 import { getOffset } from './util';
+import classNames from 'classnames';
 
 export interface ImgInfo {
   url: string;
@@ -192,14 +193,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   // =========================== Render ===========================
   return (
-    <div className={rootClassName} style={imageStyles?.root}>
+    <>
       <div
         {...otherProps}
-        className={wrapperClass}
+        className={classNames(wrapperClass, rootClassName)}
         onClick={canPreview ? onPreview : onClick}
         style={{
           width,
           height,
+          ...imageStyles?.root,
           ...wrapperStyle,
         }}
       >
@@ -259,7 +261,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           scaleStep={scaleStep}
           minScale={minScale}
           maxScale={maxScale}
-          rootClassName={rootClassName}
+          rootClassName={classNames(rootClassName, imageClassNames?.root)}
           imageRender={imageRender}
           imgCommonProps={imgCommonProps}
           toolbarRender={toolbarRender}
@@ -268,7 +270,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           {...dialogProps}
         />
       )}
-    </div>
+    </>
   );
 };
 
