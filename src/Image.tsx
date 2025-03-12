@@ -196,7 +196,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={classNames(wrapperClass, rootClassName)}
+        className={classNames(wrapperClass, imageClassNames?.root)}
         onClick={canPreview ? onPreview : onClick}
         style={{
           width,

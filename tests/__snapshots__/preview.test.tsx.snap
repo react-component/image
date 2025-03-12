@@ -2,7 +2,7 @@
 
 exports[`Preview add rootClassName should be correct 1`] = `
 <div
-  class="rc-image custom-className custom-className"
+  class="rc-image custom-className"
 >
   <img
     class="rc-image-img"
@@ -15,7 +15,7 @@ exports[`Preview add rootClassName should be correct when open preview 1`] = `
 [
   <div>
     <div
-      class="rc-image custom-className custom-className"
+      class="rc-image custom-className"
     >
       <img
         class="rc-image-img"
