@@ -1,16 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import type { Actions, PreviewProps } from '.';
-
-export interface FooterProps extends Actions {
-  prefixCls: string;
-  showProgress: boolean;
-  countRender?: PreviewProps['countRender'];
-  actionsRender?: PreviewProps['actionsRender'];
-  current: number;
-  count: number;
-  showSwitch: boolean;
-}
+import type { ImgInfo } from '../Image';
+import type { TransformType } from '../hooks/useImageTransform';
 
 type OperationType =
   | 'prev'
@@ -29,8 +21,56 @@ interface RenderOperationParams {
   onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
+export interface FooterProps extends Actions {
+  prefixCls: string;
+  showProgress: boolean;
+  countRender?: PreviewProps['countRender'];
+  actionsRender?: PreviewProps['actionsRender'];
+  current: number;
+  count: number;
+  showSwitch: boolean;
+  icons: PreviewProps['icons'];
+  scale: number;
+  minScale: number;
+  maxScale: number;
+  image: ImgInfo;
+  transform: TransformType;
+}
+
 export default function Footer(props: FooterProps) {
-  const { prefixCls, showProgress, countRender, current, count, showSwitch, onActive } = props;
+  // 修改解构，添加缺失的属性，并提供默认值
+  const {
+    prefixCls,
+    showProgress,
+    current,
+    count,
+    showSwitch,
+
+    // render
+    icons,
+    image,
+    transform,
+    countRender,
+    actionsRender,
+
+    // Scale
+    scale,
+    minScale,
+    maxScale,
+
+    // Actions
+    onActive,
+    onFlipY,
+    onFlipX,
+    onRotateLeft,
+    onRotateRight,
+    onZoomOut,
+    onZoomIn,
+    onClose,
+    onReset,
+  } = props;
+
+  const { left, right, prev, next, flipY, flipX, rotateLeft, rotateRight, zoomOut, zoomIn } = icons;
 
   // ========================== Render ==========================
   // >>>>> Progress
@@ -41,7 +81,7 @@ export default function Footer(props: FooterProps) {
   );
 
   // >>>>> Actions
-  const actionCls = `${prefixCls}-actions-operation`;
+  const actionCls = `${prefixCls}-actions-action`;
 
   const renderOperation = ({ type, disabled, onClick, icon }: RenderOperationParams) => {
     return (
@@ -59,8 +99,8 @@ export default function Footer(props: FooterProps) {
 
   const switchPrevNode = showSwitch
     ? renderOperation({
-        icon: left,
-        onClick: e => handleActive(e, -1),
+        icon: prev ?? left,
+        onClick: () => onActive(-1),
         type: 'prev',
         disabled: current === 0,
       })
@@ -68,8 +108,8 @@ export default function Footer(props: FooterProps) {
 
   const switchNextNode = showSwitch
     ? renderOperation({
-        icon: right,
-        onClick: e => handleActive(e, 1),
+        icon: next ?? right,
+        onClick: () => onActive(1),
         type: 'next',
         disabled: current === count - 1,
       })
@@ -114,10 +154,7 @@ export default function Footer(props: FooterProps) {
   });
 
   const actionsNode = (
-    <div
-      className={classNames(`${prefixCls}-operations`, imageClassNames?.actions)}
-      style={styles?.actions}
-    >
+    <div className={`${prefixCls}-actions`}>
       {flipYNode}
       {flipXNode}
       {rotateLeftNode}
@@ -127,10 +164,39 @@ export default function Footer(props: FooterProps) {
     </div>
   );
 
+  // >>>>> Render
   return (
     <div className={`${prefixCls}-footer`}>
       {progressNode}
-      {actionsNode}
+      {actionsRender
+        ? actionsRender(actionsNode, {
+            icons: {
+              prevIcon: switchPrevNode,
+              nextIcon: switchNextNode,
+              flipYIcon: flipYNode,
+              flipXIcon: flipXNode,
+              rotateLeftIcon: rotateLeftNode,
+              rotateRightIcon: rotateRightNode,
+              zoomOutIcon: zoomOutNode,
+              zoomInIcon: zoomInNode,
+            },
+            actions: {
+              onActive,
+              onFlipY,
+              onFlipX,
+              onRotateLeft,
+              onRotateRight,
+              onZoomOut,
+              onZoomIn,
+              onReset,
+              onClose,
+            },
+            transform,
+            current,
+            total: count,
+            image,
+          })
+        : actionsNode}
     </div>
   );
 }

@@ -388,12 +388,29 @@ const Preview: React.FC<PreviewProps> = props => {
             <Footer
               prefixCls={prefixCls}
               showProgress={showOperationsProgress}
-              countRender={countRender}
-              actionsRender={actionsRender}
               current={current}
               count={count}
               showSwitch={showLeftOrRightSwitches}
+              // Render
+              image={image}
+              transform={transform}
+              icons={icons}
+              countRender={countRender}
+              actionsRender={actionsRender}
+              // Scale
+              scale={scale}
+              minScale={minScale}
+              maxScale={maxScale}
+              // Actions
               onActive={onActive}
+              onFlipY={onFlipY}
+              onFlipX={onFlipX}
+              onRotateLeft={onRotateLeft}
+              onRotateRight={onRotateRight}
+              onZoomOut={onZoomOut}
+              onZoomIn={onZoomIn}
+              onClose={onClose}
+              onReset={onReset}
             />
           </div>
         </Portal>
