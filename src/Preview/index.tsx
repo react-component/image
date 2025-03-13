@@ -96,7 +96,7 @@ export interface InternalPreviewConfig {
   countRender?: (current: number, total: number) => React.ReactNode;
   imageRender?: (
     originalNode: React.ReactElement,
-    info: { transform: TransformType; current?: number; image?: ImgInfo },
+    info: { transform: TransformType; current?: number; image: ImgInfo },
   ) => React.ReactNode;
   actionsRender?: (
     originalNode: React.ReactElement,

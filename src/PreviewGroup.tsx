@@ -1,33 +1,24 @@
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
-import type { ImagePreviewType, ImgInfo } from './Image';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
+import type { ImgInfo } from './Image';
+import type { InternalPreviewConfig, PreviewProps } from './Preview';
 import Preview from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImageElementProps, OnGroupPreview } from './interface';
 
-export interface PreviewGroupPreview
-  extends Omit<
-    ImagePreviewType,
-    'mask' | 'maskClassName' | 'onVisibleChange' | 'actionsRender' | 'imageRender'
-  > {
-  /**
-   * If Preview the show img index
-   * @default 0
-   */
+export interface GroupPreviewConfig extends InternalPreviewConfig {
   current?: number;
-  countRender?: (current: number, total: number) => React.ReactNode;
-  actionsRender?: (
-    originalNode: React.ReactElement,
-    info: ToolbarRenderInfoType,
-  ) => React.ReactNode;
+  // Similar to InternalPreviewConfig but has additional current
   imageRender?: (
     originalNode: React.ReactElement,
     info: { transform: TransformType; current: number; image: ImgInfo },
   ) => React.ReactNode;
+  // zombieJ:
+  // - Do not add more parameters! This is a bad design!!!
+  // - 不要再加额外的参数了，这个设计不好！！！
   onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
   onChange?: (current: number, prevCurrent: number) => void;
 }
@@ -37,7 +28,7 @@ export interface GroupConsumerProps {
   icons?: PreviewProps['icons'];
   items?: (string | ImageElementProps)[];
   fallback?: string;
-  preview?: boolean | PreviewGroupPreview;
+  preview?: boolean | GroupPreviewConfig;
   children?: React.ReactNode;
 }
 
@@ -52,19 +43,10 @@ const Group: React.FC<GroupConsumerProps> = ({
   const {
     visible: previewVisible,
     onVisibleChange,
-    getContainer,
     current: currentIndex,
-    movable,
-    minScale,
-    maxScale,
-    countRender,
-    closeIcon,
     onChange,
-    onTransform,
-    actionsRender,
-    imageRender,
-    ...dialogProps
-  } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
+    ...restProps
+  } = preview && typeof preview === 'object' ? preview : ({} as GroupPreviewConfig);
 
   // ========================== Items ===========================
   const [mergedItems, register, fromItems] = usePreviewItems(items);
@@ -118,7 +100,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   }, [isShowPreview]);
 
   // ========================== Events ==========================
-  const onInternalChange: PreviewGroupPreview['onChange'] = (next, prev) => {
+  const onInternalChange: GroupPreviewConfig['onChange'] = (next, prev) => {
     setCurrent(next);
 
     onChange?.(next, prev);
@@ -141,27 +123,18 @@ const Group: React.FC<GroupConsumerProps> = ({
       {children}
       <Preview
         aria-hidden={!isShowPreview}
-        movable={movable}
         visible={isShowPreview}
         prefixCls={previewPrefixCls}
-        closeIcon={closeIcon}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
         imgCommonProps={imgCommonProps}
         src={src}
         fallback={fallback}
         icons={icons}
-        minScale={minScale}
-        maxScale={maxScale}
-        getContainer={getContainer}
         current={current}
         count={mergedItems.length}
-        countRender={countRender}
-        onTransform={onTransform}
-        actionsRender={actionsRender}
-        imageRender={imageRender}
         onChange={onInternalChange}
-        {...dialogProps}
+        {...restProps}
       />
     </PreviewGroupContext.Provider>
   );

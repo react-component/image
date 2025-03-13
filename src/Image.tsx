@@ -2,11 +2,16 @@ import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import classnames from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import type { InternalPreviewConfig, InternalPreviewSemanticName } from './Preview';
+import type {
+  InternalPreviewConfig,
+  InternalPreviewSemanticName,
+  ToolbarRenderInfoType,
+} from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 import { COMMON_PROPS } from './common';
 import { PreviewGroupContext } from './context';
+import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
@@ -18,10 +23,22 @@ export interface ImgInfo {
   height: string | number;
 }
 
-export interface PreviewConfig extends InternalPreviewConfig {
+export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'> {
   cover?: React.ReactNode;
   classNames?: Partial<Record<PreviewSemanticName, string>>;
   styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
+
+  // Similar to InternalPreviewConfig but not have `current`
+  imageRender?: (
+    originalNode: React.ReactElement,
+    info: { transform: TransformType; image: ImgInfo },
+  ) => React.ReactNode;
+
+  // Similar to InternalPreviewConfig but not have `current` and `total`
+  actionsRender?: (
+    originalNode: React.ReactElement,
+    info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
+  ) => React.ReactNode;
 
   onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
 }
