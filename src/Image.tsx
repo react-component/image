@@ -44,7 +44,7 @@ export interface ImagePreviewType
     info: { transform: TransformType; image: ImgInfo },
   ) => React.ReactNode;
   onTransform?: PreviewProps['onTransform'];
-  toolbarRender?: (
+  actionsRender?: (
     originalNode: React.ReactElement,
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
@@ -114,7 +114,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     minScale,
     maxScale,
     imageRender,
-    toolbarRender,
+    actionsRender,
     ...dialogProps
   }: ImagePreviewType = typeof preview === 'object' ? preview : {};
   const src = previewSrc ?? imgSrc;
@@ -259,7 +259,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           rootClassName={rootClassName}
           imageRender={imageRender}
           imgCommonProps={imgCommonProps}
-          toolbarRender={toolbarRender}
+          actionsRender={actionsRender}
           classNames={imageClassNames}
           styles={styles}
           {...dialogProps}

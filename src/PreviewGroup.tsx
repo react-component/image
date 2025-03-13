@@ -1,7 +1,7 @@
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
-import type { ImgInfo, ImagePreviewType } from './Image';
+import type { ImagePreviewType, ImgInfo } from './Image';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import { PreviewGroupContext } from './context';
@@ -20,7 +20,7 @@ export interface PreviewGroupPreview
    */
   current?: number;
   countRender?: (current: number, total: number) => React.ReactNode;
-  toolbarRender?: (
+  actionsRender?: (
     originalNode: React.ReactElement,
     info: ToolbarRenderInfoType,
   ) => React.ReactNode;
@@ -61,7 +61,7 @@ const Group: React.FC<GroupConsumerProps> = ({
     closeIcon,
     onChange,
     onTransform,
-    toolbarRender,
+    actionsRender,
     imageRender,
     ...dialogProps
   } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
@@ -158,7 +158,7 @@ const Group: React.FC<GroupConsumerProps> = ({
         count={mergedItems.length}
         countRender={countRender}
         onTransform={onTransform}
-        toolbarRender={toolbarRender}
+        actionsRender={actionsRender}
         imageRender={imageRender}
         onChange={onInternalChange}
         {...dialogProps}

@@ -106,7 +106,7 @@ export interface PreviewProps {
   getContainer?: PortalProps['getContainer'];
 
   // Motion
-  motionName: string;
+  motionName?: string;
   mousePosition: null | { x: number; y: number };
 
   // Image
