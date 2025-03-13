@@ -4,7 +4,7 @@ import { useEvent } from '@rc-component/util';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo, SemanticName } from '../Image';
+import type { ImgInfo } from '../Image';
 import { PreviewGroupContext } from '../context';
 import type { TransformAction, TransformType } from '../hooks/useImageTransform';
 import useImageTransform from '../hooks/useImageTransform';
@@ -13,8 +13,12 @@ import useStatus from '../hooks/useStatus';
 import useTouchEvent from '../hooks/useTouchEvent';
 import { BASE_SCALE_RATIO } from '../previewConfig';
 import CloseBtn from './CloseBtn';
-import Footer from './Footer';
+import Footer, { type FooterSemanticName } from './Footer';
 import PrevNext from './PrevNext';
+
+// Note: if you want to add `action`,
+// pls contact @zombieJ or @thinkasany first.
+export type InternalPreviewSemanticName = 'root' | 'mask' | 'body' | FooterSemanticName;
 
 export interface OperationIcons {
   rotateLeft?: React.ReactNode;
@@ -62,56 +66,70 @@ export type ToolbarRenderInfoType = {
   image: ImgInfo;
 };
 
-export interface PreviewProps {
-  imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
+export interface InternalPreviewConfig {
+  // Semantic
+  classNames?: Partial<Record<InternalPreviewSemanticName, string>>;
+  styles?: Partial<Record<InternalPreviewSemanticName, React.CSSProperties>>;
+
+  // Image
   src?: string;
   alt?: string;
+
+  // Scale
+  scaleStep?: number;
+  minScale?: number;
+  maxScale?: number;
+
+  // Display
+  motionName?: string;
+  visible: boolean;
+  getContainer?: PortalProps['getContainer'];
+
+  // Operation
+  movable?: boolean;
+  icons?: OperationIcons;
+  closeIcon?: React.ReactNode;
+
+  onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
+
+  // Render
+  countRender?: (current: number, total: number) => React.ReactNode;
+  imageRender?: (
+    originalNode: React.ReactElement,
+    info: { transform: TransformType; current?: number; image?: ImgInfo },
+  ) => React.ReactNode;
+  actionsRender?: (
+    originalNode: React.ReactElement,
+    info: ToolbarRenderInfoType,
+  ) => React.ReactNode;
+}
+
+export interface PreviewProps extends InternalPreviewConfig {
+  // Misc
+  prefixCls: string;
+
+  // Origin image Info
   imageInfo?: {
     width: number | string;
     height: number | string;
   };
   fallback?: string;
-  movable?: boolean;
-  rootClassName?: string;
-  icons?: OperationIcons;
-  current?: number;
-  count?: number;
-  closeIcon?: React.ReactNode;
-  countRender?: (current: number, total: number) => React.ReactNode;
-  scaleStep?: number;
-  minScale?: number;
-  maxScale?: number;
-  imageRender?: (
-    originalNode: React.ReactElement,
-    info: { transform: TransformType; current?: number; image?: ImgInfo },
-  ) => React.ReactNode;
-  onClose?: () => void;
-  onTransform?: (info: { transform: TransformType; action: TransformAction }) => void;
-  actionsRender?: (
-    originalNode: React.ReactElement,
-    info: ToolbarRenderInfoType,
-  ) => React.ReactNode;
-  onChange?: (current: number, prev: number) => void;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>> & {
-    /** Temporarily used in PurePanel, not used externally by antd */
-    wrapper?: React.CSSProperties;
-  };
 
-  // Misc
-  prefixCls: string;
-
-  // Portal
-  visible: boolean;
-  getContainer?: PortalProps['getContainer'];
-
-  // Motion
-  motionName?: string;
-  mousePosition: null | { x: number; y: number };
-
-  // Image
+  // Preview image
+  imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   width?: string | number;
   height?: string | number;
+
+  // Pagination
+  current?: number;
+  count?: number;
+  onChange?: (current: number, prev: number) => void;
+
+  // Events
+  onClose?: () => void;
+
+  // Display
+  mousePosition: null | { x: number; y: number };
 }
 
 interface PreviewImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -148,7 +166,6 @@ const Preview: React.FC<PreviewProps> = props => {
     onClose,
     visible,
     icons = {},
-    rootClassName,
     closeIcon,
     getContainer,
     current = 0,
@@ -163,8 +180,8 @@ const Preview: React.FC<PreviewProps> = props => {
     actionsRender,
     onTransform,
     onChange,
-    classNames: classNames,
-    styles,
+    classNames = {},
+    styles = {},
     mousePosition,
   } = props;
 
@@ -348,7 +365,9 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   // ========================== Render ==========================
-  const bodyStyle: React.CSSProperties = {};
+  const bodyStyle: React.CSSProperties = {
+    ...styles.body,
+  };
   if (mousePosition) {
     bodyStyle.transformOrigin = `${mousePosition.x}px ${mousePosition.y}px`;
   }
@@ -366,22 +385,23 @@ const Preview: React.FC<PreviewProps> = props => {
         {({ className: motionClassName, style: motionStyle }) => {
           return (
             <div
-              className={classnames(prefixCls, rootClassName, classNames?.root, motionClassName, {
+              className={classnames(prefixCls, classNames.root, motionClassName, {
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={{
+                ...styles.root,
                 ...motionStyle,
               }}
             >
               {/* Mask */}
               <div
-                className={classnames(`${prefixCls}-mask`, classNames?.mask)}
-                style={styles?.mask}
+                className={classnames(`${prefixCls}-mask`, classNames.mask)}
+                style={styles.mask}
                 onClick={onClose}
               />
 
               {/* Body */}
-              <div className={`${prefixCls}-body`} style={bodyStyle}>
+              <div className={classnames(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
                 {/* Preview Image */}
                 {imageRender
                   ? imageRender(imgNode, {
@@ -417,6 +437,9 @@ const Preview: React.FC<PreviewProps> = props => {
                 current={current}
                 count={count}
                 showSwitch={showLeftOrRightSwitches}
+                // Style
+                classNames={classNames}
+                styles={styles}
                 // Render
                 image={image}
                 transform={transform}

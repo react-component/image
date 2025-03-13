@@ -1,15 +1,12 @@
-import type { IDialogPropTypes } from '@rc-component/dialog/lib/IDialogPropTypes';
-import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import cn from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
+import type { InternalPreviewConfig, InternalPreviewSemanticName } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 import { COMMON_PROPS } from './common';
 import { PreviewGroupContext } from './context';
-import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
@@ -21,36 +18,46 @@ export interface ImgInfo {
   height: string | number;
 }
 
-export interface ImagePreviewType
-  extends Omit<
-    IDialogPropTypes,
-    'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
-  > {
-  src?: string;
-  visible?: boolean;
-  minScale?: number;
-  maxScale?: number;
-  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
-  getContainer?: GetContainer | false;
-  mask?: React.ReactNode;
-  maskClassName?: string;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
-  icons?: PreviewProps['icons'];
-  scaleStep?: number;
-  movable?: boolean;
-  imageRender?: (
-    originalNode: React.ReactElement,
-    info: { transform: TransformType; image: ImgInfo },
-  ) => React.ReactNode;
-  onTransform?: PreviewProps['onTransform'];
-  actionsRender?: (
-    originalNode: React.ReactElement,
-    info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
-  ) => React.ReactNode;
+// export interface ImagePreviewType
+//   extends Omit<
+//     IDialogPropTypes,
+//     'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
+//   > {
+//   // src?: string;
+//   // visible?: boolean;
+//   // minScale?: number;
+//   // maxScale?: number;
+//   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
+//   // getContainer?: GetContainer | false;
+//   // mask?: React.ReactNode;
+//   // maskClassName?: string;
+//   // classNames?: Partial<Record<SemanticName, string>>;
+//   // styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+//   // icons?: PreviewProps['icons'];
+//   // scaleStep?: number;
+//   // movable?: boolean;
+//   // imageRender?: (
+//   //   originalNode: React.ReactElement,
+//   //   info: { transform: TransformType; image: ImgInfo },
+//   // ) => React.ReactNode;
+//   // onTransform?: PreviewProps['onTransform'];
+//   // actionsRender?: (
+//   //   originalNode: React.ReactElement,
+//   //   info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
+//   // ) => React.ReactNode;
+// }
+
+export interface PreviewConfig extends InternalPreviewConfig {
+  cover?: React.ReactNode;
+  classNames?: Partial<Record<PreviewSemanticName, string>>;
+  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
+
+  onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
 }
 
 export type SemanticName = 'root' | 'actions' | 'mask';
+
+export type PreviewSemanticName = InternalPreviewSemanticName | 'cover';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -63,7 +70,7 @@ export interface ImageProps
   placeholder?: React.ReactNode;
   fallback?: string;
   rootClassName?: string;
-  preview?: boolean | ImagePreviewType;
+  preview?: boolean | PreviewConfig;
   /**
    * @deprecated since version 3.2.1
    */

@@ -1,8 +1,10 @@
-import classNames from 'classnames';
+import classnames from 'classnames';
 import * as React from 'react';
 import type { Actions, PreviewProps } from '.';
 import type { ImgInfo } from '../Image';
 import type { TransformType } from '../hooks/useImageTransform';
+
+export type FooterSemanticName = 'footer' | 'actions';
 
 type OperationType =
   | 'prev'
@@ -35,6 +37,10 @@ export interface FooterProps extends Actions {
   maxScale: number;
   image: ImgInfo;
   transform: TransformType;
+
+  // Style
+  classNames: Partial<Record<FooterSemanticName, string>>;
+  styles: Partial<Record<FooterSemanticName, React.CSSProperties>>;
 }
 
 export default function Footer(props: FooterProps) {
@@ -45,6 +51,10 @@ export default function Footer(props: FooterProps) {
     current,
     count,
     showSwitch,
+
+    // Style
+    classNames,
+    styles,
 
     // render
     icons,
@@ -87,7 +97,7 @@ export default function Footer(props: FooterProps) {
     return (
       <div
         key={type}
-        className={classNames(actionCls, `${actionCls}-${type}`, {
+        className={classnames(actionCls, `${actionCls}-${type}`, {
           [`${actionCls}-disabled`]: !!disabled,
         })}
         onClick={onClick}
@@ -166,7 +176,7 @@ export default function Footer(props: FooterProps) {
 
   // >>>>> Render
   return (
-    <div className={`${prefixCls}-footer`}>
+    <div className={classnames(`${prefixCls}-footer`)}>
       {progressNode}
       {actionsRender
         ? actionsRender(actionsNode, {
