@@ -84,6 +84,7 @@ export interface InternalPreviewConfig {
   motionName?: string;
   visible?: boolean;
   getContainer?: PortalProps['getContainer'];
+  zIndex?: number;
 
   // Operation
   movable?: boolean;
@@ -183,6 +184,7 @@ const Preview: React.FC<PreviewProps> = props => {
     classNames = {},
     styles = {},
     mousePosition,
+    zIndex,
   } = props;
 
   const imgRef = useRef<HTMLImageElement>();
@@ -383,15 +385,21 @@ const Preview: React.FC<PreviewProps> = props => {
         onVisibleChanged={onVisibleChanged}
       >
         {({ className: motionClassName, style: motionStyle }) => {
+          const mergedStyle = {
+            ...styles.root,
+            ...motionStyle,
+          };
+
+          if (zIndex) {
+            mergedStyle.zIndex = zIndex;
+          }
+
           return (
             <div
               className={classnames(prefixCls, classNames.root, motionClassName, {
                 [`${prefixCls}-moving`]: isMoving,
               })}
-              style={{
-                ...styles.root,
-                ...motionStyle,
-              }}
+              style={mergedStyle}
             >
               {/* Mask */}
               <div

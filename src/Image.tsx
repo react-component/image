@@ -114,7 +114,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     src: previewSrc,
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange,
-    cover: previewMask,
+    cover,
     classNames: previewClassNames = {},
     styles: previewStyles = {},
     ...restProps
@@ -230,7 +230,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         )}
 
         {/* Preview Click Mask */}
-        {previewMask !== false && canPreview && (
+        {cover !== false && canPreview && (
           <div
             className={classnames(`${prefixCls}-cover`, previewClassNames.cover)}
             style={{
@@ -238,7 +238,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
               ...previewStyles.cover,
             }}
           >
-            {previewMask}
+            {cover}
           </div>
         )}
       </div>

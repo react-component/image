@@ -58,18 +58,22 @@ describe('Basic', () => {
     expect(img).toHaveStyle({ objectFit: 'cover' });
   });
 
-  it('wrapperClassName and wrapperStyle should work on image wrapper element', () => {
+  it('classNames.root and styles.root should work on image wrapper element', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        wrapperClassName="wrapper"
-        wrapperStyle={{
-          objectFit: 'cover',
+        classNames={{
+          root: 'bamboo',
+        }}
+        styles={{
+          root: {
+            objectFit: 'cover',
+          },
         }}
       />,
     );
-    const wrapperElement = container.querySelector('img').parentElement;
-    expect(wrapperElement).toHaveClass('wrapper');
+    const wrapperElement = container.firstChild;
+    expect(wrapperElement).toHaveClass('bamboo');
     expect(wrapperElement).toHaveStyle({ objectFit: 'cover' });
   });
 
@@ -81,20 +85,20 @@ describe('Basic', () => {
         style={{
           display: 'none',
         }}
-        preview={{ mask: 'Click to Preview' }}
+        preview={{ cover: 'Click to Preview' }}
       />,
     );
-    const maskElement = container.querySelector('.rc-image-mask');
+    const maskElement = container.querySelector('.rc-image-cover');
     expect(maskElement).toHaveStyle({ display: 'none' });
   });
-  it('preview zIndex should pass into operations', () => {
+  it('preview zIndex should pass', () => {
     const { baseElement } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{ zIndex: 9999, visible: true }}
       />,
     );
-    const operationsElement = baseElement.querySelector('.rc-image-preview-operations-wrapper');
-    expect(operationsElement).toHaveStyle({ zIndex: 10000 });
+    const operationsElement = baseElement.querySelector('.rc-image-preview');
+    expect(operationsElement).toHaveStyle({ zIndex: 9999 });
   });
 });
