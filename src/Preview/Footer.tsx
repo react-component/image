@@ -164,7 +164,7 @@ export default function Footer(props: FooterProps) {
   });
 
   const actionsNode = (
-    <div className={`${prefixCls}-actions`}>
+    <div className={classnames(`${prefixCls}-actions`, classNames.actions)} style={styles.actions}>
       {flipYNode}
       {flipXNode}
       {rotateLeftNode}
@@ -176,7 +176,7 @@ export default function Footer(props: FooterProps) {
 
   // >>>>> Render
   return (
-    <div className={classnames(`${prefixCls}-footer`)}>
+    <div className={classnames(`${prefixCls}-footer`, classNames.footer)} style={styles.footer}>
       {progressNode}
       {actionsRender
         ? actionsRender(actionsNode, {
