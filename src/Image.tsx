@@ -98,8 +98,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     visible: previewVisible = undefined,
     onVisibleChange: onPreviewVisibleChange,
     cover: previewMask,
-    classNames: previewClassNames,
-    styles: previewStyles,
+    classNames: previewClassNames = {},
+    styles: previewStyles = {},
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
@@ -113,7 +113,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   const onPreviewClose = () => {
     setShowPreview(false);
-    setMousePosition(null);
   };
 
   // ========================= ImageProps =========================
