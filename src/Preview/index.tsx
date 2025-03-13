@@ -82,7 +82,7 @@ export interface InternalPreviewConfig {
 
   // Display
   motionName?: string;
-  visible: boolean;
+  visible?: boolean;
   getContainer?: PortalProps['getContainer'];
 
   // Operation

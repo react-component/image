@@ -1,5 +1,5 @@
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
-import cn from 'classnames';
+import classnames from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { InternalPreviewConfig, InternalPreviewSemanticName } from './Preview';
@@ -18,35 +18,6 @@ export interface ImgInfo {
   height: string | number;
 }
 
-// export interface ImagePreviewType
-//   extends Omit<
-//     IDialogPropTypes,
-//     'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
-//   > {
-//   // src?: string;
-//   // visible?: boolean;
-//   // minScale?: number;
-//   // maxScale?: number;
-//   onVisibleChange?: (value: boolean, prevValue: boolean) => void;
-//   // getContainer?: GetContainer | false;
-//   // mask?: React.ReactNode;
-//   // maskClassName?: string;
-//   // classNames?: Partial<Record<SemanticName, string>>;
-//   // styles?: Partial<Record<SemanticName, React.CSSProperties>>;
-//   // icons?: PreviewProps['icons'];
-//   // scaleStep?: number;
-//   // movable?: boolean;
-//   // imageRender?: (
-//   //   originalNode: React.ReactElement,
-//   //   info: { transform: TransformType; image: ImgInfo },
-//   // ) => React.ReactNode;
-//   // onTransform?: PreviewProps['onTransform'];
-//   // actionsRender?: (
-//   //   originalNode: React.ReactElement,
-//   //   info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
-//   // ) => React.ReactNode;
-// }
-
 export interface PreviewConfig extends InternalPreviewConfig {
   cover?: React.ReactNode;
   classNames?: Partial<Record<PreviewSemanticName, string>>;
@@ -55,26 +26,29 @@ export interface PreviewConfig extends InternalPreviewConfig {
   onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
 }
 
-export type SemanticName = 'root' | 'actions' | 'mask';
+export type SemanticName = 'root' | 'image';
 
 export type PreviewSemanticName = InternalPreviewSemanticName | 'cover';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
-  // Original
-  src?: string;
-  wrapperClassName?: string;
-  wrapperStyle?: React.CSSProperties;
+  // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
+
+  // Styles
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+
+  // Image
+  src?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  rootClassName?: string;
+
+  // Preview
   preview?: boolean | PreviewConfig;
-  /**
-   * @deprecated since version 3.2.1
-   */
-  onPreviewClose?: (value: boolean, prevValue: boolean) => void;
+
+  // Events
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
@@ -85,71 +59,73 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const {
-    src: imgSrc,
-    alt,
-    onPreviewClose: onInitialPreviewClose,
+    // Misc
     prefixCls = 'rc-image',
     previewPrefixCls = `${prefixCls}-preview`,
-    placeholder,
-    fallback,
+
+    // Style
+    className,
+    style,
+
+    classNames = {},
+    styles = {},
+
     width,
     height,
-    style,
+
+    // Image
+    src: imgSrc,
+    alt,
+    placeholder,
+    fallback,
+
+    // Preview
     preview = true,
-    className,
+
+    // Events
     onClick,
     onError,
-    wrapperClassName,
-    wrapperStyle,
-    rootClassName,
     ...otherProps
   } = props;
 
-  const isCustomPlaceholder = placeholder && placeholder !== true;
+  const groupContext = useContext(PreviewGroupContext);
+
+  // ========================== Preview ===========================
+  const canPreview = !!preview;
+
   const {
     src: previewSrc,
     visible: previewVisible = undefined,
-    onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
-    getContainer: getPreviewContainer = undefined,
-    mask: previewMask,
-    maskClassName,
-    classNames: imageClassNames,
-    styles,
-    movable,
-    icons,
-    scaleStep,
-    minScale,
-    maxScale,
-    imageRender,
-    actionsRender,
-    ...dialogProps
-  }: ImagePreviewType = typeof preview === 'object' ? preview : {};
-  const src = previewSrc ?? imgSrc;
+    onVisibleChange: onPreviewVisibleChange,
+    cover: previewMask,
+    classNames: previewClassNames,
+    styles: previewStyles,
+    ...restProps
+  }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
+
+  // ============================ Open ============================
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
     onChange: onPreviewVisibleChange,
   });
-  const [getImgRef, srcAndOnload, status] = useStatus({
-    src: imgSrc,
-    isCustomPlaceholder,
-    fallback,
-  });
+
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
-
-  const groupContext = useContext(PreviewGroupContext);
-
-  const canPreview = !!preview;
 
   const onPreviewClose = () => {
     setShowPreview(false);
     setMousePosition(null);
   };
 
-  const wrapperClass = cn(prefixCls, wrapperClassName, rootClassName, {
-    [`${prefixCls}-error`]: status === 'error',
+  // ========================= ImageProps =========================
+  const isCustomPlaceholder = placeholder && placeholder !== true;
+
+  const src = previewSrc ?? imgSrc;
+  const [getImgRef, srcAndOnload, status] = useStatus({
+    src: imgSrc,
+    isCustomPlaceholder,
+    fallback,
   });
 
-  // ========================= ImageProps =========================
   const imgCommonProps = useMemo(
     () => {
       const obj: ImageElementProps = {};
@@ -199,25 +175,29 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={wrapperClass}
+        className={classnames(prefixCls, classNames.root, {
+          [`${prefixCls}-error`]: status === 'error',
+        })}
         onClick={canPreview ? onPreview : onClick}
         style={{
           width,
           height,
-          ...wrapperStyle,
+          ...styles.root,
         }}
       >
         <img
           {...imgCommonProps}
-          className={cn(
+          className={classnames(
             `${prefixCls}-img`,
             {
               [`${prefixCls}-img-placeholder`]: placeholder === true,
             },
+            classNames.image,
             className,
           )}
           style={{
             height,
+            ...styles.image,
             ...style,
           }}
           ref={getImgRef}
@@ -234,12 +214,12 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         )}
 
         {/* Preview Click Mask */}
-        {previewMask && canPreview && (
+        {previewMask !== false && canPreview && (
           <div
-            className={cn(`${prefixCls}-mask`, maskClassName, imageClassNames?.mask)}
+            className={classnames(`${prefixCls}-cover`, previewClassNames.cover)}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
-              ...styles?.mask,
+              ...previewStyles.cover,
             }}
           >
             {previewMask}
@@ -257,19 +237,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           alt={alt}
           imageInfo={{ width, height }}
           fallback={fallback}
-          getContainer={getPreviewContainer}
-          icons={icons}
-          movable={movable}
-          scaleStep={scaleStep}
-          minScale={minScale}
-          maxScale={maxScale}
-          rootClassName={rootClassName}
-          imageRender={imageRender}
           imgCommonProps={imgCommonProps}
-          actionsRender={actionsRender}
-          classNames={imageClassNames}
-          styles={styles}
-          {...dialogProps}
+          classNames={previewClassNames}
+          styles={previewStyles}
+          {...restProps}
         />
       )}
     </>
