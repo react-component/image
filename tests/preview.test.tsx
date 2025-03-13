@@ -5,8 +5,8 @@ import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
-import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
+import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 jest.mock('../src/Preview', () => {
@@ -783,7 +783,7 @@ describe('Preview', () => {
     );
   });
 
-  describe('toolbarRender', () => {
+  describe('actionsRender', () => {
     it('single', () => {
       const printImage = jest.fn();
       const { container } = render(
@@ -793,7 +793,7 @@ describe('Preview', () => {
           width={200}
           height={200}
           preview={{
-            toolbarRender: (_, { icons, image, actions }) => {
+            actionsRender: (_, { icons, image, actions }) => {
               printImage(image);
               return (
                 <>
@@ -885,7 +885,7 @@ describe('Preview', () => {
           preview={{
             visible: true,
             current: 1,
-            toolbarRender: (_, { icons, actions }) => {
+            actionsRender: (_, { icons, actions }) => {
               return (
                 <>
                   {icons.prevIcon}

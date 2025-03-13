@@ -11,7 +11,7 @@ export default function imageRender() {
         width={200}
         preview={{
           icons: defaultIcons,
-          toolbarRender: () => null,
+          actionsRender: () => null,
           imageRender: () => (
             <video
               muted
