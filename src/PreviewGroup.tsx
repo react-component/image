@@ -12,7 +12,7 @@ import type { ImageElementProps, OnGroupPreview } from './interface';
 export interface PreviewGroupPreview
   extends Omit<
     ImagePreviewType,
-    'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
+    'mask' | 'maskClassName' | 'onVisibleChange' | 'actionsRender' | 'imageRender'
   > {
   /**
    * If Preview the show img index
