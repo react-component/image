@@ -1,9 +1,5 @@
 @import (reference) 'index.less';
 
-.zoom {
-  transition: opacity 0.3s;
-}
-
 .@{prefixCls}-preview {
   position: fixed;
   overflow: hidden;
@@ -111,6 +107,40 @@
       &-disabled {
         cursor: default;
         opacity: 0.5;
+      }
+    }
+  }
+
+  // =================== Motion ===================
+  &.fade {
+    // Basic fade
+    transition: all 0.3s;
+
+    // Fade in
+    &-enter,
+    &-appear {
+      opacity: 0;
+
+      .@{prefixCls}-preview-body {
+        transform: scale(0);
+      }
+
+      &-active {
+        opacity: 1;
+
+        .@{prefixCls}-preview-body {
+          transform: scale(1);
+          transition: all 0.3s;
+        }
+      }
+    }
+
+    // Fade out
+    &-leave {
+      opacity: 1;
+
+      &-active {
+        opacity: 0;
       }
     }
   }

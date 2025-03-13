@@ -13,7 +13,6 @@ import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
-import { getOffset } from './util';
 
 export interface ImgInfo {
   url: string;
@@ -171,7 +170,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   // ========================== Preview ===========================
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target as HTMLDivElement);
+    const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+    const left = rect.x + rect.width / 2;
+    const top = rect.y + rect.height / 2;
+
     if (groupContext) {
       groupContext.onPreview(imageId, src, left, top);
     } else {
