@@ -64,33 +64,35 @@ describe('Preview', () => {
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          onVisibleChange: onPreviewCloseMock,
+          onOpenChange: onPreviewCloseMock,
         }}
       />,
     );
 
+    // Click Image
     fireEvent.click(container.querySelector('.rc-image'));
+    expect(onPreviewCloseMock).toHaveBeenCalledWith(true);
+
     act(() => {
       jest.runAllTimers();
     });
-
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    // With mask close
-    expect(onPreviewCloseMock).toBeCalledWith(true, false);
-    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
+    // Click Mask
+    onPreviewCloseMock.mockReset();
+    fireEvent.click(document.querySelector('.rc-image-preview-mask'));
+    expect(onPreviewCloseMock).toHaveBeenCalledWith(false);
 
-    // With btn close
+    // Click Image again
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation'));
-
-    expect(onPreviewCloseMock).toBeCalledWith(false, true);
-
-    onPreviewCloseMock.mockRestore();
+    // Click Close Button
+    onPreviewCloseMock.mockReset();
+    fireEvent.click(document.querySelector('.rc-image-preview-close'));
+    expect(onPreviewCloseMock).toHaveBeenCalledWith(false);
   });
 
   it('Unmount', () => {
@@ -118,7 +120,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[3]);
     act(() => {
       jest.runAllTimers();
     });
@@ -126,7 +128,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[2]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[2]);
     act(() => {
       jest.runAllTimers();
     });
@@ -145,7 +147,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -153,7 +155,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -161,7 +163,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(-1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[1]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[1]);
     act(() => {
       jest.runAllTimers();
     });
@@ -169,7 +171,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, -1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[0]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[0]);
     act(() => {
       jest.runAllTimers();
     });
@@ -188,7 +190,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -196,7 +198,7 @@ describe('Preview', () => {
       transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -204,7 +206,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -212,7 +214,7 @@ describe('Preview', () => {
       transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -269,7 +271,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -277,7 +279,7 @@ describe('Preview', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -285,7 +287,7 @@ describe('Preview', () => {
       transform: 'translate3d(-512px, -384px, 0) scale3d(2, 2, 1) rotate(0deg)',
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[4]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
     act(() => {
       jest.runAllTimers();
     });
@@ -325,7 +327,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[5]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
     act(() => {
       jest.runAllTimers();
     });
@@ -571,7 +573,7 @@ describe('Preview', () => {
     jest.restoreAllMocks();
   });
 
-  it('PreviewGroup', () => {
+  it('PreviewGroup render', () => {
     const { container } = render(
       <Image.PreviewGroup
         icons={{
@@ -600,24 +602,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.anticon')[1]);
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
-
-    fireEvent.click(container.querySelectorAll('.rc-image')[1]);
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    fireEvent.click(document.querySelectorAll('.anticon')[0]);
-    act(() => {
-      jest.runAllTimers();
-    });
-
-    fireEvent.click(document.querySelector('.rc-image-preview-wrap'));
+    expect(document.querySelectorAll('.rc-image-preview-actions-action')).toHaveLength(6);
   });
 
   it('preview placeholder', () => {
@@ -625,14 +610,16 @@ describe('Preview', () => {
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          mask: 'Bamboo Is Light',
-          maskClassName: 'bamboo',
+          cover: 'Bamboo Is Light',
+          classNames: {
+            cover: 'bamboo',
+          },
         }}
       />,
     );
 
-    expect(document.querySelector('.rc-image-mask').textContent).toEqual('Bamboo Is Light');
-    expect(document.querySelector('.rc-image-mask')).toHaveClass('bamboo');
+    expect(document.querySelector('.rc-image-cover').textContent).toEqual('Bamboo Is Light');
+    expect(document.querySelector('.rc-image-cover')).toHaveClass('bamboo');
   });
 
   it('previewSrc', () => {
@@ -681,27 +668,23 @@ describe('Preview', () => {
   it('Customize Group preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     render(
-      <Image.PreviewGroup
-        preview={{ visible: true, transitionName: 'abc', maskTransitionName: 'def' }}
-      >
+      <Image.PreviewGroup preview={{ visible: true, motionName: 'abc' }}>
         <Image src={src} />
       </Image.PreviewGroup>,
     );
 
     expect(global._previewProps).toEqual(
       expect.objectContaining({
-        transitionName: 'abc',
-        maskTransitionName: 'def',
+        motionName: 'abc',
       }),
     );
   });
 
   it('add rootClassName should be correct', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const { container, asFragment } = render(<Image src={src} rootClassName="custom-className" />);
+    const { container } = render(<Image src={src} rootClassName="custom-className" />);
 
-    expect(container.querySelectorAll('.custom-className')).toHaveLength(1);
-    expect(asFragment().firstChild).toMatchSnapshot();
+    expect(container.querySelector('.rc-image.custom-className')).toBeTruthy();
   });
 
   it('add rootClassName should be correct when open preview', () => {
@@ -977,12 +960,12 @@ describe('Preview', () => {
   });
 
   it('should be closed when press esc after click portal', () => {
-    const onVisibleChange = jest.fn();
+    const onOpenChange = jest.fn();
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          onVisibleChange,
+          onOpenChange,
         }}
       />,
     );
@@ -994,16 +977,16 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    expect(onVisibleChange).toHaveBeenCalledWith(true, false);
+    expect(onOpenChange).toHaveBeenCalledWith(true);
 
     fireEvent.click(document.querySelector('.rc-image-preview-actions'));
 
     fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
 
-    expect(onVisibleChange).toHaveBeenCalledWith(false, true);
-    expect(onVisibleChange).toHaveBeenCalledTimes(2);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
 
-    onVisibleChange.mockRestore();
+    onOpenChange.mockRestore();
   });
 
   it('not modify preview image size', () => {

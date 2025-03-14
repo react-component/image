@@ -1,5 +1,5 @@
-import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from '@rc-component/util/lib/KeyCode';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import Image from '../src';
 
@@ -14,9 +14,9 @@ describe('PreviewGroup', () => {
 
   it('onChange should be called', () => {
     const onChange = jest.fn();
-    const onVisibleChange = jest.fn();
+    const onOpenChange = jest.fn();
     const { container } = render(
-      <Image.PreviewGroup preview={{ onChange, onVisibleChange }}>
+      <Image.PreviewGroup preview={{ onChange, onOpenChange }}>
         <Image src="src1" className="firstImg" />
         <Image preview={false} src="src2" />
         <Image src="src3" />
@@ -29,7 +29,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).not.toHaveBeenCalled();
-    expect(onVisibleChange).toBeCalledWith(true, false, 0);
+    expect(onOpenChange).toBeCalledWith(true, false, 0);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
     act(() => {

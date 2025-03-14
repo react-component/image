@@ -17,7 +17,7 @@ export default function Base() {
         }}
         preview={{
           icons: defaultIcons,
-          onVisibleChange: visible => {
+          onOpenChange: visible => {
             console.log('visible', visible);
           },
           zIndex: 9999,

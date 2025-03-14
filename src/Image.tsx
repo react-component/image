@@ -40,7 +40,7 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 
-  onVisibleChange?: (visible: boolean, prevVisible: boolean) => void;
+  onOpenChange?: (visible: boolean) => void;
 }
 
 export type SemanticName = 'root' | 'image';
@@ -115,7 +115,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const {
     src: previewSrc,
     visible: previewVisible = undefined,
-    onVisibleChange: onPreviewVisibleChange,
+    onOpenChange: onPreviewOpenChange,
     cover,
     classNames: previewClassNames = {},
     styles: previewStyles = {},
@@ -125,13 +125,17 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   // ============================ Open ============================
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
-    onChange: onPreviewVisibleChange,
   });
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
+  const triggerPreviewOpen = (nextOpen: boolean) => {
+    setShowPreview(nextOpen);
+    onPreviewOpenChange?.(nextOpen);
+  };
+
   const onPreviewClose = () => {
-    setShowPreview(false);
+    triggerPreviewOpen(false);
   };
 
   // ========================= ImageProps =========================
@@ -182,7 +186,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         x: left,
         y: top,
       });
-      setShowPreview(true);
+      triggerPreviewOpen(true);
     }
 
     onClick?.(e);

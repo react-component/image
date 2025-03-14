@@ -23,7 +23,7 @@ export default function Base() {
         preview={{
           icons: defaultIcons,
           visible,
-          onVisibleChange: value => {
+          onOpenChange: value => {
             setVisible(value);
           },
           current,

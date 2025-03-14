@@ -16,10 +16,7 @@ export interface GroupPreviewConfig extends InternalPreviewConfig {
     originalNode: React.ReactElement,
     info: { transform: TransformType; current: number; image: ImgInfo },
   ) => React.ReactNode;
-  // zombieJ:
-  // - Do not add more parameters! This is a bad design!!!
-  // - 不要再加额外的参数了，这个设计不好！！！
-  onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
+  onOpenChange?: (value: boolean, info: { current: number }) => void;
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
@@ -42,7 +39,7 @@ const Group: React.FC<GroupConsumerProps> = ({
 }) => {
   const {
     visible: previewVisible,
-    onVisibleChange,
+    onOpenChange,
     current: currentIndex,
     onChange,
     ...restProps
@@ -64,8 +61,8 @@ const Group: React.FC<GroupConsumerProps> = ({
   // >>> Visible
   const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
     value: previewVisible,
-    onChange: (val, prevVal) => {
-      onVisibleChange?.(val, prevVal, current);
+    onChange: val => {
+      onOpenChange?.(val, { current });
     },
   });
 
