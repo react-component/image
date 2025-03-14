@@ -9,7 +9,7 @@ export interface CloseBtnProps {
 export default function CloseBtn(props: CloseBtnProps) {
   const { prefixCls, icon, onClick } = props;
 
-  if (icon === false) {
+  if (icon === false || icon === null) {
     return null;
   }
 

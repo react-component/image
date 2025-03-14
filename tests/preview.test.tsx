@@ -660,7 +660,7 @@ describe('Preview', () => {
       }),
     );
 
-    expect(container.querySelector('.rc-image-close')).toBeFalsy();
+    expect(container.querySelector('.rc-image-preview-close')).toBeFalsy();
   });
 
   it('Customize Group preview props', () => {
