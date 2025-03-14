@@ -907,7 +907,6 @@ describe('Preview', () => {
       // Origin Node
       fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-prev'));
       expect(onChange).toHaveBeenCalledWith(0, 1);
-
       fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-next'));
       expect(onChange).toHaveBeenCalledWith(2, 1);
 
@@ -1032,11 +1031,13 @@ describe('Preview', () => {
   });
   it('support classnames and styles', () => {
     const customClassnames = {
+      cover: 'custom-cover',
       mask: 'custom-mask',
       actions: 'custom-actions',
       root: 'custom-root',
     };
     const customStyles = {
+      cover: { color: 'red' },
       mask: { color: 'red' },
       actions: { backgroundColor: 'blue' },
       root: { border: '1px solid green' },
@@ -1047,19 +1048,23 @@ describe('Preview', () => {
         preview={{
           styles: customStyles,
           classNames: customClassnames,
-          mask: 'Bamboo Is Light',
+          cover: 'Bamboo Is Light',
           zIndex: 9999,
           visible: true,
         }}
       />,
     );
-    const mask = document.querySelector('.rc-image-mask');
-    const actions = baseElement.querySelector('.rc-image-preview-operations');
+
+    const cover = document.querySelector('.rc-image-cover');
+    const mask = document.querySelector('.rc-image-preview-mask');
+    const actions = baseElement.querySelector('.rc-image-preview-actions');
+    expect(cover).toHaveClass(customClassnames.cover);
+    expect(cover).toHaveStyle(customStyles.cover);
     expect(mask).toHaveClass(customClassnames.mask);
     expect(mask).toHaveStyle(customStyles.mask);
     expect(actions).toHaveClass(customClassnames.actions);
     expect(actions).toHaveStyle(customStyles.actions);
-    expect(baseElement.querySelector('.rc-image-preview-root')).toHaveClass(customClassnames.root);
+    expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.root);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.root);
   });
 });
