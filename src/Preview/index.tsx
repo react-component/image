@@ -108,6 +108,7 @@ export interface InternalPreviewConfig {
 export interface PreviewProps extends InternalPreviewConfig {
   // Misc
   prefixCls: string;
+  rootClassName?: string;
 
   // Origin image Info
   imageInfo?: {
@@ -159,6 +160,7 @@ const PreviewImage: React.FC<PreviewImageProps> = ({ fallback, src, imgRef, ...p
 const Preview: React.FC<PreviewProps> = props => {
   const {
     prefixCls,
+    rootClassName,
     src,
     alt,
     imageInfo,
@@ -396,7 +398,7 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
-              className={classnames(prefixCls, classNames.root, motionClassName, {
+              className={classnames(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}

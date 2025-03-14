@@ -716,22 +716,19 @@ describe('Preview', () => {
       'src',
       src,
     );
-    expect(document.querySelector('.rc-image-preview-root.custom-className')).toBeFalsy();
+    expect(document.querySelector('.rc-image-preview.custom-className')).toBeFalsy();
 
     fireEvent.click(container.querySelector('.rc-image'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(
-      document.querySelector('.rc-image-preview-root.custom-className .rc-image-preview'),
-    ).toBeTruthy();
-    expect(document.querySelector('.rc-image-preview-root.custom-className')).toBeTruthy();
-    expect(
-      document.querySelector('.rc-image-preview-root.custom-className .rc-image-preview-img'),
-    ).toHaveAttribute('src', previewSrc);
-
-    expect(Array.from(document.body.children)).toMatchSnapshot();
+    expect(document.querySelector('.rc-image-preview.custom-className')).toBeTruthy();
+    expect(document.querySelector('.rc-image-preview.custom-className img')).toHaveAttribute(
+      'src',
+      previewSrc,
+    );
+    expect(document.querySelectorAll('.custom-className')).toHaveLength(2);
   });
 
   it('if async src set should be correct', () => {
@@ -757,10 +754,10 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', src);
+    expect(document.querySelector('.rc-image-preview img')).toHaveAttribute('src', src);
 
-    expect(document.querySelector('.rc-image-preview-switch-left')).toHaveClass(
-      'rc-image-preview-switch-left-disabled',
+    expect(document.querySelector('.rc-image-preview-switch-prev')).toHaveClass(
+      'rc-image-preview-switch-disabled',
     );
   });
 
@@ -905,9 +902,9 @@ describe('Preview', () => {
       );
 
       // Origin Node
-      fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-prev'));
+      fireEvent.click(document.querySelector('.rc-image-preview-actions-action-prev'));
       expect(onChange).toHaveBeenCalledWith(0, 1);
-      fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-next'));
+      fireEvent.click(document.querySelector('.rc-image-preview-actions-action-next'));
       expect(onChange).toHaveBeenCalledWith(2, 1);
 
       // Customize
@@ -936,7 +933,7 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
+    fireEvent.click(document.querySelector('.rc-image-preview-actions-action-flipY'));
     act(() => {
       jest.runAllTimers();
     });
@@ -997,14 +994,14 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
-    expect(onVisibleChange).toBeCalledWith(true, false);
+    expect(onVisibleChange).toHaveBeenCalledWith(true, false);
 
-    fireEvent.click(document.querySelector('.rc-image-preview-operations'));
+    fireEvent.click(document.querySelector('.rc-image-preview-actions'));
 
     fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
 
-    expect(onVisibleChange).toBeCalledWith(false, true);
-    expect(onVisibleChange).toBeCalledTimes(2);
+    expect(onVisibleChange).toHaveBeenCalledWith(false, true);
+    expect(onVisibleChange).toHaveBeenCalledTimes(2);
 
     onVisibleChange.mockRestore();
   });
@@ -1025,7 +1022,7 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    const previewImg = document.querySelector('.rc-image-preview-img-wrapper img');
+    const previewImg = document.querySelector('.rc-image-preview img');
     expect(previewImg).not.toHaveAttribute('width');
     expect(previewImg).not.toHaveAttribute('height');
   });

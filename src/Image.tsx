@@ -54,6 +54,7 @@ export interface ImageProps
   previewPrefixCls?: string;
 
   // Styles
+  rootClassName?: string;
   classNames?: Partial<Record<SemanticName, string>>;
   styles?: Partial<Record<SemanticName, React.CSSProperties>>;
 
@@ -81,6 +82,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     previewPrefixCls = `${prefixCls}-preview`,
 
     // Style
+    rootClassName,
     className,
     style,
 
@@ -191,7 +193,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={classnames(prefixCls, classNames.root, {
+        className={classnames(prefixCls, rootClassName, classNames.root, {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
@@ -256,6 +258,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imgCommonProps={imgCommonProps}
           classNames={previewClassNames}
           styles={previewStyles}
+          rootClassName={rootClassName}
           {...restProps}
         />
       )}
