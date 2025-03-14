@@ -313,15 +313,13 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const onActive = (offset: number) => {
-    const position = current + offset;
+    const nextCurrent = current + offset;
 
-    if (!Number.isInteger(position) || position < 0 || position > count - 1) {
-      return;
+    if (nextCurrent >= 0 && nextCurrent <= count - 1) {
+      setEnableTransition(false);
+      resetTransform(offset < 0 ? 'prev' : 'next');
+      onChange?.(nextCurrent, current);
     }
-
-    setEnableTransition(false);
-    resetTransform(offset < 0 ? 'prev' : 'next');
-    onChange?.(position, current);
   };
 
   // >>>>> Effect: Keyboard
