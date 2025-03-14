@@ -29,15 +29,15 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).not.toHaveBeenCalled();
-    expect(onOpenChange).toBeCalledWith(true, false, 0);
+    expect(onOpenChange).toBeCalledWith(true, { current: 0 });
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
     expect(onChange).toHaveBeenCalledWith(1, 0);
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
@@ -145,37 +145,47 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('1 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-next.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('2 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-left'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-prev'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.RIGHT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-next.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.LEFT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
   });
 
   it('With Controlled', () => {
@@ -196,7 +206,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview')).toMatchSnapshot();
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
   });
 
   it('should show error img', () => {
@@ -221,7 +231,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[3]);
     act(() => {
       jest.runAllTimers();
     });
@@ -230,7 +240,7 @@ describe('PreviewGroup', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
@@ -258,7 +268,7 @@ describe('PreviewGroup', () => {
       'no-referrer',
     );
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
