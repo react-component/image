@@ -6,7 +6,7 @@ import { defaultIcons } from './common';
 export default function Base() {
   return (
     <Image
-      preview={{ mask: 'preview!', icons: defaultIcons }}
+      preview={{ cover: 'preview!', icons: defaultIcons }}
       src="error1"
       fallback="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
       width={200}

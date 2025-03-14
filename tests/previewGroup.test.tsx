@@ -1,5 +1,5 @@
-import { act, fireEvent, render } from '@testing-library/react';
 import KeyCode from '@rc-component/util/lib/KeyCode';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import Image from '../src';
 
@@ -14,9 +14,9 @@ describe('PreviewGroup', () => {
 
   it('onChange should be called', () => {
     const onChange = jest.fn();
-    const onVisibleChange = jest.fn();
+    const onOpenChange = jest.fn();
     const { container } = render(
-      <Image.PreviewGroup preview={{ onChange, onVisibleChange }}>
+      <Image.PreviewGroup preview={{ onChange, onOpenChange }}>
         <Image src="src1" className="firstImg" />
         <Image preview={false} src="src2" />
         <Image src="src3" />
@@ -29,15 +29,15 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).not.toHaveBeenCalled();
-    expect(onVisibleChange).toBeCalledWith(true, false, 0);
+    expect(onOpenChange).toBeCalledWith(true, { current: 0 });
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
     expect(onChange).toHaveBeenCalledWith(1, 0);
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
@@ -145,42 +145,52 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('1 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-next.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
     expect(document.querySelector(previewProgressElementPath).textContent).toEqual('2 / 2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-left'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-prev'));
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.RIGHT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-right-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-next.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
 
     fireEvent.keyDown(window, { keyCode: KeyCode.LEFT });
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview-switch-left-disabled')).toBeTruthy();
+    expect(
+      document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
+    ).toBeTruthy();
   });
 
   it('With Controlled', () => {
     const { rerender } = render(
-      <Image.PreviewGroup preview={{ visible: true }}>
+      <Image.PreviewGroup preview={{ open: true }}>
         <Image src="src1" />
       </Image.PreviewGroup>,
     );
@@ -188,7 +198,7 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
     rerender(
-      <Image.PreviewGroup preview={{ visible: false }}>
+      <Image.PreviewGroup preview={{ open: false }}>
         <Image src="src1" />
       </Image.PreviewGroup>,
     );
@@ -196,12 +206,12 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview')).toMatchSnapshot();
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
   });
 
   it('should show error img', () => {
     render(
-      <Image.PreviewGroup preview={{ visible: true }}>
+      <Image.PreviewGroup preview={{ open: true }}>
         <Image src="errorsrc" />
       </Image.PreviewGroup>,
     );
@@ -221,7 +231,7 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
 
-    fireEvent.click(document.querySelectorAll('.rc-image-preview-operations-operation')[3]);
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[3]);
     act(() => {
       jest.runAllTimers();
     });
@@ -230,7 +240,7 @@ describe('PreviewGroup', () => {
       transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(90deg)',
     });
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
@@ -258,7 +268,7 @@ describe('PreviewGroup', () => {
       'no-referrer',
     );
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });
@@ -284,10 +294,10 @@ describe('PreviewGroup', () => {
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src1');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
   });
 
@@ -318,17 +328,17 @@ describe('PreviewGroup', () => {
     });
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src1');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
 
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
   });
 
   it('should keep order', async () => {
     const Demo = ({ firstUrl }: { firstUrl: string }) => {
       return (
-        <Image.PreviewGroup preview={{ visible: true }}>
+        <Image.PreviewGroup preview={{ open: true }}>
           <Image src={firstUrl} />
           <Image src="http://last/img.png" />
         </Image.PreviewGroup>
@@ -339,24 +349,24 @@ describe('PreviewGroup', () => {
 
     // Open preview
     expect(document.querySelector('.rc-image-preview-progress').textContent).toEqual('1 / 2');
-    expect(
-      document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
-    ).toEqual('http://first/img.png');
+    expect(document.querySelector<HTMLImageElement>('.rc-image-preview img')!.src).toEqual(
+      'http://first/img.png',
+    );
 
     // Modify URL should keep order
     rerender(<Demo firstUrl="http://second/img.png" />);
 
     expect(document.querySelector('.rc-image-preview-progress').textContent).toEqual('1 / 2');
-    expect(
-      document.querySelector<HTMLImageElement>('.rc-image-preview-img-wrapper img')!.src,
-    ).toEqual('http://second/img.png');
+    expect(document.querySelector<HTMLImageElement>('.rc-image-preview img')!.src).toEqual(
+      'http://second/img.png',
+    );
   });
 
   it('onTransform should be triggered when switch', () => {
     const onTransform = jest.fn();
     render(
       <Image.PreviewGroup
-        preview={{ visible: true, onTransform }}
+        preview={{ open: true, onTransform }}
         items={[
           {
             src: 'src1',
@@ -370,7 +380,7 @@ describe('PreviewGroup', () => {
         ]}
       />,
     );
-    fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-flipY'));
+    fireEvent.click(document.querySelector('.rc-image-preview-actions-action-flipY'));
     act(() => {
       jest.runAllTimers();
     });
@@ -386,7 +396,7 @@ describe('PreviewGroup', () => {
       },
       action: 'flipY',
     });
-    fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {
       jest.runAllTimers();
     });

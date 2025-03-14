@@ -1,34 +1,22 @@
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
-import type { ImgInfo, ImagePreviewType } from './Image';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
+import type { ImgInfo } from './Image';
+import type { InternalPreviewConfig, PreviewProps } from './Preview';
 import Preview from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImageElementProps, OnGroupPreview } from './interface';
 
-export interface PreviewGroupPreview
-  extends Omit<
-    ImagePreviewType,
-    'mask' | 'maskClassName' | 'onVisibleChange' | 'toolbarRender' | 'imageRender'
-  > {
-  /**
-   * If Preview the show img index
-   * @default 0
-   */
+export interface GroupPreviewConfig extends InternalPreviewConfig {
   current?: number;
-  countRender?: (current: number, total: number) => React.ReactNode;
-  toolbarRender?: (
-    originalNode: React.ReactElement,
-    info: ToolbarRenderInfoType,
-  ) => React.ReactNode;
+  // Similar to InternalPreviewConfig but has additional current
   imageRender?: (
     originalNode: React.ReactElement,
     info: { transform: TransformType; current: number; image: ImgInfo },
   ) => React.ReactNode;
-  onVisibleChange?: (value: boolean, prevValue: boolean, current: number) => void;
+  onOpenChange?: (value: boolean, info: { current: number }) => void;
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
@@ -37,7 +25,7 @@ export interface GroupConsumerProps {
   icons?: PreviewProps['icons'];
   items?: (string | ImageElementProps)[];
   fallback?: string;
-  preview?: boolean | PreviewGroupPreview;
+  preview?: boolean | GroupPreviewConfig;
   children?: React.ReactNode;
 }
 
@@ -50,21 +38,12 @@ const Group: React.FC<GroupConsumerProps> = ({
   fallback,
 }) => {
   const {
-    visible: previewVisible,
-    onVisibleChange,
-    getContainer,
+    open: previewOpen,
+    onOpenChange,
     current: currentIndex,
-    movable,
-    minScale,
-    maxScale,
-    countRender,
-    closeIcon,
     onChange,
-    onTransform,
-    toolbarRender,
-    imageRender,
-    ...dialogProps
-  } = typeof preview === 'object' ? preview : ({} as PreviewGroupPreview);
+    ...restProps
+  } = preview && typeof preview === 'object' ? preview : ({} as GroupPreviewConfig);
 
   // ========================== Items ===========================
   const [mergedItems, register, fromItems] = usePreviewItems(items);
@@ -80,10 +59,10 @@ const Group: React.FC<GroupConsumerProps> = ({
   // >>> Image
   const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
-    value: previewVisible,
-    onChange: (val, prevVal) => {
-      onVisibleChange?.(val, prevVal, current);
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
+    value: previewOpen,
+    onChange: val => {
+      onOpenChange?.(val, { current });
     },
   });
 
@@ -118,7 +97,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   }, [isShowPreview]);
 
   // ========================== Events ==========================
-  const onInternalChange: PreviewGroupPreview['onChange'] = (next, prev) => {
+  const onInternalChange: GroupPreviewConfig['onChange'] = (next, prev) => {
     setCurrent(next);
 
     onChange?.(next, prev);
@@ -141,27 +120,18 @@ const Group: React.FC<GroupConsumerProps> = ({
       {children}
       <Preview
         aria-hidden={!isShowPreview}
-        movable={movable}
-        visible={isShowPreview}
+        open={isShowPreview}
         prefixCls={previewPrefixCls}
-        closeIcon={closeIcon}
         onClose={onPreviewClose}
         mousePosition={mousePosition}
         imgCommonProps={imgCommonProps}
         src={src}
         fallback={fallback}
         icons={icons}
-        minScale={minScale}
-        maxScale={maxScale}
-        getContainer={getContainer}
         current={current}
         count={mergedItems.length}
-        countRender={countRender}
-        onTransform={onTransform}
-        toolbarRender={toolbarRender}
-        imageRender={imageRender}
         onChange={onInternalChange}
-        {...dialogProps}
+        {...restProps}
       />
     </PreviewGroupContext.Provider>
   );

@@ -1,10 +1,12 @@
-import type { IDialogPropTypes } from '@rc-component/dialog/lib/IDialogPropTypes';
-import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
-import cn from 'classnames';
+import classnames from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
+import type {
+  InternalPreviewConfig,
+  InternalPreviewSemanticName,
+  ToolbarRenderInfoType,
+} from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 import { COMMON_PROPS } from './common';
@@ -13,7 +15,6 @@ import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
-import { getOffset } from './util';
 
 export interface ImgInfo {
   url: string;
@@ -22,53 +23,50 @@ export interface ImgInfo {
   height: string | number;
 }
 
-export interface ImagePreviewType
-  extends Omit<
-    IDialogPropTypes,
-    'mask' | 'visible' | 'closable' | 'prefixCls' | 'onClose' | 'afterClose' | 'wrapClassName'
-  > {
-  src?: string;
-  visible?: boolean;
-  minScale?: number;
-  maxScale?: number;
-  onVisibleChange?: (value: boolean, prevValue: boolean) => void;
-  getContainer?: GetContainer | false;
-  mask?: React.ReactNode;
-  maskClassName?: string;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
-  icons?: PreviewProps['icons'];
-  scaleStep?: number;
-  movable?: boolean;
+export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'> {
+  cover?: React.ReactNode;
+  classNames?: Partial<Record<PreviewSemanticName, string>>;
+  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
+
+  // Similar to InternalPreviewConfig but not have `current`
   imageRender?: (
     originalNode: React.ReactElement,
     info: { transform: TransformType; image: ImgInfo },
   ) => React.ReactNode;
-  onTransform?: PreviewProps['onTransform'];
-  toolbarRender?: (
+
+  // Similar to InternalPreviewConfig but not have `current` and `total`
+  actionsRender?: (
     originalNode: React.ReactElement,
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
+
+  onOpenChange?: (open: boolean) => void;
 }
 
-export type SemanticName = 'root' | 'actions' | 'mask';
+export type SemanticName = 'root' | 'image';
+
+export type PreviewSemanticName = InternalPreviewSemanticName | 'cover';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
-  // Original
-  src?: string;
-  wrapperClassName?: string;
-  wrapperStyle?: React.CSSProperties;
+  // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
+
+  // Styles
+  rootClassName?: string;
+  classNames?: Partial<Record<SemanticName, string>>;
+  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+
+  // Image
+  src?: string;
   placeholder?: React.ReactNode;
   fallback?: string;
-  rootClassName?: string;
-  preview?: boolean | ImagePreviewType;
-  /**
-   * @deprecated since version 3.2.1
-   */
-  onPreviewClose?: (value: boolean, prevValue: boolean) => void;
+
+  // Preview
+  preview?: boolean | PreviewConfig;
+
+  // Events
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
@@ -79,71 +77,77 @@ interface CompoundedComponent<P> extends React.FC<P> {
 
 const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const {
-    src: imgSrc,
-    alt,
-    onPreviewClose: onInitialPreviewClose,
+    // Misc
     prefixCls = 'rc-image',
     previewPrefixCls = `${prefixCls}-preview`,
-    placeholder,
-    fallback,
+
+    // Style
+    rootClassName,
+    className,
+    style,
+
+    classNames = {},
+    styles = {},
+
     width,
     height,
-    style,
+
+    // Image
+    src: imgSrc,
+    alt,
+    placeholder,
+    fallback,
+
+    // Preview
     preview = true,
-    className,
+
+    // Events
     onClick,
     onError,
-    wrapperClassName,
-    wrapperStyle,
-    rootClassName,
     ...otherProps
   } = props;
 
-  const isCustomPlaceholder = placeholder && placeholder !== true;
+  const groupContext = useContext(PreviewGroupContext);
+
+  // ========================== Preview ===========================
+  const canPreview = !!preview;
+
   const {
     src: previewSrc,
-    visible: previewVisible = undefined,
-    onVisibleChange: onPreviewVisibleChange = onInitialPreviewClose,
-    getContainer: getPreviewContainer = undefined,
-    mask: previewMask,
-    maskClassName,
-    classNames: imageClassNames,
-    styles,
-    movable,
-    icons,
-    scaleStep,
-    minScale,
-    maxScale,
-    imageRender,
-    toolbarRender,
-    ...dialogProps
-  }: ImagePreviewType = typeof preview === 'object' ? preview : {};
-  const src = previewSrc ?? imgSrc;
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
-    value: previewVisible,
-    onChange: onPreviewVisibleChange,
+    open: previewOpen = undefined,
+    onOpenChange: onPreviewOpenChange,
+    cover,
+    classNames: previewClassNames = {},
+    styles: previewStyles = {},
+    ...restProps
+  }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
+
+  // ============================ Open ============================
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
+    value: previewOpen,
   });
+
+  const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
+
+  const triggerPreviewOpen = (nextOpen: boolean) => {
+    setShowPreview(nextOpen);
+    onPreviewOpenChange?.(nextOpen);
+  };
+
+  const onPreviewClose = () => {
+    triggerPreviewOpen(false);
+  };
+
+  // ========================= ImageProps =========================
+  const isCustomPlaceholder = placeholder && placeholder !== true;
+
+  const src = previewSrc ?? imgSrc;
   const [getImgRef, srcAndOnload, status] = useStatus({
     src: imgSrc,
     isCustomPlaceholder,
     fallback,
   });
-  const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
-  const groupContext = useContext(PreviewGroupContext);
-
-  const canPreview = !!preview;
-
-  const onPreviewClose = () => {
-    setShowPreview(false);
-    setMousePosition(null);
-  };
-
-  const wrapperClass = cn(prefixCls, wrapperClassName, rootClassName, {
-    [`${prefixCls}-error`]: status === 'error',
-  });
-
-  // ========================= ImageProps =========================
   const imgCommonProps = useMemo(
     () => {
       const obj: ImageElementProps = {};
@@ -171,7 +175,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   // ========================== Preview ===========================
   const onPreview: React.MouseEventHandler<HTMLDivElement> = e => {
-    const { left, top } = getOffset(e.target as HTMLDivElement);
+    const rect = (e.target as HTMLDivElement).getBoundingClientRect();
+    const left = rect.x + rect.width / 2;
+    const top = rect.y + rect.height / 2;
+
     if (groupContext) {
       groupContext.onPreview(imageId, src, left, top);
     } else {
@@ -179,7 +186,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         x: left,
         y: top,
       });
-      setShowPreview(true);
+      triggerPreviewOpen(true);
     }
 
     onClick?.(e);
@@ -190,25 +197,29 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={wrapperClass}
+        className={classnames(prefixCls, rootClassName, classNames.root, {
+          [`${prefixCls}-error`]: status === 'error',
+        })}
         onClick={canPreview ? onPreview : onClick}
         style={{
           width,
           height,
-          ...wrapperStyle,
+          ...styles.root,
         }}
       >
         <img
           {...imgCommonProps}
-          className={cn(
+          className={classnames(
             `${prefixCls}-img`,
             {
               [`${prefixCls}-img-placeholder`]: placeholder === true,
             },
+            classNames.image,
             className,
           )}
           style={{
             height,
+            ...styles.image,
             ...style,
           }}
           ref={getImgRef}
@@ -225,22 +236,22 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         )}
 
         {/* Preview Click Mask */}
-        {previewMask && canPreview && (
+        {cover !== false && canPreview && (
           <div
-            className={cn(`${prefixCls}-mask`, maskClassName, imageClassNames?.mask)}
+            className={classnames(`${prefixCls}-cover`, previewClassNames.cover)}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
-              ...styles?.mask,
+              ...previewStyles.cover,
             }}
           >
-            {previewMask}
+            {cover}
           </div>
         )}
       </div>
       {!groupContext && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
-          visible={isShowPreview}
+          open={isShowPreview}
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}
@@ -248,19 +259,11 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           alt={alt}
           imageInfo={{ width, height }}
           fallback={fallback}
-          getContainer={getPreviewContainer}
-          icons={icons}
-          movable={movable}
-          scaleStep={scaleStep}
-          minScale={minScale}
-          maxScale={maxScale}
-          rootClassName={rootClassName}
-          imageRender={imageRender}
           imgCommonProps={imgCommonProps}
-          toolbarRender={toolbarRender}
-          classNames={imageClassNames}
-          styles={styles}
-          {...dialogProps}
+          classNames={previewClassNames}
+          styles={previewStyles}
+          rootClassName={rootClassName}
+          {...restProps}
         />
       )}
     </>

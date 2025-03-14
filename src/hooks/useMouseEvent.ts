@@ -12,7 +12,7 @@ import type {
 export default function useMouseEvent(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   movable: boolean,
-  visible: boolean,
+  open: boolean,
   scaleStep: number,
   transform: TransformType,
   updateTransform: UpdateTransformFunc,
@@ -43,7 +43,7 @@ export default function useMouseEvent(
   };
 
   const onMouseMove = (event: MouseEvent) => {
-    if (visible && isMoving) {
+    if (open && isMoving) {
       updateTransform(
         {
           x: event.pageX - startPositionInfo.current.diffX,
@@ -55,7 +55,7 @@ export default function useMouseEvent(
   };
 
   const onMouseUp = () => {
-    if (visible && isMoving) {
+    if (open && isMoving) {
       setMoving(false);
 
       /** No need to restore the position when the picture is not moved, So as not to interfere with the click */
@@ -83,7 +83,7 @@ export default function useMouseEvent(
   };
 
   const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
-    if (!visible || event.deltaY == 0) return;
+    if (!open || event.deltaY == 0) return;
     // Scale ratio depends on the deltaY size
     const scaleRatio = Math.abs(event.deltaY / 100);
     // Limit the maximum scale ratio
@@ -122,7 +122,7 @@ export default function useMouseEvent(
       // /* istanbul ignore next */
       window.top?.removeEventListener('mousemove', onMouseMove);
     };
-  }, [visible, isMoving, x, y, rotate, movable]);
+  }, [open, isMoving, x, y, rotate, movable]);
 
   return {
     isMoving,
