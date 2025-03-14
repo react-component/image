@@ -40,7 +40,7 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
     info: Omit<ToolbarRenderInfoType, 'current' | 'total'>,
   ) => React.ReactNode;
 
-  onOpenChange?: (visible: boolean) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export type SemanticName = 'root' | 'image';
@@ -114,7 +114,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   const {
     src: previewSrc,
-    visible: previewVisible = undefined,
+    open: previewOpen = undefined,
     onOpenChange: onPreviewOpenChange,
     cover,
     classNames: previewClassNames = {},
@@ -123,8 +123,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
   // ============================ Open ============================
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
-    value: previewVisible,
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
+    value: previewOpen,
   });
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
@@ -251,7 +251,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       {!groupContext && canPreview && (
         <Preview
           aria-hidden={!isShowPreview}
-          visible={isShowPreview}
+          open={isShowPreview}
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}

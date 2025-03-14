@@ -647,9 +647,8 @@ describe('Preview', () => {
       <Image
         src={src}
         preview={{
-          visible: true,
-          transitionName: 'abc',
-          maskTransitionName: 'def',
+          open: true,
+          motionName: 'abc',
           closeIcon: null,
         }}
       />,
@@ -657,8 +656,7 @@ describe('Preview', () => {
 
     expect(global._previewProps).toEqual(
       expect.objectContaining({
-        transitionName: 'abc',
-        maskTransitionName: 'def',
+        motionName: 'abc',
       }),
     );
 
@@ -668,7 +666,7 @@ describe('Preview', () => {
   it('Customize Group preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     render(
-      <Image.PreviewGroup preview={{ visible: true, motionName: 'abc' }}>
+      <Image.PreviewGroup preview={{ open: true, motionName: 'abc' }}>
         <Image src={src} />
       </Image.PreviewGroup>,
     );
@@ -863,7 +861,7 @@ describe('Preview', () => {
             },
           ]}
           preview={{
-            visible: true,
+            open: true,
             current: 1,
             actionsRender: (_, { icons, actions }) => {
               return (
@@ -996,7 +994,7 @@ describe('Preview', () => {
         width={20}
         height={20}
         preview={{
-          visible: true,
+          open: true,
         }}
       />,
     );
@@ -1030,7 +1028,7 @@ describe('Preview', () => {
           classNames: customClassnames,
           cover: 'Bamboo Is Light',
           zIndex: 9999,
-          visible: true,
+          open: true,
         }}
       />,
     );

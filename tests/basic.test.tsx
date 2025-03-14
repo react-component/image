@@ -95,7 +95,7 @@ describe('Basic', () => {
     const { baseElement } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        preview={{ zIndex: 9999, visible: true }}
+        preview={{ zIndex: 9999, open: true }}
       />,
     );
     const operationsElement = baseElement.querySelector('.rc-image-preview');

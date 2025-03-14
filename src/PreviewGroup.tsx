@@ -38,7 +38,7 @@ const Group: React.FC<GroupConsumerProps> = ({
   fallback,
 }) => {
   const {
-    visible: previewVisible,
+    open: previewOpen,
     onOpenChange,
     current: currentIndex,
     onChange,
@@ -59,8 +59,8 @@ const Group: React.FC<GroupConsumerProps> = ({
   // >>> Image
   const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewVisible, {
-    value: previewVisible,
+  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
+    value: previewOpen,
     onChange: val => {
       onOpenChange?.(val, { current });
     },
@@ -120,7 +120,7 @@ const Group: React.FC<GroupConsumerProps> = ({
       {children}
       <Preview
         aria-hidden={!isShowPreview}
-        visible={isShowPreview}
+        open={isShowPreview}
         prefixCls={previewPrefixCls}
         onClose={onPreviewClose}
         mousePosition={mousePosition}

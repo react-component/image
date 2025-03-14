@@ -82,7 +82,7 @@ export interface InternalPreviewConfig {
 
   // Display
   motionName?: string;
-  visible?: boolean;
+  open?: boolean;
   getContainer?: PortalProps['getContainer'];
   zIndex?: number;
 
@@ -167,7 +167,7 @@ const Preview: React.FC<PreviewProps> = props => {
     fallback,
     movable = true,
     onClose,
-    visible,
+    open,
     icons = {},
     closeIcon,
     getContainer,
@@ -205,7 +205,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const { isMoving, onMouseDown, onWheel } = useMouseEvent(
     imgRef,
     movable,
-    visible,
+    open,
     scaleStep,
     transform,
     updateTransform,
@@ -214,7 +214,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const { isTouching, onTouchStart, onTouchMove, onTouchEnd } = useTouchEvent(
     imgRef,
     movable,
-    visible,
+    open,
     minScale,
     transform,
     updateTransform,
@@ -229,14 +229,14 @@ const Preview: React.FC<PreviewProps> = props => {
   }, [enableTransition]);
 
   useEffect(() => {
-    if (!visible) {
+    if (!open) {
       resetTransform('close');
     }
-  }, [visible]);
+  }, [open]);
 
   // ========================== Image ===========================
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
-    if (visible) {
+    if (open) {
       if (scale !== 1) {
         updateTransform({ x: 0, y: 0, scale: 1 }, 'doubleClick');
       } else {
@@ -326,7 +326,7 @@ const Preview: React.FC<PreviewProps> = props => {
 
   // >>>>> Effect: Keyboard
   const onKeyDown = useEvent((event: KeyboardEvent) => {
-    if (visible) {
+    if (open) {
       const { keyCode } = event;
 
       if (keyCode === KeyCode.ESC) {
@@ -344,23 +344,23 @@ const Preview: React.FC<PreviewProps> = props => {
   });
 
   useEffect(() => {
-    if (visible) {
+    if (open) {
       window.addEventListener('keydown', onKeyDown);
 
       return () => {
         window.removeEventListener('keydown', onKeyDown);
       };
     }
-  }, [visible]);
+  }, [open]);
 
   // ======================= Lock Scroll ========================
   const [lockScroll, setLockScroll] = useState(false);
 
   React.useEffect(() => {
-    if (visible) {
+    if (open) {
       setLockScroll(true);
     }
-  }, [visible]);
+  }, [open]);
 
   const onVisibleChanged = (nextVisible: boolean) => {
     if (!nextVisible) {
@@ -380,7 +380,7 @@ const Preview: React.FC<PreviewProps> = props => {
     <Portal open getContainer={getContainer ?? document.body} autoLock={lockScroll}>
       <CSSMotion
         motionName={motionName}
-        visible={visible}
+        visible={open}
         motionAppear
         motionEnter
         motionLeave

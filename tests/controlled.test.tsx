@@ -1,6 +1,6 @@
 import { act, fireEvent, render } from '@testing-library/react';
-import Image from '../src';
 import React from 'react';
+import Image from '../src';
 
 describe('Controlled', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('Controlled', () => {
     const { rerender } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        preview={{ visible: true }}
+        preview={{ open: true }}
       />,
     );
 
@@ -23,7 +23,7 @@ describe('Controlled', () => {
     rerender(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        preview={{ visible: false }}
+        preview={{ open: false }}
       />,
     );
 
@@ -57,33 +57,4 @@ describe('Controlled', () => {
 
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
   });
-
-  // it('controlled visible and current with items in group', () => {
-  //   const { rerender } = render(
-  //     <Image.PreviewGroup items={['src2', 'src3', 'src4']} preview={{ current: 0, visible: true }}>
-  //       <Image src="src1" />
-  //     </Image.PreviewGroup>,
-  //   );
-
-  //   expect(document.querySelector('.rc-image-preview')).toBeTruthy();
-
-  //   fireEvent.click(document.querySelector('.rc-image-preview-switch-right'));
-  //   expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src2');
-
-  //   fireEvent.click(document.querySelector('.rc-image-preview-operations-operation-close'));
-
-  //   rerender(
-  //     <Image.PreviewGroup preview={{ current: 2, visible: true }}>
-  //       <Image src="src1" className="firstImg" />
-  //       <Image src="src2" />
-  //       <Image src="src3" />
-  //     </Image.PreviewGroup>,
-  //   );
-
-  //   act(() => {
-  //     jest.runAllTimers();
-  //   });
-
-  //   expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', 'src3');
-  // });
 });

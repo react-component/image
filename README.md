@@ -77,7 +77,7 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| visible | boolean | - | Whether the preview is open or not |
+| open | boolean | - | Whether the preview is open or not |
 | closeIcon | React.ReactNode | - | Custom close icon |
 | src | string | - | Customize preview src |
 | movable | boolean | true | Enable drag |
@@ -88,7 +88,7 @@ export default () => (
 | getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
 | imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
 | actionsRender | (originalNode: React.ReactElement, info: Omit<[ToolbarRenderInfoType](#ToolbarRenderInfoType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
-| onOpenChange | (visible: boolean, prevVisible: boolean) => void | - | Callback when visible is changed |
+| onOpenChange | (open: boolean, prevVisible: boolean) => void | - | Callback when open is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
 ## Image.PreviewGroup
@@ -120,7 +120,7 @@ export default () => (
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| visible | boolean | - | Whether the preview is open or not |
+| open | boolean | - | Whether the preview is open or not |
 | movable | boolean | true | Enable drag |
 | current | number | - | Current index |
 | closeIcon | React.ReactNode | - | Custom close icon |
@@ -132,7 +132,7 @@ export default () => (
 | countRender | (current: number, total: number) => ReactNode | - | Customize count |
 | imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
 | actionsRender | (originalNode: React.ReactElement, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
-| onOpenChange | (visible: boolean, prevVisible: boolean, current: number) => void | - | Callback when visible is changed |
+| onOpenChange | (open: boolean, prevVisible: boolean, current: number) => void | - | Callback when open is changed |
 | onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
 
 ### TransformType
