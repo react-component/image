@@ -421,11 +421,13 @@ const Preview: React.FC<PreviewProps> = props => {
               </div>
 
               {/* Close Button */}
-              <CloseBtn
-                prefixCls={prefixCls}
-                icon={closeIcon === false ? closeIcon : closeIcon || icons.close}
-                onClick={onClose}
-              />
+              {closeIcon !== false && closeIcon !== null && (
+                <CloseBtn
+                  prefixCls={prefixCls}
+                  icon={closeIcon === true ? icons.close : closeIcon || icons.close}
+                  onClick={onClose}
+                />
+              )}
 
               {/* Switch prev or next */}
               {showLeftOrRightSwitches && (
