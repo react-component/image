@@ -413,4 +413,22 @@ describe('PreviewGroup', () => {
       action: 'next',
     });
   });
+
+  it('preview.rootClassName should be correct', () => {
+    render(
+      <Image.PreviewGroup
+        items={[
+          {
+            src: 'src1',
+          },
+        ]}
+        preview={{
+          open: true,
+          rootClassName: 'custom-className',
+        }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview.custom-className')).toBeTruthy();
+  });
 });
