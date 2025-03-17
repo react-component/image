@@ -119,6 +119,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     cover,
     classNames: previewClassNames = {},
     styles: previewStyles = {},
+    rootClassName: previewRootClassName,
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
@@ -262,7 +263,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imgCommonProps={imgCommonProps}
           classNames={previewClassNames}
           styles={previewStyles}
-          rootClassName={rootClassName}
+          rootClassName={classnames(previewRootClassName, rootClassName)}
           {...restProps}
         />
       )}

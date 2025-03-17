@@ -68,6 +68,8 @@ export type ToolbarRenderInfoType = {
 
 export interface InternalPreviewConfig {
   // Semantic
+  /** Better to use `classNames.root` instead */
+  rootClassName?: string;
   classNames?: Partial<Record<InternalPreviewSemanticName, string>>;
   styles?: Partial<Record<InternalPreviewSemanticName, React.CSSProperties>>;
 
@@ -108,7 +110,6 @@ export interface InternalPreviewConfig {
 export interface PreviewProps extends InternalPreviewConfig {
   // Misc
   prefixCls: string;
-  rootClassName?: string;
 
   // Origin image Info
   imageInfo?: {

@@ -643,7 +643,7 @@ describe('Preview', () => {
 
   it('Customize preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
-    const { container } = render(
+    render(
       <Image
         src={src}
         preview={{
@@ -710,6 +710,21 @@ describe('Preview', () => {
       previewSrc,
     );
     expect(document.querySelectorAll('.custom-className')).toHaveLength(2);
+  });
+
+  it('preview.rootClassName should be correct', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    render(
+      <Image
+        src={src}
+        preview={{
+          open: true,
+          rootClassName: 'custom-className',
+        }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview.custom-className')).toBeTruthy();
   });
 
   it('if async src set should be correct', () => {
