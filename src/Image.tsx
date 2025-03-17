@@ -182,17 +182,17 @@ const ImageInternal = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
 
   // ========================== Combined Ref ==========================
   const handleRef = (img: HTMLImageElement | null) => {
-    if (img) {
-      getImgRef(img);
-      
-      // 处理外部传入的 ref
-      if (ref) {
-        if (typeof ref === 'function') {
-          ref(img);
-        } else {
-          ref.current = img;
-        }
-      }
+    if (!img) {
+      return;
+    }
+
+    getImgRef(img);
+
+    // 处理外部传入的 ref
+    if (typeof ref === 'function') {
+      ref(img);
+    } else if (ref) {
+      ref.current = img;
     }
   };
 
