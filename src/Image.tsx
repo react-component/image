@@ -114,7 +114,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   const {
     src: previewSrc,
-    open: previewOpen = undefined,
+    open: previewOpen,
     onOpenChange: onPreviewOpenChange,
     cover,
     classNames: previewClassNames = {},
