@@ -1,16 +1,17 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
 import { useEvent } from '@rc-component/util';
+import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import classnames from 'classnames';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import type { ImgInfo } from '../Image';
 import { PreviewGroupContext } from '../context';
 import type { TransformAction, TransformType } from '../hooks/useImageTransform';
 import useImageTransform from '../hooks/useImageTransform';
 import useMouseEvent from '../hooks/useMouseEvent';
 import useStatus from '../hooks/useStatus';
 import useTouchEvent from '../hooks/useTouchEvent';
+import type { ImgInfo } from '../Image';
 import { BASE_SCALE_RATIO } from '../previewConfig';
 import CloseBtn from './CloseBtn';
 import Footer, { type FooterSemanticName } from './Footer';
@@ -367,6 +368,14 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
+  // ========================== Portal ==========================
+  const [portalRender, setPortalRender] = useState(false);
+  useLayoutEffect(() => {
+    if (open) {
+      setPortalRender(true);
+    }
+  }, [open]);
+
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -376,10 +385,10 @@ const Preview: React.FC<PreviewProps> = props => {
   }
 
   return (
-    <Portal open getContainer={getContainer ?? document.body} autoLock={lockScroll}>
+    <Portal open={portalRender} getContainer={getContainer ?? document.body} autoLock={lockScroll}>
       <CSSMotion
         motionName={motionName}
-        visible={open}
+        visible={portalRender && open}
         motionAppear
         motionEnter
         motionLeave
