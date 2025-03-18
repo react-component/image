@@ -727,6 +727,50 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview.custom-className')).toBeTruthy();
   });
 
+  it('rootClassName on both side but classNames.root on single side', () => {
+    const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
+    render(
+      <Image
+        src={src}
+        rootClassName="both"
+        classNames={{ root: 'image-root' }}
+        styles={{
+          root: {
+            color: 'red',
+          },
+        }}
+        preview={{
+          open: true,
+          classNames: {
+            root: 'preview-root',
+          },
+          styles: {
+            root: {
+              background: 'green',
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(document.querySelectorAll('.both')).toHaveLength(2);
+    expect(document.querySelectorAll('.rc-image.image-root')).toHaveLength(1);
+    expect(document.querySelectorAll('.rc-image-preview.preview-root')).toHaveLength(1);
+
+    expect(document.querySelector('.rc-image.image-root')).toHaveStyle({
+      color: 'red',
+    });
+    expect(document.querySelector('.rc-image.image-root')).not.toHaveStyle({
+      background: 'green',
+    });
+    expect(document.querySelector('.rc-image-preview.preview-root')).toHaveStyle({
+      background: 'green',
+    });
+    expect(document.querySelector('.rc-image-preview.preview-root')).not.toHaveStyle({
+      color: 'red',
+    });
+  });
+
   it('if async src set should be correct', () => {
     const src =
       'https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ';
