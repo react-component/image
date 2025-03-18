@@ -15,8 +15,9 @@ describe('PreviewGroup', () => {
   it('onChange should be called', () => {
     const onChange = jest.fn();
     const onOpenChange = jest.fn();
+    const afterOpenChange = jest.fn();
     const { container } = render(
-      <Image.PreviewGroup preview={{ onChange, onOpenChange }}>
+      <Image.PreviewGroup preview={{ onChange, onOpenChange, afterOpenChange }}>
         <Image src="src1" className="firstImg" />
         <Image preview={false} src="src2" />
         <Image src="src3" />
@@ -29,7 +30,8 @@ describe('PreviewGroup', () => {
       jest.runAllTimers();
     });
     expect(onChange).not.toHaveBeenCalled();
-    expect(onOpenChange).toBeCalledWith(true, { current: 0 });
+    expect(onOpenChange).toHaveBeenCalledWith(true, { current: 0 });
+    expect(afterOpenChange).toHaveBeenCalledWith(true);
 
     fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
     act(() => {

@@ -974,11 +974,13 @@ describe('Preview', () => {
 
   it('should be closed when press esc after click portal', () => {
     const onOpenChange = jest.fn();
+    const afterOpenChange = jest.fn();
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
           onOpenChange,
+          afterOpenChange,
         }}
       />,
     );
@@ -991,15 +993,17 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
 
     expect(onOpenChange).toHaveBeenCalledWith(true);
+    expect(afterOpenChange).toHaveBeenCalledWith(true);
 
     fireEvent.click(document.querySelector('.rc-image-preview-actions'));
 
     fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
 
     expect(onOpenChange).toHaveBeenCalledWith(false);
-    expect(onOpenChange).toHaveBeenCalledTimes(2);
+    expect(afterOpenChange).toHaveBeenCalledWith(false);
 
-    onOpenChange.mockRestore();
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
+    expect(afterOpenChange).toHaveBeenCalledTimes(2);
   });
 
   it('not modify preview image size', () => {

@@ -88,6 +88,7 @@ export interface InternalPreviewConfig {
   open?: boolean;
   getContainer?: PortalProps['getContainer'];
   zIndex?: number;
+  afterOpenChange?: (open: boolean) => void;
 
   // Operation
   movable?: boolean;
@@ -170,6 +171,7 @@ const Preview: React.FC<PreviewProps> = props => {
     movable = true,
     onClose,
     open,
+    afterOpenChange,
     icons = {},
     closeIcon,
     getContainer,
@@ -366,6 +368,7 @@ const Preview: React.FC<PreviewProps> = props => {
     if (!nextVisible) {
       setLockScroll(false);
     }
+    afterOpenChange?.(nextVisible);
   };
 
   // ========================== Portal ==========================
