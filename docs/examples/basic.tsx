@@ -17,8 +17,8 @@ export default function Base() {
         }}
         preview={{
           icons: defaultIcons,
-          onVisibleChange: visible => {
-            console.log('visible', visible);
+          onOpenChange: open => {
+            console.log('open', open);
           },
           zIndex: 9999,
         }}
@@ -30,7 +30,7 @@ export default function Base() {
         style={{
           marginRight: 24,
         }}
-        preview={{ icons: defaultIcons, mask: 'Click to Preview' }}
+        preview={{ icons: defaultIcons, cover: 'Click to Preview' }}
       />
       <Image
         src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*ngiJQaLQELEAAAAAAAAAAABkARQnAQ"

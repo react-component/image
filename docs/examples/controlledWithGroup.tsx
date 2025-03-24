@@ -5,7 +5,7 @@ import '../../assets/index.less';
 import { defaultIcons } from './common';
 
 export default function Base() {
-  const [visible, setVisible] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const [current, setCurrent] = React.useState(1);
   return (
     <div>
@@ -13,7 +13,7 @@ export default function Base() {
         <button
           type="button"
           onClick={() => {
-            setVisible(true);
+            setOpen(true);
           }}
         >
           Switch Preview
@@ -22,9 +22,9 @@ export default function Base() {
       <Image.PreviewGroup
         preview={{
           icons: defaultIcons,
-          visible,
-          onVisibleChange: value => {
-            setVisible(value);
+          open,
+          onOpenChange: value => {
+            setOpen(value);
           },
           current,
           onChange: c => setCurrent(c),
@@ -34,8 +34,14 @@ export default function Base() {
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
           width={200}
         />
-        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/1.jpeg')} />
-        <Image wrapperStyle={{ marginRight: 24, width: 200 }} src={require('./images/2.jpeg')} />
+        <Image
+          styles={{ root: { marginRight: 24, width: 200 } }}
+          src={require('./images/1.jpeg')}
+        />
+        <Image
+          styles={{ root: { marginRight: 24, width: 200 } }}
+          src={require('./images/2.jpeg')}
+        />
       </Image.PreviewGroup>
     </div>
   );

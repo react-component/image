@@ -1,6 +1,6 @@
 {
   "name": "@rc-component/image",
-  "version": "1.0.0",
+  "version": "1.2.5",
   "description": "React easy to use image component",
   "keywords": [
     "react",
@@ -42,7 +42,6 @@
     "@rc-component/portal": "^2.0.0",
     "@rc-component/motion": "^1.0.0",
     "@rc-component/util": "^1.0.0",
-    "@rc-component/dialog": "~1.2.0",
     "classnames": "^2.2.6"
   },
   "devDependencies": {

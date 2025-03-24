@@ -11,7 +11,7 @@ export default function ToolbarRender() {
         width={200}
         preview={{
           icons: defaultIcons,
-          toolbarRender: (
+          actionsRender: (
             _,
             {
               actions: {
@@ -55,7 +55,7 @@ export default function ToolbarRender() {
           imageRender(_, { image }) {
             return <div>{JSON.stringify(image)}</div>;
           },
-          toolbarRender(_, { image }) {
+          actionsRender(_, { image }) {
             return <div>{JSON.stringify(image)}</div>;
           },
         }}

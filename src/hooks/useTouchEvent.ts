@@ -47,7 +47,7 @@ function getCenter(oldPoint1: Point, oldPoint2: Point, newPoint1: Point, newPoin
 export default function useTouchEvent(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   movable: boolean,
-  visible: boolean,
+  open: boolean,
   minScale: number,
   transform: TransformType,
   updateTransform: UpdateTransformFunc,
@@ -131,7 +131,7 @@ export default function useTouchEvent(
   };
 
   const onTouchEnd = () => {
-    if (!visible) return;
+    if (!open) return;
 
     if (isTouching) {
       setIsTouching(false);
@@ -167,7 +167,7 @@ export default function useTouchEvent(
       e.preventDefault();
     };
 
-    if (visible && movable) {
+    if (open && movable) {
       window.addEventListener('touchmove', preventDefault, {
         passive: false,
       });
@@ -175,7 +175,7 @@ export default function useTouchEvent(
     return () => {
       window.removeEventListener('touchmove', preventDefault);
     };
-  }, [visible, movable]);
+  }, [open, movable]);
 
   return {
     isTouching,
