@@ -1,7 +1,7 @@
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import classnames from 'classnames';
 import * as React from 'react';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo, useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import type {
   InternalPreviewConfig,
   InternalPreviewSemanticName,
@@ -71,11 +71,16 @@ export interface ImageProps
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-interface CompoundedComponent<P> extends React.FC<P> {
+// 定义 ImageRef 接口，只包含 nativeElement 属性
+export interface ImageRef {
+  nativeElement: HTMLImageElement | null;
+}
+
+interface CompoundedComponent<P> extends React.ForwardRefExoticComponent<P & React.RefAttributes<ImageRef>> {
   PreviewGroup: typeof PreviewGroup;
 }
 
-const ImageInternal: CompoundedComponent<ImageProps> = props => {
+const ImageInternal = forwardRef<ImageRef, ImageProps>((props, ref) => {
   const {
     // Misc
     prefixCls = 'rc-image',
@@ -107,6 +112,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     ...otherProps
   } = props;
 
+  // 创建内部引用来跟踪 image 元素
+  const imageElementRef = useRef<HTMLImageElement | null>(null);
+
+  // 使用 useImperativeHandle 暴露自定义 ref 对象
+  useImperativeHandle(ref, () => ({
+    nativeElement: imageElementRef.current,
+  }));
   const groupContext = useContext(PreviewGroupContext);
 
   // ========================== Preview ===========================
@@ -193,6 +205,16 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     onClick?.(e);
   };
 
+  // ========================== Image Ref ==========================
+  const handleRef = (img: HTMLImageElement | null) => {
+    if (!img) {
+      return;
+    }
+    // 保存到内部引用
+    imageElementRef.current = img;
+    getImgRef(img);
+  };
+
   // =========================== Render ===========================
   return (
     <>
@@ -223,7 +245,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
             ...styles.image,
             ...style,
           }}
-          ref={getImgRef}
+          ref={handleRef}
           {...srcAndOnload}
           width={width}
           height={height}
@@ -269,8 +291,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       )}
     </>
   );
-};
-
+}) as CompoundedComponent<ImageProps>;
 ImageInternal.PreviewGroup = PreviewGroup;
 
 if (process.env.NODE_ENV !== 'production') {
