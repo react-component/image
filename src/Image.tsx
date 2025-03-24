@@ -207,13 +207,12 @@ const ImageInternal = forwardRef<ImageRef, ImageProps>((props, ref) => {
 
   // ========================== Image Ref ==========================
   const handleRef = (img: HTMLImageElement | null) => {
-    if (img) {
-      // 保存到内部引用
-      imageElementRef.current = img;
-      
-      // 调用原来的 getImgRef
-      getImgRef(img);
+    if (!img) {
+      return;
     }
+    // 保存到内部引用
+    imageElementRef.current = img;
+    getImgRef(img);
   };
 
   // =========================== Render ===========================
