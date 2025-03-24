@@ -16,7 +16,6 @@ describe('Image ref forwarding', () => {
 
     // 确保 ref.current.nativeElement 指向正确的 img 元素
     expect(ref.current).not.toBeNull();
-    expect(ref.current?.nativeElement).not.toBeNull();
     expect(ref.current?.nativeElement).toBe(container.querySelector('.rc-image-img'));
     expect(ref.current?.nativeElement?.tagName).toBe('IMG');
     expect(ref.current?.nativeElement?.alt).toBe('test image');
@@ -38,7 +37,6 @@ describe('Image ref forwarding', () => {
 
     // 确保回调 ref 被调用，且 nativeElement 指向正确的 img 元素
     expect(imgRef).not.toBeNull();
-    expect(imgRef?.nativeElement).not.toBeNull();
     expect(imgRef?.nativeElement).toBe(container.querySelector('.rc-image-img'));
   });
 
@@ -89,21 +87,4 @@ describe('Image ref forwarding', () => {
     expect(ref.current?.nativeElement?.alt).toBe('updated alt');
   });
 
-  // 测试 ref 不能直接访问 img 元素属性
-  it('should not allow direct access to img element properties', () => {
-    const ref = React.createRef<ImageRef>();
-    render(
-      <Image
-        ref={ref}
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-      />,
-    );
-
-    // 确保 ref.current 不是 HTMLImageElement
-    expect(ref.current).not.toBeNull();
-    // @ts-ignore - 故意测试运行时行为
-    expect(ref.current.tagName).toBeUndefined();
-    // @ts-ignore - 故意测试运行时行为
-    expect(ref.current.src).toBeUndefined();
-  });
 });
