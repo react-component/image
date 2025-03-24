@@ -3,7 +3,7 @@ import type { GetContainer } from '@rc-component/util/lib/PortalWrapper';
 import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import cn from 'classnames';
 import * as React from 'react';
-import { useContext, useMemo, useState, forwardRef } from 'react';
+import { useContext, useMemo, useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import type { PreviewProps, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
@@ -69,11 +69,16 @@ export interface ImageProps
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
-interface CompoundedComponent<P> extends React.ForwardRefExoticComponent<P & React.RefAttributes<HTMLImageElement>> {
+// 定义 ImageRef 接口，只包含 nativeElement 属性
+export interface ImageRef {
+  nativeElement: HTMLImageElement | null;
+}
+
+interface CompoundedComponent<P> extends React.ForwardRefExoticComponent<P & React.RefAttributes<ImageRef>> {
   PreviewGroup: typeof PreviewGroup;
 }
 
-const ImageInternal = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
+const ImageInternal = forwardRef<ImageRef, ImageProps>((props, ref) => {
   const {
     src: imgSrc,
     alt,
@@ -95,6 +100,14 @@ const ImageInternal = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
 
     ...otherProps
   } = props;
+
+  // 创建内部引用来跟踪 image 元素
+  const imageElementRef = useRef<HTMLImageElement | null>(null);
+
+  // 使用 useImperativeHandle 暴露自定义 ref 对象
+  useImperativeHandle(ref, () => ({
+    nativeElement: imageElementRef.current,
+  }));
 
   const isCustomPlaceholder = placeholder && placeholder !== true;
   const {
@@ -180,19 +193,14 @@ const ImageInternal = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
     onClick?.(e);
   };
 
-  // ========================== Combined Ref ==========================
+  // ========================== Image Ref ==========================
   const handleRef = (img: HTMLImageElement | null) => {
     if (img) {
-      getImgRef(img);
+      // 保存到内部引用
+      imageElementRef.current = img;
       
-      // 处理外部传入的 ref
-      if (ref) {
-        if (typeof ref === 'function') {
-          ref(img);
-        } else {
-          ref.current = img;
-        }
-      }
+      // 调用原来的 getImgRef
+      getImgRef(img);
     }
   };
 
