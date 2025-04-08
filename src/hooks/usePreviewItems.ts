@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { GroupConsumerProps } from '../PreviewGroup';
+import type { PreviewGroupProps } from '../PreviewGroup';
 import { COMMON_PROPS } from '../common';
 import type {
   ImageElementProps,
@@ -14,7 +14,7 @@ export type Items = Omit<InternalItem, 'canPreview'>[];
  * Merge props provided `items` or context collected images
  */
 export default function usePreviewItems(
-  items?: GroupConsumerProps['items'],
+  items?: PreviewGroupProps['items'],
 ): [items: Items, registerImage: RegisterImage, fromItems: boolean] {
   // Context collection image data
   const [images, setImages] = React.useState<Record<number, PreviewImageElementProps>>({});

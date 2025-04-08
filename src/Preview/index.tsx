@@ -19,7 +19,7 @@ import PrevNext from './PrevNext';
 
 // Note: if you want to add `action`,
 // pls contact @zombieJ or @thinkasany first.
-export type InternalPreviewSemanticName = 'root' | 'mask' | 'body' | FooterSemanticName;
+export type PreviewSemanticName = 'root' | 'mask' | 'body' | FooterSemanticName;
 
 export interface OperationIcons {
   rotateLeft?: React.ReactNode;
@@ -71,8 +71,6 @@ export interface InternalPreviewConfig {
   // Semantic
   /** Better to use `classNames.root` instead */
   rootClassName?: string;
-  classNames?: Partial<Record<InternalPreviewSemanticName, string>>;
-  styles?: Partial<Record<InternalPreviewSemanticName, React.CSSProperties>>;
 
   // Image
   src?: string;
@@ -112,6 +110,9 @@ export interface InternalPreviewConfig {
 export interface PreviewProps extends InternalPreviewConfig {
   // Misc
   prefixCls: string;
+
+  classNames?: Partial<Record<PreviewSemanticName, string>>;
+  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
 
   // Origin image Info
   imageInfo?: {
