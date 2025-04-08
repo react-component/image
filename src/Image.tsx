@@ -259,10 +259,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imageInfo={{ width, height }}
           fallback={fallback}
           imgCommonProps={imgCommonProps}
+          {...restProps}
           classNames={classNames?.popup}
           styles={styles?.popup}
           rootClassName={classnames(previewRootClassName, rootClassName)}
-          {...restProps}
         />
       )}
     </>

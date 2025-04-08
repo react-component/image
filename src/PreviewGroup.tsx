@@ -141,9 +141,9 @@ const Group: React.FC<PreviewGroupProps> = ({
         current={current}
         count={mergedItems.length}
         onChange={onInternalChange}
+        {...restProps}
         classNames={classNames?.popup}
         styles={styles?.popup}
-        {...restProps}
       />
     </PreviewGroupContext.Provider>
   );

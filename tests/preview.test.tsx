@@ -733,22 +733,24 @@ describe('Preview', () => {
       <Image
         src={src}
         rootClassName="both"
-        classNames={{ root: 'image-root' }}
+        classNames={{
+          root: 'image-root',
+          popup: {
+            root: 'preview-root',
+          },
+        }}
         styles={{
           root: {
             color: 'red',
           },
-        }}
-        preview={{
-          open: true,
-          classNames: {
-            root: 'preview-root',
-          },
-          styles: {
+          popup: {
             root: {
               background: 'green',
             },
           },
+        }}
+        preview={{
+          open: true,
         }}
       />,
     );
