@@ -2,7 +2,7 @@ import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import * as React from 'react';
 import { useState } from 'react';
 import type { ImgInfo } from './Image';
-import type { InternalPreviewConfig, PreviewProps } from './Preview';
+import type { InternalPreviewConfig, PreviewProps, PreviewSemanticName } from './Preview';
 import Preview from './Preview';
 import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
@@ -20,8 +20,16 @@ export interface GroupPreviewConfig extends InternalPreviewConfig {
   onChange?: (current: number, prevCurrent: number) => void;
 }
 
-export interface GroupConsumerProps {
+export interface PreviewGroupProps {
   previewPrefixCls?: string;
+  classNames?: {
+    popup?: Partial<Record<PreviewSemanticName, string>>;
+  };
+
+  styles?: {
+    popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
+  };
+
   icons?: PreviewProps['icons'];
   items?: (string | ImageElementProps)[];
   fallback?: string;
@@ -29,8 +37,10 @@ export interface GroupConsumerProps {
   children?: React.ReactNode;
 }
 
-const Group: React.FC<GroupConsumerProps> = ({
+const Group: React.FC<PreviewGroupProps> = ({
   previewPrefixCls = 'rc-image-preview',
+  classNames,
+  styles,
   children,
   icons = {},
   items,
@@ -131,6 +141,8 @@ const Group: React.FC<GroupConsumerProps> = ({
         current={current}
         count={mergedItems.length}
         onChange={onInternalChange}
+        classNames={classNames?.popup}
+        styles={styles?.popup}
         {...restProps}
       />
     </PreviewGroupContext.Provider>

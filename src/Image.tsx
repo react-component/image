@@ -2,11 +2,7 @@ import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
 import classnames from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
-import type {
-  InternalPreviewConfig,
-  InternalPreviewSemanticName,
-  ToolbarRenderInfoType,
-} from './Preview';
+import type { InternalPreviewConfig, PreviewSemanticName, ToolbarRenderInfoType } from './Preview';
 import Preview from './Preview';
 import PreviewGroup from './PreviewGroup';
 import { COMMON_PROPS } from './common';
@@ -25,8 +21,6 @@ export interface ImgInfo {
 
 export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'> {
   cover?: React.ReactNode;
-  classNames?: Partial<Record<PreviewSemanticName, string>>;
-  styles?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
 
   // Similar to InternalPreviewConfig but not have `current`
   imageRender?: (
@@ -43,9 +37,7 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
   onOpenChange?: (open: boolean) => void;
 }
 
-export type SemanticName = 'root' | 'image';
-
-export type PreviewSemanticName = InternalPreviewSemanticName | 'cover';
+export type SemanticName = 'root' | 'image' | 'cover';
 
 export interface ImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
@@ -55,8 +47,16 @@ export interface ImageProps
 
   // Styles
   rootClassName?: string;
-  classNames?: Partial<Record<SemanticName, string>>;
-  styles?: Partial<Record<SemanticName, React.CSSProperties>>;
+  classNames?: Partial<
+    Record<SemanticName, string> & {
+      popup?: Partial<Record<PreviewSemanticName, string>>;
+    }
+  >;
+  styles?: Partial<
+    Record<SemanticName, React.CSSProperties> & {
+      popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>>;
+    }
+  >;
 
   // Image
   src?: string;
@@ -117,8 +117,6 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     open: previewOpen,
     onOpenChange: onPreviewOpenChange,
     cover,
-    classNames: previewClassNames = {},
-    styles: previewStyles = {},
     rootClassName: previewRootClassName,
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
@@ -239,10 +237,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(`${prefixCls}-cover`, previewClassNames.cover)}
+            className={classnames(`${prefixCls}-cover`, classNames.cover)}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
-              ...previewStyles.cover,
+              ...styles.cover,
             }}
           >
             {cover}
@@ -261,8 +259,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           imageInfo={{ width, height }}
           fallback={fallback}
           imgCommonProps={imgCommonProps}
-          classNames={previewClassNames}
-          styles={previewStyles}
+          classNames={classNames?.popup}
+          styles={styles?.popup}
           rootClassName={classnames(previewRootClassName, rootClassName)}
           {...restProps}
         />

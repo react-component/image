@@ -609,11 +609,11 @@ describe('Preview', () => {
     render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        classNames={{
+          cover: 'bamboo',
+        }}
         preview={{
           cover: 'Bamboo Is Light',
-          classNames: {
-            cover: 'bamboo',
-          },
         }}
       />,
     );
@@ -1073,26 +1073,30 @@ describe('Preview', () => {
   it('support classnames and styles', () => {
     const customClassnames = {
       cover: 'custom-cover',
-      mask: 'custom-mask',
-      actions: 'custom-actions',
-      root: 'custom-root',
+      popup: {
+        mask: 'custom-mask',
+        actions: 'custom-actions',
+        root: 'custom-root',
+      },
     };
     const customStyles = {
       cover: { color: 'red' },
-      mask: { color: 'red' },
-      actions: { backgroundColor: 'blue' },
-      root: { border: '1px solid green' },
+      popup: {
+        mask: { color: 'red' },
+        actions: { backgroundColor: 'blue' },
+        root: { border: '1px solid green' },
+      },
     };
     const { baseElement } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         preview={{
-          styles: customStyles,
-          classNames: customClassnames,
           cover: 'Bamboo Is Light',
           zIndex: 9999,
           open: true,
         }}
+        classNames={customClassnames}
+        styles={customStyles}
       />,
     );
 
@@ -1101,11 +1105,11 @@ describe('Preview', () => {
     const actions = baseElement.querySelector('.rc-image-preview-actions');
     expect(cover).toHaveClass(customClassnames.cover);
     expect(cover).toHaveStyle(customStyles.cover);
-    expect(mask).toHaveClass(customClassnames.mask);
-    expect(mask).toHaveStyle(customStyles.mask);
-    expect(actions).toHaveClass(customClassnames.actions);
-    expect(actions).toHaveStyle(customStyles.actions);
-    expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.root);
-    expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.root);
+    expect(mask).toHaveClass(customClassnames.popup.mask);
+    expect(mask).toHaveStyle(customStyles.popup.mask);
+    expect(actions).toHaveClass(customClassnames.popup.actions);
+    expect(actions).toHaveStyle(customStyles.popup.actions);
+    expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.popup.root);
+    expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.popup.root);
   });
 });
