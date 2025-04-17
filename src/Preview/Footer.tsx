@@ -86,7 +86,7 @@ export default function Footer(props: FooterProps) {
   // >>>>> Progress
   const progressNode = showProgress && (
     <div className={`${prefixCls}-progress`}>
-      {countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}
+      <bdi>{countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}</bdi>
     </div>
   );
 
