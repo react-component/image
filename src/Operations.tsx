@@ -246,7 +246,7 @@ const Operations: React.FC<OperationsProps> = props => {
             <div className={`${prefixCls}-footer`}>
               {showProgress && (
                 <div className={`${prefixCls}-progress`}>
-                  {countRender ? countRender(current + 1, count) : `${current + 1} / ${count}`}
+                  {countRender ? countRender(current + 1, count) : <bdi>{`${current + 1} / ${count}`}</bdi>}
                 </div>
               )}
 
