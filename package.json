@@ -36,6 +36,7 @@
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "start": "dumi dev",
     "test": "rc-test",
+    "test:update": "rc-test -u",
     "tsc": "bunx tsc --noEmit"
   },
   "dependencies": {
