@@ -19,8 +19,12 @@ export interface ImgInfo {
   height: string | number;
 }
 
+export interface CoverConfig {
+  coverNode?: React.ReactNode;
+  placement?: 'top' | 'bottom' | 'center';
+}
 export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'> {
-  cover?: React.ReactNode;
+  cover?: React.ReactNode | CoverConfig;
 
   // Similar to InternalPreviewConfig but not have `current`
   imageRender?: (
@@ -120,6 +124,14 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     rootClassName: previewRootClassName,
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
+
+  const coverPlacement = typeof cover === 'object' && (cover as CoverConfig).placement ?
+    (cover as CoverConfig).placement || 'center' :
+    'center';
+
+  const coverNode = typeof cover === 'object' && (cover as CoverConfig).coverNode ?
+    (cover as CoverConfig).coverNode :
+    cover as React.ReactNode;
 
   // ============================ Open ============================
   const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
@@ -237,13 +249,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(`${prefixCls}-cover`, classNames.cover)}
+            className={classnames(`${prefixCls}-cover`, classNames.cover, `${prefixCls}-cover-${coverPlacement}`)}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
               ...styles.cover,
             }}
           >
-            {cover}
+            {coverNode}
           </div>
         )}
       </div>

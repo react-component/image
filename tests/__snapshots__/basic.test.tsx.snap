@@ -11,7 +11,7 @@ exports[`Basic snapshot 1`] = `
     width="200"
   />
   <div
-    class="rc-image-cover"
+    class="rc-image-cover rc-image-cover-center"
   />
 </div>
 `;

@@ -1,8 +1,16 @@
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import Image from '../src';
+import Image, { CoverConfig } from '../src';
 
 describe('Basic', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('snapshot', () => {
     const { asFragment } = render(
       <Image
@@ -100,5 +108,53 @@ describe('Basic', () => {
     );
     const operationsElement = baseElement.querySelector('.rc-image-preview');
     expect(operationsElement).toHaveStyle({ zIndex: 9999 });
+  });
+  it('cover placement should work', () => {
+    const App = () => {
+      const [placement, setPlacement] = React.useState<'top' | 'bottom' | 'center'>('center');
+      return (
+        <>
+          <select
+            id="placement"
+            onChange={e => setPlacement(e.target.value as CoverConfig['placement'])}
+            value={placement}
+          >
+            <option value="top">top</option>
+            <option value="bottom">bottom</option>
+            <option value="center">center</option>
+          </select>
+          <Image
+            src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+            preview={{
+              cover: {
+                coverNode: 'Click to Preview',
+                placement: placement as CoverConfig['placement'],
+              },
+            }}
+          />
+        </>
+      );
+    };
+    const { container } = render(<App />);
+    const coverElement = container.querySelector('.rc-image-cover');
+    expect(coverElement).toHaveClass('rc-image-cover-center');
+
+    fireEvent.change(container.querySelector('#placement'), {
+      target: { value: 'top' },
+    });
+    // Wait for the state update to take effect
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(coverElement).toHaveClass('rc-image-cover-top');
+
+    fireEvent.change(container.querySelector('#placement'), {
+      target: { value: 'bottom' },
+    });
+    // Wait for the state update to take effect
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(coverElement).toHaveClass('rc-image-cover-bottom');
   });
 });
