@@ -13,7 +13,7 @@ export type ImageElementProps = Pick<
   | 'srcSet'
   | 'useMap'
   | 'alt'
->;
+> & { type?: 'image' | 'video' };
 
 export type PreviewImageElementProps = {
   data: ImageElementProps;

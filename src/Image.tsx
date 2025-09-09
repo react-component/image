@@ -117,6 +117,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   const canPreview = !!preview;
 
   const {
+    type: previewType = 'image',
     src: previewSrc,
     open: previewOpen,
     onOpenChange: onPreviewOpenChange,
@@ -178,8 +179,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     () => ({
       ...imgCommonProps,
       src,
+      type: previewType,
     }),
-    [src, imgCommonProps],
+    [src, imgCommonProps, previewType],
   );
 
   const imageId = useRegisterImage(canPreview, registerData);
@@ -266,6 +268,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           prefixCls={previewPrefixCls}
           onClose={onPreviewClose}
           mousePosition={mousePosition}
+          type={previewType}
           src={src}
           alt={alt}
           imageInfo={{ width, height }}
