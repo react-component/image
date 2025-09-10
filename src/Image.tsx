@@ -1,4 +1,4 @@
-import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
+import useControlledState from '@rc-component/util/lib/hooks/useControlledState';
 import classnames from 'classnames';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
@@ -125,18 +125,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
-  const coverPlacement = typeof cover === 'object' && (cover as CoverConfig).placement ?
-    (cover as CoverConfig).placement || 'center' :
-    'center';
+  const coverPlacement =
+    typeof cover === 'object' && (cover as CoverConfig).placement
+      ? (cover as CoverConfig).placement || 'center'
+      : 'center';
 
-  const coverNode = typeof cover === 'object' && (cover as CoverConfig).coverNode ?
-    (cover as CoverConfig).coverNode :
-    cover as React.ReactNode;
+  const coverNode =
+    typeof cover === 'object' && (cover as CoverConfig).coverNode
+      ? (cover as CoverConfig).coverNode
+      : (cover as React.ReactNode);
 
   // ============================ Open ============================
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
-    value: previewOpen,
-  });
+  const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
@@ -249,7 +249,11 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(`${prefixCls}-cover`, classNames.cover, `${prefixCls}-cover-${coverPlacement}`)}
+            className={classnames(
+              `${prefixCls}-cover`,
+              classNames.cover,
+              `${prefixCls}-cover-${coverPlacement}`,
+            )}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
               ...styles.cover,
