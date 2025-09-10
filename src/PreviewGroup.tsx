@@ -66,7 +66,7 @@ const Group: React.FC<PreviewGroupProps> = ({
   const [keepOpenIndex, setKeepOpenIndex] = useState(false);
 
   // >>> Image
-  const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
+  const { src, type, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
   const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
   const triggerShowPreview = useEvent((next: boolean) => {
@@ -136,6 +136,7 @@ const Group: React.FC<PreviewGroupProps> = ({
         mousePosition={mousePosition}
         imgCommonProps={imgCommonProps}
         src={src}
+        type={type}
         fallback={fallback}
         icons={icons}
         current={current}

@@ -72,7 +72,8 @@ export interface InternalPreviewConfig {
   /** Better to use `classNames.root` instead */
   rootClassName?: string;
 
-  // Image
+  // Media
+  type?: 'image' | 'video';
   src?: string;
   alt?: string;
 
@@ -121,7 +122,7 @@ export interface PreviewProps extends InternalPreviewConfig {
   };
   fallback?: string;
 
-  // Preview image
+  // Preview media
   imgCommonProps?: React.ImgHTMLAttributes<HTMLImageElement>;
   width?: string | number;
   height?: string | number;
@@ -165,6 +166,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const {
     prefixCls,
     rootClassName,
+    type = 'image',
     src,
     alt,
     imageInfo,
@@ -425,13 +427,24 @@ const Preview: React.FC<PreviewProps> = props => {
               {/* Body */}
               <div className={classnames(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
                 {/* Preview Image */}
-                {imageRender
-                  ? imageRender(imgNode, {
-                      transform,
-                      image,
-                      ...(groupContext ? { current } : {}),
-                    })
-                  : imgNode}
+                {type === 'image' &&
+                  (imageRender
+                    ? imageRender(imgNode, {
+                        transform,
+                        image,
+                        ...(groupContext ? { current } : {}),
+                      })
+                    : imgNode)}
+                {type === 'video' && (
+                  <video
+                    className={`${prefixCls}-video`}
+                    src={src}
+                    width={props.width}
+                    height={props.height}
+                    controls
+                    autoPlay
+                  />
+                )}
               </div>
 
               {/* Close Button */}
@@ -454,37 +467,38 @@ const Preview: React.FC<PreviewProps> = props => {
                 />
               )}
 
-              {/* Footer */}
-              <Footer
-                prefixCls={prefixCls}
-                showProgress={showOperationsProgress}
-                current={current}
-                count={count}
-                showSwitch={showLeftOrRightSwitches}
-                // Style
-                classNames={classNames}
-                styles={styles}
-                // Render
-                image={image}
-                transform={transform}
-                icons={icons}
-                countRender={countRender}
-                actionsRender={actionsRender}
-                // Scale
-                scale={scale}
-                minScale={minScale}
-                maxScale={maxScale}
-                // Actions
-                onActive={onActive}
-                onFlipY={onFlipY}
-                onFlipX={onFlipX}
-                onRotateLeft={onRotateLeft}
-                onRotateRight={onRotateRight}
-                onZoomOut={onZoomOut}
-                onZoomIn={onZoomIn}
-                onClose={onClose}
-                onReset={onReset}
-              />
+              {type === 'image' && (
+                <Footer
+                  prefixCls={prefixCls}
+                  showProgress={showOperationsProgress}
+                  current={current}
+                  count={count}
+                  showSwitch={showLeftOrRightSwitches}
+                  // Style
+                  classNames={classNames}
+                  styles={styles}
+                  // Render
+                  image={image}
+                  transform={transform}
+                  icons={icons}
+                  countRender={countRender}
+                  actionsRender={actionsRender}
+                  // Scale
+                  scale={scale}
+                  minScale={minScale}
+                  maxScale={maxScale}
+                  // Actions
+                  onActive={onActive}
+                  onFlipY={onFlipY}
+                  onFlipX={onFlipX}
+                  onRotateLeft={onRotateLeft}
+                  onRotateRight={onRotateRight}
+                  onZoomOut={onZoomOut}
+                  onZoomIn={onZoomIn}
+                  onClose={onClose}
+                  onReset={onReset}
+                />
+              )}
             </div>
           );
         }}
