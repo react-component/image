@@ -71,7 +71,7 @@ const Group: React.FC<PreviewGroupProps> = ({
 
   React.useEffect(() => {
     onOpenChange?.(isShowPreview, { current });
-  }, [isShowPreview]);
+  }, [isShowPreview, current, onOpenChange]);
 
   // >>> Position
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
