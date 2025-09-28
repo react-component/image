@@ -46,7 +46,7 @@
     "clsx": "^2.1.1"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.0.1",
+    "@ant-design/icons": "^6.0.2",
     "@rc-component/father-plugin": "^2.0.2",
     "@rc-component/np": "^1.0.0",
     "@testing-library/jest-dom": "^6.4.0",
