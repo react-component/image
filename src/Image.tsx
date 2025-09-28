@@ -1,5 +1,5 @@
 import useControlledState from '@rc-component/util/lib/hooks/useControlledState';
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { InternalPreviewConfig, PreviewSemanticName, ToolbarRenderInfoType } from './Preview';
@@ -208,7 +208,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={classnames(prefixCls, rootClassName, classNames.root, {
+        className={clsx(prefixCls, rootClassName, classNames.root, {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
@@ -220,7 +220,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       >
         <img
           {...imgCommonProps}
-          className={classnames(
+          className={clsx(
             `${prefixCls}-img`,
             {
               [`${prefixCls}-img-placeholder`]: placeholder === true,
@@ -249,7 +249,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(
+            className={clsx(
               `${prefixCls}-cover`,
               classNames.cover,
               `${prefixCls}-cover-${coverPlacement}`,
@@ -278,7 +278,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           {...restProps}
           classNames={classNames?.popup}
           styles={styles?.popup}
-          rootClassName={classnames(previewRootClassName, rootClassName)}
+          rootClassName={clsx(previewRootClassName, rootClassName)}
         />
       )}
     </>
