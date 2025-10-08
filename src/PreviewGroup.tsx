@@ -1,4 +1,5 @@
-import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
+import useControlledState from '@rc-component/util/lib/hooks/useControlledState';
+import useEvent from '@rc-component/util/lib/hooks/useEvent';
 import * as React from 'react';
 import { useState } from 'react';
 import type { ImgInfo } from './Image';
@@ -60,20 +61,19 @@ const Group: React.FC<PreviewGroupProps> = ({
 
   // ========================= Preview ==========================
   // >>> Index
-  const [current, setCurrent] = useMergedState(0, {
-    value: currentIndex,
-  });
+  const [current, setCurrent] = useControlledState(0, currentIndex);
 
   const [keepOpenIndex, setKeepOpenIndex] = useState(false);
 
   // >>> Image
   const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
   // >>> Visible
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
-    value: previewOpen,
-    onChange: val => {
-      onOpenChange?.(val, { current });
-    },
+  const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
+  const triggerShowPreview = useEvent((next: boolean) => {
+    setShowPreview(next);
+    if (next !== isShowPreview) {
+      onOpenChange?.(next, { current });
+    }
   });
 
   // >>> Position
@@ -87,7 +87,7 @@ const Group: React.FC<PreviewGroupProps> = ({
 
       setCurrent(index < 0 ? 0 : index);
 
-      setShowPreview(true);
+      triggerShowPreview(true);
       setMousePosition({ x: mouseX, y: mouseY });
 
       setKeepOpenIndex(true);
@@ -114,7 +114,7 @@ const Group: React.FC<PreviewGroupProps> = ({
   };
 
   const onPreviewClose = () => {
-    setShowPreview(false);
+    triggerShowPreview(false);
     setMousePosition(null);
   };
 

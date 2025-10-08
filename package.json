@@ -1,6 +1,6 @@
 {
   "name": "@rc-component/image",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "description": "React easy to use image component",
   "keywords": [
     "react",
@@ -36,13 +36,14 @@
     "prettier": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "start": "dumi dev",
     "test": "rc-test",
+    "test:update": "rc-test -u",
     "tsc": "bunx tsc --noEmit"
   },
   "dependencies": {
-    "@rc-component/portal": "^2.0.0",
     "@rc-component/motion": "^1.0.0",
-    "@rc-component/util": "^1.0.0",
-    "classnames": "^2.2.6"
+    "@rc-component/portal": "^2.0.0",
+    "@rc-component/util": "^1.3.0",
+    "clsx": "^2.1.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -50,8 +51,8 @@
     "@rc-component/np": "^1.0.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^15.0.6",
-    "@types/classnames": "^2.2.10",
     "@types/jest": "^30.0.0",
+    "@types/node": "^24.5.2",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@umijs/fabric": "^4.0.1",

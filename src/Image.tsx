@@ -1,5 +1,5 @@
-import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
-import classnames from 'classnames';
+import useControlledState from '@rc-component/util/lib/hooks/useControlledState';
+import { clsx } from 'clsx';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { InternalPreviewConfig, PreviewSemanticName, ToolbarRenderInfoType } from './Preview';
@@ -19,8 +19,12 @@ export interface ImgInfo {
   height: string | number;
 }
 
+export interface CoverConfig {
+  coverNode?: React.ReactNode;
+  placement?: 'top' | 'bottom' | 'center';
+}
 export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'> {
-  cover?: React.ReactNode;
+  cover?: React.ReactNode | CoverConfig;
 
   // Similar to InternalPreviewConfig but not have `current`
   imageRender?: (
@@ -121,10 +125,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
+  const coverPlacement =
+    typeof cover === 'object' && (cover as CoverConfig).placement
+      ? (cover as CoverConfig).placement || 'center'
+      : 'center';
+
+  const coverNode =
+    typeof cover === 'object' && (cover as CoverConfig).coverNode
+      ? (cover as CoverConfig).coverNode
+      : (cover as React.ReactNode);
+
   // ============================ Open ============================
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
-    value: previewOpen,
-  });
+  const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
@@ -196,7 +208,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     <>
       <div
         {...otherProps}
-        className={classnames(prefixCls, rootClassName, classNames.root, {
+        className={clsx(prefixCls, rootClassName, classNames.root, {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
@@ -208,7 +220,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       >
         <img
           {...imgCommonProps}
-          className={classnames(
+          className={clsx(
             `${prefixCls}-img`,
             {
               [`${prefixCls}-img-placeholder`]: placeholder === true,
@@ -237,13 +249,17 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(`${prefixCls}-cover`, classNames.cover)}
+            className={clsx(
+              `${prefixCls}-cover`,
+              classNames.cover,
+              `${prefixCls}-cover-${coverPlacement}`,
+            )}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
               ...styles.cover,
             }}
           >
-            {cover}
+            {coverNode}
           </div>
         )}
       </div>
@@ -262,7 +278,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           {...restProps}
           classNames={classNames?.popup}
           styles={styles?.popup}
-          rootClassName={classnames(previewRootClassName, rootClassName)}
+          rootClassName={clsx(previewRootClassName, rootClassName)}
         />
       )}
     </>

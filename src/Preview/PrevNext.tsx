@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { clsx } from 'clsx';
 import * as React from 'react';
 import type { OperationIcons } from '.';
 
@@ -24,7 +24,7 @@ export default function PrevNext(props: PrevNextProps) {
   return (
     <>
       <div
-        className={classNames(switchCls, `${switchCls}-prev`, {
+        className={clsx(switchCls, `${switchCls}-prev`, {
           [`${switchCls}-disabled`]: current === 0,
         })}
         onClick={() => onActive(-1)}
@@ -32,7 +32,7 @@ export default function PrevNext(props: PrevNextProps) {
         {prev ?? left}
       </div>
       <div
-        className={classNames(switchCls, `${switchCls}-next`, {
+        className={clsx(switchCls, `${switchCls}-next`, {
           [`${switchCls}-disabled`]: current === count - 1,
         })}
         onClick={() => onActive(1)}
