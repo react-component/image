@@ -1,4 +1,4 @@
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import * as React from 'react';
 
 export interface CloseBtnProps {
@@ -14,7 +14,7 @@ export default function CloseBtn(props: CloseBtnProps) {
 
   return (
     <button
-      className={classnames(`${prefixCls}-close`, className)}
+      className={clsx(`${prefixCls}-close`, className)}
       style={style}
       onClick={onClick}
     >
