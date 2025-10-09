@@ -1,4 +1,4 @@
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import * as React from 'react';
 import type { Actions, PreviewProps } from '.';
 import type { ImgInfo } from '../Image';
@@ -97,7 +97,7 @@ export default function Footer(props: FooterProps) {
     return (
       <div
         key={type}
-        className={classnames(actionCls, `${actionCls}-${type}`, {
+        className={clsx(actionCls, `${actionCls}-${type}`, {
           [`${actionCls}-disabled`]: !!disabled,
         })}
         onClick={onClick}
@@ -164,7 +164,7 @@ export default function Footer(props: FooterProps) {
   });
 
   const actionsNode = (
-    <div className={classnames(`${prefixCls}-actions`, classNames.actions)} style={styles.actions}>
+    <div className={clsx(`${prefixCls}-actions`, classNames.actions)} style={styles.actions}>
       {flipYNode}
       {flipXNode}
       {rotateLeftNode}
@@ -176,7 +176,7 @@ export default function Footer(props: FooterProps) {
 
   // >>>>> Render
   return (
-    <div className={classnames(`${prefixCls}-footer`, classNames.footer)} style={styles.footer}>
+    <div className={clsx(`${prefixCls}-footer`, classNames.footer)} style={styles.footer}>
       {progressNode}
       {actionsRender
         ? actionsRender(actionsNode, {

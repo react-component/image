@@ -3,7 +3,7 @@ import Portal, { type PortalProps } from '@rc-component/portal';
 import { useEvent } from '@rc-component/util';
 import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
 import KeyCode from '@rc-component/util/lib/KeyCode';
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from '../context';
 import type { TransformAction, TransformType } from '../hooks/useImageTransform';
@@ -410,27 +410,23 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
-              className={classnames(prefixCls, rootClassName, classNames.root, motionClassName, {
+              className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}
             >
               {/* Mask */}
               <div
-                className={classnames(`${prefixCls}-mask`, classNames.mask)}
+                className={clsx(`${prefixCls}-mask`, classNames.mask)}
                 style={styles.mask}
                 onClick={onClose}
               />
 
               {/* Body */}
-              <div className={classnames(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
+              <div className={clsx(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
                 {/* Preview Image */}
                 {imageRender
-                  ? imageRender(imgNode, {
-                      transform,
-                      image,
-                      ...(groupContext ? { current } : {}),
-                    })
+                  ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
                   : imgNode}
               </div>
 
