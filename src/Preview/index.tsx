@@ -389,7 +389,7 @@ const Preview: React.FC<PreviewProps> = props => {
   }
 
   return (
-    <Portal open={portalRender} getContainer={getContainer} autoLock={lockScroll}>
+    <Portal open={portalRender && open} getContainer={getContainer} autoLock={lockScroll}>
       <CSSMotion
         motionName={motionName}
         visible={portalRender && open}
