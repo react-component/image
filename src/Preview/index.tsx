@@ -332,16 +332,20 @@ const Preview: React.FC<PreviewProps> = props => {
     if (open) {
       const { keyCode } = event;
 
-      if (keyCode === KeyCode.ESC) {
-        onClose?.();
-      }
-
-      if (showLeftOrRightSwitches) {
-        if (keyCode === KeyCode.LEFT) {
-          onActive(-1);
-        } else if (keyCode === KeyCode.RIGHT) {
-          onActive(1);
-        }
+      switch (keyCode) {
+        case KeyCode.ESC:
+          event.preventDefault();
+          onClose?.();
+          break;
+        case KeyCode.LEFT:
+        case KeyCode.RIGHT:
+          if (showLeftOrRightSwitches) {
+            event.preventDefault();
+            onActive(keyCode === KeyCode.LEFT ? -1 : 1);
+          }
+          break;
+        default:
+          break;
       }
     }
   });
