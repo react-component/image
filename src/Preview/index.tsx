@@ -479,8 +479,7 @@ const Preview: React.FC<PreviewProps> = props => {
         </CSSMotion>
       </div>
     </Portal>
-  )
-    ;
+  );
 };
 
 export default Preview;

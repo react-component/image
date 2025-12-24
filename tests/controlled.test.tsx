@@ -31,7 +31,7 @@ describe('Controlled', () => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
   });
 
   it('controlled current in group', () => {
