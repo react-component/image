@@ -387,104 +387,105 @@ const Preview: React.FC<PreviewProps> = props => {
   if (mousePosition) {
     bodyStyle.transformOrigin = `${mousePosition.x}px ${mousePosition.y}px`;
   }
-
   return (
     <Portal open={portalRender} getContainer={getContainer} autoLock={lockScroll}>
-      <CSSMotion
-        motionName={motionName}
-        visible={portalRender && open}
-        motionAppear
-        motionEnter
-        motionLeave
-        onVisibleChanged={onVisibleChanged}
-      >
-        {({ className: motionClassName, style: motionStyle }) => {
-          const mergedStyle = {
-            ...styles.root,
-            ...motionStyle,
-          };
-
-          if (zIndex) {
-            mergedStyle.zIndex = zIndex;
-          }
-
-          return (
-            <div
-              className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
-                [`${prefixCls}-moving`]: isMoving,
-              })}
-              style={mergedStyle}
-            >
-              {/* Mask */}
+      <div
+        className={clsx(prefixCls, rootClassName, classNames.root, { [`${prefixCls}-moving`]: isMoving })}
+        style={{ ...styles.root, ...(zIndex ? { zIndex } : {}) }}>
+        {/* Mask */}
+        <CSSMotion
+          motionName={motionName}
+          visible={portalRender && open}
+          motionAppear
+          motionEnter
+          motionLeave>
+          {({ className: motionClassName, style: motionStyle }) => {
+            return (<div
+              className={clsx(`${prefixCls}-mask`, classNames.mask, motionClassName)}
+              style={{ ...styles.mask, ...motionStyle }}
+              onClick={onClose}
+            />);
+          }}
+        </CSSMotion>
+        <CSSMotion
+          motionName={motionName}
+          visible={portalRender && open}
+          motionAppear
+          motionEnter
+          motionLeave
+          onVisibleChanged={onVisibleChanged}
+        >
+          {({ className: motionClassName, style: motionStyle }) => {
+            return (
               <div
-                className={clsx(`${prefixCls}-mask`, classNames.mask)}
-                style={styles.mask}
-                onClick={onClose}
-              />
+                className={clsx(motionClassName)}
+                style={{ ...motionStyle }}
+              >
 
-              {/* Body */}
-              <div className={clsx(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
-                {/* Preview Image */}
-                {imageRender
-                  ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
-                  : imgNode}
-              </div>
+                {/* Body */}
+                <div className={clsx(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
+                  {/* Preview Image */}
+                  {imageRender
+                    ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
+                    : imgNode}
+                </div>
 
-              {/* Close Button */}
-              {closeIcon !== false && closeIcon !== null && (
-                <CloseBtn
+                {/* Close Button */}
+                {closeIcon !== false && closeIcon !== null && (
+                  <CloseBtn
+                    prefixCls={prefixCls}
+                    icon={closeIcon === true ? icons.close : closeIcon || icons.close}
+                    onClick={onClose}
+                  />
+                )}
+
+                {/* Switch prev or next */}
+                {showLeftOrRightSwitches && (
+                  <PrevNext
+                    prefixCls={prefixCls}
+                    current={current}
+                    count={count}
+                    icons={icons}
+                    onActive={onActive}
+                  />
+                )}
+
+                {/* Footer */}
+                <Footer
                   prefixCls={prefixCls}
-                  icon={closeIcon === true ? icons.close : closeIcon || icons.close}
-                  onClick={onClose}
-                />
-              )}
-
-              {/* Switch prev or next */}
-              {showLeftOrRightSwitches && (
-                <PrevNext
-                  prefixCls={prefixCls}
+                  showProgress={showOperationsProgress}
                   current={current}
                   count={count}
+                  showSwitch={showLeftOrRightSwitches}
+                  // Style
+                  classNames={classNames}
+                  styles={styles}
+                  // Render
+                  image={image}
+                  transform={transform}
                   icons={icons}
+                  countRender={countRender}
+                  actionsRender={actionsRender}
+                  // Scale
+                  scale={scale}
+                  minScale={minScale}
+                  maxScale={maxScale}
+                  // Actions
                   onActive={onActive}
+                  onFlipY={onFlipY}
+                  onFlipX={onFlipX}
+                  onRotateLeft={onRotateLeft}
+                  onRotateRight={onRotateRight}
+                  onZoomOut={onZoomOut}
+                  onZoomIn={onZoomIn}
+                  onClose={onClose}
+                  onReset={onReset}
                 />
-              )}
-
-              {/* Footer */}
-              <Footer
-                prefixCls={prefixCls}
-                showProgress={showOperationsProgress}
-                current={current}
-                count={count}
-                showSwitch={showLeftOrRightSwitches}
-                // Style
-                classNames={classNames}
-                styles={styles}
-                // Render
-                image={image}
-                transform={transform}
-                icons={icons}
-                countRender={countRender}
-                actionsRender={actionsRender}
-                // Scale
-                scale={scale}
-                minScale={minScale}
-                maxScale={maxScale}
-                // Actions
-                onActive={onActive}
-                onFlipY={onFlipY}
-                onFlipX={onFlipX}
-                onRotateLeft={onRotateLeft}
-                onRotateRight={onRotateRight}
-                onZoomOut={onZoomOut}
-                onZoomIn={onZoomIn}
-                onClose={onClose}
-                onReset={onReset}
-              />
-            </div>
-          );
-        }}
-      </CSSMotion>
+              </div>
+            );
+          }}
+        </CSSMotion>
+      </div>
     </Portal>
   );
 };

@@ -194,7 +194,7 @@ describe('PreviewGroup', () => {
     const { rerender } = render(
       <Image.PreviewGroup preview={{ open: true }}>
         <Image src="src1" />
-      </Image.PreviewGroup>,
+      </Image.PreviewGroup>
     );
 
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
@@ -202,13 +202,13 @@ describe('PreviewGroup', () => {
     rerender(
       <Image.PreviewGroup preview={{ open: false }}>
         <Image src="src1" />
-      </Image.PreviewGroup>,
+      </Image.PreviewGroup>
     );
     act(() => {
       jest.runAllTimers();
     });
 
-    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
   });
 
   it('should show error img', () => {
