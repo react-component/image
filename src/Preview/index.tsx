@@ -393,12 +393,20 @@ const Preview: React.FC<PreviewProps> = props => {
         className={clsx(prefixCls, rootClassName, classNames.root, { [`${prefixCls}-moving`]: isMoving })}
         style={{ ...styles.root, ...(zIndex ? { zIndex } : {}) }}>
         {/* Mask */}
-        {open && (<div
-            className={clsx(`${prefixCls}-mask`, classNames.mask)}
-            style={styles.mask}
-            onClick={onClose}
-          />
-        )}
+        <CSSMotion
+          motionName={motionName}
+          visible={portalRender && open}
+          motionAppear
+          motionEnter
+          motionLeave>
+          {({ className: motionClassName, style: motionStyle }) => {
+            return (<div
+              className={clsx(`${prefixCls}-mask`, classNames.mask, motionClassName)}
+              style={{ ...styles.mask, ...motionStyle }}
+              onClick={onClose}
+            />);
+          }}
+        </CSSMotion>
         <CSSMotion
           motionName={motionName}
           visible={portalRender && open}
