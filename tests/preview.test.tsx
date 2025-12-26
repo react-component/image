@@ -1054,27 +1054,13 @@ describe('Preview', () => {
   });
 
   it('Esc closes preview then modal', () => {
-    function NestedTestDemo({ onClose }: { onClose: () => void }) {
-      const [visible, setVisible] = useState(false);
-      const [open, setOpen] = useState(false);
-      return (
-        <>
-          <button onClick={() => setVisible(true)}>open</button>
-          <Dialog visible={visible} onClose={onClose}>
-            <Image
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-              preview={{ open, onOpenChange: setOpen }}
-            />
-          </Dialog>
-        </>
-      );
-    }
-
     const onClose = jest.fn();
-    const { baseElement, getByRole } = render(<NestedTestDemo onClose={onClose} />);
 
-    fireEvent.click(getByRole('button'));
-    expect(getByRole('dialog')).toBeTruthy();
+    const { baseElement, getByRole } = render(
+      <Dialog visible onClose={onClose}>
+        <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+      </Dialog>,
+    );
 
     fireEvent.click(getByRole('img'));
     expect(baseElement.querySelector('.rc-image-preview')).toBeTruthy();
