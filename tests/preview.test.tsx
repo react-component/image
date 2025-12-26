@@ -7,7 +7,8 @@ import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
-import React from 'react';
+import React, { useState } from 'react';
+import Dialog from '@rc-component/dialog';
 
 jest.mock('../src/Preview', () => {
   const MockPreview = (props: any) => {
@@ -1050,6 +1051,25 @@ describe('Preview', () => {
 
     expect(onOpenChange).toHaveBeenCalledTimes(2);
     expect(afterOpenChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('Esc closes preview then modal', () => {
+    const onClose = jest.fn();
+
+    const { baseElement, getByRole } = render(
+      <Dialog visible onClose={onClose}>
+        <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+      </Dialog>,
+    );
+
+    fireEvent.click(getByRole('img'));
+    expect(baseElement.querySelector('.rc-image-preview')).toBeTruthy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(baseElement.querySelector('.rc-image-preview')).toBeFalsy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalled();
   });
 
   it('not modify preview image size', () => {

@@ -45,3 +45,4 @@ es/
 .dumi/tmp-production
 
 bun.lockb
+.vscode
