@@ -11,6 +11,7 @@
       "@/*": ["src/*"],
       "@@/*": [".dumi/tmp/*"],
       "@rc-component/image": ["src/index.ts"]
-    }
+    },
+    "types": ["@testing-library/jest-dom", "jest", "node"]
   }
 }

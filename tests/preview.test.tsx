@@ -7,7 +7,8 @@ import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
-import React from 'react';
+import React, { useState } from 'react';
+import Dialog from '@rc-component/dialog';
 
 jest.mock('../src/Preview', () => {
   const MockPreview = (props: any) => {
@@ -1050,6 +1051,39 @@ describe('Preview', () => {
 
     expect(onOpenChange).toHaveBeenCalledTimes(2);
     expect(afterOpenChange).toHaveBeenCalledTimes(2);
+  });
+
+  it('Esc closes preview then modal', () => {
+    function NestedTestDemo({ onClose }: { onClose: () => void }) {
+      const [visible, setVisible] = useState(false);
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <button onClick={() => setVisible(true)}>open</button>
+          <Dialog visible={visible} onClose={onClose}>
+            <Image
+              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+              preview={{ open, onOpenChange: setOpen }}
+            />
+          </Dialog>
+        </>
+      );
+    }
+
+    const onClose = jest.fn();
+    const { baseElement, getByRole } = render(<NestedTestDemo onClose={onClose} />);
+
+    fireEvent.click(getByRole('button'));
+    expect(getByRole('dialog')).toBeTruthy();
+
+    fireEvent.click(getByRole('img'));
+    expect(baseElement.querySelector('.rc-image-preview')).toBeTruthy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(baseElement.querySelector('.rc-image-preview')).toBeFalsy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalled();
   });
 
   it('not modify preview image size', () => {

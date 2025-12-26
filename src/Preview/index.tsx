@@ -332,10 +332,6 @@ const Preview: React.FC<PreviewProps> = props => {
     if (open) {
       const { keyCode } = event;
 
-      if (keyCode === KeyCode.ESC) {
-        onClose?.();
-      }
-
       if (showLeftOrRightSwitches) {
         if (keyCode === KeyCode.LEFT) {
           onActive(-1);
@@ -380,6 +376,12 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [open]);
 
+  const onEsc: PortalProps['onEsc'] = ({ top }) => {
+    if (top) {
+      onClose?.();
+    }
+  };
+
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -389,7 +391,13 @@ const Preview: React.FC<PreviewProps> = props => {
   }
 
   return (
-    <Portal open={portalRender} getContainer={getContainer} autoLock={lockScroll}>
+    <Portal
+      open={portalRender && open}
+      autoDestroy={false}
+      getContainer={getContainer}
+      autoLock={lockScroll}
+      onEsc={onEsc}
+    >
       <CSSMotion
         motionName={motionName}
         visible={portalRender && open}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Button, Divider } from 'antd';
 import Dialog from '@rc-component/dialog';
 import Image from '@rc-component/image';
 import '@rc-component/dialog/assets/index.css';
@@ -9,13 +8,13 @@ const App: React.FC = () => {
   const [show, setShow] = useState(false);
   return (
     <>
-      <Button
+      <button
         onClick={() => {
           setShow(true);
         }}
       >
         showModal
-      </Button>
+      </button>
       <Dialog
         visible={show}
         afterOpenChange={open => {
@@ -26,21 +25,20 @@ const App: React.FC = () => {
         }}
         footer={
           <>
-            <Button
+            <button
               onClick={() => {
                 setShow(false);
               }}
             >
               Cancel
-            </Button>
-            <Button
-              type="primary"
+              </button>
+            <button
               onClick={() => {
                 setShow(false);
               }}
             >
               OK
-            </Button>
+            </button>
           </>
         }
       >
@@ -49,7 +47,6 @@ const App: React.FC = () => {
           alt="svg image"
           src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
         />
-        <Divider />
         <Image.PreviewGroup
           preview={{
             onChange: (current, prev) =>
