@@ -1099,6 +1099,7 @@ describe('Preview', () => {
         mask: 'custom-mask',
         actions: 'custom-actions',
         root: 'custom-root',
+        close: 'custom-close',
       },
     };
     const customStyles = {
@@ -1107,6 +1108,7 @@ describe('Preview', () => {
         mask: { color: 'red' },
         actions: { backgroundColor: 'blue' },
         root: { border: '1px solid green' },
+        close: { color: 'purple' },
       },
     };
     const { baseElement } = render(
@@ -1125,12 +1127,15 @@ describe('Preview', () => {
     const cover = document.querySelector('.rc-image-cover');
     const mask = document.querySelector('.rc-image-preview-mask');
     const actions = baseElement.querySelector('.rc-image-preview-actions');
+    const close = baseElement.querySelector('.rc-image-preview-close');
     expect(cover).toHaveClass(customClassnames.cover);
     expect(cover).toHaveStyle(customStyles.cover);
     expect(mask).toHaveClass(customClassnames.popup.mask);
     expect(mask).toHaveStyle(customStyles.popup.mask);
     expect(actions).toHaveClass(customClassnames.popup.actions);
     expect(actions).toHaveStyle(customStyles.popup.actions);
+    expect(close).toHaveClass(customClassnames.popup.close);
+    expect(close).toHaveStyle(customStyles.popup.close);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.popup.root);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.popup.root);
   });
