@@ -2,7 +2,6 @@ import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
 import { useEvent } from '@rc-component/util';
 import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
-import KeyCode from '@rc-component/util/lib/KeyCode';
 import { clsx } from 'clsx';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from '../context';
@@ -329,14 +328,12 @@ const Preview: React.FC<PreviewProps> = props => {
 
   // >>>>> Effect: Keyboard
   const onKeyDown = useEvent((event: KeyboardEvent) => {
-    if (open && !KeyCode.isEditableTarget(event)) {
-      const { keyCode } = event;
-
+    if (open) {
       if (showLeftOrRightSwitches) {
-        if (keyCode === KeyCode.LEFT) {
+        if (event.key === 'ArrowLeft') {
           onActive(-1);
           event.preventDefault();
-        } else if (keyCode === KeyCode.RIGHT) {
+        } else if (event.key === 'ArrowRight') {
           onActive(1);
           event.preventDefault();
         }
