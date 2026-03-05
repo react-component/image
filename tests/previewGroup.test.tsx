@@ -1,4 +1,3 @@
-import KeyCode from '@rc-component/util/lib/KeyCode';
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import Image from '../src';
@@ -171,7 +170,7 @@ describe('PreviewGroup', () => {
       document.querySelector('.rc-image-preview-switch-prev.rc-image-preview-switch-disabled'),
     ).toBeTruthy();
 
-    fireEvent.keyDown(window, { keyCode: KeyCode.RIGHT });
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
     act(() => {
       jest.runAllTimers();
     });
@@ -180,7 +179,7 @@ describe('PreviewGroup', () => {
       document.querySelector('.rc-image-preview-switch-next.rc-image-preview-switch-disabled'),
     ).toBeTruthy();
 
-    fireEvent.keyDown(window, { keyCode: KeyCode.LEFT });
+    fireEvent.keyDown(window, { key: 'ArrowLeft' });
     act(() => {
       jest.runAllTimers();
     });
