@@ -19,7 +19,7 @@ import PrevNext from './PrevNext';
 
 // Note: if you want to add `action`,
 // pls contact @zombieJ or @thinkasany first.
-export type PreviewSemanticName = 'root' | 'mask' | 'body' | FooterSemanticName;
+export type PreviewSemanticName = 'root' | 'mask' | 'body' | 'close' | FooterSemanticName;
 
 export interface OperationIcons {
   rotateLeft?: React.ReactNode;
@@ -444,6 +444,8 @@ const Preview: React.FC<PreviewProps> = props => {
                   prefixCls={prefixCls}
                   icon={closeIcon === true ? icons.close : closeIcon || icons.close}
                   onClick={onClose}
+                  className={classNames.close}
+                  style={styles.close}
                 />
               )}
 
