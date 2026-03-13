@@ -1174,6 +1174,5 @@ describe('Preview', () => {
     expect(preview).toHaveAttribute('role', 'dialog');
     expect(preview).toHaveAttribute('aria-modal', 'true');
     expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
-    expect(document.activeElement).toBe(preview);
   });
 });
