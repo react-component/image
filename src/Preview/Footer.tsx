@@ -20,7 +20,7 @@ interface RenderOperationParams {
   icon: React.ReactNode;
   type: OperationType;
   disabled?: boolean;
-  onClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 export interface FooterProps extends Actions {
