@@ -195,6 +195,8 @@ const Preview: React.FC<PreviewProps> = props => {
   } = props;
 
   const imgRef = useRef<HTMLImageElement>();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const lastActiveRef = useRef<HTMLElement | null>(null);
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;
@@ -236,6 +238,20 @@ const Preview: React.FC<PreviewProps> = props => {
   useEffect(() => {
     if (!open) {
       resetTransform('close');
+    }
+  }, [open]);
+
+  // =========================== Focus ============================
+  useEffect(() => {
+    if (open) {
+      lastActiveRef.current = (document.activeElement as HTMLElement) || null;
+
+      if (wrapperRef.current) {
+        wrapperRef.current.focus();
+      }
+    } else if (!open && lastActiveRef.current) {
+      lastActiveRef.current.focus();
+      lastActiveRef.current = null;
     }
   }, [open]);
 
@@ -418,10 +434,15 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
+              ref={wrapperRef}
               className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}
+              role="dialog"
+              aria-modal="true"
+              aria-label={alt || 'Image preview'}
+              tabIndex={-1}
             >
               {/* Mask */}
               <div

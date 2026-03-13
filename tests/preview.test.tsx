@@ -1144,4 +1144,36 @@ describe('Preview', () => {
     expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.popup.root);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.popup.root);
   });
+
+  it('Image wrapper should be keyboard focusable when preview enabled', () => {
+    const { container } = render(<Image src="src" alt="keyboard test" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    expect(wrapper).toHaveAttribute('role', 'button');
+    expect(wrapper).toHaveAttribute('tabindex', '0');
+  });
+
+  it('Pressing Enter on image wrapper should open preview', () => {
+    const { container } = render(<Image src="src" alt="keyboard open" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
+  it('Preview dialog should have role dialog and receive focus', () => {
+    render(<Image src="src" alt="dialog a11y" preview={{ open: true }} />);
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toHaveAttribute('role', 'dialog');
+    expect(preview).toHaveAttribute('aria-modal', 'true');
+    expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
+    expect(document.activeElement).toBe(preview);
+  });
 });

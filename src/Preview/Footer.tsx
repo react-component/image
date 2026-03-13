@@ -95,15 +95,18 @@ export default function Footer(props: FooterProps) {
 
   const renderOperation = ({ type, disabled, onClick, icon }: RenderOperationParams) => {
     return (
-      <div
+      <button
+        type="button"
         key={type}
         className={clsx(actionCls, `${actionCls}-${type}`, {
           [`${actionCls}-disabled`]: !!disabled,
         })}
         onClick={onClick}
+        disabled={!!disabled}
+        aria-label={type}
       >
         {icon}
-      </div>
+      </button>
     );
   };
 

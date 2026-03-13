@@ -203,6 +203,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     onClick?.(e);
   };
 
+  // ======================= Keyboard Preview =====================
+  const onPreviewKeyDown: React.KeyboardEventHandler<HTMLDivElement> = event => {
+    if (!canPreview) {
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onPreview(event as any);
+    }
+  };
+
   // =========================== Render ===========================
   return (
     <>
@@ -212,6 +224,10 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
+        role={canPreview ? 'button' : otherProps.role}
+        tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
+        aria-label={canPreview ? (alt || 'Preview image') : otherProps['aria-label']}
+        onKeyDown={onPreviewKeyDown}
         style={{
           width,
           height,
