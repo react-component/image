@@ -5,10 +5,10 @@ import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
+import Dialog from '@rc-component/dialog';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
-import React, { useState } from 'react';
-import Dialog from '@rc-component/dialog';
+import React from 'react';
 
 jest.mock('../src/Preview', () => {
   const MockPreview = (props: any) => {
@@ -376,6 +376,26 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'translate3d(75px, 75px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
+  });
+
+  it('should render movable className correctly according to movable prop', () => {
+    const { rerender } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ open: true }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview')).toHaveClass('rc-image-preview-movable');
+
+    rerender(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ open: true, movable: false }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview')).not.toHaveClass('rc-image-preview-movable');
   });
 
   it('Mouse Event', () => {
