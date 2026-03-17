@@ -173,6 +173,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     COMMON_PROPS.map(prop => props[prop]),
   );
 
+  // Filter out img-specific props from wrapper div props
+  const wrapperProps = useMemo(() => {
+    const obj = { ...otherProps };
+    COMMON_PROPS.forEach((prop: any) => {
+      delete obj[prop];
+    });
+    return obj;
+  }, [otherProps]);
+
   // ========================== Register ==========================
   const registerData: ImageElementProps = useMemo(
     () => ({
@@ -207,7 +216,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   return (
     <>
       <div
-        {...otherProps}
+        {...wrapperProps}
         className={clsx(prefixCls, rootClassName, classNames.root, {
           [`${prefixCls}-error`]: status === 'error',
         })}

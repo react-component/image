@@ -13,6 +13,7 @@ export type ImageElementProps = Pick<
   | 'srcSet'
   | 'useMap'
   | 'alt'
+  | 'fetchPriority'
 >;
 
 export type PreviewImageElementProps = {
