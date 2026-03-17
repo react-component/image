@@ -57,14 +57,30 @@ describe('Preview portal esc fallback', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('avoids duplicate close when keydown esc already handled', () => {
+  it('avoids duplicate close when keydown esc already handled (key only)', () => {
     const onClose = jest.fn();
 
     render(
       <Preview prefixCls="rc-image-preview" open src="x" mousePosition={null} onClose={onClose} />,
     );
 
-    fireEvent.keyDown(window, { key: 'Escape', keyCode: 27 });
+    fireEvent.keyDown(window, { key: 'Escape' });
+
+    act(() => {
+      (global as any).__portalProps.onEsc({ top: true });
+    });
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('avoids duplicate close when keydown esc already handled (keyCode only)', () => {
+    const onClose = jest.fn();
+
+    render(
+      <Preview prefixCls="rc-image-preview" open src="x" mousePosition={null} onClose={onClose} />,
+    );
+
+    fireEvent.keyDown(window, { keyCode: 27 });
 
     act(() => {
       (global as any).__portalProps.onEsc({ top: true });

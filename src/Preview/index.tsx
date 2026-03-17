@@ -328,20 +328,30 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   const escClosingRef = useRef(false);
+  const openRef = useRef(open);
+  openRef.current = open;
 
   // >>>>> Effect: Keyboard
   const onKeyDown = useEvent((event: KeyboardEvent) => {
-    if (open) {
+    if (openRef.current) {
       const { keyCode, key } = event;
 
       if (keyCode === KeyCode.ESC || key === 'Escape') {
+        if (escClosingRef.current) {
+          return;
+        }
+
         escClosingRef.current = true;
+        openRef.current = false;
         event.preventDefault();
+        if (keyCode === KeyCode.ESC) {
+          event.stopPropagation();
+        }
         onClose?.();
 
-        Promise.resolve().then(() => {
+        setTimeout(() => {
           escClosingRef.current = false;
-        });
+        }, 0);
         return;
       }
 
