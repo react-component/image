@@ -7,7 +7,7 @@ import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
-import React, { useState } from 'react';
+import React from 'react';
 import Dialog from '@rc-component/dialog';
 
 jest.mock('../src/Preview', () => {
@@ -21,6 +21,11 @@ jest.mock('../src/Preview', () => {
   };
 
   return MockPreview;
+});
+
+jest.mock('@rc-component/util/lib/hooks/useId', () => {
+  const origin = jest.requireActual('react');
+  return origin.useId;
 });
 
 import Image from '../src';
