@@ -211,7 +211,20 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      onPreview(event as any);
+
+      const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+      const left = rect.x + rect.width / 2;
+      const top = rect.y + rect.height / 2;
+
+      if (groupContext) {
+        groupContext.onPreview(imageId, src, left, top);
+      } else {
+        setMousePosition({
+          x: left,
+          y: top,
+        });
+        triggerPreviewOpen(true);
+      }
     }
   };
 
@@ -226,8 +239,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         onClick={canPreview ? onPreview : onClick}
         role={canPreview ? 'button' : otherProps.role}
         tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
-        aria-label={canPreview ? (alt || 'Preview image') : otherProps['aria-label']}
-        onKeyDown={onPreviewKeyDown}
+        aria-label={
+          canPreview ? (otherProps['aria-label'] ?? alt ?? 'Preview image') : otherProps['aria-label']
+        }
+        onKeyDown={event => {
+          onPreviewKeyDown(event);
+          (otherProps as any).onKeyDown?.(event);
+        }}
         style={{
           width,
           height,

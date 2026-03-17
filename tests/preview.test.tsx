@@ -1167,6 +1167,20 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview')).toBeTruthy();
   });
 
+  it('Pressing Space on image wrapper should open preview', () => {
+    const { container } = render(<Image src="src" alt="keyboard open space" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: ' ' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
   it('Preview dialog should have role dialog and receive focus', () => {
     render(<Image src="src" alt="dialog a11y" preview={{ open: true }} />);
 
