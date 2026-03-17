@@ -330,7 +330,14 @@ const Preview: React.FC<PreviewProps> = props => {
   // >>>>> Effect: Keyboard
   const onKeyDown = useEvent((event: KeyboardEvent) => {
     if (open) {
-      const { keyCode } = event;
+      const { keyCode, key } = event;
+
+      if (keyCode === KeyCode.ESC || key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        onClose?.();
+        return;
+      }
 
       if (showLeftOrRightSwitches) {
         if (keyCode === KeyCode.LEFT) {
@@ -376,12 +383,6 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [open]);
 
-  const onEsc: PortalProps['onEsc'] = ({ top }) => {
-    if (top) {
-      onClose?.();
-    }
-  };
-
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -396,7 +397,6 @@ const Preview: React.FC<PreviewProps> = props => {
       autoDestroy={false}
       getContainer={getContainer}
       autoLock={lockScroll}
-      onEsc={onEsc}
     >
       <CSSMotion
         motionName={motionName}
