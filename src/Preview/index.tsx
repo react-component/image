@@ -337,10 +337,6 @@ const Preview: React.FC<PreviewProps> = props => {
       const { keyCode, key } = event;
 
       if (keyCode === KeyCode.ESC || key === 'Escape') {
-        if (escClosingRef.current) {
-          return;
-        }
-
         escClosingRef.current = true;
         openRef.current = false;
         event.preventDefault();
@@ -348,10 +344,6 @@ const Preview: React.FC<PreviewProps> = props => {
           event.stopPropagation();
         }
         onClose?.();
-
-        setTimeout(() => {
-          escClosingRef.current = false;
-        }, 0);
         return;
       }
 
@@ -387,6 +379,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const onVisibleChanged = (nextVisible: boolean) => {
     if (!nextVisible) {
       setLockScroll(false);
+      escClosingRef.current = false;
     }
     afterOpenChange?.(nextVisible);
   };
