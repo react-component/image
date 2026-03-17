@@ -327,14 +327,21 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
+  const escClosingRef = useRef(false);
+
   // >>>>> Effect: Keyboard
   const onKeyDown = useEvent((event: KeyboardEvent) => {
     if (open) {
       const { keyCode, key } = event;
 
       if (keyCode === KeyCode.ESC || key === 'Escape') {
+        escClosingRef.current = true;
         event.preventDefault();
         onClose?.();
+
+        Promise.resolve().then(() => {
+          escClosingRef.current = false;
+        });
         return;
       }
 
@@ -382,6 +389,12 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [open]);
 
+  const onEsc: PortalProps['onEsc'] = ({ top }) => {
+    if (top && !escClosingRef.current) {
+      onClose?.();
+    }
+  };
+
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -396,6 +409,7 @@ const Preview: React.FC<PreviewProps> = props => {
       autoDestroy={false}
       getContainer={getContainer}
       autoLock={lockScroll}
+      onEsc={onEsc}
     >
       <CSSMotion
         motionName={motionName}
