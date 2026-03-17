@@ -12,20 +12,10 @@ React Image.
 
 [npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/rc-image
-[github-actions-image]: https://github.com/react-component/image/workflows/CI/badge.svg
-[github-actions-url]: https://github.com/react-component/image/actions
-[travis-image]: https://img.shields.io/travis/react-component/image/master?style=flat-square
-[travis-url]: https://travis-ci.org/react-component/image
-[circleci-image]: https://img.shields.io/circleci/build/github/react-component/image/master?style=flat-square
-[circleci-url]: https://circleci.com/gh/react-component/image
-[coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/image?branch=master
+[github-actions-image]: https://github.com/react-component/image/actions/workflows/react-component-ci.yml/badge.svg
+[github-actions-url]: https://github.com/react-component/image/actions/workflows/react-component-ci.yml
 [codecov-image]: https://img.shields.io/codecov/c/gh/react-component/image?style=flat-square
 [codecov-url]: https://codecov.io/gh/react-component/image
-[david-url]: https://david-dm.org/react-component/image
-[david-image]: https://david-dm.org/react-component/image/status.svg?style=flat-square
-[david-dev-url]: https://david-dm.org/react-component/image?type=dev
-[david-dev-image]: https://david-dm.org/react-component/image/dev-status.svg?style=flat-square
 [download-image]: https://img.shields.io/npm/dm/rc-image.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-image
 [bundlephobia-url]: https://bundlephobia.com/result?p=rc-image
