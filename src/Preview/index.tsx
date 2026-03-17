@@ -334,7 +334,6 @@ const Preview: React.FC<PreviewProps> = props => {
 
       if (keyCode === KeyCode.ESC || key === 'Escape') {
         event.preventDefault();
-        event.stopImmediatePropagation();
         onClose?.();
         return;
       }
@@ -351,10 +350,10 @@ const Preview: React.FC<PreviewProps> = props => {
 
   useEffect(() => {
     if (open) {
-      window.addEventListener('keydown', onKeyDown, true);
+      window.addEventListener('keydown', onKeyDown);
 
       return () => {
-        window.removeEventListener('keydown', onKeyDown, true);
+        window.removeEventListener('keydown', onKeyDown);
       };
     }
   }, [open]);
