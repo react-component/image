@@ -1190,6 +1190,19 @@ describe('Preview', () => {
     expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
   });
 
+  it('Preview should focus wrapper after portal renders', () => {
+    const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus');
+
+    render(<Image src="src" alt="focus portal" preview={{ open: true }} />);
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(focusSpy).toHaveBeenCalled();
+    focusSpy.mockRestore();
+  });
+
   it('Preview open should render focusable wrapper', () => {
     render(<Image src="src" alt="focus test" preview={{ open: true }} />);
 

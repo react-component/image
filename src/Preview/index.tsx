@@ -241,20 +241,6 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [open]);
 
-  // =========================== Focus ============================
-  useEffect(() => {
-    if (open) {
-      lastActiveRef.current = (document.activeElement as HTMLElement) || null;
-
-      if (wrapperRef.current) {
-        wrapperRef.current.focus();
-      }
-    } else if (!open && lastActiveRef.current) {
-      lastActiveRef.current.focus();
-      lastActiveRef.current = null;
-    }
-  }, [open]);
-
   // ========================== Image ===========================
   const onDoubleClick = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (open) {
@@ -397,6 +383,22 @@ const Preview: React.FC<PreviewProps> = props => {
       onClose?.();
     }
   };
+
+  // =========================== Focus ============================
+  useEffect(() => {
+    if (open) {
+      lastActiveRef.current = (document.activeElement as HTMLElement) || null;
+
+      // When `open` is initially true, the portal content is rendered in a later effect.
+      // Depend on `portalRender` so we can focus once the wrapper is actually mounted.
+      if (wrapperRef.current && portalRender) {
+        wrapperRef.current.focus();
+      }
+    } else if (!open && lastActiveRef.current) {
+      lastActiveRef.current.focus();
+      lastActiveRef.current = null;
+    }
+  }, [open, portalRender]);
 
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
