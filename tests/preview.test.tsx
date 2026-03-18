@@ -1189,4 +1189,25 @@ describe('Preview', () => {
     expect(preview).toHaveAttribute('aria-modal', 'true');
     expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
   });
+
+  it('Preview open should render focusable wrapper', () => {
+    render(<Image src="src" alt="focus test" preview={{ open: true }} />);
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('Pressing Enter should not open preview when preview is disabled', () => {
+    const { container } = render(<Image src="src" alt="disabled preview" preview={false} />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+  });
 });

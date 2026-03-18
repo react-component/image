@@ -108,6 +108,25 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview')).toBeFalsy();
   });
 
+  it('Keyboard Enter should open preview from group image', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" alt="first" />
+        <Image src="src2" alt="second" />
+      </Image.PreviewGroup>,
+    );
+
+    const first = container.querySelector('.rc-image') as HTMLElement;
+    first.focus();
+    fireEvent.keyDown(first, { key: 'Enter' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
   it('Preview with Custom Preview Property', () => {
     const { container } = render(
       <Image.PreviewGroup
