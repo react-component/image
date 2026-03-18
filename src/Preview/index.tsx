@@ -419,6 +419,7 @@ const Preview: React.FC<PreviewProps> = props => {
           return (
             <div
               className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
+                [`${prefixCls}-movable`]: movable,
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}
