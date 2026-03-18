@@ -23,6 +23,11 @@ jest.mock('../src/Preview', () => {
   return MockPreview;
 });
 
+jest.mock('@rc-component/util/lib/hooks/useId', () => {
+  const origin = jest.requireActual('react');
+  return origin.useId;
+});
+
 import Image from '../src';
 
 describe('Preview', () => {
