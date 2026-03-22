@@ -1,3 +1,5 @@
+export type FetchPriority = 'high' | 'low' | 'auto';
+
 /**
  * Used for PreviewGroup passed image data
  */
@@ -7,13 +9,16 @@ export type ImageElementProps = Pick<
   | 'crossOrigin'
   | 'decoding'
   | 'draggable'
+  | 'fetchPriority'
   | 'loading'
   | 'referrerPolicy'
   | 'sizes'
   | 'srcSet'
   | 'useMap'
   | 'alt'
->;
+> & {
+  fetchpriority?: FetchPriority;
+};
 
 export type PreviewImageElementProps = {
   data: ImageElementProps;

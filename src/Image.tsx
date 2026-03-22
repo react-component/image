@@ -11,6 +11,7 @@ import type { TransformType } from './hooks/useImageTransform';
 import useRegisterImage from './hooks/useRegisterImage';
 import useStatus from './hooks/useStatus';
 import type { ImageElementProps } from './interface';
+import { getFetchPriorityProps } from './util';
 
 export interface ImgInfo {
   url: string;
@@ -99,8 +100,17 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     // Image
     src: imgSrc,
     alt,
+    crossOrigin,
+    decoding,
+    draggable,
+    fetchPriority,
+    loading,
     placeholder,
+    referrerPolicy,
     fallback,
+    sizes,
+    srcSet,
+    useMap,
 
     // Preview
     preview = true,
@@ -163,14 +173,32 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     () => {
       const obj: ImageElementProps = {};
       COMMON_PROPS.forEach((prop: any) => {
-        if (props[prop] !== undefined) {
-          obj[prop] = props[prop];
+        if (prop === 'fetchPriority') {
+          Object.assign(obj, getFetchPriorityProps(fetchPriority));
+        } else if (prop === 'crossOrigin' && crossOrigin !== undefined) {
+          obj.crossOrigin = crossOrigin;
+        } else if (prop === 'decoding' && decoding !== undefined) {
+          obj.decoding = decoding;
+        } else if (prop === 'draggable' && draggable !== undefined) {
+          obj.draggable = draggable;
+        } else if (prop === 'loading' && loading !== undefined) {
+          obj.loading = loading;
+        } else if (prop === 'referrerPolicy' && referrerPolicy !== undefined) {
+          obj.referrerPolicy = referrerPolicy;
+        } else if (prop === 'sizes' && sizes !== undefined) {
+          obj.sizes = sizes;
+        } else if (prop === 'srcSet' && srcSet !== undefined) {
+          obj.srcSet = srcSet;
+        } else if (prop === 'useMap' && useMap !== undefined) {
+          obj.useMap = useMap;
+        } else if (prop === 'alt' && alt !== undefined) {
+          obj.alt = alt;
         }
       });
 
       return obj;
     },
-    COMMON_PROPS.map(prop => props[prop]),
+    [alt, crossOrigin, decoding, draggable, fetchPriority, loading, referrerPolicy, sizes, srcSet, useMap],
   );
 
   // ========================== Register ==========================

@@ -194,7 +194,7 @@ const Preview: React.FC<PreviewProps> = props => {
     zIndex,
   } = props;
 
-  const imgRef = useRef<HTMLImageElement>();
+  const imgRef = useRef<HTMLImageElement>(null);
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;

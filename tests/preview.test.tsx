@@ -809,11 +809,12 @@ describe('Preview', () => {
     );
   });
 
-  it('pass img common props to previewed image', () => {
+  it('passes image common props to previewed image', () => {
     const { container } = render(
       <Image
         src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         referrerPolicy="no-referrer"
+        fetchPriority="high"
       />,
     );
 
@@ -825,6 +826,10 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
       'referrerPolicy',
       'no-referrer',
+    );
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'fetchpriority',
+      'high',
     );
   });
 
