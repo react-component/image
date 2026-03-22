@@ -23,22 +23,28 @@ export default function PrevNext(props: PrevNextProps) {
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className={clsx(switchCls, `${switchCls}-prev`, {
           [`${switchCls}-disabled`]: current === 0,
         })}
         onClick={() => onActive(-1)}
+        disabled={current === 0}
+        aria-label="Previous image"
       >
         {prev ?? left}
-      </div>
-      <div
+      </button>
+      <button
+        type="button"
         className={clsx(switchCls, `${switchCls}-next`, {
           [`${switchCls}-disabled`]: current === count - 1,
         })}
         onClick={() => onActive(1)}
+        disabled={current === count - 1}
+        aria-label="Next image"
       >
         {next ?? right}
-      </div>
+      </button>
     </>
   );
 }

@@ -2,8 +2,11 @@
 
 exports[`Basic snapshot 1`] = `
 <div
+  aria-label="Preview image"
   class="rc-image"
+  role="button"
   style="width: 200px;"
+  tabindex="0"
 >
   <img
     class="rc-image-img"

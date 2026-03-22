@@ -203,6 +203,31 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     onClick?.(e);
   };
 
+  // ======================= Keyboard Preview =====================
+  const onPreviewKeyDown: React.KeyboardEventHandler<HTMLDivElement> = event => {
+    if (!canPreview) {
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+
+      const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+      const left = rect.x + rect.width / 2;
+      const top = rect.y + rect.height / 2;
+
+      if (groupContext) {
+        groupContext.onPreview(imageId, src, left, top);
+      } else {
+        setMousePosition({
+          x: left,
+          y: top,
+        });
+        triggerPreviewOpen(true);
+      }
+    }
+  };
+
   // =========================== Render ===========================
   return (
     <>
@@ -212,6 +237,15 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
+        role={canPreview ? 'button' : otherProps.role}
+        tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
+        aria-label={
+          canPreview ? (otherProps['aria-label'] ?? alt ?? 'Preview image') : otherProps['aria-label']
+        }
+        onKeyDown={event => {
+          onPreviewKeyDown(event);
+          (otherProps as any).onKeyDown?.(event);
+        }}
         style={{
           width,
           height,
