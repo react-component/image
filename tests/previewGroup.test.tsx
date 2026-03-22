@@ -281,6 +281,35 @@ describe('PreviewGroup', () => {
     );
   });
 
+  it('passes fetchpriority to previewed image in group mode', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" fetchPriority="high" />
+        <Image src="src2" fetchPriority="low" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'fetchpriority',
+      'high',
+    );
+
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'fetchpriority',
+      'low',
+    );
+  });
+
   it('album mode', () => {
     const { container } = render(
       <Image.PreviewGroup items={['src1', 'src2', 'src3']}>
