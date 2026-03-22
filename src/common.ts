@@ -10,4 +10,5 @@ export const COMMON_PROPS: (keyof Omit<ImageElementProps, 'src'>)[] = [
   'srcSet',
   'useMap',
   'alt',
+  'fetchPriority'
 ];
