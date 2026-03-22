@@ -4,7 +4,6 @@ export const COMMON_PROPS: (keyof Omit<ImageElementProps, 'src'>)[] = [
   'crossOrigin',
   'decoding',
   'draggable',
-  'fetchPriority',
   'loading',
   'referrerPolicy',
   'sizes',

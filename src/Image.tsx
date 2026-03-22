@@ -171,28 +171,13 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   const imgCommonProps = useMemo(
     () => {
-      const obj: ImageElementProps = {};
+      const obj: ImageElementProps = {
+        ...getFetchPriorityProps(fetchPriority),
+      };
+
       COMMON_PROPS.forEach((prop: any) => {
-        if (prop === 'fetchPriority') {
-          Object.assign(obj, getFetchPriorityProps(fetchPriority));
-        } else if (prop === 'crossOrigin' && crossOrigin !== undefined) {
-          obj.crossOrigin = crossOrigin;
-        } else if (prop === 'decoding' && decoding !== undefined) {
-          obj.decoding = decoding;
-        } else if (prop === 'draggable' && draggable !== undefined) {
-          obj.draggable = draggable;
-        } else if (prop === 'loading' && loading !== undefined) {
-          obj.loading = loading;
-        } else if (prop === 'referrerPolicy' && referrerPolicy !== undefined) {
-          obj.referrerPolicy = referrerPolicy;
-        } else if (prop === 'sizes' && sizes !== undefined) {
-          obj.sizes = sizes;
-        } else if (prop === 'srcSet' && srcSet !== undefined) {
-          obj.srcSet = srcSet;
-        } else if (prop === 'useMap' && useMap !== undefined) {
-          obj.useMap = useMap;
-        } else if (prop === 'alt' && alt !== undefined) {
-          obj.alt = alt;
+        if (props[prop] !== undefined) {
+          obj[prop] = props[prop];
         }
       });
 
