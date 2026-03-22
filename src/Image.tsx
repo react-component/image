@@ -100,17 +100,9 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     // Image
     src: imgSrc,
     alt,
-    crossOrigin,
-    decoding,
-    draggable,
     fetchPriority,
-    loading,
     placeholder,
-    referrerPolicy,
     fallback,
-    sizes,
-    srcSet,
-    useMap,
 
     // Preview
     preview = true,
@@ -183,7 +175,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
       return obj;
     },
-    [alt, crossOrigin, decoding, draggable, fetchPriority, loading, referrerPolicy, sizes, srcSet, useMap],
+    [fetchPriority, ...COMMON_PROPS.map(prop => props[prop])],
   );
 
   // ========================== Register ==========================
