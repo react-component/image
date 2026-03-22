@@ -9,7 +9,6 @@ export type ImageElementProps = Pick<
   | 'crossOrigin'
   | 'decoding'
   | 'draggable'
-  | 'fetchPriority'
   | 'loading'
   | 'referrerPolicy'
   | 'sizes'
