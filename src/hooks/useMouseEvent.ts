@@ -115,15 +115,17 @@ export default function useMouseEvent(
     }
 
     return () => {
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('mousemove', onMouseMove);
+      if (movable) {
+        window.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('mousemove', onMouseMove);
 
-      /* istanbul ignore next */
-      try {
-        window.top?.removeEventListener('mouseup', onMouseUp);
-        window.top?.removeEventListener('mousemove', onMouseMove);
-      } catch (error) {
-        // Do nothing
+        /* istanbul ignore next */
+        try {
+          window.top?.removeEventListener('mouseup', onMouseUp);
+          window.top?.removeEventListener('mousemove', onMouseMove);
+        } catch (error) {
+          // Do nothing
+        }
       }
     };
   }, [open, isMoving, x, y, rotate, movable]);
