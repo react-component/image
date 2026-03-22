@@ -9,6 +9,7 @@ import { PreviewGroupContext } from './context';
 import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImageElementProps, OnGroupPreview } from './interface';
+import { getFetchPriorityProps } from './util';
 
 export interface GroupPreviewConfig extends InternalPreviewConfig {
   current?: number;
@@ -66,7 +67,15 @@ const Group: React.FC<PreviewGroupProps> = ({
   const [keepOpenIndex, setKeepOpenIndex] = useState(false);
 
   // >>> Image
-  const { src, ...imgCommonProps } = mergedItems[current]?.data || {};
+  const { src, ...currentData } = mergedItems[current]?.data || {};
+  const imgCommonProps = React.useMemo(() => {
+    const { fetchpriority, ...restImageProps } = currentData;
+
+    return {
+      ...restImageProps,
+      ...getFetchPriorityProps(fetchpriority),
+    };
+  }, [currentData]);
   // >>> Visible
   const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
   const triggerShowPreview = useEvent((next: boolean) => {
@@ -92,7 +101,7 @@ const Group: React.FC<PreviewGroupProps> = ({
 
       setKeepOpenIndex(true);
     },
-    [mergedItems, fromItems],
+    [fromItems, mergedItems, setCurrent, triggerShowPreview],
   );
 
   // Reset current when reopen
@@ -104,7 +113,7 @@ const Group: React.FC<PreviewGroupProps> = ({
     } else {
       setKeepOpenIndex(false);
     }
-  }, [isShowPreview]);
+  }, [isShowPreview, keepOpenIndex, setCurrent]);
 
   // ========================== Events ==========================
   const onInternalChange: GroupPreviewConfig['onChange'] = (next, prev) => {
