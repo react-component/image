@@ -388,15 +388,15 @@ const Preview: React.FC<PreviewProps> = props => {
   useEffect(() => {
     if (open) {
       lastActiveRef.current = (document.activeElement as HTMLElement) || null;
-
-      // When `open` is initially true, the portal content is rendered in a later effect.
-      // Depend on `portalRender` so we can focus once the wrapper is actually mounted.
-      if (wrapperRef.current && portalRender) {
-        wrapperRef.current.focus();
-      }
-    } else if (!open && lastActiveRef.current) {
+    } else if (lastActiveRef.current) {
       lastActiveRef.current.focus();
       lastActiveRef.current = null;
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (open && portalRender && wrapperRef.current) {
+      wrapperRef.current.focus();
     }
   }, [open, portalRender]);
 
