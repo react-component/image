@@ -30,7 +30,6 @@ export default function PrevNext(props: PrevNextProps) {
         })}
         onClick={() => onActive(-1)}
         disabled={current === 0}
-        aria-label="Previous image"
       >
         {prev ?? left}
       </button>
@@ -41,7 +40,6 @@ export default function PrevNext(props: PrevNextProps) {
         })}
         onClick={() => onActive(1)}
         disabled={current === count - 1}
-        aria-label="Next image"
       >
         {next ?? right}
       </button>

@@ -443,7 +443,7 @@ const Preview: React.FC<PreviewProps> = props => {
               style={mergedStyle}
               role="dialog"
               aria-modal="true"
-              aria-label={alt || 'Image preview'}
+              aria-label={alt}
               tabIndex={-1}
             >
               {/* Mask */}

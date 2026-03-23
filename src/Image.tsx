@@ -240,7 +240,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         role={canPreview ? 'button' : otherProps.role}
         tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
         aria-label={
-          canPreview ? (otherProps['aria-label'] ?? alt ?? 'Preview image') : otherProps['aria-label']
+          canPreview ? (otherProps['aria-label'] ?? alt) : otherProps['aria-label']
         }
         onKeyDown={event => {
           onPreviewKeyDown(event);
