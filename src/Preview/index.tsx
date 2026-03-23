@@ -1,6 +1,7 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
 import { useEvent } from '@rc-component/util';
+import { useLockFocus } from '@rc-component/util/lib/Dom/focus';
 import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import { clsx } from 'clsx';
@@ -385,20 +386,7 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   // =========================== Focus ============================
-  useEffect(() => {
-    if (open) {
-      lastActiveRef.current = (document.activeElement as HTMLElement) || null;
-    } else if (lastActiveRef.current) {
-      lastActiveRef.current.focus();
-      lastActiveRef.current = null;
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (open && portalRender && wrapperRef.current) {
-      wrapperRef.current.focus();
-    }
-  }, [open, portalRender]);
+  useLockFocus(open && portalRender, () => wrapperRef.current);
 
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {

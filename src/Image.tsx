@@ -44,7 +44,7 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
 export type SemanticName = 'root' | 'image' | 'cover';
 
 export interface ImageProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick' | 'onKeyDown'> {
   // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
@@ -73,6 +73,7 @@ export interface ImageProps
   // Events
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
@@ -108,6 +109,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     // Events
     onClick,
     onError,
+    onKeyDown,
     ...otherProps
   } = props;
 
@@ -205,6 +207,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
 
   // ======================= Keyboard Preview =====================
   const onPreviewKeyDown: React.KeyboardEventHandler<HTMLDivElement> = event => {
+    onKeyDown?.(event);
+
     if (!canPreview) {
       return;
     }
@@ -239,13 +243,8 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         onClick={canPreview ? onPreview : onClick}
         role={canPreview ? 'button' : otherProps.role}
         tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
-        aria-label={
-          canPreview ? (otherProps['aria-label'] ?? alt) : otherProps['aria-label']
-        }
-        onKeyDown={event => {
-          onPreviewKeyDown(event);
-          (otherProps as any).onKeyDown?.(event);
-        }}
+        aria-label={canPreview ? otherProps['aria-label'] ?? alt : otherProps['aria-label']}
+        onKeyDown={onPreviewKeyDown}
         style={{
           width,
           height,

@@ -21,25 +21,27 @@ export default function PrevNext(props: PrevNextProps) {
 
   const switchCls = `${prefixCls}-switch`;
 
+  const prevDisabled = current === 0;
+  const nextDisabled = current === count - 1;
+
   return (
     <>
       <button
-        type="button"
         className={clsx(switchCls, `${switchCls}-prev`, {
-          [`${switchCls}-disabled`]: current === 0,
+          [`${switchCls}-disabled`]: prevDisabled,
         })}
         onClick={() => onActive(-1)}
-        disabled={current === 0}
+        disabled={prevDisabled}
       >
         {prev ?? left}
       </button>
       <button
         type="button"
         className={clsx(switchCls, `${switchCls}-next`, {
-          [`${switchCls}-disabled`]: current === count - 1,
+          [`${switchCls}-disabled`]: nextDisabled,
         })}
         onClick={() => onActive(1)}
-        disabled={current === count - 1}
+        disabled={nextDisabled}
       >
         {next ?? right}
       </button>
