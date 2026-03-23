@@ -5,10 +5,10 @@ import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
+import Dialog from '@rc-component/dialog';
 import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import Dialog from '@rc-component/dialog';
 
 jest.mock('../src/Preview', () => {
   const MockPreview = (props: any) => {
@@ -1190,8 +1190,18 @@ describe('Preview', () => {
     expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
   });
 
-  it('Preview should focus wrapper after portal renders', () => {
-    const focusSpy = jest.spyOn(HTMLElement.prototype, 'focus');
+  it('Preview wrapper should be focusable after portal renders', () => {
+    const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
+      toJSON: () => undefined,
+    } as DOMRect);
 
     render(<Image src="src" alt="focus portal" preview={{ open: true }} />);
 
@@ -1199,8 +1209,11 @@ describe('Preview', () => {
       jest.runAllTimers();
     });
 
-    expect(focusSpy).toHaveBeenCalled();
-    focusSpy.mockRestore();
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    rectSpy.mockRestore();
   });
 
   it('Preview open should render focusable wrapper', () => {
