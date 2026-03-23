@@ -1,6 +1,7 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
 import { useEvent } from '@rc-component/util';
+import { useLockFocus } from '@rc-component/util/lib/Dom/focus';
 import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
 import KeyCode from '@rc-component/util/lib/KeyCode';
 import { clsx } from 'clsx';
@@ -195,6 +196,7 @@ const Preview: React.FC<PreviewProps> = props => {
   } = props;
 
   const imgRef = useRef<HTMLImageElement>();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;
@@ -382,6 +384,9 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   };
 
+  // =========================== Focus ============================
+  useLockFocus(open && portalRender, () => wrapperRef.current);
+
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -418,11 +423,16 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
+              ref={wrapperRef}
               className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-movable`]: movable,
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}
+              role="dialog"
+              aria-modal="true"
+              aria-label={alt}
+              tabIndex={-1}
             >
               {/* Mask */}
               <div
