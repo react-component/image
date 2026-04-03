@@ -196,7 +196,9 @@ const Preview: React.FC<PreviewProps> = props => {
   } = props;
 
   const imgRef = useRef<HTMLImageElement>();
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement>(null);
+  const [wrapperEl, setWrapperEl] = useState<HTMLDivElement>(null);
+
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;
@@ -366,6 +368,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const onVisibleChanged = (nextVisible: boolean) => {
     if (!nextVisible) {
       setLockScroll(false);
+
+      // Restore focus to the trigger element after leave animation
+      triggerRef.current?.focus?.();
+      triggerRef.current = null;
     }
     afterOpenChange?.(nextVisible);
   };
@@ -385,7 +391,13 @@ const Preview: React.FC<PreviewProps> = props => {
   };
 
   // =========================== Focus ============================
-  useLockFocus(open && portalRender, () => wrapperRef.current);
+  useEffect(() => {
+    if (open) {
+      triggerRef.current = document.activeElement as HTMLElement;
+    }
+  }, [open]);
+
+  useLockFocus(open && !!wrapperEl, () => wrapperEl);
 
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
@@ -423,7 +435,7 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
-              ref={wrapperRef}
+              ref={setWrapperEl}
               className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-movable`]: movable,
                 [`${prefixCls}-moving`]: isMoving,

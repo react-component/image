@@ -1256,4 +1256,44 @@ describe('Preview', () => {
 
     expect(document.querySelector('.rc-image-preview')).toBeFalsy();
   });
+
+  it('Focus should be trapped inside preview after keyboard open and restored on close', () => {
+    const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0, y: 0, width: 100, height: 100,
+      top: 0, right: 100, bottom: 100, left: 0,
+      toJSON: () => undefined,
+    } as DOMRect);
+
+    const { container } = render(<Image src="src" alt="focus trap" />);
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+
+    // Open preview via keyboard
+    wrapper.focus();
+    expect(document.activeElement).toBe(wrapper);
+
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Focus should be inside the preview
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toBeTruthy();
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    // Focus should not escape when trying to focus outside
+    wrapper.focus();
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    // Close preview via Escape
+    fireEvent.keyDown(window, { key: 'Escape' });
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Focus should return to the trigger element
+    expect(document.activeElement).toBe(wrapper);
+
+    rectSpy.mockRestore();
+  });
 });
