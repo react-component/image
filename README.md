@@ -69,6 +69,7 @@ export default () => (
 | --- | --- | --- | --- |
 | open | boolean | - | Whether the preview is open or not |
 | closeIcon | React.ReactNode | - | Custom close icon |
+| maskClosable | boolean | true | Whether to close preview on clicking mask |
 | src | string | - | Customize preview src |
 | movable | boolean | true | Enable drag |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
@@ -114,6 +115,7 @@ export default () => (
 | movable | boolean | true | Enable drag |
 | current | number | - | Current index |
 | closeIcon | React.ReactNode | - | Custom close icon |
+| maskClosable | boolean | true | Whether to close preview on clicking mask |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
 | minScale | number | 1 | Min scale |
 | maxScale | number | 50 | Max scale |

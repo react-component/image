@@ -101,6 +101,33 @@ describe('Preview', () => {
     expect(onPreviewCloseMock).toHaveBeenCalledWith(false);
   });
 
+  it('maskClosable should control mask close behavior only', () => {
+    const onPreviewOpenChange = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          maskClosable: false,
+          onOpenChange: onPreviewOpenChange,
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    onPreviewOpenChange.mockReset();
+
+    fireEvent.click(document.querySelector('.rc-image-preview-mask'));
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+    expect(onPreviewOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.click(document.querySelector('.rc-image-preview-close'));
+    expect(onPreviewOpenChange).toHaveBeenCalledWith(false);
+  });
+
   it('Unmount', () => {
     const { container, unmount } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,

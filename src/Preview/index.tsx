@@ -87,6 +87,7 @@ export interface InternalPreviewConfig {
   open?: boolean;
   getContainer?: PortalProps['getContainer'];
   zIndex?: number;
+  maskClosable?: boolean;
   afterOpenChange?: (open: boolean) => void;
 
   // Operation
@@ -174,6 +175,7 @@ const Preview: React.FC<PreviewProps> = props => {
     onClose,
     open,
     afterOpenChange,
+    maskClosable = true,
     icons = {},
     closeIcon,
     getContainer,
@@ -450,7 +452,7 @@ const Preview: React.FC<PreviewProps> = props => {
               <div
                 className={clsx(`${prefixCls}-mask`, classNames.mask)}
                 style={styles.mask}
-                onClick={onClose}
+                onClick={maskClosable ? onClose : undefined}
               />
 
               {/* Body */}
