@@ -428,7 +428,7 @@ const Preview: React.FC<PreviewProps> = props => {
         motionAppear
         motionEnter
         motionLeave
-        motionDeadline={500}
+        motionDeadline={1000}
         onVisibleChanged={onVisibleChanged}
       >
         {({ className: motionClassName, style: motionStyle }) => {
