@@ -6,7 +6,7 @@ import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import Dialog from '@rc-component/dialog';
-import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
+import { spyElementPrototypes } from '@rc-component/util';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
@@ -23,9 +23,13 @@ jest.mock('../src/Preview', () => {
   return MockPreview;
 });
 
-jest.mock('@rc-component/util/lib/hooks/useId', () => {
+jest.mock('@rc-component/util', () => {
+  const util = jest.requireActual('@rc-component/util');
   const origin = jest.requireActual('react');
-  return origin.useId;
+  return {
+    ...util,
+    useId: origin.useId,
+  };
 });
 
 import Image from '../src';
@@ -1286,8 +1290,14 @@ describe('Preview', () => {
 
   it('Focus should be trapped inside preview after keyboard open and restored on close', () => {
     const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-      x: 0, y: 0, width: 100, height: 100,
-      top: 0, right: 100, bottom: 100, left: 0,
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
       toJSON: () => undefined,
     } as DOMRect);
 
@@ -1326,12 +1336,20 @@ describe('Preview', () => {
 
   it('Focus should not be trapped when focusTrap is false', () => {
     const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
-      x: 0, y: 0, width: 100, height: 100,
-      top: 0, right: 100, bottom: 100, left: 0,
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
       toJSON: () => undefined,
     } as DOMRect);
 
-    const { container } = render(<Image src="src" alt="no trap" preview={{ open: true, focusTrap: false }} />);
+    const { container } = render(
+      <Image src="src" alt="no trap" preview={{ open: true, focusTrap: false }} />,
+    );
 
     act(() => {
       jest.runAllTimers();

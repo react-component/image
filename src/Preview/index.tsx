@@ -1,9 +1,6 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
-import { useEvent } from '@rc-component/util';
-import { useLockFocus } from '@rc-component/util/lib/Dom/focus';
-import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
-import KeyCode from '@rc-component/util/lib/KeyCode';
+import { KeyCode, useEvent, useLayoutEffect, useLockFocus } from '@rc-component/util';
 import { clsx } from 'clsx';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from '../context';

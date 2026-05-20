@@ -1,4 +1,4 @@
-import { warning } from '@rc-component/util/lib/warning';
+import { warning } from '@rc-component/util';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';

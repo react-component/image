@@ -42,14 +42,14 @@
   "dependencies": {
     "@rc-component/motion": "^1.0.0",
     "@rc-component/portal": "^2.1.2",
-    "@rc-component/util": "^1.10.1",
+    "@rc-component/util": "^1.11.1",
     "clsx": "^2.1.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.0.1",
-    "@rc-component/father-plugin": "^2.0.2",
-    "@rc-component/np": "^1.0.0",
     "@rc-component/dialog": "^1.7.0",
+    "@rc-component/father-plugin": "^2.2.0",
+    "@rc-component/np": "^1.0.0",
     "@testing-library/jest-dom": "^6.4.0",
     "@testing-library/react": "^15.0.6",
     "@types/jest": "^30.0.0",
