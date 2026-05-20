@@ -27,6 +27,7 @@ jest.mock('@rc-component/util', () => {
   const util = jest.requireActual('@rc-component/util');
   const origin = jest.requireActual('react');
   return {
+    __esModule: true,
     ...util,
     useId: origin.useId,
   };
