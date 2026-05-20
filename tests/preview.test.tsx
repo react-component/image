@@ -23,14 +23,9 @@ jest.mock('../src/Preview', () => {
   return MockPreview;
 });
 
-jest.mock('@rc-component/util', () => {
-  const util = jest.requireActual('@rc-component/util');
+jest.mock('@rc-component/util/lib/hooks/useId', () => {
   const origin = jest.requireActual('react');
-  return {
-    __esModule: true,
-    ...util,
-    useId: origin.useId,
-  };
+  return origin.useId;
 });
 
 import Image from '../src';
