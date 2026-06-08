@@ -1,4 +1,4 @@
-import KeyCode from '@rc-component/util/lib/KeyCode';
+import { KeyCode } from '@rc-component/util';
 import { act, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import Image from '../src';

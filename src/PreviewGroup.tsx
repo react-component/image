@@ -1,5 +1,4 @@
-import useControlledState from '@rc-component/util/lib/hooks/useControlledState';
-import useEvent from '@rc-component/util/lib/hooks/useEvent';
+import { useControlledState, useEvent } from '@rc-component/util';
 import * as React from 'react';
 import { useState } from 'react';
 import type { ImgInfo } from './Image';
