@@ -96,8 +96,9 @@ Native image attributes are also supported.
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| actionsRender | Custom toolbar renderer | `(node: React.ReactElement, info: ToolbarRenderInfoType) => React.ReactNode` | - |
+| actionsRender | Custom toolbar renderer | `(node: React.ReactElement, info: Omit<ToolbarRenderInfoType, 'current' \| 'total'>) => React.ReactNode` | - |
 | closeIcon | Custom close icon | `React.ReactNode` | - |
+| cover | Custom preview cover | `React.ReactNode \| CoverConfig` | - |
 | countRender | Custom count renderer | `(current: number, total: number) => React.ReactNode` | - |
 | forceRender | Force render preview | boolean | false |
 | getContainer | Preview container | string \| HTMLElement \| `() => HTMLElement` \| false | `document.body` |
@@ -109,18 +110,21 @@ Native image attributes are also supported.
 | open | Controlled preview open state | boolean | - |
 | scaleStep | Scale step | number | 0.5 |
 | src | Custom preview image source | string | - |
-| onOpenChange | Callback when preview open state changes | `(open: boolean, prevOpen: boolean) => void` | - |
+| onOpenChange | Callback when preview open state changes | `(open: boolean) => void` | - |
 | onTransform | Callback when transform changes | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 
 ### Image.PreviewGroup
 
 | Property | Description | Type | Default |
 | --- | --- | --- | --- |
+| children | Image children | `React.ReactNode` | - |
+| classNames | Semantic preview popup class names | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
 | fallback | Image source used when loading fails | string | - |
-| icons | Custom preview operation icons | `OperationIcons` | - |
+| icons | Custom preview operation icons | `PreviewProps['icons']` | - |
 | items | Preview items | `(string \| ImageElementProps)[]` | - |
 | preview | Whether and how to show preview group | boolean \| `GroupPreviewConfig` | true |
 | previewPrefixCls | Preview class name prefix | string | `rc-image-preview` |
+| styles | Semantic preview popup styles | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
 
 ### TransformType
 
@@ -148,6 +152,36 @@ type TransformAction =
   | 'doubleClick'
   | 'move'
   | 'dragRebound';
+
+type Actions = {
+  onActive: (offset: number) => void;
+  onFlipY: () => void;
+  onFlipX: () => void;
+  onRotateLeft: () => void;
+  onRotateRight: () => void;
+  onZoomOut: () => void;
+  onZoomIn: () => void;
+  onClose: () => void;
+  onReset: () => void;
+};
+
+type ToolbarRenderInfoType = {
+  icons: {
+    prevIcon?: React.ReactNode;
+    nextIcon?: React.ReactNode;
+    flipYIcon: React.ReactNode;
+    flipXIcon: React.ReactNode;
+    rotateLeftIcon: React.ReactNode;
+    rotateRightIcon: React.ReactNode;
+    zoomOutIcon: React.ReactNode;
+    zoomInIcon: React.ReactNode;
+  };
+  actions: Actions;
+  transform: TransformType;
+  current: number;
+  total: number;
+  image: ImgInfo;
+};
 ```
 
 ## Development
