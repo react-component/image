@@ -133,6 +133,21 @@ type TransformType = {
   flipX: boolean;
   flipY: boolean;
 };
+
+type TransformAction =
+  | 'flipY'
+  | 'flipX'
+  | 'rotateLeft'
+  | 'rotateRight'
+  | 'zoomIn'
+  | 'zoomOut'
+  | 'close'
+  | 'prev'
+  | 'next'
+  | 'wheel'
+  | 'doubleClick'
+  | 'move'
+  | 'dragRebound';
 ```
 
 ## Development
