@@ -37,7 +37,8 @@
     "start": "dumi dev",
     "test": "rc-test",
     "test:update": "rc-test -u",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "docs:build:gh-pages": "GH_PAGES=1 npm run docs:build"
   },
   "dependencies": {
     "@rc-component/motion": "^1.0.0",
