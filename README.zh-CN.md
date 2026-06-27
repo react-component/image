@@ -1,7 +1,6 @@
 <div align="center">
   <h1>@rc-component/image</h1>
-  <p><sub>Ant Design 生态的一部分。</sub></p>
-  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+  <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Ant Design 生态的一部分。</sub></p>
   <p>🖼️ React 图片预览组件，支持预览组、缩放、旋转和自定义工具栏。</p>
 </div>
 
@@ -29,9 +28,9 @@
 
 ## 特性
 
-- 支持 placeholder, fallback, and preview.
-- Preview supports zoom, rotate, flip, drag, keyboard access, and custom actions.
-- `Image.PreviewGroup` supports grouped preview and custom preview items.
+- 支持占位符、后备和预览。
+- 预览支持缩放、旋转、翻转、拖动、键盘访问和自定义操作。
+- `Image.PreviewGroup` 支持分组预览和自定义预览项。
 - 提供编译后的 JavaScript、TypeScript 类型定义和 CSS 资源。
 
 ## 安装
@@ -84,49 +83,49 @@ npm start
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| fallback | Image source used when loading fails | string | - |
-| placeholder | Placeholder before image loads | boolean \| `React.ReactElement` | - |
-| prefixCls | Component class name prefix | string | `rc-image` |
-| preview | Whether and how to show preview | boolean \| `PreviewConfig` | true |
-| previewPrefixCls | Preview class name prefix | string | `rc-image-preview` |
+| fallback | 加载失败时使用的图片源 | string | - |
+| placeholder | 图片加载前的占位内容 | boolean \| `React.ReactElement` | - |
+| prefixCls | 组件className前缀 | string | `rc-image` |
+| preview | 是否以及如何显示预览 | boolean \| `PreviewConfig` | true |
+| previewPrefixCls | 预览className前缀 | string | `rc-image-preview` |
 | src | Image source | string | - |
-| onError | Callback when image loading fails | `(event: Event) => void` | - |
+| onError | 图片加载失败时的回调 | `(event: Event) => void` | - |
 
-Native image attributes are also supported.
+也支持原生图片属性。
 
 ### PreviewConfig
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| actionsRender | Custom toolbar renderer | `(node: React.ReactElement, info: Omit<ToolbarRenderInfoType, 'current' \| 'total'>) => React.ReactNode` | - |
-| closeIcon | Custom close icon | `React.ReactNode` | - |
-| cover | Custom preview cover | `React.ReactNode \| CoverConfig` | - |
-| countRender | Custom count renderer | `(current: number, total: number) => React.ReactNode` | - |
-| forceRender | Force render preview | boolean | false |
-| getContainer | Preview container | string \| HTMLElement \| `() => HTMLElement` \| false | `document.body` |
-| imageRender | Custom image renderer | `(node: React.ReactElement, info: { transform: TransformType; image: ImgInfo }) => React.ReactNode` | - |
-| maskClosable | Whether clicking mask closes preview | boolean | true |
+| actionsRender | 自定义工具栏渲染器 | `(node: React.ReactElement, info: Omit<ToolbarRenderInfoType, 'current' \| 'total'>) => React.ReactNode` | - |
+| closeIcon | 自定义关闭图标 | `React.ReactNode` | - |
+| cover | 自定义预览封面 | `React.ReactNode \| CoverConfig` | - |
+| countRender | 自定义计数渲染器 | `(current: number, total: number) => React.ReactNode` | - |
+| forceRender | 强制渲染预览 | boolean | false |
+| getContainer | 预览容器 | string \| HTMLElement \| `() => HTMLElement` \| false | `document.body` |
+| imageRender | 自定义图像渲染器 | `(node: React.ReactElement, info: { transform: TransformType; image: ImgInfo }) => React.ReactNode` | - |
+| maskClosable | 单击蒙版是否关闭预览 | boolean | true |
 | maxScale | Max scale | number | 50 |
 | minScale | Min scale | number | 1 |
-| movable | Enable drag | boolean | true |
-| open | Controlled preview open state | boolean | - |
+| movable | 启用拖动 | boolean | true |
+| 打开 | 受控预览打开状态 | boolean | - |
 | scaleStep | Scale step | number | 0.5 |
-| src | Custom preview image source | string | - |
-| onOpenChange | Callback when preview open state changes | `(open: boolean) => void` | - |
-| onTransform | Callback when transform changes | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
+| src | 自定义预览图像源 | string | - |
+| onOpenChange | 预览打开状态变化时回调 | `(open: boolean) => void` | - |
+| onTransform | 变换变化时的回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 
 ### Image.PreviewGroup
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| children | Image children | `React.ReactNode` | - |
-| classNames | Semantic preview popup class names | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
-| fallback | Image source used when loading fails | string | - |
-| icons | Custom preview operation icons | `PreviewProps['icons']` | - |
-| items | Preview items | `(string \| ImageElementProps)[]` | - |
-| preview | Whether and how to show preview group | boolean \| `GroupPreviewConfig` | true |
-| previewPrefixCls | Preview class name prefix | string | `rc-image-preview` |
-| styles | Semantic preview popup styles | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
+| children们 | 儿童形象 | `React.ReactNode` | - |
+| classNames | 语义预览弹层className称 | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
+| fallback | 加载失败时使用的图片源 | string | - |
+| icons | 自定义预览操作图标 | `PreviewProps['icons']` | - |
+| 项目 | 预览项目 | `(string \| ImageElementProps)[]` | - |
+| preview | 是否以及如何显示预览 group | boolean \| `GroupPreviewConfig` | true |
+| previewPrefixCls | 预览className前缀 | string | `rc-image-preview` |
+| styles | 语义预览弹层样式 | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
 
 ### TransformType
 
@@ -207,8 +206,8 @@ npm run build
 npm run prepublishOnly
 ```
 
-The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
+包构建完成后，发布流程由 `@rc-component/np` 通过 `rc-np` 命令处理。
 
 ## 许可证
 
-@rc-component/image is released under the [MIT](./LICENSE.md) license.
+@rc-component/image 基于 [MIT](./LICENSE.md) 许可证发布。
