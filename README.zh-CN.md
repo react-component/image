@@ -1,6 +1,7 @@
 <div align="center">
   <h1>@rc-component/image</h1>
   <p><sub>Ant Design 生态的一部分。</sub></p>
+  <img alt="Ant Design" height="32" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
   <p>🖼️ React 图片预览组件，支持预览组、缩放、旋转和自定义工具栏。</p>
 </div>
 
