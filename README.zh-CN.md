@@ -1,10 +1,10 @@
 <div align="center">
   <h1>@rc-component/image</h1>
-  <p><sub>Part of the Ant Design ecosystem.</sub></p>
-  <p>🖼️ Image display, fallback, and preview tooling for React.</p>
+  <p><sub>Ant Design 生态的一部分。</sub></p>
+  <p>🖼️ React 图片预览组件，支持预览组、缩放、旋转和自定义工具栏。</p>
 </div>
 
-<p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
+<p align="center"><a href="./README.md">English</a> | 简体中文</p>
 
 
 <div align="center">
@@ -26,20 +26,20 @@
 [dumi-image]: https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square
 [dumi-url]: https://github.com/umijs/dumi
 
-## Highlights
+## 特性
 
-- Supports placeholder, fallback, and preview.
+- 支持 placeholder, fallback, and preview.
 - Preview supports zoom, rotate, flip, drag, keyboard access, and custom actions.
 - `Image.PreviewGroup` supports grouped preview and custom preview items.
-- Ships compiled JavaScript, TypeScript definitions, and CSS assets.
+- 提供编译后的 JavaScript、TypeScript 类型定义和 CSS 资源。
 
-## Install
+## 安装
 
 ```bash
 npm install @rc-component/image
 ```
 
-## Usage
+## 使用
 
 ```tsx | pure
 import Image from '@rc-component/image';
@@ -68,20 +68,20 @@ export default function App() {
 }
 ```
 
-## Examples
+## 示例
 
 ```bash
 npm install
 npm start
 ```
 
-Then open `http://localhost:8000`.
+然后打开 `http://localhost:8000`。
 
 ## API
 
 ### Image
 
-| Property | Description | Type | Default |
+| 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | fallback | Image source used when loading fails | string | - |
 | placeholder | Placeholder before image loads | boolean \| `React.ReactElement` | - |
@@ -95,7 +95,7 @@ Native image attributes are also supported.
 
 ### PreviewConfig
 
-| Property | Description | Type | Default |
+| 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | actionsRender | Custom toolbar renderer | `(node: React.ReactElement, info: Omit<ToolbarRenderInfoType, 'current' \| 'total'>) => React.ReactNode` | - |
 | closeIcon | Custom close icon | `React.ReactNode` | - |
@@ -116,7 +116,7 @@ Native image attributes are also supported.
 
 ### Image.PreviewGroup
 
-| Property | Description | Type | Default |
+| 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | children | Image children | `React.ReactNode` | - |
 | classNames | Semantic preview popup class names | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
@@ -185,7 +185,7 @@ type ToolbarRenderInfoType = {
 };
 ```
 
-## Development
+## 本地开发
 
 ```bash
 npm install
@@ -200,7 +200,7 @@ npm run compile
 npm run build
 ```
 
-## Release
+## 发布
 
 ```bash
 npm run prepublishOnly
@@ -208,6 +208,6 @@ npm run prepublishOnly
 
 The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
 
-## License
+## 许可证
 
 @rc-component/image is released under the [MIT](./LICENSE.md) license.
