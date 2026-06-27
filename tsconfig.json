@@ -8,11 +8,28 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@@/*": [".dumi/tmp/*"],
-      "@rc-component/image": ["src/index.ts"]
+      "@/*": [
+        "src/*"
+      ],
+      "@@/*": [
+        ".dumi/tmp/*"
+      ],
+      "@rc-component/image": [
+        "src/index.ts"
+      ]
     },
-    "types": ["@testing-library/jest-dom", "jest", "node"]
+    "types": [
+      "@testing-library/jest-dom",
+      "jest",
+      "node"
+    ],
+    "ignoreDeprecations": "5.0"
   },
-  "include": [".dumirc.ts", "docs", "src", "tests", "typings.d.ts"]
+  "include": [
+    ".dumirc.ts",
+    "docs",
+    "src",
+    "tests",
+    "typings.d.ts"
+  ]
 }
