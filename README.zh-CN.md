@@ -107,11 +107,11 @@ npm start
 | getContainer | 预览容器 | string \| HTMLElement \| `() => HTMLElement` \| false | `document.body` |
 | imageRender | 自定义图像渲染器 | `(node: React.ReactElement, info: { transform: TransformType; image: ImgInfo }) => React.ReactNode` | - |
 | maskClosable | 单击蒙版是否关闭预览 | boolean | true |
-| maxScale | Max scale | number | 50 |
-| minScale | Min scale | number | 1 |
+| maxScale | 最大缩放比例 | number | 50 |
+| minScale | 最小缩放比例 | number | 1 |
 | movable | 启用拖动 | boolean | true |
-| 打开 | 受控预览打开状态 | boolean | - |
-| scaleStep | Scale step | number | 0.5 |
+| open | 受控预览打开状态 | boolean | - |
+| scaleStep | 缩放步长 | number | 0.5 |
 | src | 自定义预览图像源 | string | - |
 | onOpenChange | 预览打开状态变化时回调 | `(open: boolean) => void` | - |
 | onTransform | 变换变化时的回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
@@ -120,11 +120,11 @@ npm start
 
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| children们 | 儿童形象 | `React.ReactNode` | - |
+| children | 儿童形象 | `React.ReactNode` | - |
 | classNames | 语义预览弹层className称 | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
 | fallback | 加载失败时使用的图片源 | string | - |
 | icons | 自定义预览操作图标 | `PreviewProps['icons']` | - |
-| 项目 | 预览项目 | `(string \| ImageElementProps)[]` | - |
+| items | 预览项目 | `(string \| ImageElementProps)[]` | - |
 | preview | 是否以及如何显示预览 group | boolean \| `GroupPreviewConfig` | true |
 | previewPrefixCls | 预览className前缀 | string | `rc-image-preview` |
 | styles | 语义预览弹层样式 | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
