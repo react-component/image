@@ -212,4 +212,4 @@ npm run prepublishOnly
 
 ## 许可证
 
-@rc-component/image 基于 [MIT](./LICENSE.md) 许可证发布。
+@rc-component/image 基于 [MIT](./LICENSE) 许可证发布。
