@@ -87,9 +87,9 @@ npm start
 | --- | --- | --- | --- |
 | fallback | 加载失败时使用的图片源 | string | - |
 | placeholder | 图片加载前的占位内容 | boolean \| `React.ReactElement` | - |
-| prefixCls | 组件className前缀 | string | `rc-image` |
+| prefixCls | 组件 className 前缀 | string | `rc-image` |
 | preview | 是否以及如何显示预览 | boolean \| `PreviewConfig` | true |
-| previewPrefixCls | 预览className前缀 | string | `rc-image-preview` |
+| previewPrefixCls | 预览 className 前缀 | string | `rc-image-preview` |
 | src | Image source | string | - |
 | onError | 图片加载失败时的回调 | `(event: Event) => void` | - |
 
@@ -121,12 +121,12 @@ npm start
 | 参数 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | children | 儿童形象 | `React.ReactNode` | - |
-| classNames | 语义预览弹层className称 | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
+| classNames | 语义预览弹层 className | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
 | fallback | 加载失败时使用的图片源 | string | - |
 | icons | 自定义预览操作图标 | `PreviewProps['icons']` | - |
 | items | 预览项目 | `(string \| ImageElementProps)[]` | - |
 | preview | 是否以及如何显示预览 group | boolean \| `GroupPreviewConfig` | true |
-| previewPrefixCls | 预览className前缀 | string | `rc-image-preview` |
+| previewPrefixCls | 预览 className 前缀 | string | `rc-image-preview` |
 | styles | 语义预览弹层样式 | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
 
 ### TransformType
