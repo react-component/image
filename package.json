@@ -38,7 +38,8 @@
     "test": "rc-test",
     "test:update": "rc-test -u",
     "tsc": "tsc --noEmit",
-    "docs:build:gh-pages": "GH_PAGES=1 npm run docs:build"
+    "docs:build:gh-pages": "GH_PAGES=1 npm run docs:build",
+    "prepare": "husky"
   },
   "dependencies": {
     "@rc-component/motion": "^1.0.0",
@@ -68,7 +69,9 @@
     "rc-test": "^7.1.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
   },
   "peerDependencies": {
     "react": ">=16.9.0",
@@ -76,5 +79,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   }
 }
