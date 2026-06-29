@@ -48,7 +48,7 @@
     "clsx": "^2.1.1"
   },
   "devDependencies": {
-    "@ant-design/icons": "^5.0.1",
+    "@ant-design/icons": "^6.3.2",
     "@rc-component/dialog": "^1.7.0",
     "@rc-component/father-plugin": "^2.2.0",
     "prettier": "^3.9.0",
