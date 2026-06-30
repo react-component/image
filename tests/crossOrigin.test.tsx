@@ -1,6 +1,5 @@
-import { fireEvent } from '@testing-library/dom';
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, fireEvent, act } from '@testing-library/react';
 import Image from '../src';
 
 describe('CrossOrigin', () => {

@@ -1,4 +1,3 @@
-import { createEvent, fireEvent } from '@testing-library/dom';
 import CloseOutlined from '@ant-design/icons/CloseOutlined';
 import LeftOutlined from '@ant-design/icons/LeftOutlined';
 import RightOutlined from '@ant-design/icons/RightOutlined';
@@ -8,7 +7,7 @@ import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
 import Dialog from '@rc-component/dialog';
 import { spyElementPrototypes } from '@rc-component/util';
-import { act, render } from '@testing-library/react';
+import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
 jest.mock('../src/Preview', () => {
