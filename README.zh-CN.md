@@ -62,7 +62,7 @@ export default function App() {
 运行本地 dumi 站点：
 
 ```bash
-npm install
+ut install
 npm start
 ```
 
@@ -72,15 +72,15 @@ npm start
 
 ### Image
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| fallback | 加载失败时使用的图片源 | string | - |
-| placeholder | 图片加载前的占位内容 | boolean \| `React.ReactElement` | - |
-| prefixCls | 组件 className 前缀 | string | `rc-image` |
-| preview | 是否以及如何显示预览 | boolean \| `PreviewConfig` | true |
-| previewPrefixCls | 预览 className 前缀 | string | `rc-image-preview` |
-| src | 图片地址 | string | - |
-| onError | 图片加载失败时的回调 | `(event: Event) => void` | - |
+| 参数             | 说明                   | 类型                            | 默认值             |
+| ---------------- | ---------------------- | ------------------------------- | ------------------ |
+| fallback         | 加载失败时使用的图片源 | string                          | -                  |
+| placeholder      | 图片加载前的占位内容   | boolean \| `React.ReactElement` | -                  |
+| prefixCls        | 组件 className 前缀    | string                          | `rc-image`         |
+| preview          | 是否以及如何显示预览   | boolean \| `PreviewConfig`      | true               |
+| previewPrefixCls | 预览 className 前缀    | string                          | `rc-image-preview` |
+| src              | 图片地址               | string                          | -                  |
+| onError          | 图片加载失败时的回调   | `(event: Event) => void`        | -                  |
 
 也支持原生图片属性。
 
@@ -179,7 +179,7 @@ type ToolbarRenderInfoType = {
 ## 本地开发
 
 ```bash
-npm install
+ut install
 npm start
 ```
 

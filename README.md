@@ -62,7 +62,7 @@ export default function App() {
 Run the local dumi site:
 
 ```bash
-npm install
+ut install
 npm start
 ```
 
@@ -179,7 +179,7 @@ type ToolbarRenderInfoType = {
 ## Development
 
 ```bash
-npm install
+ut install
 npm start
 ```
 
