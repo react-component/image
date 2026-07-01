@@ -7,15 +7,9 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@@/*": [
-        "./.dumi/tmp/*"
-      ],
-      "@rc-component/image": [
-        "./src/index.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@@/*": ["./.dumi/tmp/*"],
+      "@rc-component/image": ["./src/index.ts"]
     },
     "noImplicitAny": false,
     "strictNullChecks": false,
@@ -26,14 +20,5 @@
     "strictBindCallApply": false,
     "module": "ESNext"
   },
-  "include": [
-    "react-compat.d.ts",
-    "global.d.ts",
-    ".dumirc.ts",
-    ".fatherrc.ts",
-    "docs",
-    "src",
-    "tests",
-    "typings.d.ts"
-  ]
+  "include": ["global.d.ts", ".dumirc.ts", ".fatherrc.ts", "docs", "src", "tests", "typings.d.ts"]
 }

@@ -199,7 +199,7 @@ const Preview: React.FC<PreviewProps> = props => {
     focusTrap = true,
   } = props;
 
-  const imgRef = useRef<HTMLImageElement>();
+  const imgRef = useRef<HTMLImageElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLElement>(null);
 
