@@ -1,6 +1,6 @@
 <div align="center">
   <h1>@rc-component/image</h1>
-  <p><sub><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /> Ant Design 生态的一部分。</sub></p>
+  <p><sub><a href="https://ant.design"><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /></a> Ant Design 生态的一部分。</sub></p>
   <p>🖼️ React 图片预览组件，支持预览组、缩放、旋转和自定义工具栏。</p>
 
   <p>
@@ -72,15 +72,15 @@ npm start
 
 ### Image
 
-| 参数 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- |
-| fallback | 加载失败时使用的图片源 | string | - |
-| placeholder | 图片加载前的占位内容 | boolean \| `React.ReactElement` | - |
-| prefixCls | 组件 className 前缀 | string | `rc-image` |
-| preview | 是否以及如何显示预览 | boolean \| `PreviewConfig` | true |
-| previewPrefixCls | 预览 className 前缀 | string | `rc-image-preview` |
-| src | 图片地址 | string | - |
-| onError | 图片加载失败时的回调 | `(event: Event) => void` | - |
+| 参数             | 说明                   | 类型                            | 默认值             |
+| ---------------- | ---------------------- | ------------------------------- | ------------------ |
+| fallback         | 加载失败时使用的图片源 | string                          | -                  |
+| placeholder      | 图片加载前的占位内容   | boolean \| `React.ReactElement` | -                  |
+| prefixCls        | 组件 className 前缀    | string                          | `rc-image`         |
+| preview          | 是否以及如何显示预览   | boolean \| `PreviewConfig`      | true               |
+| previewPrefixCls | 预览 className 前缀    | string                          | `rc-image-preview` |
+| src              | 图片地址               | string                          | -                  |
+| onError          | 图片加载失败时的回调   | `(event: Event) => void`        | -                  |
 
 也支持原生图片属性。
 
