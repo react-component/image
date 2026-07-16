@@ -81,6 +81,7 @@ export default () => (
 | closeIcon | React.ReactNode | - | Custom close icon |
 | src | string | - | Customize preview src |
 | movable | boolean | true | Enable drag |
+| wheel | boolean | true | Enable mouse wheel zoom |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
 | minScale | number | 1 | Min scale |
 | maxScale | number | 50 | Max scale |
@@ -122,6 +123,7 @@ export default () => (
 | --- | --- | --- | --- |
 | open | boolean | - | Whether the preview is open or not |
 | movable | boolean | true | Enable drag |
+| wheel | boolean | true | Enable mouse wheel zoom |
 | current | number | - | Current index |
 | closeIcon | React.ReactNode | - | Custom close icon |
 | scaleStep | number | 0.5 | The number to which the scale is increased or decreased |

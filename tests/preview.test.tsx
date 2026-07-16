@@ -256,6 +256,45 @@ describe('Preview', () => {
     });
   });
 
+  it('should not zoom with wheel when wheel is false', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          open: true,
+          wheel: false,
+        }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    // Wheel zoom should not work when wheel is false
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
+      deltaY: -50,
+    });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Scale should remain 1
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    // But zoom in button should still work
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(-256px, -192px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
+    });
+  });
+
   it('scaleStep = 1', () => {
     const { container } = render(
       <Image

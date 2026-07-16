@@ -17,6 +17,7 @@ export default function useMouseEvent(
   transform: TransformType,
   updateTransform: UpdateTransformFunc,
   dispatchZoomChange: DispatchZoomChangeFunc,
+  wheel: boolean = true,
 ) {
   const { rotate, scale, x, y } = transform;
 
@@ -83,7 +84,7 @@ export default function useMouseEvent(
   };
 
   const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
-    if (!open || event.deltaY == 0) return;
+    if (!open || !wheel || event.deltaY == 0) return;
     // Scale ratio depends on the deltaY size
     const scaleRatio = Math.abs(event.deltaY / 100);
     // Limit the maximum scale ratio
