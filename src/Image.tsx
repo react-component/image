@@ -1,5 +1,5 @@
-import useMergedState from '@rc-component/util/lib/hooks/useMergedState';
-import classnames from 'classnames';
+import { useControlledState } from '@rc-component/util';
+import { clsx } from 'clsx';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
 import type { InternalPreviewConfig, PreviewSemanticName, ToolbarRenderInfoType } from './Preview';
@@ -44,7 +44,7 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
 export type SemanticName = 'root' | 'image' | 'cover';
 
 export interface ImageProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick'> {
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick' | 'onKeyDown'> {
   // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
@@ -73,6 +73,7 @@ export interface ImageProps
   // Events
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 interface CompoundedComponent<P> extends React.FC<P> {
@@ -108,6 +109,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     // Events
     onClick,
     onError,
+    onKeyDown,
     ...otherProps
   } = props;
 
@@ -125,18 +127,18 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
-  const coverPlacement = typeof cover === 'object' && (cover as CoverConfig).placement ?
-    (cover as CoverConfig).placement || 'center' :
-    'center';
+  const coverPlacement =
+    typeof cover === 'object' && (cover as CoverConfig).placement
+      ? (cover as CoverConfig).placement || 'center'
+      : 'center';
 
-  const coverNode = typeof cover === 'object' && (cover as CoverConfig).coverNode ?
-    (cover as CoverConfig).coverNode :
-    cover as React.ReactNode;
+  const coverNode =
+    typeof cover === 'object' && (cover as CoverConfig).coverNode
+      ? (cover as CoverConfig).coverNode
+      : (cover as React.ReactNode);
 
   // ============================ Open ============================
-  const [isShowPreview, setShowPreview] = useMergedState(!!previewOpen, {
-    value: previewOpen,
-  });
+  const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
 
   const [mousePosition, setMousePosition] = useState<null | { x: number; y: number }>(null);
 
@@ -203,15 +205,46 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     onClick?.(e);
   };
 
+  // ======================= Keyboard Preview =====================
+  const onPreviewKeyDown: React.KeyboardEventHandler<HTMLDivElement> = event => {
+    onKeyDown?.(event);
+
+    if (!canPreview) {
+      return;
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+
+      const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+      const left = rect.x + rect.width / 2;
+      const top = rect.y + rect.height / 2;
+
+      if (groupContext) {
+        groupContext.onPreview(imageId, src, left, top);
+      } else {
+        setMousePosition({
+          x: left,
+          y: top,
+        });
+        triggerPreviewOpen(true);
+      }
+    }
+  };
+
   // =========================== Render ===========================
   return (
     <>
       <div
         {...otherProps}
-        className={classnames(prefixCls, rootClassName, classNames.root, {
+        className={clsx(prefixCls, rootClassName, classNames.root, {
           [`${prefixCls}-error`]: status === 'error',
         })}
         onClick={canPreview ? onPreview : onClick}
+        role={canPreview ? 'button' : otherProps.role}
+        tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
+        aria-label={canPreview ? otherProps['aria-label'] ?? alt : otherProps['aria-label']}
+        onKeyDown={onPreviewKeyDown}
         style={{
           width,
           height,
@@ -220,7 +253,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
       >
         <img
           {...imgCommonProps}
-          className={classnames(
+          className={clsx(
             `${prefixCls}-img`,
             {
               [`${prefixCls}-img-placeholder`]: placeholder === true,
@@ -249,7 +282,11 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         {/* Preview Click Mask */}
         {cover !== false && canPreview && (
           <div
-            className={classnames(`${prefixCls}-cover`, classNames.cover, `${prefixCls}-cover-${coverPlacement}`)}
+            className={clsx(
+              `${prefixCls}-cover`,
+              classNames.cover,
+              `${prefixCls}-cover-${coverPlacement}`,
+            )}
             style={{
               display: style?.display === 'none' ? 'none' : undefined,
               ...styles.cover,
@@ -274,7 +311,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           {...restProps}
           classNames={classNames?.popup}
           styles={styles?.popup}
-          rootClassName={classnames(previewRootClassName, rootClassName)}
+          rootClassName={clsx(previewRootClassName, rootClassName)}
         />
       )}
     </>

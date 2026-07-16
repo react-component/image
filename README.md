@@ -1,158 +1,136 @@
-# rc-image
+<div align="center">
+  <h1>@rc-component/image</h1>
+  <p><sub><a href="https://ant.design"><img alt="Ant Design" height="14" src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" style="vertical-align: -0.125em;" /></a> Part of the Ant Design ecosystem.</sub></p>
+  <p>🖼️ Image display, fallback, and preview tooling for React.</p>
 
-React Image.
+  <p>
+    <a href="https://npmjs.org/package/@rc-component/image"><img alt="NPM version" src="https://img.shields.io/npm/v/@rc-component/image.svg?style=flat-square"></a>
+    <a href="https://npmjs.org/package/@rc-component/image"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@rc-component/image.svg?style=flat-square"></a>
+    <a href="https://github.com/react-component/image/actions/workflows/react-component-ci.yml"><img alt="build status" src="https://github.com/react-component/image/actions/workflows/react-component-ci.yml/badge.svg"></a>
+    <a href="https://app.codecov.io/gh/react-component/image"><img alt="Codecov" src="https://img.shields.io/codecov/c/github/react-component/image/master.svg?style=flat-square"></a>
+    <a href="https://bundlephobia.com/package/@rc-component/image"><img alt="bundle size" src="https://img.shields.io/bundlephobia/minzip/@rc-component/image?style=flat-square"></a>
+    <a href="https://github.com/umijs/dumi"><img alt="dumi" src="https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square"></a>
+  </p>
+</div>
 
-<!-- prettier-ignore -->
-[![NPM version][npm-image]][npm-url]
-[![npm download][download-image]][download-url]
-[![build status][github-actions-image]][github-actions-url]
-[![Codecov][codecov-image]][codecov-url]
-[![bundle size][bundlephobia-image]][bundlephobia-url]
-[![dumi][dumi-image]][dumi-url]
+<p align="center">English | <a href="./README.zh-CN.md">简体中文</a></p>
 
-[npm-image]: http://img.shields.io/npm/v/rc-image.svg?style=flat-square
-[npm-url]: http://npmjs.org/package/rc-image
-[github-actions-image]: https://github.com/react-component/image/workflows/CI/badge.svg
-[github-actions-url]: https://github.com/react-component/image/actions
-[travis-image]: https://img.shields.io/travis/react-component/image/master?style=flat-square
-[travis-url]: https://travis-ci.org/react-component/image
-[circleci-image]: https://img.shields.io/circleci/build/github/react-component/image/master?style=flat-square
-[circleci-url]: https://circleci.com/gh/react-component/image
-[coveralls-image]: https://img.shields.io/coveralls/react-component/image.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/image?branch=master
-[codecov-image]: https://img.shields.io/codecov/c/gh/react-component/image?style=flat-square
-[codecov-url]: https://codecov.io/gh/react-component/image
-[david-url]: https://david-dm.org/react-component/image
-[david-image]: https://david-dm.org/react-component/image/status.svg?style=flat-square
-[david-dev-url]: https://david-dm.org/react-component/image?type=dev
-[david-dev-image]: https://david-dm.org/react-component/image/dev-status.svg?style=flat-square
-[download-image]: https://img.shields.io/npm/dm/rc-image.svg?style=flat-square
-[download-url]: https://npmjs.org/package/rc-image
-[bundlephobia-url]: https://bundlephobia.com/result?p=rc-image
-[bundlephobia-image]: https://badgen.net/bundlephobia/minzip/rc-image
-[dumi-url]: https://github.com/umijs/dumi
-[dumi-image]: https://img.shields.io/badge/docs%20by-dumi-blue?style=flat-square
+## Highlights
 
-## Feature
+- Supports placeholder, fallback, and preview.
+- Preview supports zoom, rotate, flip, drag, keyboard access, and custom actions.
+- `Image.PreviewGroup` supports grouped preview and custom preview items.
+- Ships compiled JavaScript, TypeScript definitions, and CSS assets.
 
-- [x] Placeholder
-- [x] Preview
-- [x] Rotate
-- [x] Zoom
-- [x] Flip
-- [x] Fallback
-- [x] Multiple Preview
+## Install
 
-## install
-
-[![rc-image](https://nodei.co/npm/rc-image.png)](https://npmjs.org/package/rc-image)
+```bash
+npm install @rc-component/image
+```
 
 ## Usage
+
+```tsx | pure
+import Image from '@rc-component/image';
+import '@rc-component/image/assets/index.css';
+
+export default function App() {
+  return (
+    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+  );
+}
+```
+
+## Preview Group
+
+```tsx | pure
+import Image from '@rc-component/image';
+import '@rc-component/image/assets/index.css';
+
+export default function App() {
+  return (
+    <Image.PreviewGroup>
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+      <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
+    </Image.PreviewGroup>
+  );
+}
+```
+
+## Examples
+
+Run the local dumi site:
 
 ```bash
 npm install
 npm start
 ```
 
-```js
-import Image from '@rc-component/image';
-
-export default () => (
-  <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-);
-```
+Then open `http://localhost:8000`.
 
 ## API
 
-| Name | Type | Default | Description |
+### Image
+
+| Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| preview | boolean \| [PreviewType](#PreviewType) | true | Whether to show preview |
-| prefixCls | string | rc-image | Classname prefix |
-| placeholder | boolean \| ReactElement | - | if `true` will set default placeholder or use `ReactElement` set customize placeholder |
-| fallback | string | - | Load failed src |
-| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
-| onError | (event: Event) => void | - | Load failed callback |
+| fallback | Image source used when loading fails | string | - |
+| placeholder | Placeholder before image loads | boolean \| `React.ReactElement` | - |
+| prefixCls | Component class name prefix | string | `rc-image` |
+| preview | Whether and how to show preview | boolean \| `PreviewConfig` | true |
+| previewPrefixCls | Preview class name prefix | string | `rc-image-preview` |
+| src | Image source | string | - |
+| onError | Callback when image loading fails | `(event: Event) => void` | - |
 
-### PreviewType
+Native image attributes are also supported.
 
-| Name | Type | Default | Description |
+### PreviewConfig
+
+| Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| open | boolean | - | Whether the preview is open or not |
-| closeIcon | React.ReactNode | - | Custom close icon |
-| src | string | - | Customize preview src |
-| movable | boolean | true | Enable drag |
-| wheel | boolean | true | Enable mouse wheel zoom |
-| scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
-| minScale | number | 1 | Min scale |
-| maxScale | number | 50 | Max scale |
-| forceRender | boolean | - | Force render preview |
-| getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
-| imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType) }) => React.ReactNode | - | Customize image |
-| actionsRender | (originalNode: React.ReactElement, info: Omit<[ToolbarRenderInfoType](#ToolbarRenderInfoType), 'current' \| 'total'>) => React.ReactNode | - | Customize toolbar |
-| onOpenChange | (open: boolean, prevVisible: boolean) => void | - | Callback when open is changed |
-| onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
+| actionsRender | Custom toolbar renderer | `(node: React.ReactElement, info: Omit<ToolbarRenderInfoType, 'current' \| 'total'>) => React.ReactNode` | - |
+| closeIcon | Custom close icon | `React.ReactNode` | - |
+| cover | Custom preview cover | `React.ReactNode \| CoverConfig` | - |
+| countRender | Custom count renderer | `(current: number, total: number) => React.ReactNode` | - |
+| forceRender | Force render preview | boolean | false |
+| getContainer | Preview container | string \| HTMLElement \| `() => HTMLElement` \| false | `document.body` |
+| imageRender | Custom image renderer | `(node: React.ReactElement, info: { transform: TransformType; image: ImgInfo }) => React.ReactNode` | - |
+| maskClosable | Whether clicking mask closes preview | boolean | true |
+| maxScale | Max scale | number | 50 |
+| minScale | Min scale | number | 1 |
+| movable | Enable drag | boolean | true |
+| open | Controlled preview open state | boolean | - |
+| scaleStep | Scale step | number | 0.5 |
+| src | Custom preview image source | string | - |
+| wheel | Enable mouse wheel zoom | boolean | true |
+| onOpenChange | Callback when preview open state changes | `(open: boolean) => void` | - |
+| onTransform | Callback when transform changes | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 
-## Image.PreviewGroup
+### Image.PreviewGroup
 
-preview the merged src
-
-```js
-import Image from '@rc-component/image';
-
-export default () => (
-  <Image.PreviewGroup>
-    <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
-    <Image src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*P0S-QIRUbsUAAAAAAAAAAABkARQnAQ" />
-  </Image.PreviewGroup>
-);
-```
-
-### API
-
-| Name | Type | Default | Description |
+| Property | Description | Type | Default |
 | --- | --- | --- | --- |
-| preview | boolean \| [PreviewGroupType](#PreviewGroupType) | true | Whether to show preview, <br> current: If Preview the show img index, default 0 |
-| previewPrefixCls | string | rc-image-preview | Preview classname prefix |
-| icons | { [iconKey]?: ReactNode } | - | Icons in the top operation bar, iconKey: 'rotateLeft' \| 'rotateRight' \| 'zoomIn' \| 'zoomOut' \| 'close' \| 'left' \| 'right' |
-| fallback | string | - | Load failed src |
-| items | (string \| { src: string, alt: string, crossOrigin: string, ... })[] | - | preview group |
-
-### PreviewGroupType
-
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| open | boolean | - | Whether the preview is open or not |
-| movable | boolean | true | Enable drag |
-| wheel | boolean | true | Enable mouse wheel zoom |
-| current | number | - | Current index |
-| closeIcon | React.ReactNode | - | Custom close icon |
-| scaleStep | number | 0.5 | The number to which the scale is increased or decreased |
-| minScale | number | 1 | Min scale |
-| maxScale | number | 50 | Max scale |
-| forceRender | boolean | - | Force render preview |
-| getContainer | string \| HTMLElement \| (() => HTMLElement) \| false | document.body | Return the mount node for preview |
-| countRender | (current: number, total: number) => ReactNode | - | Customize count |
-| imageRender | (originalNode: React.ReactElement, info: { transform: [TransformType](#TransformType), current: number }) => React.ReactNode | - | Customize image |
-| actionsRender | (originalNode: React.ReactElement, info: [ToolbarRenderInfoType](#ToolbarRenderInfoType)) => React.ReactNode | - | Customize toolbar |
-| onOpenChange | (open: boolean, prevVisible: boolean, current: number) => void | - | Callback when open is changed |
-| onTransform | { transform: [TransformType](#TransformType), action: [TransformAction](#TransformAction) } | - | Callback when transform is changed |
+| children | Image children | `React.ReactNode` | - |
+| classNames | Semantic preview popup class names | `{ popup?: Partial<Record<PreviewSemanticName, string>> }` | - |
+| fallback | Image source used when loading fails | string | - |
+| icons | Custom preview operation icons | `PreviewProps['icons']` | - |
+| items | Preview items | `(string \| ImageElementProps)[]` | - |
+| preview | Whether and how to show preview group | boolean \| `GroupPreviewConfig` | true |
+| previewPrefixCls | Preview class name prefix | string | `rc-image-preview` |
+| styles | Semantic preview popup styles | `{ popup?: Partial<Record<PreviewSemanticName, React.CSSProperties>> }` | - |
 
 ### TransformType
 
-```typescript
-{
+```ts
+type TransformType = {
   x: number;
   y: number;
   rotate: number;
   scale: number;
   flipX: boolean;
   flipY: boolean;
-}
-```
+};
 
-### TransformAction
-
-```typescript
 type TransformAction =
   | 'flipY'
   | 'flipX'
@@ -167,12 +145,20 @@ type TransformAction =
   | 'doubleClick'
   | 'move'
   | 'dragRebound';
-```
 
-### ToolbarRenderInfoType
+type Actions = {
+  onActive: (offset: number) => void;
+  onFlipY: () => void;
+  onFlipX: () => void;
+  onRotateLeft: () => void;
+  onRotateRight: () => void;
+  onZoomOut: () => void;
+  onZoomIn: () => void;
+  onClose: () => void;
+  onReset: () => void;
+};
 
-```typescript
-{
+type ToolbarRenderInfoType = {
   icons: {
     prevIcon?: React.ReactNode;
     nextIcon?: React.ReactNode;
@@ -183,52 +169,39 @@ type TransformAction =
     zoomOutIcon: React.ReactNode;
     zoomInIcon: React.ReactNode;
   };
-  actions: {
-    onActive?: (offset: number) => void;
-    onFlipY: () => void;
-    onFlipX: () => void;
-    onRotateLeft: () => void;
-    onRotateRight: () => void;
-    onZoomOut: () => void;
-    onZoomIn: () => void;
-    onClose: () => void;
-    onReset: () => void;
-  };
-  transform: {
-    x: number;
-    y: number;
-    rotate: number;
-    scale: number;
-    flipX: boolean;
-    flipY: boolean;
-  },
+  actions: Actions;
+  transform: TransformType;
   current: number;
   total: number;
-}
+  image: ImgInfo;
+};
 ```
 
-## Example
+## Development
 
-http://localhost:8003/examples/
-
-## Test Case
-
+```bash
+npm install
+npm start
 ```
+
+The dumi site runs at `http://localhost:8000` by default.
+
+```bash
 npm test
+npm run tsc
+npm run lint
+npm run compile
+npm run build
 ```
 
-## Coverage
+## Release
 
+```bash
+npm run prepublishOnly
 ```
-npm run coverage
-```
+
+The release flow is handled by `@rc-component/np` through the `rc-np` command after the package build.
 
 ## License
 
-rc-image is released under the MIT license.
-
-## 🤝 Contributing 
-
-<a href="https://openomy.app/github/react-component/image" target="_blank" style="display: block; width: 100%;" align="center">
-  <img src="https://www.openomy.app/svg?repo=react-component/image&chart=bubble&latestMonth=24" target="_blank" alt="Contribution Leaderboard" style="display: block; width: 100%;" />
-</a>
+@rc-component/image is released under the [MIT](./LICENSE) license.

@@ -51,6 +51,17 @@ describe('Basic', () => {
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
 
+  it('should pass fetchPriority to img element', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        fetchPriority="high"
+      />,
+    );
+    const img = container.querySelector('img');
+    expect(img).toHaveAttribute('fetchpriority', 'high');
+  });
+
   it('className and style props should work on img element', () => {
     const { container } = render(
       <Image

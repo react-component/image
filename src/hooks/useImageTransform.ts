@@ -1,7 +1,6 @@
-import { getClientSize } from '../util';
-import isEqual from '@rc-component/util/lib/isEqual';
-import raf from '@rc-component/util/lib/raf';
+import { isEqual, raf } from '@rc-component/util';
 import { useRef, useState } from 'react';
+import { getClientSize } from '../util';
 
 export type TransformType = {
   x: number;

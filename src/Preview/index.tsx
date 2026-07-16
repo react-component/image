@@ -1,9 +1,7 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
-import { useEvent } from '@rc-component/util';
-import useLayoutEffect from '@rc-component/util/lib/hooks/useLayoutEffect';
-import KeyCode from '@rc-component/util/lib/KeyCode';
-import classnames from 'classnames';
+import { KeyCode, useEvent, useLayoutEffect, useLockFocus } from '@rc-component/util';
+import { clsx } from 'clsx';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from '../context';
 import type { TransformAction, TransformType } from '../hooks/useImageTransform';
@@ -19,7 +17,7 @@ import PrevNext from './PrevNext';
 
 // Note: if you want to add `action`,
 // pls contact @zombieJ or @thinkasany first.
-export type PreviewSemanticName = 'root' | 'mask' | 'body' | FooterSemanticName;
+export type PreviewSemanticName = 'root' | 'mask' | 'body' | 'close' | FooterSemanticName;
 
 export interface OperationIcons {
   rotateLeft?: React.ReactNode;
@@ -89,7 +87,12 @@ export interface InternalPreviewConfig {
   open?: boolean;
   getContainer?: PortalProps['getContainer'];
   zIndex?: number;
+  maskClosable?: boolean;
   afterOpenChange?: (open: boolean) => void;
+
+  // Focus
+  /** Whether to trap focus within the preview when open. Default is true. */
+  focusTrap?: boolean;
 
   // Operation
   movable?: boolean;
@@ -176,6 +179,7 @@ const Preview: React.FC<PreviewProps> = props => {
     onClose,
     open,
     afterOpenChange,
+    maskClosable = true,
     icons = {},
     closeIcon,
     getContainer,
@@ -196,9 +200,13 @@ const Preview: React.FC<PreviewProps> = props => {
     mousePosition,
     zIndex,
     wheel = true,
+    focusTrap = true,
   } = props;
 
-  const imgRef = useRef<HTMLImageElement>();
+  const imgRef = useRef<HTMLImageElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement>(null);
+
   const groupContext = useContext(PreviewGroupContext);
   const showLeftOrRightSwitches = groupContext && count > 1;
   const showOperationsProgress = groupContext && count >= 1;
@@ -337,10 +345,6 @@ const Preview: React.FC<PreviewProps> = props => {
     if (open) {
       const { keyCode } = event;
 
-      if (keyCode === KeyCode.ESC) {
-        onClose?.();
-      }
-
       if (showLeftOrRightSwitches) {
         if (keyCode === KeyCode.LEFT) {
           onActive(-1);
@@ -373,6 +377,10 @@ const Preview: React.FC<PreviewProps> = props => {
   const onVisibleChanged = (nextVisible: boolean) => {
     if (!nextVisible) {
       setLockScroll(false);
+
+      // Restore focus to the trigger element after leave animation
+      triggerRef.current?.focus?.();
+      triggerRef.current = null;
     }
     afterOpenChange?.(nextVisible);
   };
@@ -385,6 +393,21 @@ const Preview: React.FC<PreviewProps> = props => {
     }
   }, [open]);
 
+  const onEsc: PortalProps['onEsc'] = ({ top }) => {
+    if (top) {
+      onClose?.();
+    }
+  };
+
+  // =========================== Focus ============================
+  useLayoutEffect(() => {
+    if (open) {
+      triggerRef.current = document.activeElement as HTMLElement;
+    }
+  }, [open]);
+
+  useLockFocus(focusTrap && open && portalRender, () => wrapperRef.current);
+
   // ========================== Render ==========================
   const bodyStyle: React.CSSProperties = {
     ...styles.body,
@@ -394,7 +417,13 @@ const Preview: React.FC<PreviewProps> = props => {
   }
 
   return (
-    <Portal open={portalRender} getContainer={getContainer} autoLock={lockScroll}>
+    <Portal
+      open={portalRender && open}
+      autoDestroy={false}
+      getContainer={getContainer}
+      autoLock={lockScroll}
+      onEsc={onEsc}
+    >
       <CSSMotion
         motionName={motionName}
         visible={portalRender && open}
@@ -415,27 +444,29 @@ const Preview: React.FC<PreviewProps> = props => {
 
           return (
             <div
-              className={classnames(prefixCls, rootClassName, classNames.root, motionClassName, {
+              ref={wrapperRef}
+              className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
+                [`${prefixCls}-movable`]: movable,
                 [`${prefixCls}-moving`]: isMoving,
               })}
               style={mergedStyle}
+              role="dialog"
+              aria-modal="true"
+              aria-label={alt}
+              tabIndex={-1}
             >
               {/* Mask */}
               <div
-                className={classnames(`${prefixCls}-mask`, classNames.mask)}
+                className={clsx(`${prefixCls}-mask`, classNames.mask)}
                 style={styles.mask}
-                onClick={onClose}
+                onClick={maskClosable ? onClose : undefined}
               />
 
               {/* Body */}
-              <div className={classnames(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
+              <div className={clsx(`${prefixCls}-body`, classNames.body)} style={bodyStyle}>
                 {/* Preview Image */}
                 {imageRender
-                  ? imageRender(imgNode, {
-                      transform,
-                      image,
-                      ...(groupContext ? { current } : {}),
-                    })
+                  ? imageRender(imgNode, { transform, image, ...(groupContext ? { current } : {}) })
                   : imgNode}
               </div>
 
@@ -445,6 +476,8 @@ const Preview: React.FC<PreviewProps> = props => {
                   prefixCls={prefixCls}
                   icon={closeIcon === true ? icons.close : closeIcon || icons.close}
                   onClick={onClose}
+                  className={classNames.close}
+                  style={styles.close}
                 />
               )}
 

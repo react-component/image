@@ -5,7 +5,8 @@ import RotateLeftOutlined from '@ant-design/icons/RotateLeftOutlined';
 import RotateRightOutlined from '@ant-design/icons/RotateRightOutlined';
 import ZoomInOutlined from '@ant-design/icons/ZoomInOutlined';
 import ZoomOutOutlined from '@ant-design/icons/ZoomOutOutlined';
-import { spyElementPrototypes } from '@rc-component/util/lib/test/domHook';
+import Dialog from '@rc-component/dialog';
+import { spyElementPrototypes } from '@rc-component/util';
 import { act, createEvent, fireEvent, render } from '@testing-library/react';
 import React from 'react';
 
@@ -20,6 +21,11 @@ jest.mock('../src/Preview', () => {
   };
 
   return MockPreview;
+});
+
+jest.mock('@rc-component/util/lib/hooks/useId', () => {
+  const origin = jest.requireActual('react');
+  return origin.useId;
 });
 
 import Image from '../src';
@@ -93,6 +99,33 @@ describe('Preview', () => {
     onPreviewCloseMock.mockReset();
     fireEvent.click(document.querySelector('.rc-image-preview-close'));
     expect(onPreviewCloseMock).toHaveBeenCalledWith(false);
+  });
+
+  it('maskClosable should control mask close behavior only', () => {
+    const onPreviewOpenChange = jest.fn();
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          maskClosable: false,
+          onOpenChange: onPreviewOpenChange,
+        }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    onPreviewOpenChange.mockReset();
+
+    fireEvent.click(document.querySelector('.rc-image-preview-mask'));
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+    expect(onPreviewOpenChange).not.toHaveBeenCalled();
+
+    fireEvent.click(document.querySelector('.rc-image-preview-close'));
+    expect(onPreviewOpenChange).toHaveBeenCalledWith(false);
   });
 
   it('Unmount', () => {
@@ -414,6 +447,26 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
       transform: 'translate3d(75px, 75px, 0) scale3d(1.5, 1.5, 1) rotate(0deg)',
     });
+  });
+
+  it('should render movable className correctly according to movable prop', () => {
+    const { rerender } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ open: true }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview')).toHaveClass('rc-image-preview-movable');
+
+    rerender(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ open: true, movable: false }}
+      />,
+    );
+
+    expect(document.querySelector('.rc-image-preview')).not.toHaveClass('rc-image-preview-movable');
   });
 
   it('Mouse Event', () => {
@@ -1091,6 +1144,25 @@ describe('Preview', () => {
     expect(afterOpenChange).toHaveBeenCalledTimes(2);
   });
 
+  it('Esc closes preview then modal', () => {
+    const onClose = jest.fn();
+
+    const { baseElement, getByRole } = render(
+      <Dialog visible onClose={onClose}>
+        <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />
+      </Dialog>,
+    );
+
+    fireEvent.click(getByRole('img'));
+    expect(baseElement.querySelector('.rc-image-preview')).toBeTruthy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(baseElement.querySelector('.rc-image-preview')).toBeFalsy();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalled();
+  });
+
   it('not modify preview image size', () => {
     render(
       <Image
@@ -1118,6 +1190,7 @@ describe('Preview', () => {
         mask: 'custom-mask',
         actions: 'custom-actions',
         root: 'custom-root',
+        close: 'custom-close',
       },
     };
     const customStyles = {
@@ -1126,6 +1199,7 @@ describe('Preview', () => {
         mask: { color: 'red' },
         actions: { backgroundColor: 'blue' },
         root: { border: '1px solid green' },
+        close: { color: 'purple' },
       },
     };
     const { baseElement } = render(
@@ -1144,13 +1218,186 @@ describe('Preview', () => {
     const cover = document.querySelector('.rc-image-cover');
     const mask = document.querySelector('.rc-image-preview-mask');
     const actions = baseElement.querySelector('.rc-image-preview-actions');
+    const close = baseElement.querySelector('.rc-image-preview-close');
     expect(cover).toHaveClass(customClassnames.cover);
     expect(cover).toHaveStyle(customStyles.cover);
     expect(mask).toHaveClass(customClassnames.popup.mask);
     expect(mask).toHaveStyle(customStyles.popup.mask);
     expect(actions).toHaveClass(customClassnames.popup.actions);
     expect(actions).toHaveStyle(customStyles.popup.actions);
+    expect(close).toHaveClass(customClassnames.popup.close);
+    expect(close).toHaveStyle(customStyles.popup.close);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveClass(customClassnames.popup.root);
     expect(baseElement.querySelector('.rc-image-preview')).toHaveStyle(customStyles.popup.root);
+  });
+
+  it('Image wrapper should be keyboard focusable when preview enabled', () => {
+    const { container } = render(<Image src="src" alt="keyboard test" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    expect(wrapper).toHaveAttribute('role', 'button');
+    expect(wrapper).toHaveAttribute('tabindex', '0');
+  });
+
+  it('Pressing Enter on image wrapper should open preview', () => {
+    const { container } = render(<Image src="src" alt="keyboard open" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
+  it('Pressing Space on image wrapper should open preview', () => {
+    const { container } = render(<Image src="src" alt="keyboard open space" />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: ' ' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
+  it('Preview dialog should have role dialog and receive focus', () => {
+    render(<Image src="src" alt="dialog a11y" preview={{ open: true }} />);
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toHaveAttribute('role', 'dialog');
+    expect(preview).toHaveAttribute('aria-modal', 'true');
+    expect(preview).toHaveAttribute('aria-label', 'dialog a11y');
+  });
+
+  it('Preview wrapper should be focusable after portal renders', () => {
+    const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
+      toJSON: () => undefined,
+    } as DOMRect);
+
+    render(<Image src="src" alt="focus portal" preview={{ open: true }} />);
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    rectSpy.mockRestore();
+  });
+
+  it('Preview open should render focusable wrapper', () => {
+    render(<Image src="src" alt="focus test" preview={{ open: true }} />);
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('Pressing Enter should not open preview when preview is disabled', () => {
+    const { container } = render(<Image src="src" alt="disabled preview" preview={false} />);
+
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+  });
+
+  it('Focus should be trapped inside preview after keyboard open and restored on close', () => {
+    const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
+      toJSON: () => undefined,
+    } as DOMRect);
+
+    const { container } = render(<Image src="src" alt="focus trap" />);
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+
+    // Open preview via keyboard
+    wrapper.focus();
+    expect(document.activeElement).toBe(wrapper);
+
+    fireEvent.keyDown(wrapper, { key: 'Enter' });
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Focus should be inside the preview
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toBeTruthy();
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    // Focus should not escape when trying to focus outside
+    wrapper.focus();
+    expect(preview.contains(document.activeElement)).toBeTruthy();
+
+    // Close preview via Escape
+    fireEvent.keyDown(window, { key: 'Escape' });
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Focus should return to the trigger element
+    expect(document.activeElement).toBe(wrapper);
+
+    rectSpy.mockRestore();
+  });
+
+  it('Focus should not be trapped when focusTrap is false', () => {
+    const rectSpy = jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      left: 0,
+      toJSON: () => undefined,
+    } as DOMRect);
+
+    const { container } = render(
+      <Image src="src" alt="no trap" preview={{ open: true, focusTrap: false }} />,
+    );
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const preview = document.querySelector('.rc-image-preview') as HTMLElement;
+    expect(preview).toBeTruthy();
+
+    // Focus outside the preview should not be redirected back
+    const wrapper = container.querySelector('.rc-image') as HTMLElement;
+    wrapper.focus();
+    expect(document.activeElement).toBe(wrapper);
+
+    rectSpy.mockRestore();
   });
 });

@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "moduleResolution": "node",
-    "baseUrl": "./",
+    "moduleResolution": "bundler",
     "jsx": "react",
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "paths": {
-      "@/*": ["src/*"],
-      "@@/*": [".dumi/tmp/*"],
-      "@rc-component/image": ["src/index.ts"]
-    }
-  }
+      "@/*": ["./src/*"],
+      "@@/*": ["./.dumi/tmp/*"],
+      "@rc-component/image": ["./src/index.ts"]
+    },
+    "strict": false,
+    "module": "ESNext"
+  },
+  "include": ["global.d.ts", ".dumirc.ts", ".fatherrc.ts", "docs", "src", "tests", "typings.d.ts"]
 }

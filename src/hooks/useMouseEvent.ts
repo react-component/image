@@ -1,4 +1,4 @@
-import { warning } from '@rc-component/util/lib/warning';
+import { warning } from '@rc-component/util';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
@@ -118,10 +118,14 @@ export default function useMouseEvent(
     return () => {
       window.removeEventListener('mouseup', onMouseUp);
       window.removeEventListener('mousemove', onMouseMove);
-      // /* istanbul ignore next */
-      window.top?.removeEventListener('mouseup', onMouseUp);
-      // /* istanbul ignore next */
-      window.top?.removeEventListener('mousemove', onMouseMove);
+
+      /* istanbul ignore next */
+      try {
+        window.top?.removeEventListener('mouseup', onMouseUp);
+        window.top?.removeEventListener('mousemove', onMouseMove);
+      } catch (error) {
+        // Do nothing
+      }
     };
   }, [open, isMoving, x, y, rotate, movable]);
 
