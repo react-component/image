@@ -289,6 +289,40 @@ describe('Preview', () => {
     });
   });
 
+  it('should zoom with wheel when wheel is explicitly true', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{
+          open: true,
+          wheel: true,
+        }}
+      />,
+    );
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    // Wheel zoom should work when wheel is true
+    fireEvent.wheel(document.querySelector('.rc-image-preview-img'), {
+      deltaY: -50,
+    });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Scale should change to 1.25
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1.25, 1.25, 1) rotate(0deg)',
+    });
+  });
+
   it('should not zoom with wheel when wheel is false', () => {
     const { container } = render(
       <Image
