@@ -102,6 +102,7 @@ npm start
 | open | 受控预览打开状态 | boolean | - |
 | scaleStep | 缩放步长 | number | 0.5 |
 | src | 自定义预览图像源 | string | - |
+| wheel | 启用鼠标滚轮缩放 | boolean | true |
 | onOpenChange | 预览打开状态变化时回调 | `(open: boolean) => void` | - |
 | onTransform | 变换变化时的回调 | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 

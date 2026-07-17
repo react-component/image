@@ -79,6 +79,9 @@ export interface InternalPreviewConfig {
   minScale?: number;
   maxScale?: number;
 
+  /** Whether to enable mouse wheel zoom. Default is true. */
+  wheel?: boolean;
+
   // Display
   motionName?: string;
   open?: boolean;
@@ -196,6 +199,7 @@ const Preview: React.FC<PreviewProps> = props => {
     styles = {},
     mousePosition,
     zIndex,
+    wheel = true,
     focusTrap = true,
   } = props;
 
@@ -223,6 +227,7 @@ const Preview: React.FC<PreviewProps> = props => {
     transform,
     updateTransform,
     dispatchZoomChange,
+    wheel,
   );
   const { isTouching, onTouchStart, onTouchMove, onTouchEnd } = useTouchEvent(
     imgRef,

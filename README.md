@@ -102,6 +102,7 @@ Native image attributes are also supported.
 | open | Controlled preview open state | boolean | - |
 | scaleStep | Scale step | number | 0.5 |
 | src | Custom preview image source | string | - |
+| wheel | Enable mouse wheel zoom | boolean | true |
 | onOpenChange | Callback when preview open state changes | `(open: boolean) => void` | - |
 | onTransform | Callback when transform changes | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
 
