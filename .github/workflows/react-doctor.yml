@@ -24,6 +24,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - uses: millionco/react-doctor@938008119a288f2fb47c66a69cd9279a21f31784
+      - uses: millionco/react-doctor@01820bb4fd4d0a4aebcd8df2b2a143a098649cb2
         with:
           version: 0.7.4
