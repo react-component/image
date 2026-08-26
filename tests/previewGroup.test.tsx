@@ -151,6 +151,28 @@ describe('PreviewGroup', () => {
     expect(previewProgressElement.textContent).toEqual('current:1 / total:3');
   });
 
+  it('uses non-submitting button types for preview controls', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" />
+        <Image src="src2" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    [
+      '.rc-image-preview-close',
+      '.rc-image-preview-switch-prev',
+      '.rc-image-preview-switch-next',
+    ].forEach(selector => {
+      expect(document.querySelector(selector)).toHaveAttribute('type', 'button');
+    });
+  });
+
   it('Switch', () => {
     const previewProgressElementPath = '.rc-image-preview-progress';
     const { container } = render(
