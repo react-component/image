@@ -47,6 +47,7 @@ function getCenter(oldPoint1: Point, oldPoint2: Point, newPoint1: Point, newPoin
 export default function useTouchEvent(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   movable: boolean,
+  rebound: boolean,
   open: boolean,
   minScale: number,
   transform: TransformType,
@@ -143,6 +144,9 @@ export default function useTouchEvent(
       /** When the scaling ratio is less than the minimum scaling ratio, reset the scaling ratio */
       return updateTransform({ x: 0, y: 0, scale: minScale }, 'touchZoom');
     }
+
+    // Keep the image at the dropped position when `rebound` is disabled
+    if (!rebound) return;
 
     const width = imgRef.current.offsetWidth * scale;
     const height = imgRef.current.offsetHeight * scale;

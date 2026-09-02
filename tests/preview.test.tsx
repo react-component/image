@@ -699,6 +699,57 @@ describe('Preview', () => {
     jest.restoreAllMocks();
   });
 
+  it('rebound disabled keeps the dropped position', () => {
+    const clientWidthMock = jest
+      .spyOn(document.documentElement, 'clientWidth', 'get')
+      .mockImplementation(() => 1080);
+    const clientHeightMock = jest
+      .spyOn(document.documentElement, 'clientHeight', 'get')
+      .mockImplementation(() => 760);
+
+    const left = 0;
+    const top = 0;
+
+    const imgEleMock = spyElementPrototypes(HTMLImageElement, {
+      offsetWidth: { get: () => 2000 },
+      offsetHeight: { get: () => 1000 },
+      getBoundingClientRect: () => ({ left, top }),
+    });
+
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ rebound: false }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    // Drag the image out of the visible area
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
+    });
+    fireMouseEvent('mouseMove', window, { pageX: 80, pageY: 60 });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(80px, 60px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    // Without rebound, the image stays where it was dropped
+    fireMouseEvent('mouseUp', window);
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(80px, 60px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    clientWidthMock.mockRestore();
+    clientHeightMock.mockRestore();
+    imgEleMock.mockRestore();
+    jest.restoreAllMocks();
+  });
+
   it('PreviewGroup render', () => {
     const { container } = render(
       <Image.PreviewGroup
