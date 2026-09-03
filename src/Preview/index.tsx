@@ -96,6 +96,8 @@ export interface InternalPreviewConfig {
 
   // Operation
   movable?: boolean;
+  /** Whether to rebound the image to the visible area after dragging. Default is true. */
+  rebound?: boolean;
   icons?: OperationIcons;
   closeIcon?: React.ReactNode;
 
@@ -176,6 +178,7 @@ const Preview: React.FC<PreviewProps> = props => {
     imageInfo,
     fallback,
     movable = true,
+    rebound = true,
     onClose,
     open,
     afterOpenChange,
@@ -217,11 +220,13 @@ const Preview: React.FC<PreviewProps> = props => {
     imgRef,
     minScale,
     maxScale,
+    rebound,
     onTransform,
   );
   const { isMoving, onMouseDown, onWheel } = useMouseEvent(
     imgRef,
     movable,
+    rebound,
     open,
     scaleStep,
     transform,
@@ -232,6 +237,7 @@ const Preview: React.FC<PreviewProps> = props => {
   const { isTouching, onTouchStart, onTouchMove, onTouchEnd } = useTouchEvent(
     imgRef,
     movable,
+    rebound,
     open,
     minScale,
     transform,

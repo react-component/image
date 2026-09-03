@@ -51,6 +51,100 @@ describe('Touch Events', () => {
     });
   });
 
+  it('touch move does not rebound when rebound is disabled', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ rebound: false }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    const previewImgDom = document.querySelector('.rc-image-preview-img');
+
+    fireEvent.touchStart(previewImgDom, {
+      touches: [{ clientX: 0, clientY: 0 }],
+    });
+    fireEvent.touchMove(previewImgDom, {
+      touches: [{ clientX: 50, clientY: 50 }],
+    });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(previewImgDom).toHaveStyle({
+      transform: 'translate3d(50px, 50px, 0) scale3d(1, 1, 1) rotate(0deg)',
+      transitionDuration: '0s',
+    });
+
+    fireEvent.touchEnd(previewImgDom);
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Keep the dropped position instead of rebounding to the center
+    expect(previewImgDom).toHaveStyle({
+      transform: 'translate3d(50px, 50px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+  });
+
+  it('touch zoom still corrects position when rebound is disabled', () => {
+    const imgEleMock = spyElementPrototypes(HTMLImageElement, {
+      offsetWidth: { get: () => 2000 },
+      offsetHeight: { get: () => 1000 },
+      getBoundingClientRect: () => ({ left: 10, top: 10 }),
+    });
+
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ rebound: false }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    const previewImgDom = document.querySelector('.rc-image-preview-img');
+
+    fireEvent.touchStart(previewImgDom, {
+      touches: [
+        { clientX: 40, clientY: 40 },
+        { clientX: 60, clientY: 60 },
+      ],
+    });
+    fireEvent.touchMove(previewImgDom, {
+      touches: [
+        { clientX: 30, clientY: 30 },
+        { clientX: 70, clientY: 70 },
+      ],
+    });
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(previewImgDom).toHaveStyle({
+      transform: 'translate3d(-50px, -50px, 0) scale3d(2, 2, 1) rotate(0deg)',
+    });
+
+    fireEvent.touchEnd(previewImgDom);
+
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // `rebound` only skips single-finger dragging; the two-finger zoom still
+    // corrects the image back into the visible area.
+    expect(previewImgDom).toHaveStyle({
+      transform: 'translate3d(2000px, 616px, 0) scale3d(2, 2, 1) rotate(0deg)',
+    });
+
+    imgEleMock.mockRestore();
+  });
+
   it('touch zoom', () => {
     const { container } = render(
       <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,

@@ -12,6 +12,7 @@ import type {
 export default function useMouseEvent(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   movable: boolean,
+  rebound: boolean,
   open: boolean,
   scaleStep: number,
   transform: TransformType,
@@ -63,6 +64,9 @@ export default function useMouseEvent(
       const { transformX, transformY } = startPositionInfo.current;
       const hasChangedPosition = x !== transformX && y !== transformY;
       if (!hasChangedPosition) return;
+
+      // Keep the image at the dropped position when `rebound` is disabled
+      if (!rebound) return;
 
       const width = imgRef.current.offsetWidth * scale;
       const height = imgRef.current.offsetHeight * scale;
