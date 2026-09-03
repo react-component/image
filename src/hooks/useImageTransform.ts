@@ -54,6 +54,7 @@ export default function useImageTransform(
   imgRef: React.MutableRefObject<HTMLImageElement>,
   minScale: number,
   maxScale: number,
+  rebound: boolean,
   onTransform: (info: { transform: TransformType; action: TransformAction }) => void,
 ) {
   const frame = useRef(null);
@@ -134,7 +135,9 @@ export default function useImageTransform(
       const mergedWidth = offsetWidth * newScale;
       const mergedHeight = offsetHeight * newScale;
       const { width: clientWidth, height: clientHeight } = getClientSize();
-      if (mergedWidth <= clientWidth && mergedHeight <= clientHeight) {
+      // Keep the dropped position when `rebound` is disabled, instead of
+      // resetting the image back to the viewport center.
+      if (mergedWidth <= clientWidth && mergedHeight <= clientHeight && rebound) {
         newX = 0;
         newY = 0;
       }

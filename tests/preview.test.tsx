@@ -707,13 +707,10 @@ describe('Preview', () => {
       .spyOn(document.documentElement, 'clientHeight', 'get')
       .mockImplementation(() => 760);
 
-    const left = 0;
-    const top = 0;
-
     const imgEleMock = spyElementPrototypes(HTMLImageElement, {
-      offsetWidth: { get: () => 2000 },
-      offsetHeight: { get: () => 1000 },
-      getBoundingClientRect: () => ({ left, top }),
+      offsetWidth: { get: () => 200 },
+      offsetHeight: { get: () => 100 },
+      getBoundingClientRect: () => ({ left: 0, top: 0 }),
     });
 
     const { container } = render(
@@ -725,7 +722,8 @@ describe('Preview', () => {
 
     fireEvent.click(container.querySelector('.rc-image'));
 
-    // Drag the image out of the visible area
+    // Drag the image within the visible area (image is smaller than the
+    // viewport, so the default behaviour would rebound it back to the origin)
     fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
       pageX: 0,
       pageY: 0,
@@ -748,6 +746,116 @@ describe('Preview', () => {
     clientHeightMock.mockRestore();
     imgEleMock.mockRestore();
     jest.restoreAllMocks();
+  });
+
+  it('rebound defaults to true', () => {
+    const clientWidthMock = jest
+      .spyOn(document.documentElement, 'clientWidth', 'get')
+      .mockImplementation(() => 1080);
+    const clientHeightMock = jest
+      .spyOn(document.documentElement, 'clientHeight', 'get')
+      .mockImplementation(() => 760);
+
+    const imgEleMock = spyElementPrototypes(HTMLImageElement, {
+      offsetWidth: { get: () => 200 },
+      offsetHeight: { get: () => 100 },
+      getBoundingClientRect: () => ({ left: 0, top: 0 }),
+    });
+
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    fireMouseEvent('mouseDown', document.querySelector('.rc-image-preview-img'), {
+      pageX: 0,
+      pageY: 0,
+      button: 0,
+    });
+    fireMouseEvent('mouseMove', window, { pageX: 80, pageY: 60 });
+
+    // When `rebound` is omitted, the default (true) still rebounds the image
+    fireMouseEvent('mouseUp', window);
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
+
+    clientWidthMock.mockRestore();
+    clientHeightMock.mockRestore();
+    imgEleMock.mockRestore();
+    jest.restoreAllMocks();
+  });
+
+  it('rebound disabled keeps the position when zooming back to min scale', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ rebound: false }}
+      />,
+    );
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    const img = document.querySelector('.rc-image-preview-img');
+
+    // Zoom in to 1.5x
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Drag the image to a non-centered position
+    fireMouseEvent('mouseDown', img, { pageX: 0, pageY: 0, button: 0 });
+    fireMouseEvent('mouseMove', window, { pageX: 100, pageY: 80 });
+    fireMouseEvent('mouseUp', window);
+
+    // Zoom out back to the minimum scale (1x)
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Without rebound, the image keeps the dropped position instead of
+    // jumping back to the viewport center
+    const transform = img.getAttribute('style') || '';
+    expect(transform).toContain('scale3d(1, 1, 1)');
+    expect(transform).not.toContain('translate3d(0px, 0px,');
+  });
+
+  it('rebound enabled resets to center when zooming back to min scale', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    const img = document.querySelector('.rc-image-preview-img');
+
+    // Zoom in to 1.5x
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[5]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // Drag the image to a non-centered position
+    fireMouseEvent('mouseDown', img, { pageX: 0, pageY: 0, button: 0 });
+    fireMouseEvent('mouseMove', window, { pageX: 100, pageY: 80 });
+    fireMouseEvent('mouseUp', window);
+
+    // Zoom out back to the minimum scale (1x)
+    fireEvent.click(document.querySelectorAll('.rc-image-preview-actions-action')[4]);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    // With rebound (default true), the image jumps back to the center
+    expect(img).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1, 1, 1) rotate(0deg)',
+    });
   });
 
   it('PreviewGroup render', () => {

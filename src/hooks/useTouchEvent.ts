@@ -133,6 +133,7 @@ export default function useTouchEvent(
 
   const onTouchEnd = () => {
     if (!open) return;
+    const { eventType } = touchPointInfo.current;
 
     if (isTouching) {
       setIsTouching(false);
@@ -146,7 +147,7 @@ export default function useTouchEvent(
     }
 
     // Keep the image at the dropped position when `rebound` is disabled
-    if (!rebound) return;
+    if (!rebound && eventType === 'move') return;
 
     const width = imgRef.current.offsetWidth * scale;
     const height = imgRef.current.offsetHeight * scale;

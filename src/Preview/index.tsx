@@ -220,6 +220,7 @@ const Preview: React.FC<PreviewProps> = props => {
     imgRef,
     minScale,
     maxScale,
+    rebound,
     onTransform,
   );
   const { isMoving, onMouseDown, onWheel } = useMouseEvent(
