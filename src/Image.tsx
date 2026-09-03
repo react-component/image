@@ -1,4 +1,4 @@
-import { useControlledState } from '@rc-component/util';
+import { isReactRenderable, useControlledState } from '@rc-component/util';
 import { clsx } from 'clsx';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
@@ -152,7 +152,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
   };
 
   // ========================= ImageProps =========================
-  const isCustomPlaceholder = placeholder && placeholder !== true;
+  const isCustomPlaceholder = isReactRenderable(placeholder) && placeholder !== true;
 
   const src = previewSrc ?? imgSrc;
   const [getImgRef, srcAndOnload, status] = useStatus({
@@ -273,7 +273,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           onError={onError}
         />
 
-        {status === 'loading' && (
+        {status === 'loading' && isCustomPlaceholder && (
           <div aria-hidden="true" className={`${prefixCls}-placeholder`}>
             {placeholder}
           </div>
