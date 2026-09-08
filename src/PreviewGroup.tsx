@@ -9,7 +9,7 @@ import type { TransformType } from './hooks/useImageTransform';
 import usePreviewItems from './hooks/usePreviewItems';
 import type { ImageElementProps, OnGroupPreview } from './interface';
 
-export interface GroupPreviewConfig extends InternalPreviewConfig {
+export interface GroupPreviewConfig extends Omit<InternalPreviewConfig, 'imageRender'> {
   current?: number;
   // Similar to InternalPreviewConfig but has additional current
   imageRender?: (

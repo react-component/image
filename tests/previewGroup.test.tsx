@@ -151,6 +151,35 @@ describe('PreviewGroup', () => {
     expect(previewProgressElement.textContent).toEqual('current:1 / total:3');
   });
 
+  it('imageRender receives the current group index', () => {
+    const imageRender = jest.fn((originalNode, { current }) => (
+      <div data-testid="group-image-render" data-current={current}>
+        {originalNode}
+      </div>
+    ));
+
+    render(
+      <Image.PreviewGroup
+        items={['src1', 'src2']}
+        preview={{ open: true, imageRender }}
+      />,
+    );
+
+    expect(document.querySelector('[data-testid="group-image-render"]')).toHaveAttribute(
+      'data-current',
+      '0',
+    );
+    fireEvent.click(document.querySelector('.rc-image-preview-switch-next'));
+    expect(document.querySelector('[data-testid="group-image-render"]')).toHaveAttribute(
+      'data-current',
+      '1',
+    );
+    expect(imageRender).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({ current: 1 }),
+    );
+  });
+
   it('Switch', () => {
     const previewProgressElementPath = '.rc-image-preview-progress';
     const { container } = render(
