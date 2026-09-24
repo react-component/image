@@ -27,6 +27,7 @@ export default function PrevNext(props: PrevNextProps) {
   return (
     <>
       <button
+        type="button"
         className={clsx(switchCls, `${switchCls}-prev`, {
           [`${switchCls}-disabled`]: prevDisabled,
         })}
