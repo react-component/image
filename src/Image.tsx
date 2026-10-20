@@ -175,13 +175,22 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     COMMON_PROPS.map(prop => props[prop]),
   );
 
+  // `srcSet` & `sizes` describe the thumbnail, and would win over `preview.src` in the preview image
+  const previewImgCommonProps = useMemo(() => {
+    if (previewSrc === undefined) {
+      return imgCommonProps;
+    }
+    const { srcSet, sizes, ...rest } = imgCommonProps;
+    return rest;
+  }, [previewSrc, imgCommonProps]);
+
   // ========================== Register ==========================
   const registerData: ImageElementProps = useMemo(
     () => ({
-      ...imgCommonProps,
+      ...previewImgCommonProps,
       src,
     }),
-    [src, imgCommonProps],
+    [src, previewImgCommonProps],
   );
 
   const imageId = useRegisterImage(canPreview, registerData);
@@ -307,7 +316,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
           alt={alt}
           imageInfo={{ width, height }}
           fallback={fallback}
-          imgCommonProps={imgCommonProps}
+          imgCommonProps={previewImgCommonProps}
           {...restProps}
           classNames={classNames?.popup}
           styles={styles?.popup}
