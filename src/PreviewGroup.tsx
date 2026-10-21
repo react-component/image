@@ -111,6 +111,12 @@ const Group: React.FC<PreviewGroupProps> = ({
     }
   }, [isShowPreview]);
 
+  React.useEffect(() => {
+    if (!canPreview) {
+      setShowPreview(false);
+    }
+  }, [canPreview, setShowPreview]);
+
   // ========================== Events ==========================
   const onInternalChange: GroupPreviewConfig['onChange'] = (next, prev) => {
     setCurrent(next);

@@ -133,6 +133,46 @@ describe('PreviewGroup', () => {
     expect(document.querySelector('.rc-image-preview')).toBeFalsy();
   });
 
+  it('should not reopen preview after disable and re-enable', () => {
+    const { container, rerender } = render(
+      <Image.PreviewGroup>
+        <Image src="src1" />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+
+    rerender(
+      <Image.PreviewGroup preview={false}>
+        <Image src="src1" />
+      </Image.PreviewGroup>,
+    );
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+
+    rerender(
+      <Image.PreviewGroup>
+        <Image src="src1" />
+      </Image.PreviewGroup>,
+    );
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview')).toBeFalsy();
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+    expect(document.querySelector('.rc-image-preview')).toBeTruthy();
+  });
+
   it('Keyboard Enter should open preview from group image', () => {
     const { container } = render(
       <Image.PreviewGroup>
