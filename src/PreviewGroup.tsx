@@ -55,6 +55,8 @@ const Group: React.FC<PreviewGroupProps> = ({
     ...restProps
   } = preview && typeof preview === 'object' ? preview : ({} as GroupPreviewConfig);
 
+  const canPreview = preview !== false && preview !== null;
+
   // ========================== Items ===========================
   const [mergedItems, register, fromItems] = usePreviewItems(items);
 
@@ -80,6 +82,10 @@ const Group: React.FC<PreviewGroupProps> = ({
 
   const onPreviewFromImage = React.useCallback<OnGroupPreview>(
     (id, imageSrc, mouseX, mouseY) => {
+      if (!canPreview) {
+        return;
+      }
+
       const index = fromItems
         ? mergedItems.findIndex(item => item.data.src === imageSrc)
         : mergedItems.findIndex(item => item.id === id);
@@ -91,7 +97,7 @@ const Group: React.FC<PreviewGroupProps> = ({
 
       setKeepOpenIndex(true);
     },
-    [mergedItems, fromItems],
+    [canPreview, mergedItems, fromItems],
   );
 
   // Reset current when reopen
@@ -119,31 +125,33 @@ const Group: React.FC<PreviewGroupProps> = ({
 
   // ========================= Context ==========================
   const previewGroupContext = React.useMemo(
-    () => ({ register, onPreview: onPreviewFromImage }),
-    [register, onPreviewFromImage],
+    () => ({ register, onPreview: onPreviewFromImage, canPreview }),
+    [register, onPreviewFromImage, canPreview],
   );
 
   // ========================== Render ==========================
   return (
     <PreviewGroupContext.Provider value={previewGroupContext}>
       {children}
-      <Preview
-        aria-hidden={!isShowPreview}
-        open={isShowPreview}
-        prefixCls={previewPrefixCls}
-        onClose={onPreviewClose}
-        mousePosition={mousePosition}
-        imgCommonProps={imgCommonProps}
-        src={src}
-        fallback={fallback}
-        icons={icons}
-        current={current}
-        count={mergedItems.length}
-        onChange={onInternalChange}
-        {...restProps}
-        classNames={classNames?.popup}
-        styles={styles?.popup}
-      />
+      {canPreview && (
+        <Preview
+          aria-hidden={!isShowPreview}
+          open={isShowPreview}
+          prefixCls={previewPrefixCls}
+          onClose={onPreviewClose}
+          mousePosition={mousePosition}
+          imgCommonProps={imgCommonProps}
+          src={src}
+          fallback={fallback}
+          icons={icons}
+          current={current}
+          count={mergedItems.length}
+          onChange={onInternalChange}
+          {...restProps}
+          classNames={classNames?.popup}
+          styles={styles?.popup}
+        />
+      )}
     </PreviewGroupContext.Provider>
   );
 };
