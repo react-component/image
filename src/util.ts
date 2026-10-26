@@ -1,10 +1,13 @@
-export function isImageValid(src: string) {
+export function isImageValid(src: string, crossOrigin?: string) {
   return new Promise(resolve => {
     if (!src) {
       resolve(false);
       return;
     }
     const img = document.createElement('img');
+    if (crossOrigin !== undefined) {
+      img.crossOrigin = crossOrigin;
+    }
     img.onerror = () => resolve(false);
     img.onload = () => resolve(true);
     img.src = src;

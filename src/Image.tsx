@@ -43,8 +43,10 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
 
 export type SemanticName = 'root' | 'image' | 'cover';
 
-export interface ImageProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick' | 'onKeyDown'> {
+export interface ImageProps extends Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  'placeholder' | 'onClick' | 'onKeyDown'
+> {
   // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
@@ -159,6 +161,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     src: imgSrc,
     isCustomPlaceholder,
     fallback,
+    crossOrigin: props.crossOrigin,
   });
 
   const imgCommonProps = useMemo(
@@ -243,7 +246,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         onClick={canPreview ? onPreview : onClick}
         role={canPreview ? 'button' : otherProps.role}
         tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
-        aria-label={canPreview ? otherProps['aria-label'] ?? alt : otherProps['aria-label']}
+        aria-label={canPreview ? (otherProps['aria-label'] ?? alt) : otherProps['aria-label']}
         onKeyDown={onPreviewKeyDown}
         style={{
           width,
