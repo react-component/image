@@ -146,7 +146,7 @@ export default function useTouchEvent(
 
     const width = imgRef.current.offsetWidth * scale;
     const height = imgRef.current.offsetHeight * scale;
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     const { left, top } = imgRef.current.getBoundingClientRect();
     const isRotate = rotate % 180 !== 0;
 
@@ -164,7 +164,9 @@ export default function useTouchEvent(
 
   useEffect(() => {
     const preventDefault = (e: TouchEvent) => {
-      e.preventDefault();
+      if (e.cancelable) {
+        e.preventDefault();
+      }
     };
 
     if (open && movable) {
