@@ -179,3 +179,64 @@ describe('Touch Events', () => {
     });
   });
 });
+
+describe('Window touchmove preventDefault', () => {
+  const dispatchTouchMove = (cancelable: boolean) => {
+    const event = new Event('touchmove', { bubbles: true, cancelable });
+    const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
+    window.dispatchEvent(event);
+    return { event, preventDefaultSpy };
+  };
+
+  it('prevents cancelable touchmove while preview is open', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    const { event, preventDefaultSpy } = dispatchTouchMove(true);
+
+    expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('does not call preventDefault on non-cancelable touchmove', () => {
+    const { container } = render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    const { preventDefaultSpy } = dispatchTouchMove(false);
+
+    expect(preventDefaultSpy).not.toHaveBeenCalled();
+  });
+
+  it('does not prevent touchmove when preview is closed', () => {
+    render(
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
+    );
+
+    const { event, preventDefaultSpy } = dispatchTouchMove(true);
+
+    expect(preventDefaultSpy).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('does not prevent touchmove when preview is not movable', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ movable: false }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+
+    const { event, preventDefaultSpy } = dispatchTouchMove(true);
+
+    expect(preventDefaultSpy).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+  });
+});
