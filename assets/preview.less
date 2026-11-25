@@ -7,6 +7,16 @@
   inset: 0;
   z-index: 1055;
 
+  &-pass-through {
+    pointer-events: none;
+
+    *,
+    *::before,
+    *::after {
+      pointer-events: none !important;
+    }
+  }
+
   &-mask {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.3);

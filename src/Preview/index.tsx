@@ -430,6 +430,7 @@ const Preview: React.FC<PreviewProps> = props => {
         motionAppear
         motionEnter
         motionLeave
+        motionDeadline={1000}
         onVisibleChanged={onVisibleChanged}
       >
         {({ className: motionClassName, style: motionStyle }) => {
@@ -448,6 +449,7 @@ const Preview: React.FC<PreviewProps> = props => {
               className={clsx(prefixCls, rootClassName, classNames.root, motionClassName, {
                 [`${prefixCls}-movable`]: movable,
                 [`${prefixCls}-moving`]: isMoving,
+                [`${prefixCls}-pass-through`]: !(portalRender && open),
               })}
               style={mergedStyle}
               role="dialog"
