@@ -14,6 +14,7 @@ export default function CloseBtn(props: CloseBtnProps) {
 
   return (
     <button
+      type="button"
       className={clsx(`${prefixCls}-close`, className)}
       style={style}
       onClick={onClick}
