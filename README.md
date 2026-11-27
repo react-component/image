@@ -105,6 +105,7 @@ Native image attributes are also supported.
 | wheel | Enable mouse wheel zoom | boolean | true |
 | onOpenChange | Callback when preview open state changes | `(open: boolean) => void` | - |
 | onTransform | Callback when transform changes | `(info: { transform: TransformType; action: TransformAction }) => void` | - |
+| rebound | Whether to rebound the image to the visible area after dragging ends | boolean | true |
 
 ### Image.PreviewGroup
 
