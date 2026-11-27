@@ -767,6 +767,60 @@ describe('Preview', () => {
     expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute('src', previewSrc);
   });
 
+  it('previewSrc should not use the srcSet and sizes of the thumbnail', () => {
+    const { container } = render(
+      <Image
+        src="thumb-100.png"
+        srcSet="thumb-200.png 2x"
+        sizes="100px"
+        preview={{ src: 'big-500.png' }}
+      />,
+    );
+
+    expect(container.querySelector('.rc-image-img')).toHaveAttribute('srcset', 'thumb-200.png 2x');
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const previewImg = document.querySelector('.rc-image-preview-img');
+    expect(previewImg).toHaveAttribute('src', 'big-500.png');
+    expect(previewImg).not.toHaveAttribute('srcset');
+    expect(previewImg).not.toHaveAttribute('sizes');
+  });
+
+  it('previewSrc should not use the srcSet of the thumbnail in PreviewGroup', () => {
+    const { container } = render(
+      <Image.PreviewGroup>
+        <Image src="thumb-100.png" srcSet="thumb-200.png 2x" preview={{ src: 'big-500.png' }} />
+      </Image.PreviewGroup>,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const previewImg = document.querySelector('.rc-image-preview-img');
+    expect(previewImg).toHaveAttribute('src', 'big-500.png');
+    expect(previewImg).not.toHaveAttribute('srcset');
+  });
+
+  it('should keep srcSet in the preview without previewSrc', () => {
+    const { container } = render(<Image src="thumb-100.png" srcSet="thumb-200.png 2x" />);
+
+    fireEvent.click(container.querySelector('.rc-image'));
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(document.querySelector('.rc-image-preview-img')).toHaveAttribute(
+      'srcset',
+      'thumb-200.png 2x',
+    );
+  });
+
   it('Customize preview props', () => {
     const src = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';
     render(
