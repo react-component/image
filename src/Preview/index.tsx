@@ -1,6 +1,12 @@
 import CSSMotion from '@rc-component/motion';
 import Portal, { type PortalProps } from '@rc-component/portal';
-import { KeyCode, useEvent, useLayoutEffect, useLockFocus } from '@rc-component/util';
+import {
+  isReactRenderable,
+  KeyCode,
+  useEvent,
+  useLayoutEffect,
+  useLockFocus,
+} from '@rc-component/util';
 import { clsx } from 'clsx';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { PreviewGroupContext } from '../context';
@@ -474,7 +480,9 @@ const Preview: React.FC<PreviewProps> = props => {
               {closeIcon !== false && closeIcon !== null && (
                 <CloseBtn
                   prefixCls={prefixCls}
-                  icon={closeIcon === true ? icons.close : closeIcon || icons.close}
+                  icon={
+                    closeIcon !== true && isReactRenderable(closeIcon) ? closeIcon : icons.close
+                  }
                   onClick={onClose}
                   className={classNames.close}
                   style={styles.close}

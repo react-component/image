@@ -1,4 +1,4 @@
-import { isReactRenderable, useControlledState } from '@rc-component/util';
+import { isNonNullable, isReactRenderable, useControlledState } from '@rc-component/util';
 import { clsx } from 'clsx';
 import * as React from 'react';
 import { useContext, useMemo, useState } from 'react';
@@ -43,8 +43,10 @@ export interface PreviewConfig extends Omit<InternalPreviewConfig, 'countRender'
 
 export type SemanticName = 'root' | 'image' | 'cover';
 
-export interface ImageProps
-  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'placeholder' | 'onClick' | 'onKeyDown'> {
+export interface ImageProps extends Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  'placeholder' | 'onClick' | 'onKeyDown'
+> {
   // Misc
   prefixCls?: string;
   previewPrefixCls?: string;
@@ -127,15 +129,17 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
     ...restProps
   }: PreviewConfig = preview && typeof preview === 'object' ? preview : {};
 
-  const coverPlacement =
-    typeof cover === 'object' && (cover as CoverConfig).placement
-      ? (cover as CoverConfig).placement || 'center'
-      : 'center';
-
-  const coverNode =
-    typeof cover === 'object' && (cover as CoverConfig).coverNode
-      ? (cover as CoverConfig).coverNode
-      : (cover as React.ReactNode);
+  // Identify the config by its shape, independently of its node's content.
+  const coverConfig =
+    isNonNullable(cover) &&
+    typeof cover === 'object' &&
+    ('coverNode' in cover ||
+      'placement' in cover ||
+      (Object.getPrototypeOf(cover) === Object.prototype && Reflect.ownKeys(cover).length === 0))
+      ? (cover as CoverConfig)
+      : undefined;
+  const coverPlacement = coverConfig?.placement || 'center';
+  const coverNode = coverConfig ? coverConfig.coverNode : (cover as React.ReactNode);
 
   // ============================ Open ============================
   const [isShowPreview, setShowPreview] = useControlledState(!!previewOpen, previewOpen);
@@ -243,7 +247,7 @@ const ImageInternal: CompoundedComponent<ImageProps> = props => {
         onClick={canPreview ? onPreview : onClick}
         role={canPreview ? 'button' : otherProps.role}
         tabIndex={canPreview && otherProps.tabIndex == null ? 0 : otherProps.tabIndex}
-        aria-label={canPreview ? otherProps['aria-label'] ?? alt : otherProps['aria-label']}
+        aria-label={canPreview ? (otherProps['aria-label'] ?? alt) : otherProps['aria-label']}
         onKeyDown={onPreviewKeyDown}
         style={{
           width,
