@@ -219,7 +219,7 @@ const Preview: React.FC<PreviewProps> = props => {
     maxScale,
     onTransform,
   );
-  const { isMoving, onMouseDown, onWheel } = useMouseEvent(
+  const { isMoving, onMouseDown } = useMouseEvent(
     imgRef,
     movable,
     open,
@@ -284,7 +284,6 @@ const Preview: React.FC<PreviewProps> = props => {
       }}
       fallback={fallback}
       src={src}
-      onWheel={onWheel}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
       onTouchStart={onTouchStart}

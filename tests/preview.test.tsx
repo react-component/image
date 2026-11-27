@@ -323,6 +323,39 @@ describe('Preview', () => {
     });
   });
 
+  it('should prevent browser zoom when zooming with a trackpad', () => {
+    const { container } = render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        preview={{ open: true }}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('.rc-image')!);
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    const previewImage = document.querySelector('.rc-image-preview-img');
+    let defaultPrevented = false;
+    window.addEventListener(
+      'wheel',
+      event => {
+        defaultPrevented = event.defaultPrevented;
+      },
+      { once: true },
+    );
+    fireEvent.wheel(previewImage!, { ctrlKey: true, deltaY: -50 });
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    expect(defaultPrevented).toBe(true);
+    expect(previewImage).toHaveStyle({
+      transform: 'translate3d(0px, 0px, 0) scale3d(1.25, 1.25, 1) rotate(0deg)',
+    });
+  });
+
   it('should not zoom with wheel when wheel is false', () => {
     const { container } = render(
       <Image

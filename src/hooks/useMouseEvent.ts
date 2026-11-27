@@ -1,4 +1,4 @@
-import { warning } from '@rc-component/util';
+import { useEvent, warning } from '@rc-component/util';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getFixScaleEleTransPosition from '../getFixScaleEleTransPosition';
@@ -83,8 +83,9 @@ export default function useMouseEvent(
     }
   };
 
-  const onWheel = (event: React.WheelEvent<HTMLImageElement>) => {
-    if (!open || !wheel || event.deltaY == 0) return;
+  const onWheel = useEvent((event: WheelEvent) => {
+    if (!open || !wheel || event.target !== imgRef.current || event.deltaY == 0) return;
+    event.preventDefault();
     // Scale ratio depends on the deltaY size
     const scaleRatio = Math.abs(event.deltaY / 100);
     // Limit the maximum scale ratio
@@ -95,7 +96,19 @@ export default function useMouseEvent(
       ratio = BASE_SCALE_RATIO / ratio;
     }
     dispatchZoomChange(ratio, 'wheel', event.clientX, event.clientY);
-  };
+  });
+
+  // React delegates wheel events through a passive listener, so use a native listener
+  // to prevent the browser's trackpad zoom gesture.
+  useEffect(() => {
+    if (open && wheel) {
+      window.addEventListener('wheel', onWheel, { passive: false });
+    }
+
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+    };
+  }, [open, wheel, onWheel]);
 
   useEffect(() => {
     if (movable) {
@@ -134,6 +147,5 @@ export default function useMouseEvent(
     onMouseDown,
     onMouseMove,
     onMouseUp,
-    onWheel,
   };
 }
