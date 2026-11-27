@@ -153,6 +153,7 @@ const PreviewImage: React.FC<PreviewImageProps> = ({ fallback, src, imgRef, ...p
   const [getImgRef, srcAndOnload] = useStatus({
     src,
     fallback,
+    crossOrigin: props.crossOrigin,
   });
 
   return (

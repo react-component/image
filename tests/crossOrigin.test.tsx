@@ -15,14 +15,17 @@ describe('CrossOrigin', () => {
   it('should not crash when window.top access throws SecurityError', () => {
     // Mock window.top to throw SecurityError on access
     const originalTop = window.top;
-    
+
     // Try to define a property that throws when accessed
     // Note: In some jsdom environments window.top might be non-configurable.
     // If this fails, we might need a different strategy, but this is the standard way to mock cross-origin.
     try {
       Object.defineProperty(window, 'top', {
         get: () => {
-          throw new DOMException('Permission denied to access property "removeEventListener" on cross-origin object', 'SecurityError');
+          throw new DOMException(
+            'Permission denied to access property "removeEventListener" on cross-origin object',
+            'SecurityError',
+          );
         },
         configurable: true,
       });
@@ -35,9 +38,7 @@ describe('CrossOrigin', () => {
     }
 
     const { container, unmount } = render(
-      <Image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-      />,
+      <Image src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png" />,
     );
 
     // Open preview to trigger the effect that binds events
@@ -56,5 +57,34 @@ describe('CrossOrigin', () => {
       value: originalTop,
       configurable: true,
     });
+  });
+
+  it('should pass crossOrigin to isImageValid check', () => {
+    let probeCrossOrigin: string | undefined;
+    const originalCreateElement = document.createElement.bind(document);
+    jest.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
+      const el = originalCreateElement(tagName);
+      if (tagName.toLowerCase() === 'img') {
+        const descriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+        if (descriptor && descriptor.set) {
+          Object.defineProperty(el, 'src', {
+            set(val) {
+              probeCrossOrigin = el.crossOrigin;
+              descriptor.set!.call(el, val);
+            },
+          });
+        }
+      }
+      return el;
+    });
+
+    render(
+      <Image
+        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        crossOrigin="anonymous"
+      />,
+    );
+
+    expect(probeCrossOrigin).toBe('anonymous');
   });
 });
